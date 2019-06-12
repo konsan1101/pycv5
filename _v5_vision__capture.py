@@ -29,7 +29,7 @@ qCtrl_resultCV  = 'temp/result_cv.txt'
 qCtrl_resultOCR = 'temp/result_ocr.txt'
 qCtrl_resultTrn = 'temp/result_ocrTrn.txt'
 
-qFONT_default = {'file':'_vision_font_ipaexg.ttf','offset':10}
+qFONT_default = {'file':'_fonts/_vision_font_ipaexg.ttf','offset':10}
 qFONT_zh = {'file':'C:/Windows/Fonts/msyh.ttc', 'offset':5}
 qFONT_ko = {'file':'C:/Windows/Fonts/batang.ttc', 'offset':10}
 
@@ -1783,19 +1783,19 @@ if (__name__ == '__main__'):
 
     if (casName1 != 'none'):
         if (casName1 == 'cars'):
-            casName1 = '_vision_opencv_cars.xml'
+            casName1 = '_xml/_vision_opencv_cars.xml'
         if (casName1 == 'face'):
-            casName1 = '_vision_opencv_face.xml'
+            casName1 = '_xml/_vision_opencv_face.xml'
         if (casName1 == 'fullbody'):
-            casName1 = '_vision_opencv_fullbody.xml'
+            casName1 = '_xml/_vision_opencv_fullbody.xml'
 
     if (casName2 != 'none'):
         if (casName2 == 'cars'):
-            casName2 = '_vision_opencv_cars.xml'
+            casName2 = '_xml/_vision_opencv_cars.xml'
         if (casName2 == 'face'):
-            casName2 = '_vision_opencv_face.xml'
+            casName2 = '_xml/_vision_opencv_face.xml'
         if (casName2 == 'fullbody'):
-            casName2 = '_vision_opencv_fullbody.xml'
+            casName2 = '_xml/_vision_opencv_fullbody.xml'
 
     qFunc.logOutput('')
     qFunc.logOutput('video_main:runMode  =' + str(runMode  ))
