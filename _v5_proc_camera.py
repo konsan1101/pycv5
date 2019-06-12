@@ -1,0 +1,428 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+import os
+import shutil
+import queue
+import threading
+import subprocess
+import datetime
+import time
+import codecs
+import glob
+
+import numpy as np
+import cv2
+
+
+
+# qFunc 共通ルーチン
+import  _v5__qFunc
+qFunc = _v5__qFunc.qFunc_class()
+
+qOS            = qFunc.getValue('qOS'           )
+qPath_log      = qFunc.getValue('qPath_log'     )
+qPath_work     = qFunc.getValue('qPath_work'    )
+qPath_rec      = qFunc.getValue('qPath_rec'     )
+
+qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
+qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
+qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
+qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
+qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
+qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
+qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
+qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
+qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
+qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
+qPath_v_detect = qFunc.getValue('qPath_v_detect')
+qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
+qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
+
+qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
+qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
+qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
+qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
+qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
+qBusy_a_ctrl   = qFunc.getValue('qBusy_a_ctrl'  )
+qBusy_a_inp    = qFunc.getValue('qBusy_a_inp'   )
+qBusy_a_wav    = qFunc.getValue('qBusy_a_wav'   )
+qBusy_a_STT    = qFunc.getValue('qBusy_a_STT'   )
+qBusy_a_TTS    = qFunc.getValue('qBusy_a_TTS'   )
+qBusy_a_TRA    = qFunc.getValue('qBusy_a_TRA'   )
+qBusy_a_play   = qFunc.getValue('qBusy_a_play'  )
+qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
+qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
+qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
+qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
+
+
+
+class proc_camera:
+
+    def __init__(self, name='thread', id='0', runMode='debug', 
+                    camDev='0', camMode='vga', camStretch='0', camRotate='0', camZoom='1.0', camFps='30', ):
+        self.runMode    = runMode
+        self.camDev     = camDev
+        self.camMode    = camMode
+        self.camStretch = camStretch
+        self.camRotate  = camRotate
+        self.camZoom    = camZoom
+        self.camFps     = camFps
+
+        camWidth, camHeight = qFunc.getResolution(camMode)
+        self.camWidth   = camWidth
+        self.camHeight  = camHeight
+
+        self.breakFlag = threading.Event()
+        self.breakFlag.clear()
+        self.name      = name
+        self.id        = id
+        self.proc_id   = '{0:10s}'.format(name).replace(' ', '_')
+        self.proc_id   = self.proc_id[:-2] + '_{:01}'.format(int(id))
+        if (runMode == 'debug'):
+            self.logDisp = True
+        else:
+            self.logDisp = False
+        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+
+        self.proc_s    = None
+        self.proc_r    = None
+        self.proc_main = None
+        self.proc_beat = None
+        self.proc_last = None
+        self.proc_step = '0'
+        self.proc_seq  = 0
+
+        # 変数設定
+        self.blue_img = np.zeros((240,320,3), np.uint8)
+        cv2.rectangle(self.blue_img,(0,0),(320,240),(255,0,0),-1)
+        cv2.putText(self.blue_img, 'No Image !', (40,80), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,255))
+
+    def __del__(self, ):
+        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+
+    def start(self, ):
+        #qFunc.logOutput(self.proc_id + ':start')
+
+        self.proc_s = queue.Queue()
+        self.proc_r = queue.Queue()
+        self.proc_main = threading.Thread(target=self.main_proc, args=(self.proc_s, self.proc_r, ))
+        self.proc_beat = time.time()
+        self.proc_last = time.time()
+        self.proc_step = '0'
+        self.proc_seq  = 0
+
+        self.proc_main.setDaemon(True)
+        self.proc_main.start()
+
+    def stop(self, waitMax=5, ):
+        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+
+        self.breakFlag.set()
+        chktime = time.time()
+        while (not self.proc_beat is None) or (int(time.time() - chktime) < waitMax):
+            time.sleep(0.10)
+
+    def put(self, data, ):
+        self.proc_s.put(data)        
+        return True
+
+    def checkGet(self, waitMax=5, ):
+        chktime = time.time()
+        while (self.proc_r.qsize() == 0) and (int(time.time() - chktime) < waitMax):
+            time.sleep(0.10)
+        data = self.get()
+        return data
+
+    def get(self, ):
+        if (self.proc_r.qsize() == 0):
+            return ['', '']        
+        data = self.proc_r.get()        
+        self.proc_r.task_done()
+        return data
+
+    def main_proc(self, cn_r, cn_s, ):
+        # ログ
+        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        self.proc_beat = time.time()
+
+        # 初期設定
+        self.proc_step = '1'
+
+        fileRdy = qPath_work + self.proc_id + '.rdy'
+        fileBsy = qPath_work + self.proc_id + '.bsy'
+        qFunc.remove(fileRdy)
+        qFunc.remove(fileBsy)
+
+        # デバイス設定
+        capture = None
+        if (not self.camDev.isdigit()):
+            capture = cv2.VideoCapture(self.camDev)
+
+        # ＦＰＳ計測
+        qFPS_class = _v5__qFunc.qFPS_class()
+        qFPS_last  = time.time()
+
+        # 待機ループ
+        self.proc_step = '5'
+
+        while (self.proc_step == '5'):
+            self.proc_beat = time.time()
+
+            # 停止要求確認
+            if (self.breakFlag.is_set()):
+                self.breakFlag.clear()
+                self.proc_step = '9'
+                break
+
+            # キュー取得
+            if (cn_r.qsize() > 0):
+                cn_r_get  = cn_r.get()
+                inp_name  = cn_r_get[0]
+                inp_value = cn_r_get[1]
+                cn_r.task_done()
+            else:
+                inp_name  = ''
+                inp_value = ''
+
+            if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
+                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+
+            # デバイス設定
+            if (self.camDev.isdigit()):
+                if (capture is None) and (qFunc.busyCheck(qBusy_dev_cam, 0) != 'busy'): 
+
+                    if (os.name != 'nt'):
+                        capture = cv2.VideoCapture(int(self.camDev))
+                    else:
+                        capture = cv2.VideoCapture(int(self.camDev), cv2.CAP_DSHOW)
+                    try:
+                        capture.set(3, int(self.camWidth ))
+                        capture.set(4, int(self.camHeight))
+                        capture.set(5, int(self.camFps   ))
+                    except:
+                        pass
+
+                    # ビジー設定 (ready)
+                    if (not os.path.exists(fileBsy)):
+                        qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                    if (str(self.id) == '0'):
+                        qFunc.busySet(qBusy_v_inp, True)
+
+                if (not capture is None) and (qFunc.busyCheck(qBusy_dev_cam, 0) == 'busy'): 
+                    capture.release()
+                    capture = None
+
+                    # ビジー解除 (!ready)
+                    qFunc.remove(fileBsy)
+                    if (str(self.id) == '0'):
+                        qFunc.busySet(qBusy_v_inp, False)
+
+            # レディ設定
+            if (not capture is None) and (not os.path.exists(fileRdy)):
+                qFunc.txtsWrite(fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+            if (capture is None) and (os.path.exists(fileRdy)):
+                qFunc.remove(fileRdy)
+
+            # ステータス応答
+            if (inp_name.lower() == 'status'):
+                out_name  = inp_name
+                if (not capture is None):
+                    out_value = 'ready'
+                else:
+                    out_value = '!ready'
+                cn_s.put([out_name, out_value])
+
+            # 連携情報
+            if (inp_name.lower() == 'camstretch'):
+                self.camStretch = inp_value
+                qFPS_last = time.time() - 60
+            if (inp_name.lower() == 'camrotate'):
+                self.camRotate = inp_value
+                qFPS_last = time.time() - 60
+            if (inp_name.lower() == 'camzoom'):
+                self.camZoom = inp_value
+                qFPS_last = time.time() - 60
+
+
+
+            # 画像処理
+            if (cn_s.qsize() == 0):
+            #if (True):
+
+                # 画像取得
+                if (not capture is None):
+                    ret, frame = capture.read()
+                else:
+                    ret = True
+                    frame = self.blue_img.copy()
+
+                if (ret == False):
+                    qFunc.logOutput(self.proc_id + ':capture error!', display=self.logDisp,)
+                    time.sleep(5.00)
+                    self.proc_step = '9'
+                    break
+
+                else:
+
+                    # 実行カウンタ
+                    self.proc_last = time.time()
+                    self.proc_seq += 1
+                    if (self.proc_seq > 9999):
+                        self.proc_seq = 1
+
+                    # frame_img
+                    frame_img = frame.copy()
+                    frame_height, frame_width = frame_img.shape[:2]
+                    input_img = frame.copy()
+                    input_height, input_width = input_img.shape[:2]
+
+                    # 台形補正
+                    if (int(self.camStretch) != 0):
+                        x = int((input_width/2) * abs(int(self.camStretch))/100)
+                        if (int(self.camStretch) > 0):
+                            perspective1 = np.float32([ [x, 0], [input_width-x, 0], [input_width, input_height], [0, input_height] ])
+                        else:
+                            perspective1 = np.float32([ [0, 0], [input_width, 0], [input_width-x, input_height], [x, input_height] ])
+                        perspective2 = np.float32([ [0, 0], [input_width, 0], [input_width, input_height], [0, input_height] ])
+                        transform_matrix = cv2.getPerspectiveTransform(perspective1, perspective2)
+                        input_img = cv2.warpPerspective(input_img, transform_matrix, (input_width, input_height))
+
+                    # 画像回転
+                    if   (int(self.camRotate) == -180):
+                        input_img = cv2.flip(input_img, 0) # 180 Rotation Y
+                    elif (int(self.camRotate) == -360):
+                        input_img = cv2.flip(input_img, 1) # 180 Rotation X
+                    elif (abs(int(self.camRotate)) !=   0):
+                        width2    = int((input_width - input_height)/2)
+                        rect_img  = cv2.resize(input_img[0:input_height, width2:width2+input_height], (960,960))
+                        rect_mat  = cv2.getRotationMatrix2D((480, 480), -int(self.camRotate), 1.0)
+                        rect_r    = cv2.warpAffine(rect_img, rect_mat, (960, 960), flags=cv2.INTER_LINEAR)
+                        input_img = cv2.resize(rect_r, (input_height, input_height))
+                        input_height, input_width = input_img.shape[:2]
+
+                    # ズーム
+                    if (float(self.camZoom) != 1):
+                        zm = float(self.camZoom)
+                        x1 = int((input_width-(input_width/zm))/2)
+                        x2 = input_width - x1
+                        y1 = int((input_height-(input_height/zm))/2)
+                        y2 = input_height - y1
+                        zm_img = input_img[y1:y2, x1:x2]
+                        input_img = zm_img.copy()
+                        input_height, input_width = input_img.shape[:2]
+
+                    # ＦＰＳ計測
+                    fps = qFPS_class.get()
+                    if (int(time.time() - qFPS_last) > 5):
+                        qFPS_last  = time.time()
+
+                        # 結果出力(fps)
+                        out_name  = 'fps'
+                        out_value = '{:.1f}'.format(fps)
+                        cn_s.put([out_name, out_value])
+
+                        # 結果出力(reso)
+                        out_name  = 'reso'
+                        out_value = str(input_width) + 'x' + str(input_height)
+                        if (float(self.camZoom) != 1):
+                            out_value += ' (Zoom=' + self.camZoom + ')'
+                        cn_s.put([out_name, out_value])
+
+                    # 結果出力
+                    if (cn_s.qsize() == 0):
+                        out_name  = '[img]'
+                        out_value = input_img.copy()
+                        cn_s.put([out_name, out_value])
+
+
+
+            # アイドリング
+            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
+            or (qFunc.busyCheck(qBusy_dev_cam, 0) == 'busy'):
+                time.sleep(1.00)
+            if (int(self.camFps) > 15):
+                time.sleep(0.02)
+            else:
+                time.sleep(0.05)
+
+
+
+        # 終了処理
+        if (True):
+
+            # レディ解除
+            qFunc.remove(fileRdy)
+
+            # デバイス開放
+            if (not capture is None): 
+                capture.release()
+                capture = None
+
+            # ビジー解除 (!ready)
+            qFunc.remove(fileBsy)
+            if (str(self.id) == '0'):
+                qFunc.busySet(qBusy_v_inp, False)
+
+            # キュー削除
+            while (cn_r.qsize() > 0):
+                cn_r_get = cn_r.get()
+                cn_r.task_done()
+            while (cn_s.qsize() > 0):
+                cn_s_get = cn_s.get()
+                cn_s.task_done()
+
+            # ログ
+            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            self.proc_beat = None
+
+
+
+if __name__ == '__main__':
+    # 共通クラス
+    qFunc.init()
+
+    # ログ設定
+    qNowTime = datetime.datetime.now()
+    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d-%H%M%S') + '_' + os.path.basename(__file__) + '.log'
+    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
+    qFunc.logOutput(qLogFile, )
+
+    cv2.namedWindow('Display', 1)
+    cv2.moveWindow( 'Display', 0, 0)
+
+
+
+    camera_thread = proc_camera('camera', '0', )
+    camera_thread.start()
+
+    chktime = time.time()
+    while (int(time.time() - chktime) < 15):
+
+        res_data  = camera_thread.get()
+        res_name  = res_data[0]
+        res_value = res_data[1]
+        if (res_name != ''):
+            if (res_name == '[img]'):
+                cv2.imshow('Display', res_value.copy() )
+                cv2.waitKey(1)
+            else:
+                print(res_name, res_value, )
+
+        #if (camera_thread.proc_s.qsize() == 0):
+        #    camera_thread.put(['status', ''])
+
+        time.sleep(0.02)
+
+    time.sleep(1.00)
+    camera_thread.stop()
+    del camera_thread
+
+
+
+    cv2.destroyAllWindows()
+
+
