@@ -68,11 +68,11 @@ class proc_cvdetect:
 
         self.casName   = casName
         if (casName == 'cars'):
-            self.casName = '_vision_opencv_cars.xml'
+            self.casName = '_xml/_vision_opencv_cars.xml'
         if (casName == 'face'):
-            self.casName = '_vision_opencv_face.xml'
+            self.casName = '_xml/_vision_opencv_face.xml'
         if (casName == 'fullbody'):
-            self.casName = '_vision_opencv_fullbody.xml'
+            self.casName = '_xml/_vision_opencv_fullbody.xml'
         if (self.casName != 'none'):
             self.cas_nm  = self.casName[:-4]
             self.cas_nm  = self.cas_nm.replace('_vision_opencv_', '')

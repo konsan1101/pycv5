@@ -18,7 +18,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-qFONT_default = {'file':'_vision_font_ipaexg.ttf','offset':10}
+qFONT_default = {'file':'_fonts/_vision_font_ipaexg.ttf','offset':10}
 qFONT_zh = {'file':'C:/Windows/Fonts/msyh.ttc', 'offset':5}
 qFONT_ko = {'file':'C:/Windows/Fonts/batang.ttc', 'offset':10}
 

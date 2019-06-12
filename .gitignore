@@ -104,8 +104,15 @@ venv.bak/
 .mypy_cache/
 
 *key*
-yolo3*/
-temp*/
 
+bat/
+gijiroku/
+julius/
+naration/
+pi/
+sh/
+sox/
+temp/
+yolo3*/
 
 

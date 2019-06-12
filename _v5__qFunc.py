@@ -361,19 +361,19 @@ class qFunc_class:
 
         playfile = filename
         if (filename == '_up'):
-            playfile = '_sound_up.mp3'
+            playfile = '_sounds/_sound_up.mp3'
         if (filename == '_ready'):
-            playfile = '_sound_ready.mp3'
+            playfile = '_sounds/_sound_ready.mp3'
         if (filename == '_accept'):
-            playfile = '_sound_accept.mp3'
+            playfile = '_sounds/_sound_accept.mp3'
         if (filename == '_ok'):
-            playfile = '_sound_ok.mp3'
+            playfile = '_sounds/_sound_ok.mp3'
         if (filename == '_ng'):
-            playfile = '_sound_ng.mp3'
+            playfile = '_sounds/_sound_ng.mp3'
         if (filename == '_down'):
-            playfile = '_sound_down.mp3'
+            playfile = '_sounds/_sound_down.mp3'
         if (filename == '_shutter'):
-            playfile = '_sound_shutter.mp3'
+            playfile = '_sounds/_sound_shutter.mp3'
 
         if (os.path.exists(playfile)):
 
