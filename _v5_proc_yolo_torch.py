@@ -71,45 +71,6 @@ qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
 
 
 
-def get_test_input(input_dim, CUDA):
-    img = cv2.imread("yolo3_torch/dog-cycle-car.png")
-    img = cv2.resize(img, (input_dim, input_dim)) 
-    img_ =  img[:,:,::-1].transpose((2,0,1))
-    img_ = img_[np.newaxis,:,:,:]/255.0
-    img_ = torch.from_numpy(img_).float()
-    img_ = Variable(img_)    
-    if CUDA:
-        img_ = img_.cuda()    
-    return img_
-
-def prep_image(img, inp_dim):
-    """
-    Prepare image for inputting to the neural network. 
-    
-    Returns a Variable 
-    """
-
-    orig_im = img
-    dim = orig_im.shape[1], orig_im.shape[0]
-    img = (letterbox_image(orig_im, (inp_dim, inp_dim)))
-    img_ = img[:,:,::-1].transpose((2,0,1)).copy()
-    img_ = torch.from_numpy(img_).float().div(255.0).unsqueeze(0)
-    return img_, orig_im, dim
-
-def write(x, img, classes, colors, ):
-    c1 = tuple(x[1:3].int())
-    c2 = tuple(x[3:5].int())
-    cls = int(x[-1])
-    label = "{0}".format(classes[cls])
-    color = random.choice(colors)
-    cv2.rectangle(img, c1, c2,color, 1)
-    t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 1 , 1)[0]
-    c2 = c1[0] + t_size[0] + 3, c1[1] + t_size[1] + 4
-    cv2.rectangle(img, c1, c2,color, -1)
-    cv2.putText(img, label, (c1[0], c1[1] + t_size[1] + 4), cv2.FONT_HERSHEY_PLAIN, 1, [225,255,255], 1);
-    return img
-
-
 class proc_yolo_torch:
 
     def __init__(self, name='thread', id='0', runMode='debug',
@@ -201,7 +162,7 @@ class proc_yolo_torch:
         nms_thesh = float(0.4)
         CUDA = torch.cuda.is_available()
         num_classes = 80
-        CUDA = torch.cuda.is_available()        
+        #CUDA = torch.cuda.is_available()        
         bbox_attrs = 5 + num_classes
         
         print("Loading network.....")
@@ -213,10 +174,16 @@ class proc_yolo_torch:
         inp_dim = int(model.net_info["height"])
         assert inp_dim % 32 == 0 
         assert inp_dim > 32
+
+        #If there's a GPU availible, put the model on GPU
         if CUDA:
             model.cuda()
-        model(get_test_input(inp_dim, CUDA), CUDA)
+
+        #Set the model in evaluation mode
         model.eval()
+
+        classes = load_classes("yolo3_torch/data/coco.names")
+        colors = pkl.load(open("yolo3_torch/data/pallete", "rb"))
 
         # 待機ループ
         self.proc_step = '5'
@@ -276,8 +243,13 @@ class proc_yolo_torch:
 
                 frame = inp_value.copy()
 
-                img, orig_im, dim = prep_image(frame, inp_dim)
-                
+                orig_im = frame
+                dim = orig_im.shape[1], orig_im.shape[0]
+                img = (letterbox_image(orig_im, (inp_dim, inp_dim)))
+                img_ = img[:,:,::-1].transpose((2,0,1)).copy()
+                img2 = torch.from_numpy(img_).float().div(255.0).unsqueeze(0)
+                img = img2
+
                 im_dim = torch.FloatTensor(dim).repeat(1,2)                        
                                 
                 if CUDA:
@@ -286,6 +258,7 @@ class proc_yolo_torch:
                 
                 with torch.no_grad():   
                     output = model(Variable(img), CUDA)
+
                 output = write_results(output, confidence, num_classes, nms = True, nms_conf = nms_thesh)
 
                 im_dim = im_dim.repeat(output.size(0), 1)
@@ -299,22 +272,38 @@ class proc_yolo_torch:
                 for i in range(output.shape[0]):
                     output[i, [1,3]] = torch.clamp(output[i, [1,3]], 0.0, im_dim[i,0])
                     output[i, [2,4]] = torch.clamp(output[i, [2,4]], 0.0, im_dim[i,1])
-                
-                classes = load_classes("yolo3_torch/data/coco.names")
-                colors = pkl.load(open("yolo3_torch/data/pallete", "rb"))
-                
-                list(map(lambda x: write(x, orig_im, classes, colors), output))
                                 
-                #cv2.imshow("frame", orig_im)
+                out_img = orig_im.copy()
+                for detect in output:
+                    x1 = int(detect[1])
+                    y1 = int(detect[2])
+                    x2 = int(detect[3])
+                    y2 = int(detect[4])
+                    cl = int(detect[-1])
 
+                    label = "{0}".format(classes[cl])
+                    color = random.choice(colors)
+                    cv2.rectangle(out_img, (x1, y1), (x2, y2), color, 2)
 
+                    print(int(detect[0]) )
+
+                    # 結果出力
+                    out_name  = '[array]'
+                    out_value = orig_im[y1:y2, x1:x2].copy()
+                    cn_s.put([out_name, out_value])
+
+                    t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 1 , 1)[0]
+                    x2 = x1 + t_size[0] + 3
+                    y2 = y1 + t_size[1] + 4
+                    cv2.rectangle(out_img, (x1, y1), (x2, y2), color, -1)
+                    cv2.putText(out_img, label, (x1, y1 + t_size[1] + 4), cv2.FONT_HERSHEY_PLAIN, 1, [225,255,255], 1)
 
                 # 結果出力
                 out_name  = '[img]'
-                out_value = orig_im.copy()
+                out_value = out_img.copy()
                 cn_s.put([out_name, out_value])
 
-                time.sleep(0.50)
+                #time.sleep(0.50)
 
 
 
@@ -327,9 +316,9 @@ class proc_yolo_torch:
             or (qFunc.busyCheck(qBusy_dev_cam, 0) == 'busy'):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
-                time.sleep(0.50)
-            else:
                 time.sleep(0.25)
+            else:
+                time.sleep(0.05)
 
 
 
@@ -390,11 +379,11 @@ if __name__ == '__main__':
                 if (res_name == '[img]'):
                     cv2.imshow('Display', res_value.copy() )
                     cv2.waitKey(1)
-                    time.sleep(0.50)
+                    #time.sleep(0.25)
                 if (res_name == '[array]'):
                     cv2.imshow('Display', res_value.copy() )
                     cv2.waitKey(1)
-                    time.sleep(0.50)
+                    #time.sleep(0.25)
                 #else:
                 #    print(res_name, res_value, )
 
