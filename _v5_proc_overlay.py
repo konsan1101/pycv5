@@ -289,21 +289,25 @@ class proc_overlay:
                 # カメラ１（メイン画像）
                 if (inp_name.lower() == '[img]') \
                 or (inp_name.lower() == '[cam1]'):
-                    image_img = inp_value.copy()
-                    cam1_time = time.time()
-                    cam1_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
+                    try:
+                        image_img = inp_value.copy()
+                        cam1_time = time.time()
+                        cam1_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
 
-                    if (cam1_fps != ''):
-                        puttext = 'Cam1: ' + cam1_fps + 'fps'
-                        cv2.putText(image_img, puttext, ( 20,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,255))
-                    if (cam1_reso != ''):
-                        puttext = cam1_reso
-                        cv2.putText(image_img, puttext, (200,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
+                        if (cam1_fps != ''):
+                            puttext = 'Cam1: ' + cam1_fps + 'fps'
+                            cv2.putText(image_img, puttext, ( 20,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,255))
+                        if (cam1_reso != ''):
+                            puttext = cam1_reso
+                            cv2.putText(image_img, puttext, (200,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
 
-                    image_height, image_width = image_img.shape[:2]
-                    work_width  = int(self.dspWidth * 0.25)
-                    work_height = int(work_width * image_height / image_width)
-                    cam1_mini   = cv2.resize(image_img, (work_width, work_height))
+                        image_height, image_width = image_img.shape[:2]
+                        work_width  = int(self.dspWidth * 0.25)
+                        work_height = int(work_width * image_height / image_width)
+                        cam1_mini   = cv2.resize(image_img, (work_width, work_height))
+
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 if (inp_name.lower() == 'cam1_fps'):
                     cam1_fps  = inp_value
@@ -312,21 +316,25 @@ class proc_overlay:
 
                 # カメラ２（ワイプ画像）
                 if (inp_name.lower() == '[cam2]'):
-                    image_img = inp_value.copy()
-                    cam2_time = time.time()
-                    cam2_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
+                    try:
+                        image_img = inp_value.copy()
+                        cam2_time = time.time()
+                        cam2_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
 
-                    if (cam2_fps != ''):
-                        puttext = 'Cam2: ' + cam2_fps + 'fps'
-                        cv2.putText(image_img, puttext, ( 20,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,255))
-                    if (cam2_reso != ''):
-                        puttext = cam2_reso
-                        cv2.putText(image_img, puttext, (200,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
+                        if (cam2_fps != ''):
+                            puttext = 'Cam2: ' + cam2_fps + 'fps'
+                            cv2.putText(image_img, puttext, ( 20,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,255))
+                        if (cam2_reso != ''):
+                            puttext = cam2_reso
+                            cv2.putText(image_img, puttext, (200,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
 
-                    image_height, image_width = image_img.shape[:2]
-                    work_width  = int(self.dspWidth * 0.25)
-                    work_height = int(work_width * image_height / image_width)
-                    cam2_mini   = cv2.resize(image_img, (work_width, work_height))
+                        image_height, image_width = image_img.shape[:2]
+                        work_width  = int(self.dspWidth * 0.25)
+                        work_height = int(work_width * image_height / image_width)
+                        cam2_mini   = cv2.resize(image_img, (work_width, work_height))
+
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 if (inp_name.lower() == 'cam2_fps'):
                     cam2_fps  = inp_value
@@ -335,23 +343,27 @@ class proc_overlay:
 
                 # 演算画像
                 if (inp_name.lower() == '[comp]'):
-                    image_img = inp_value.copy()
-                    comp_time = time.time()
-                    comp_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
+                    try:
+                        image_img = inp_value.copy()
+                        comp_time = time.time()
+                        comp_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
 
-                    puttext = 'comp: '
-                    cv2.putText(image_img, puttext, ( 20,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,255))
-                    if (comp_fps != ''):
-                        puttext = 'comp: ' + comp_fps + 'fps'
+                        puttext = 'comp: '
                         cv2.putText(image_img, puttext, ( 20,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,255))
-                    if (comp_reso != ''):
-                        puttext = comp_reso
-                        cv2.putText(image_img, puttext, (200,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
+                        if (comp_fps != ''):
+                            puttext = 'comp: ' + comp_fps + 'fps'
+                            cv2.putText(image_img, puttext, ( 20,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,255))
+                        if (comp_reso != ''):
+                            puttext = comp_reso
+                            cv2.putText(image_img, puttext, (200,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
 
-                    image_height, image_width = image_img.shape[:2]
-                    work_width  = int(self.dspWidth * 0.25)
-                    work_height = int(work_width * image_height / image_width)
-                    comp_mini   = cv2.resize(image_img, (work_width, work_height))
+                        image_height, image_width = image_img.shape[:2]
+                        work_width  = int(self.dspWidth * 0.25)
+                        work_height = int(work_width * image_height / image_width)
+                        comp_mini   = cv2.resize(image_img, (work_width, work_height))
+
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 if (inp_name.lower() == 'comp_fps'):
                     comp_fps  = inp_value
@@ -360,94 +372,121 @@ class proc_overlay:
 
                 # ステータス画像
                 if (inp_name.lower() == '[status_img]'):
-                    image_img = inp_value.copy()
-                    image_height, image_width = image_img.shape[:2]
-                    while (image_height > int(self.dspHeight * 0.6)):
-                        image_img = cv2.resize(image_img, (int(image_width * 0.8), int(image_height * 0.8)))
+                    try:
+                        image_img = inp_value.copy()
                         image_height, image_width = image_img.shape[:2]
-                    while (image_width > int(self.dspWidth * 0.25)):
-                        image_img = cv2.resize(image_img, (int(image_width * 0.5), image_height))
-                        image_height, image_width = image_img.shape[:2]
+                        while (image_height > int(self.dspHeight * 0.6)):
+                            image_img = cv2.resize(image_img, (int(image_width * 0.8), int(image_height * 0.8)))
+                            image_height, image_width = image_img.shape[:2]
+                        while (image_width > int(self.dspWidth * 0.25)):
+                            image_img = cv2.resize(image_img, (int(image_width * 0.5), image_height))
+                            image_height, image_width = image_img.shape[:2]
 
-                    status_time = time.time()
-                    status_img  = image_img.copy()
+                        status_time = time.time()
+                        status_img  = image_img.copy()
+
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 # リーダー画像
                 if (inp_name.lower() == '[reader]'):
-                    image_img   = inp_value.copy()
-                    image_height, image_width = image_img.shape[:2]
-                    work_width  = int(self.dspWidth * 0.25)
-                    work_height = int(work_width * image_height / image_width)
-                    reader_time = time.time()
-                    reader_img  = cv2.resize(image_img, (work_width, work_height))
+                    try:
+                        image_img   = inp_value.copy()
+                        image_height, image_width = image_img.shape[:2]
+                        work_width  = int(self.dspWidth * 0.25)
+                        work_height = int(work_width * image_height / image_width)
+                        reader_time = time.time()
+                        reader_img  = cv2.resize(image_img, (work_width, work_height))
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 # 認識画像
                 if (inp_name.lower() == '[cvdetect]') \
                 or (inp_name.lower() == '[cvdetect1]'):
-                    image_img      = inp_value.copy()
-                    cvdetect1_time = time.time()
-                    cvdetect1_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
+                    try:
+                        image_img      = inp_value.copy()
+                        cvdetect1_time = time.time()
+                        cvdetect1_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 if (inp_name.lower() == '[cvdetect2]'):
-                    image_img      = inp_value.copy()
-                    cvdetect2_time = time.time()
-                    cvdetect2_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
+                    try:
+                        image_img      = inp_value.copy()
+                        cvdetect2_time = time.time()
+                        cvdetect2_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 # 認識画像
                 if (inp_name.lower() == '[detect]') \
                 or (inp_name.lower() == '[detect1]'):
-                    image_img = inp_value.copy()
-                    image_height, image_width = image_img.shape[:2]
-                    work_width  = int(self.dspWidth * 0.25)
-                    work_height = int(work_width * image_height / image_width)
-                    detect1_time = time.time()
-                    detect1_img  = cv2.resize(image_img, (work_width, work_height))
+                    try:
+                        image_img = inp_value.copy()
+                        image_height, image_width = image_img.shape[:2]
+                        work_width  = int(self.dspWidth * 0.25)
+                        work_height = int(work_width * image_height / image_width)
+                        detect1_time = time.time()
+                        detect1_img  = cv2.resize(image_img, (work_width, work_height))
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 if (inp_name.lower() == '[detect2]'):
-                    image_img = inp_value.copy()
-                    image_height, image_width = image_img.shape[:2]
-                    work_width  = int(self.dspWidth * 0.25)
-                    work_height = int(work_width * image_height / image_width)
-                    detect2_time = time.time()
-                    detect2_img  = cv2.resize(image_img, (work_width, work_height))
+                    try:
+                        image_img = inp_value.copy()
+                        image_height, image_width = image_img.shape[:2]
+                        work_width  = int(self.dspWidth * 0.25)
+                        work_height = int(work_width * image_height / image_width)
+                        detect2_time = time.time()
+                        detect2_img  = cv2.resize(image_img, (work_width, work_height))
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 # 配列画像
                 if (inp_name.lower() == '[array]'):
-                    image_img = inp_value.copy()
-                    image_height, image_width = image_img.shape[:2]
-                    work_width  = int(self.dspWidth * 0.07)
-                    work_height = int(work_width * image_height / image_width)
+                    try:
+                        image_img = inp_value.copy()
+                        image_height, image_width = image_img.shape[:2]
+                        work_width  = int(self.dspWidth * 0.07)
+                        work_height = int(work_width * image_height / image_width)
 
-                    for i in range(2, ary_max+1):
-                        ary_time[i-1] = ary_time[i]
-                        if (not ary_img[i] is None):
-                            ary_img[i-1]  = ary_img[i].copy()
-                        ary_img[i]    = None
-                            
-                    ary_time[ary_max] = time.time()
-                    ary_img[ary_max]  = cv2.resize(image_img, (work_width, work_height))
+                        for i in range(2, ary_max+1):
+                            ary_time[i-1] = ary_time[i]
+                            if (not ary_img[i] is None):
+                                ary_img[i-1]  = ary_img[i].copy()
+                            ary_img[i]    = None
+                                
+                        ary_time[ary_max] = time.time()
+                        ary_img[ary_max]  = cv2.resize(image_img, (work_width, work_height))
+
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 # テキスト画像
                 if (inp_name.lower() == '[txt]'):
-                    image_img = inp_value.copy()
-                    image_height, image_width = image_img.shape[:2]
-
-                    while (image_height > int(self.dspHeight * 0.6)):
-                        image_img = cv2.resize(image_img, (int(image_width * 0.8), int(image_height * 0.8)))
+                    try:
+                        image_img = inp_value.copy()
                         image_height, image_width = image_img.shape[:2]
 
-                    while (image_width > int(self.dspWidth * 0.7)):
-                        image_img = cv2.resize(image_img, (int(image_width * 0.8), image_height))
-                        image_height, image_width = image_img.shape[:2]
+                        while (image_height > int(self.dspHeight * 0.6)):
+                            image_img = cv2.resize(image_img, (int(image_width * 0.8), int(image_height * 0.8)))
+                            image_height, image_width = image_img.shape[:2]
 
-                    for i in range(2, txt_max+1):
-                        txt_time[i-1] = txt_time[i]
-                        if (not txt_img[i] is None):
-                            txt_img[i-1]  = txt_img[i].copy()
-                        txt_img[i]    = None
-                            
-                    txt_time[txt_max] = time.time()
-                    txt_img[txt_max]  = image_img.copy()
+                        while (image_width > int(self.dspWidth * 0.7)):
+                            image_img = cv2.resize(image_img, (int(image_width * 0.8), image_height))
+                            image_height, image_width = image_img.shape[:2]
+
+                        for i in range(2, txt_max+1):
+                            txt_time[i-1] = txt_time[i]
+                            if (not txt_img[i] is None):
+                                txt_img[i-1]  = txt_img[i].copy()
+                            txt_img[i]    = None
+                                
+                        txt_time[txt_max] = time.time()
+                        txt_img[txt_max]  = image_img.copy()
+
+                    except:
+                        print(inp_name.lower() + ' error!')
 
             # 画像処理
             if ((inp_name.lower() == '[img]') \

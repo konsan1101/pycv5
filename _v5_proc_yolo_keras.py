@@ -238,7 +238,7 @@ class proc_yolo_keras:
         self.boxes, self.scores, self.classes = self.generate()
 
         #font = ImageFont.truetype(font='_vision_font_ipaexg.ttf', size=9, )
-        font = ImageFont.truetype(font='_vision_font_ipaexg.ttf', size=18, )
+        font = ImageFont.truetype(font='_fonts/_vision_font_ipaexg.ttf', size=18, )
 
         # 待機ループ
         self.proc_step = '5'
@@ -362,8 +362,8 @@ class proc_yolo_keras:
                     if (bottom_o > input_height):
                         bottom_o = input_height
 
-                    msg = '{}, ({}, {}), ({}, {})'.format(label, left_o, top_o, right_o, bottom_o)
-                    qFunc.logOutput(self.proc_id + ':' + msg, display=self.logDisp, )
+                    #msg = '{}, ({}, {}), ({}, {})'.format(label, left_o, top_o, right_o, bottom_o)
+                    #qFunc.logOutput(self.proc_id + ':' + msg, display=self.logDisp, )
 
                     # 認識画像出力
                     if (predicted_class == 'person') \
@@ -392,7 +392,8 @@ class proc_yolo_keras:
                     for i in range(thickness):
                         draw.rectangle(
                             #[left + i, top + i, right - i, bottom - i], outline=self.colors[c])
-                            [left_o + i, top_o + i, right_o - i, bottom_o - i], outline=self.colors[c])
+                            [left_o + i, top_o + i, right_o - i, bottom_o - i], outline=self.colors[c],
+                            width=2, )
                     draw.rectangle(
                         [tuple(text_origin), tuple(text_origin + label_size)], fill=self.colors[c])
                     draw.text(text_origin, label, fill=(0, 0, 0), font=font)

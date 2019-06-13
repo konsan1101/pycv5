@@ -159,7 +159,7 @@ class proc_yolo_torch:
 
         # YOLO
         confidence = float(0.5)
-        nms_thesh = float(0.4)
+        nms_thesh = float(0.45)
         CUDA = torch.cuda.is_available()
         num_classes = 80
         #CUDA = torch.cuda.is_available()        
@@ -280,23 +280,30 @@ class proc_yolo_torch:
                     x2 = int(detect[3])
                     y2 = int(detect[4])
                     cl = int(detect[-1])
+                    sc = float(detect[-2])
 
-                    label = "{0}".format(classes[cl])
-                    color = random.choice(colors)
+                    label = '{} {:.2f}'.format(classes[cl], sc)
+                    #color = random.choice(colors)
+                    color = colors[ cl % len(colors) ]
+
                     cv2.rectangle(out_img, (x1, y1), (x2, y2), color, 2)
 
-                    print(int(detect[0]) )
+                    # 認識画像出力
+                    if (classes[cl] == 'person') \
+                    or (classes[cl] == 'car'):
 
-                    # 結果出力
-                    out_name  = '[array]'
-                    out_value = orig_im[y1:y2, x1:x2].copy()
-                    cn_s.put([out_name, out_value])
+                        if (x1 != x2):
+
+                            # 結果出力
+                            out_name  = '[array]'
+                            out_value = orig_im[y1:y2, x1:x2].copy()
+                            cn_s.put([out_name, out_value])
 
                     t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 1 , 1)[0]
                     x2 = x1 + t_size[0] + 3
-                    y2 = y1 + t_size[1] + 4
+                    y1 = y2 - t_size[1] - 4
                     cv2.rectangle(out_img, (x1, y1), (x2, y2), color, -1)
-                    cv2.putText(out_img, label, (x1, y1 + t_size[1] + 4), cv2.FONT_HERSHEY_PLAIN, 1, [225,255,255], 1)
+                    cv2.putText(out_img, label, (x1, y1 + t_size[1] + 2), cv2.FONT_HERSHEY_PLAIN, 1, [225,255,255], 1)
 
                 # 結果出力
                 out_name  = '[img]'
