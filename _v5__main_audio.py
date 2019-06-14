@@ -87,11 +87,6 @@ import _v5_proc_txtreader
 import speech_api_julius
 
 
-runMode     = 'handsfree'
-micDev      = '0'
-micType     = 'bluetooth'
-micGuide    = 'on'
-micLevel    = '777'
 
 qApiInp     = 'free'
 qApiTrn     = qApiInp
@@ -107,7 +102,7 @@ qLangOut    = qLangTrn[:2]
 
 
 # debug
-runMode      = 'handsfree'
+runMode      = 'speech'
 
 
 
@@ -670,6 +665,12 @@ if __name__ == '__main__':
     # パラメータ
 
     if (True):
+
+        #runMode     = 'handsfree'
+        micDev      = '0'
+        micType     = 'bluetooth'
+        micGuide    = 'on'
+        micLevel    = '777'
 
         if (len(sys.argv) >= 2):
             runMode  = str(sys.argv[1]).lower()

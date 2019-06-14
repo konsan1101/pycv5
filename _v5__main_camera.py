@@ -88,11 +88,6 @@ import _v5_proc_overlay
 import _v5_proc_camera
 import _v5_proc_txt2img
 import _v5_proc_cvreader
-import _v5_proc_cvdetect
-import _v5_proc_yolo_keras
-import _v5_proc_yolo_torch
-import _v5_proc_vin2jpg
-import _v5_proc_coreCV
 
 
 
@@ -243,41 +238,13 @@ class main_video:
         txt2img_switch    = 'on'
         cvreader_thread   = None
         cvreader_switch   = 'on'
-        cvdetect_thread1  = None
-        cvdetect_switch1  = 'on'
-        cvdetect_thread2  = None
-        cvdetect_switch2  = 'on'
-        yolo_keras_thread = None
-        yolo_keras_switch = 'on'
-        yolo_torch_max    = 2
-        yolo_torch_seq    = 0
-        yolo_torch_thread = {}
-        yolo_torch_switch = 'on'
-        for i in range(yolo_torch_max):
-            yolo_torch_thread[i] = None
-        vin2jpg_thread    = None
-        vin2jpg_switch    = 'on'
-        coreCV_thread     = None
-        coreCV_switch     = 'on'
 
         if (self.runMode == 'handsfree'):
             camera_switch2    = 'off'
             cvreader_switch   = 'on'
-            cvdetect_switch1  = 'off'
-            cvdetect_switch2  = 'off'
-            yolo_keras_switch = 'off'
-            yolo_torch_switch = 'on'
-            vin2jpg_switch    = 'on'
-            coreCV_switch     = 'on'
         if (self.runMode == 'camera'):
             camera_switch2    = 'off'
             cvreader_switch   = 'on'
-            cvdetect_switch1  = 'off'
-            cvdetect_switch2  = 'off'
-            yolo_keras_switch = 'off'
-            yolo_torch_switch = 'off'
-            vin2jpg_switch    = 'off'
-            coreCV_switch     = 'off'
 
         if (self.cam2Dev == 'none'):
             camera_switch2    = 'off'
@@ -290,9 +257,6 @@ class main_video:
         self.proc_step = '5'
 
         cvreader_last_put  = time.time()
-        cvdetect1_last_put = time.time()
-        cvdetect2_last_put = time.time()
-        yolo_last_put      = time.time()
 
         onece = True
 
@@ -438,102 +402,6 @@ class main_video:
                 del cvreader_thread
                 cvreader_thread = None
 
-            if (cvdetect_thread1 is None) and (cvdetect_switch1 == 'on'):
-                cvdetect_thread1 = _v5_proc_cvdetect.proc_cvdetect(
-                                    name='detect', id='0',
-                                    runMode=self.runMode, 
-                                    casName=self.casName1, procMode='640x480',
-                                    )
-                cvdetect_thread1.start()
-
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'オープンＣＶ画像認識が有効です。', 'wait':0, })
-
-            if (not cvdetect_thread1 is None) and (cvdetect_switch1 != 'on'):
-                cvdetect_thread1.stop()
-                del cvdetect_thread1
-                cvdetect_thread1 = None
-
-            if (cvdetect_thread2 is None) and (cvdetect_switch2 == 'on'):
-                cvdetect_thread2 = _v5_proc_cvdetect.proc_cvdetect(
-                                    name='detect', id='1',
-                                    runMode=self.runMode, 
-                                    casName=self.casName2, procMode='640x480',
-                                    )
-                cvdetect_thread2.start()
-
-            if (not cvdetect_thread2 is None) and (cvdetect_switch2 != 'on'):
-                cvdetect_thread2.stop()
-                del cvdetect_thread2
-                cvdetect_thread2 = None
-
-            if (yolo_keras_thread is None) and (yolo_keras_switch == 'on'):
-                yolo_keras_thread = _v5_proc_yolo_torch.proc_yolo_torch(
-                                    name='yolokeras', id='0',
-                                    runMode=self.runMode, 
-                                    procMode='320x240',
-                                    )
-                yolo_keras_thread.start()
-
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'画像認識（Ｋｅｒａｓ）が有効です。', 'wait':0, })
-
-            if (not yolo_keras_thread is None) and (yolo_keras_switch != 'on'):
-                yolo_keras_thread.stop()
-                del yolo_keras_thread
-                yolo_keras_thread = None
-
-            for i in range(yolo_torch_max):
-                if (yolo_torch_thread[i] is None) and (yolo_torch_switch == 'on'):
-                    yolo_torch_thread[i] = _v5_proc_yolo_torch.proc_yolo_torch(
-                                        name='yolotorch', id=str(i),
-                                        runMode=self.runMode, 
-                                        procMode='320x240',
-                                        )
-                    yolo_torch_thread[i].start()
-
-                    if (i == 0):
-                        if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
-                            speechs.append({ 'text':u'画像認識（Ｐｙｔｏｒｃｈ）が有効です。', 'wait':0, })
-
-            for i in range(yolo_torch_max):
-                if (not yolo_torch_thread[i] is None) and (yolo_torch_switch != 'on'):
-                    yolo_torch_thread[i].stop()
-                    del yolo_torch_thread[i]
-                    yolo_torch_thread[i] = None
-
-            if (vin2jpg_thread is None) and (vin2jpg_switch == 'on'):
-                vin2jpg_thread = _v5_proc_vin2jpg.proc_vin2jpg(
-                                    name='vin2jpg', id='0',
-                                    runMode=self.runMode,
-                                    camDev=self.cam1Dev,
-                                    )
-                vin2jpg_thread.start()
-
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'写真認識が有効です。', 'wait':0, })
-
-            if (not vin2jpg_thread is None) and (vin2jpg_switch != 'on'):
-                vin2jpg_thread.stop()
-                del vin2jpg_thread
-                vin2jpg_thread = None
-
-            if (coreCV_thread is None) and (coreCV_switch == 'on'):
-                coreCV_thread = _v5_proc_coreCV.proc_coreCV(
-                                    name='coreCV', id='0',
-                                    runMode=self.runMode,
-                                    camDev=self.cam1Dev,
-                                    )
-                coreCV_thread.start()
-
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'ＡＩ画像認識が有効です。', 'wait':0, })
-
-            if (not coreCV_thread is None) and (coreCV_switch != 'on'):
-                coreCV_thread.stop()                
-                del coreCV_thread
-                coreCV_thread = None
-
             if (len(speechs) != 0):
                 qFunc.speech(id=self.proc_id, speechs=speechs, )
 
@@ -651,37 +519,6 @@ class main_video:
                                         if (cvreader_thread.proc_s.qsize() == 0):
                                             cvreader_thread.put(['[img]', main_img ])
                                             cvreader_last_put = time.time()
-                                # 画像識別（顔等）
-                                if  (int(time.time() - cvdetect1_last_put) >= 1):
-                                    if (not cvdetect_thread1 is None):
-                                        if (cvdetect_thread1.proc_s.qsize() == 0):
-                                            cvdetect_thread1.put(['[img]', main_img ])
-                                            cvdetect1_last_put = time.time()
-                                # 画像識別（自動車等）
-                                if  (int(time.time() - cvdetect1_last_put) >= 1):
-                                    if (not cvdetect_thread2 is None):
-                                        if (cvdetect_thread2.proc_s.qsize() == 0):
-                                            cvdetect_thread2.put(['[img]', main_img ])
-                                            cvdetect1_last_put = time.time()
-
-                                # 画像識別（YOLO）keras
-                                if  (int(time.time() - yolo_last_put) >= 1):
-                                    if (not yolo_keras_thread is None):
-                                        if (yolo_keras_thread.proc_s.qsize() == 0):
-                                            yolo_keras_thread.put(['[img]', main_img ])
-                                            yolo_last_put = time.time()
-
-                                # 画像識別（YOLO）torch
-                                if (int(time.time() - yolo_last_put) >= 1):
-                                    i = yolo_torch_seq
-                                    if (not yolo_torch_thread[i] is None):
-                                        if (yolo_torch_thread[i].proc_s.qsize() == 0):
-                                            yolo_torch_thread[i].put(['[img]', main_img ])
-                                            yolo_last_put = time.time()
-                                            print('yolo put ' + str(i))
-                                            yolo_torch_seq += 1
-                                            yolo_torch_seq = yolo_torch_seq % yolo_torch_max
-                                            break
 
                             # 画像合成（メイン画像）
                             overlay_thread.put(['[cam1]', main_img ])
@@ -720,75 +557,6 @@ class main_video:
                         if (res_name == '[img]'):
                             reader_img = res_value.copy()
                             overlay_thread.put(['[reader]', reader_img ])
-
-                # 画像合成（顔等　識別結果）
-                if (not cvdetect_thread1 is None):
-                    while (cvdetect_thread1.proc_r.qsize() != 0):
-                        res_data  = cvdetect_thread1.get()
-                        res_name  = res_data[0]
-                        res_value = res_data[1]
-                        if (res_name == '[img]'):
-                            cvdetect_img1 = res_value.copy()
-                            overlay_thread.put(['[cvdetect1]', cvdetect_img1 ])
-                        if (res_name == '[detect]'):
-                            detect_img1 = res_value.copy()
-                            overlay_thread.put(['[detect1]', detect_img1 ])
-                        if (res_name == '[array]'):
-                            ary_img1 = res_value.copy()
-                            overlay_thread.put(['[array]', ary_img1 ])
-
-                # 画像合成（自動車等　識別結果）
-                if (not cvdetect_thread2 is None):
-                    while (cvdetect_thread2.proc_r.qsize() != 0):
-                        res_data  = cvdetect_thread2.get()
-                        res_name  = res_data[0]
-                        res_value = res_data[1]
-                        if (res_name == '[img]'):
-                            cvdetect_img2 = res_value.copy()
-                            overlay_thread.put(['[cvdetect2]', cvdetect_img2 ])
-                        if (res_name == '[detect]'):
-                            detect_img2 = res_value.copy()
-                            overlay_thread.put(['[detect2]', detect_img2 ])
-
-                # 画像合成（YOLO識別結果）keras
-                if (not yolo_keras_thread is None):
-                    while (yolo_keras_thread.proc_r.qsize() != 0):
-                        res_data  = yolo_keras_thread.get()
-                        res_name  = res_data[0]
-                        res_value = res_data[1]
-                        if (res_name == '[img]'):
-                            yolo_img = res_value.copy()
-                            overlay_thread.put(['[comp]', yolo_img ])
-                        if (res_name == '[array]'):
-                            ary_imgy = res_value.copy()
-                            overlay_thread.put(['[array]', ary_imgy ])
-                            if (cvdetect_thread1 is None):
-                                overlay_thread.put(['[detect1]', ary_imgy ])
-
-                # 画像合成（YOLO識別結果）torch
-                for i in range(yolo_torch_max):
-                    if (not yolo_torch_thread[i] is None):
-                        while (yolo_torch_thread[i].proc_r.qsize() != 0):
-                            res_data  = yolo_torch_thread[i].get()
-                            res_name  = res_data[0]
-                            res_value = res_data[1]
-                            if (res_name == '[img]'):
-                                print('yolo get '+str(i))
-                                yolo_img = res_value.copy()
-                                overlay_thread.put(['[comp]', yolo_img ])
-                            if (res_name == '[array]'):
-                                ary_imgy = res_value.copy()
-                                overlay_thread.put(['[array]', ary_imgy ])
-                                if (cvdetect_thread1 is None):
-                                    overlay_thread.put(['[detect1]', ary_imgy ])
-
-                # 画像処理（前処理）
-                if (not vin2jpg_thread is None):
-                    res_data  = vin2jpg_thread.get()
-
-                # ＡＩ画像認識（クラウド処理）
-                if (not coreCV_thread is None):
-                    res_data  = coreCV_thread.get()
 
                 # 文字→画像変換
                 if (not txt2img_thread is None):
@@ -891,37 +659,6 @@ class main_video:
                 cvreader_thread.stop()
                 del cvreader_thread
                 cvreader_thread = None
-
-            if (not cvdetect_thread1 is None):
-                cvdetect_thread1.stop()
-                del cvdetect_thread1
-                cvdetect_thread1 = None
-
-            if (not cvdetect_thread2 is None):
-                cvdetect_thread2.stop()
-                del cvdetect_thread2
-                cvdetect_thread2 = None
-
-            if (not yolo_keras_thread is None):
-                yolo_keras_thread.stop()
-                del yolo_keras_thread
-                yolo_keras_thread = None
-
-            for i in range(yolo_torch_max):
-                if (not yolo_torch_thread[i] is None):
-                    yolo_torch_thread[i].stop()
-                    del yolo_torch_thread[i]
-                    yolo_torch_thread[i] = None
-
-            if (not vin2jpg_thread is None):                    
-                vin2jpg_thread.stop()
-                del vin2jpg_thread
-                vin2jpg_thread = None
-
-            if (not coreCV_thread is None):
-                coreCV_thread.stop()                
-                del coreCV_thread
-                coreCV_thread = None
 
             # キュー削除
             while (cn_r.qsize() > 0):
