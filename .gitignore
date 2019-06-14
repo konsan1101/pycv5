@@ -115,4 +115,7 @@ sox/
 temp/
 yolo3*/
 
+*.exe
+*.bat
+
 
