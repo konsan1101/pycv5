@@ -15,6 +15,8 @@ import glob
 import numpy as np
 import cv2
 
+#test insert1
+
 import torch 
 import torch.nn as nn
 from torch.autograd import Variable
