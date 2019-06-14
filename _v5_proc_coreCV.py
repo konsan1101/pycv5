@@ -56,8 +56,8 @@ qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
 
 # 画像処理 api
-import       _v5_api_vision
-api_vision = _v5_api_vision.api_vision_class()
+#import       _v5_api_vision
+#api_vision = _v5_api_vision.api_vision_class()
 
 
 
@@ -338,12 +338,25 @@ class proc_coreCV:
                 if (seq4[-1:] == '0'):
                     sync = True
 
-            res = api_vision.execute(sync,
+            #res = api_vision.execute(sync,
+            #        self.runMode, self.camDev, 
+            #        self.qApiCV, self.qApiOCR, self.qApiTrn, 
+            #        self.qLangCV, self.qLangOCR, self.qLangTrn,
+            #        'CV0' + str(seq4), proc_name, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn, 
+            #        )
+
+            api = subprocess.Popen(['python', '_v5_api_vision.py',
                     self.runMode, self.camDev, 
                     self.qApiCV, self.qApiOCR, self.qApiTrn, 
                     self.qLangCV, self.qLangOCR, self.qLangTrn,
                     'CV0' + str(seq4), proc_name, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn, 
-                    )
+                    ],)
+            if (sync == True):
+                api.wait()
+                api.terminate()
+                api = None
+
+
 
             if (not self.camDev.isdigit()):
                 if (sync == True):

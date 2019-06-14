@@ -1545,7 +1545,7 @@ if (__name__ == '__main__'):
     procId   = '00'
     fileId   = 'temp_sample'
 
-    inpInput = '_sound_hallo.wav'
+    inpInput = '_sounds/_sound_hallo.wav'
     inpOutput= 'temp/temp_sample_ja.txt'
     trnInput = 'temp/temp_sample_ja.txt'
     trnOutput= 'temp/temp_sample_en.txt'

@@ -1,0 +1,6 @@
+[landmark] ja (google)
+ 雷門,
+
+[label] ja (google)
+ 礼拝所,神社,寺院,中国の建築,神社,建物,日本の建築,建築,寺院,群集,
+

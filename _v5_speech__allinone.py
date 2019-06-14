@@ -95,8 +95,8 @@ qLangTxt   = qLangInp
 qLangOut   = qLangTrn[:2]
 
 # 音声処理 api
-import       _v5_api_speech
-api_speech = _v5_api_speech.api_speech_class()
+#import       _v5_api_speech
+#api_speech = _v5_api_speech.api_speech_class()
 
 
 
@@ -143,13 +143,25 @@ def control_speech(seq, fileId, runMode, micDev, useApiTrn, useApiOut, inpLang, 
         outPlay  = 'off'
 
     if (True):
-        res = api_speech.execute(sync,
+        #res = api_speech.execute(sync,
+        #        xrunMode, micDev,
+        #        xApiInp, xApiTrn, xApiOut, xLangInp, xLangTrn, xLangTxt, xLangOut,
+        #        str(seq), fileId,
+        #        inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput,
+        #        inpPlay, txtPlay, outPlay, 
+        #        )
+
+        api = subprocess.Popen(['python', '_v5_api_speech.py',
                 xrunMode, micDev,
                 xApiInp, xApiTrn, xApiOut, xLangInp, xLangTrn, xLangTxt, xLangOut,
                 str(seq), fileId,
                 inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput,
                 inpPlay, txtPlay, outPlay, 
-                )
+                ],)
+        if (sync == True):
+            api.wait()
+            api.terminate()
+            api = None
 
 
 
@@ -1528,13 +1540,25 @@ def stt_sub(seq, fileId, runMode, micDev, file, ):
             if (seq[-1:] == '0'):
                 sync = True
 
-        res = api_speech.execute(sync,
+        #res = api_speech.execute(sync,
+        #        runMode, micDev, 
+        #        qApiInp, qApiTrn, qApiOut, qLangInp, qLangTrn, qLangTxt, qLangOut,
+        #        'STT'+str(seq), fileId, 
+        #        inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput, 
+        #        inpPlay, txtPlay, outPlay, 
+        #        )
+
+        api = subprocess.Popen(['python', '_v5_api_speech.py',
                 runMode, micDev, 
                 qApiInp, qApiTrn, qApiOut, qLangInp, qLangTrn, qLangTxt, qLangOut,
                 'STT'+str(seq), fileId, 
                 inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput, 
                 inpPlay, txtPlay, outPlay, 
-                )
+                ],)
+        if (sync == True):
+            api.wait()
+            api.terminate()
+            api = None
 
         if (str(micDev) == 'file'):
             if (sync == True):
@@ -1774,13 +1798,25 @@ def tts_sub(seq, fileId, runMode, micDev, file, txtText, ):
             if (seq[-1:] == '0'):
                 sync = True
 
-        res = api_speech.execute(False,
+        #res = api_speech.execute(sync,
+        #        runMode, micDev, 
+        #        qApiInp, qApiTrn, qApiOut, qLangTxt, qLangTrn, qLangTxt, qLangOut,
+        #        'TTS'+str(seq), fileId,
+        #        inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput,
+        #        inpPlay, txtPlay, outPlay, 
+        #        )
+
+        api = subprocess.Popen(['python', '_v5_api_speech.py',
                 runMode, micDev, 
                 qApiInp, qApiTrn, qApiOut, qLangTxt, qLangTrn, qLangTxt, qLangOut,
                 'TTS'+str(seq), fileId,
                 inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput,
                 inpPlay, txtPlay, outPlay, 
-                )
+                ],)
+        if (sync == True):
+            api.wait()
+            api.terminate()
+            api = None
 
         if (str(micDev) == 'file'):
             if (sync == True):

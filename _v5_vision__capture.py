@@ -84,8 +84,8 @@ qLangOCR   = qLangCV
 qLangTrn   = 'en'
 
 # 画像処理 api
-import       _v5_api_vision
-api_vision = _v5_api_vision.api_vision_class()
+#import       _v5_api_vision
+#api_vision = _v5_api_vision.api_vision_class()
 
 
 
@@ -1624,11 +1624,21 @@ def main_cv(seq, fileId, runMode, cam1Dev, inpFile, sync=False):
         outTrn = qPath_v_cv    + fileId + '.ocr.' + qLangTrn + '.txt'
 
     if (True):
-        res = api_vision.execute(sync,
+        #res = api_vision.execute(sync,
+        #        runMode, cam1Dev, 
+        #        qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn,
+        #        str(seq), fileId, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn, 
+        #        )
+
+        api = subprocess.Popen(['python', '_v5_api_vision.py',
                 runMode, cam1Dev, 
                 qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn,
                 str(seq), fileId, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn, 
-                )
+                ],)
+        if (sync == True):
+            api.wait()
+            api.terminate()
+            api = None
 
 
 
