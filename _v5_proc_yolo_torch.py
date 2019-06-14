@@ -19,6 +19,8 @@ import torch
 import torch.nn as nn
 from torch.autograd import Variable
 
+#test insert2
+
 import pickle as pkl
 import random 
 
