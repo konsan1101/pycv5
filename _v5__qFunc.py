@@ -549,6 +549,7 @@ class qFunc_class:
 class qBusy_status_txts_class(object):
     def __init__(self):
         self.dev_cpu = 'none'
+        self.dev_com = 'none'
         self.dev_mic = 'none'
         self.dev_spk = 'none'
         self.dev_cam = 'none'
@@ -582,6 +583,10 @@ class qBusy_status_txts_class(object):
         check = self.busyCheck(qBusy_dev_cpu, 0)
         if (check != self.dev_cpu):
             self.dev_cpu = check
+            change = True
+        check = self.busyCheck(qBusy_dev_com, 0)
+        if (check != self.dev_com):
+            self.dev_com = check
             change = True
         check = self.busyCheck(qBusy_dev_mic, 0)
         if (check != self.dev_mic):
@@ -656,6 +661,10 @@ class qBusy_status_txts_class(object):
             txts.append(' CPU    : slow!__')
         else:
             txts.append(' CPU    : _______')
+        if (self.dev_com == 'busy'):
+            txts.append(' Comm   : disable')
+        else:
+            txts.append(' Comm   : _______')
         if (self.dev_mic == 'busy'):
             txts.append(' Mic    : disable')
         else:
