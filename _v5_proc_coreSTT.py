@@ -449,7 +449,7 @@ if __name__ == '__main__':
     coreSTT_thread = proc_coreSTT('coreSTT', '0', )
     coreSTT_thread.start()
 
-    shutil.copy2('_sound_hallo.wav', qPath_a_wav + '_sound_hallo.wav')
+    shutil.copy2('_sounds/_sound_hallo.wav', qPath_a_wav + '_sound_hallo.wav')
 
     chktime = time.time()
     while (int(time.time() - chktime) < 15):

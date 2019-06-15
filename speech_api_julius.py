@@ -334,7 +334,7 @@ if __name__ == '__main__':
     time.sleep(3.00)
 
     for _ in range(3):
-        julius_thread.put(['filename', '_sound_hallo.wav'])
+        julius_thread.put(['filename', '_sounds/_sound_hallo.wav'])
         res_data  = julius_thread.checkGet()
 
     time.sleep(1.00)

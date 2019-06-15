@@ -115,7 +115,7 @@ if (qOS == 'darwin'):
 
 
 
-def qVoiceInput(useApi='free', inpLang='auto', inpFile='_sound_hallo.wav', apiRecovery=True, ):
+def qVoiceInput(useApi='free', inpLang='auto', inpFile='_sounds/_sound_hallo.wav', apiRecovery=True, ):
     resText = ''
     resApi  = ''
 

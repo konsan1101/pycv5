@@ -77,12 +77,12 @@ if __name__ == '__main__':
             f1 = f1.replace('\\', '/')
             f2 = f1
             f2 = f2.replace('gijiroku/temp/wav_'+fn+'/', 'gijiroku/wav/')
-            shutil.copy(f1, f2)
+            shutil.copy2(f1, f2)
 
         f1 = 'gijiroku/temp/temp__gijiroku16_' + fn + '.wav'
         f2 = 'gijiroku/temp/temp__gijiroku16.wav'
         print('COPY', f1, f2)
-        shutil.copy(f1, f2)
+        shutil.copy2(f1, f2)
 
         #sox "gijiroku/temp/temp__gijiroku16.wav"      "gijiroku/temp/temp__gijiroku16.mp3"
 
@@ -99,7 +99,7 @@ if __name__ == '__main__':
         f1 = 'gijiroku/temp/temp__gijilist16_' + fn + '.txt'
         f2 = 'gijiroku/temp/temp__gijilist16.txt'
         print('COPY', f1, f2)
-        shutil.copy(f1, f2)
+        shutil.copy2(f1, f2)
 
 
 
