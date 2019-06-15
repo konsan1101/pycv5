@@ -42,6 +42,7 @@ qPath_v_cv     = 'temp/v5_5cv_txt/'
 qPath_v_photo  = 'temp/v5_7photo/'
 
 qBusy_dev_cpu  = qPath_work + 'busy_dev_cpu.txt'
+qBusy_dev_com  = qPath_work + 'busy_dev_commnication.txt'
 qBusy_dev_mic  = qPath_work + 'busy_dev_microphone.txt'
 qBusy_dev_spk  = qPath_work + 'busy_dev_speaker.txt'
 qBusy_dev_cam  = qPath_work + 'busy_dev_camera.txt'
@@ -119,6 +120,7 @@ class qFunc_class:
         if (field == 'qPath_v_photo' ): return qPath_v_photo
 
         if (field == 'qBusy_dev_cpu' ): return qBusy_dev_cpu
+        if (field == 'qBusy_dev_com' ): return qBusy_dev_com
         if (field == 'qBusy_dev_mic' ): return qBusy_dev_mic
         if (field == 'qBusy_dev_spk' ): return qBusy_dev_spk
         if (field == 'qBusy_dev_cam' ): return qBusy_dev_cam
@@ -457,6 +459,7 @@ class qFunc_class:
 
     def busyReset_a(self, Flag=False):
         self.busySet(qBusy_dev_cpu, Flag)
+        self.busySet(qBusy_dev_com, Flag)
         self.busySet(qBusy_dev_mic, Flag)
         self.busySet(qBusy_dev_spk, Flag)
         self.busySet(qBusy_a_ctrl,  Flag)
@@ -470,6 +473,7 @@ class qFunc_class:
 
     def busyReset_v(self, Flag=False):
         self.busySet(qBusy_dev_cpu, Flag)
+        self.busySet(qBusy_dev_com, Flag)
         self.busySet(qBusy_dev_cam, Flag)
         self.busySet(qBusy_dev_dsp, Flag)
         self.busySet(qBusy_v_ctrl,  Flag)
@@ -766,6 +770,7 @@ if (__name__ == '__main__'):
 
     qFunc.logOutput('')
     qFunc.logOutput( qBusy_dev_cpu + ':' + qFunc.busyCheck(qBusy_dev_cpu, 1), )
+    qFunc.logOutput( qBusy_dev_com + ':' + qFunc.busyCheck(qBusy_dev_com, 1), )
     qFunc.logOutput( qBusy_dev_mic + ':' + qFunc.busyCheck(qBusy_dev_mic, 1), )
     qFunc.logOutput( qBusy_dev_spk + ':' + qFunc.busyCheck(qBusy_dev_spk, 1), )
     qFunc.logOutput( qBusy_dev_cam + ':' + qFunc.busyCheck(qBusy_dev_cam, 1), )

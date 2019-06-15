@@ -66,6 +66,7 @@ qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
+qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
 qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
 qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
 qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
@@ -920,6 +921,7 @@ if __name__ == '__main__':
     qFunc.busyReset_v(False)
 
     qFunc.busySet(qBusy_dev_cpu, False)
+    qFunc.busySet(qBusy_dev_com, False)
     qFunc.busySet(qBusy_dev_cam, False)
     qFunc.busySet(qBusy_dev_dsp, False)
 
