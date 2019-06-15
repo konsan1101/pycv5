@@ -586,25 +586,25 @@ def proc_compute(cn_r, cn_s, ):
     qFunc.logOutput('v_compute_:cam1Dev   =' + str(cam1Dev ))
     if (casName1 != 'none'):
         cas_nm1 = casName1[:-4]
-        cas_nm1 = cas_nm1.replace('_vision_opencv_', '')
+        cas_nm1 = cas_nm1.replace('_xml/_vision_opencv_', '')
         qFunc.logOutput('v_compute_:casName1  =' + str(casName1  ))
         cascade1 = cv2.CascadeClassifier(casName1)
         haar_scale1    = 1.1
         min_neighbors1 = 10
         min_size1      = ( 15, 15)
-        if (casName1 == '_vision_opencv_cars.xml'):
+        if (cas_nm1 == 'cars'):
             haar_scale1    = 1.1
             min_neighbors1 = 3
             min_size1      = ( 15, 15)
     if (casName2 != 'none'):
         cas_nm2 = casName2[:-4]
-        cas_nm2 = cas_nm2.replace('_vision_opencv_', '')
+        cas_nm2 = cas_nm2.replace('_xml/_vision_opencv_', '')
         qFunc.logOutput('v_compute_:casName2  =' + str(casName2  ))
         cascade2 = cv2.CascadeClassifier(casName2)
         haar_scale2    = 1.1
         min_neighbors2 = 15
         min_size2      = ( 20, 20)
-        if (casName2 == '_vision_opencv_cars.xml'):
+        if (cas_nm2 == 'cars'):
             haar_scale2    = 1.1
             min_neighbors2 = 5
             min_size2      = ( 20, 20)

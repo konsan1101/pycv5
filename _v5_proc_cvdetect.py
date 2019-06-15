@@ -76,12 +76,12 @@ class proc_cvdetect:
             self.casName = '_xml/_vision_opencv_fullbody.xml'
         if (self.casName != 'none'):
             self.cas_nm  = self.casName[:-4]
-            self.cas_nm  = self.cas_nm.replace('_vision_opencv_', '')
+            self.cas_nm  = self.cas_nm.replace('_xml/_vision_opencv_', '')
             self.cascade = cv2.CascadeClassifier(self.casName)
             self.haar_scale    = 1.1
             self.min_neighbors = 10
             self.min_size      = ( 15, 15)
-            if (self.casName == '_vision_opencv_cars.xml'):
+            if (self.cas_nm == 'cars'):
                 self.haar_scale    = 1.1
                 self.min_neighbors = 3
                 self.min_size      = ( 15, 15)

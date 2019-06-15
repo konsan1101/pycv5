@@ -238,7 +238,6 @@ class proc_yolo_keras:
         self.sess = K.get_session()
         self.boxes, self.scores, self.classes = self.generate()
 
-        #font = ImageFont.truetype(font='_vision_font_ipaexg.ttf', size=9, )
         font = ImageFont.truetype(font='_fonts/_vision_font_ipaexg.ttf', size=18, )
 
         # 待機ループ
