@@ -265,7 +265,8 @@ class proc_julius:
                 if (self.runMode=='debug'):
                     qFunc.logOutput(self.proc_id + ':' + str(out_name) + ', ' + str(out_value), display=self.logDisp, )
                 else:
-                    qFunc.logOutput(' ' + self.proc_id + ':Recognize /' + str(out_value) + '/ ja (julius) pass!', display=True, )
+                    #qFunc.logOutput(' ' + self.proc_id + ':Recognize /' + str(out_value) + '/ ja (julius) pass!', display=True, )
+                    pass
 
                 # txt ファイル出力
                 fileTxt = inp_value[:-4] + '.txt'

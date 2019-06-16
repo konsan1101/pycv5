@@ -666,342 +666,367 @@ def speech_batch(runMode, micDev,
     outRun  = False
 
     if (inpInput != '' and os.path.exists(inpInput)):
-        now = datetime.datetime.now()
-        stamp = now.strftime('%Y%m%d')
+        nowTime = datetime.datetime.now()
+        stamp   = nowTime.strftime('%Y%m%d')
         recfile = qPath_rec + fileId + '.stt.mp3'
 
         inpRun   = True
         inpText  = ''
-        soxMsg1  = ''
-        soxMsg2  = ''
-        soxMsg3  = ''
 
-        wrkApi   = 'free'
-        if (qApiInp == 'google'):
-            wrkApi = 'google8k'
 
-        wrkfile    = ''
-        wrkfile_0  = qPath_work + fileId + '_input_0.wav'
-        wrkfile_0s = qPath_work + fileId + '_input_0s.wav'
-        wrkfile_1  = qPath_work + fileId + '_input_1.wav'
-        wrkfile_1s = qPath_work + fileId + '_input_1s.wav'
-        wrkfile_2  = qPath_work + fileId + '_input_2.wav'
-        wrkfile_2s = qPath_work + fileId + '_input_2s.wav'
-        wrkfile_x1 = qPath_work + fileId + '_input_x1.wav'
-        wrkfile_x2 = qPath_work + fileId + '_input_x2.wav'
-        wrkfile_y1 = qPath_work + fileId + '_input_y1.wav'
-        wrkfile_y2 = qPath_work + fileId + '_input_y2.wav'
-        wrkfile_y3 = qPath_work + fileId + '_input_y3.wav'
-        wrkfile_y4 = qPath_work + fileId + '_input_y4.wav'
-        wrkfile_y5 = qPath_work + fileId + '_input_y5.wav'
-        wrkfile_y6 = qPath_work + fileId + '_input_y6.wav'
 
-        sox_0  = subprocess.Popen(['sox', '-q', inpInput, wrkfile_0, ], \
-                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-        sox_0s = subprocess.Popen(['sox', '-q', inpInput, wrkfile_0s, \
-                 'silence', '1', '0.5', '0.2%', '1', '0.5', '0%', ':restart', ], \
-                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-        sox_1  = subprocess.Popen(['sox', '-q', inpInput, wrkfile_1,  '--norm', ], \
-                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-        sox_1s = subprocess.Popen(['sox', '-q', inpInput, wrkfile_1s, '--norm', \
-                 'silence', '1', '0.5', '0.2%', '1', '0.5', '0%', ':restart', ], \
-                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-        sox_2  = subprocess.Popen(['sox', '-q', inpInput, wrkfile_2,  'gain', '+12', ], \
-                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-        sox_2s = subprocess.Popen(['sox', '-q', inpInput, wrkfile_2s, 'gain', '+12', \
-                 'silence', '1', '0.5', '0.2%', '1', '0.5', '0.1%', ':restart', ], \
-                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+        if (qFunc.busyCheck(qBusy_dev_com,  0) == 'busy') or (qApiInp == 'julius'):
 
-        sox_0.wait()
-        sox_0.terminate()
-        sox_0 = None
-        if (os.path.exists(wrkfile_0)):
-            inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_0, False, )
-            if (runMode == 'debug'):
-                qFunc.logOutput('Debug [' + inpText + '](' + wrkApi + ') step1 normal wav ', True)
+            api = 'julius'
+            waitfile = qPath_a_jul + fileId + '.txt'
+            print(waitfile)
 
-            if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                inpText = inpTextX
-                soxMsg1 = ''
+            chktime = time.time()
+            while (int(time.time() - chktime) < 5):
+                if (os.path.exists(waitfile)):
+
+                    res_txts, res_text = qFunc.txtsRead(waitfile, encoding='utf-8', exclusive=False, )
+                    if (res_txts != False):
+                        inpText = res_text
+                    break
+                time.sleep(0.05)
+
+
+
+        if (qFunc.busyCheck(qBusy_dev_com,  0) != 'busy') and (qApiInp != 'julius'):
+
+            soxMsg1  = ''
+            soxMsg2  = ''
+            soxMsg3  = ''
+
+            wrkApi   = 'free'
+            if (qApiInp == 'google'):
+                wrkApi = 'google8k'
+
+            wrkfile    = ''
+            wrkfile_0  = qPath_work + fileId + '_input_0.wav'
+            wrkfile_0s = qPath_work + fileId + '_input_0s.wav'
+            wrkfile_1  = qPath_work + fileId + '_input_1.wav'
+            wrkfile_1s = qPath_work + fileId + '_input_1s.wav'
+            wrkfile_2  = qPath_work + fileId + '_input_2.wav'
+            wrkfile_2s = qPath_work + fileId + '_input_2s.wav'
+            wrkfile_x1 = qPath_work + fileId + '_input_x1.wav'
+            wrkfile_x2 = qPath_work + fileId + '_input_x2.wav'
+            wrkfile_y1 = qPath_work + fileId + '_input_y1.wav'
+            wrkfile_y2 = qPath_work + fileId + '_input_y2.wav'
+            wrkfile_y3 = qPath_work + fileId + '_input_y3.wav'
+            wrkfile_y4 = qPath_work + fileId + '_input_y4.wav'
+            wrkfile_y5 = qPath_work + fileId + '_input_y5.wav'
+            wrkfile_y6 = qPath_work + fileId + '_input_y6.wav'
+
+            sox_0  = subprocess.Popen(['sox', '-q', inpInput, wrkfile_0, ], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            sox_0s = subprocess.Popen(['sox', '-q', inpInput, wrkfile_0s, \
+                    'silence', '1', '0.5', '0.2%', '1', '0.5', '0%', ':restart', ], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            sox_1  = subprocess.Popen(['sox', '-q', inpInput, wrkfile_1,  '--norm', ], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            sox_1s = subprocess.Popen(['sox', '-q', inpInput, wrkfile_1s, '--norm', \
+                    'silence', '1', '0.5', '0.2%', '1', '0.5', '0%', ':restart', ], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            sox_2  = subprocess.Popen(['sox', '-q', inpInput, wrkfile_2,  'gain', '+12', ], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            sox_2s = subprocess.Popen(['sox', '-q', inpInput, wrkfile_2s, 'gain', '+12', \
+                    'silence', '1', '0.5', '0.2%', '1', '0.5', '0.1%', ':restart', ], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+            sox_0.wait()
+            sox_0.terminate()
+            sox_0 = None
+            if (os.path.exists(wrkfile_0)):
+                inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_0, False, )
+                if (runMode == 'debug'):
+                    qFunc.logOutput('Debug [' + inpText + '](' + wrkApi + ') step1 normal wav ', True)
+
+                if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                    inpText = inpTextX
+                    soxMsg1 = ''
+                    wrkfile  = wrkfile_0
+
+            sox_0s.wait()
+            sox_0s.terminate()
+            sox_0s = None
+            if (os.path.exists(wrkfile_0s)):
+                #if (not micDev.isdigit()) or (runMode == 'debug') \
+                #or (inpText == '') or (inpText == '!'):
+                if (not micDev.isdigit()) or (runMode == 'debug'):
+                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_0s, False, )
+                    if (runMode == 'debug'):
+                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 sox silence 0.5s 0%', True)
+
+                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                        inpText = inpTextX
+                        soxMsg1 = '< silence 0.5s 0% '
+                        wrkfile  = wrkfile_0s
+
+            sox_1.wait()
+            sox_1.terminate()
+            sox_1 = None
+            if (os.path.exists(wrkfile_1)):
+                #if (not micDev.isdigit()) or (runMode == 'debug') \
+                #or (inpText == '') or (inpText == '!'):
+                if (not micDev.isdigit()) or (runMode == 'debug'):
+                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_1, False, )
+                    if (runMode == 'debug'):
+                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 --norm', True)
+
+                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                        inpText = inpTextX
+                        soxMsg1 = '< --norm '
+                        wrkfile  = wrkfile_1
+
+            sox_1s.wait()
+            sox_1s.terminate()
+            sox_1s = None
+            if (os.path.exists(wrkfile_1s)):
+                if (not micDev.isdigit()) or (runMode == 'debug') \
+                or (inpText == '') or (inpText == '!'):
+                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_1s, False, )
+                    if (runMode == 'debug'):
+                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 --norm silence 0.5s 0%', True)
+
+                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                        inpText = inpTextX
+                        soxMsg1 = '< --norm silence 0.5s 0% '
+                        wrkfile  = wrkfile_1s
+
+            sox_2.wait()
+            sox_2.terminate()
+            sox_2 = None
+            if (os.path.exists(wrkfile_2)):
+                #if (not micDev.isdigit()) or (runMode == 'debug') \
+                #or (inpText == '') or (inpText == '!'):
+                if (not micDev.isdigit()) or (runMode == 'debug'):
+                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_2, False, )
+                    if (runMode == 'debug'):
+                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 gain +12', True)
+
+                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                        inpText = inpTextX
+                        soxMsg1 = '< gain +12 '
+                        wrkfile  = wrkfile_2
+
+            sox_2s.wait()
+            sox_2s.terminate()
+            sox_2s = None
+            if (os.path.exists(wrkfile_2s)):
+                #if (not micDev.isdigit()) or (runMode == 'debug') \
+                #or (inpText == '') or (inpText == '!'):
+                if (not micDev.isdigit()) or (runMode == 'debug'):
+                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_2s, False, )
+                    if (runMode == 'debug'):
+                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 gain +12 silence 0.5s 0.1%', True)
+
+                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                        inpText = inpTextX
+                        soxMsg1 = '< gain +12 silence 0.5s 0.1% '
+                        wrkfile  = wrkfile_2s
+
+            if (wrkfile == ''):
                 wrkfile  = wrkfile_0
 
-        sox_0s.wait()
-        sox_0s.terminate()
-        sox_0s = None
-        if (os.path.exists(wrkfile_0s)):
-            #if (not micDev.isdigit()) or (runMode == 'debug') \
-            #or (inpText == '') or (inpText == '!'):
-            if (not micDev.isdigit()) or (runMode == 'debug'):
-                inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_0s, False, )
-                if (runMode == 'debug'):
-                    qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 sox silence 0.5s 0%', True)
-
-                if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                    inpText = inpTextX
-                    soxMsg1 = '< silence 0.5s 0% '
-                    wrkfile  = wrkfile_0s
-
-        sox_1.wait()
-        sox_1.terminate()
-        sox_1 = None
-        if (os.path.exists(wrkfile_1)):
-            #if (not micDev.isdigit()) or (runMode == 'debug') \
-            #or (inpText == '') or (inpText == '!'):
-            if (not micDev.isdigit()) or (runMode == 'debug'):
-                inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_1, False, )
-                if (runMode == 'debug'):
-                    qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 --norm', True)
-
-                if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                    inpText = inpTextX
-                    soxMsg1 = '< --norm '
-                    wrkfile  = wrkfile_1
-
-        sox_1s.wait()
-        sox_1s.terminate()
-        sox_1s = None
-        if (os.path.exists(wrkfile_1s)):
-            if (not micDev.isdigit()) or (runMode == 'debug') \
-            or (inpText == '') or (inpText == '!'):
-                inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_1s, False, )
-                if (runMode == 'debug'):
-                    qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 --norm silence 0.5s 0%', True)
-
-                if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                    inpText = inpTextX
-                    soxMsg1 = '< --norm silence 0.5s 0% '
-                    wrkfile  = wrkfile_1s
-
-        sox_2.wait()
-        sox_2.terminate()
-        sox_2 = None
-        if (os.path.exists(wrkfile_2)):
-            #if (not micDev.isdigit()) or (runMode == 'debug') \
-            #or (inpText == '') or (inpText == '!'):
-            if (not micDev.isdigit()) or (runMode == 'debug'):
-                inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_2, False, )
-                if (runMode == 'debug'):
-                    qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 gain +12', True)
-
-                if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                    inpText = inpTextX
-                    soxMsg1 = '< gain +12 '
-                    wrkfile  = wrkfile_2
-
-        sox_2s.wait()
-        sox_2s.terminate()
-        sox_2s = None
-        if (os.path.exists(wrkfile_2s)):
-            #if (not micDev.isdigit()) or (runMode == 'debug') \
-            #or (inpText == '') or (inpText == '!'):
-            if (not micDev.isdigit()) or (runMode == 'debug'):
-                inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_2s, False, )
-                if (runMode == 'debug'):
-                    qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 gain +12 silence 0.5s 0.1%', True)
-
-                if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                    inpText = inpTextX
-                    soxMsg1 = '< gain +12 silence 0.5s 0.1% '
-                    wrkfile  = wrkfile_2s
-
-        if (wrkfile == ''):
-            wrkfile  = wrkfile_0
-
-        if (os.path.exists(wrkfile)):
-            if (not micDev.isdigit()) or (runMode == 'debug'):
-
-                sox_x1 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_x1, \
-                         'silence', '1', '0.3', '0.5%', '1', '0.3', '0.5%', ':restart', ], \
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                sox_x2 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_x2, \
-                         'silence', '1', '0.3', '1%', '1', '0.3', '1%', ':restart', ], \
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-
-                sox_x1.wait()
-                sox_x1.terminate()
-                sox_x1 = None
-                if (os.path.exists(wrkfile_x1)):
-                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_x1, False, )
-                    if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step2 silence 0.3s 0.5%', True)
-
-                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                        inpText = inpTextX
-                        soxMsg2 = '< silence 0.3s 0.5% '
-                        wrkfile  = wrkfile_x1
-
-                sox_x2.wait()
-                sox_x2.terminate()
-                sox_x2 = None
-                if (os.path.exists(wrkfile_x2)):
-                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_x2, False, )
-                    if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step2 silence 0.3s 1.0%', True)
-
-                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                        inpText = inpTextX
-                        soxMsg2 = '< silence 0.3s 1.0% '
-                        wrkfile  = wrkfile_x2
-
-        if (os.path.exists(wrkfile)):
-            if (not micDev.isdigit()) or (runMode == 'debug'):
-
-                sox_y1 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y1, \
-                         'highpass', '50', ], \
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                sox_y2 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y2, \
-                         'equalizer', '500', '1.0q', '3', ], \
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                sox_y3 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y3, \
-                         'highpass', '50', 'equalizer', '500', '1.0q', '3', ], \
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                sox_y4 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y4, \
-                         'treble', '+2', ], \
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                sox_y5 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y5, \
-                         'highpass', '50', 'treble', '+2', ], \
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                sox_y6 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y6, \
-                         'highpass', '50', 'equalizer', '500', '1.0q', '3', 'treble', '+2', ], \
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-
-                sox_y1.wait()
-                sox_y1.terminate()
-                sox_y1 = None
-                if (os.path.exists(wrkfile_y1)):
-                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y1, False, )
-                    if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass 50', True)
-
-                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                        inpText = inpTextX
-                        soxMsg3 = '< highpass 50 '
-                        wrkfile  = wrkfile_y1
-
-                sox_y2.wait()
-                sox_y2.terminate()
-                sox_y2 = None
-                if (os.path.exists(wrkfile_y2)):
-                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y2, False, )
-                    if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 equalizer 500 1.0q 3', True)
-
-                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                        inpText = inpTextX
-                        soxMsg3 = '< equalizer 500 1.0q 3 '
-                        wrkfile  = wrkfile_y2
-
-                sox_y3.wait()
-                sox_y3.terminate()
-                sox_y3 = None
-                if (os.path.exists(wrkfile_y3)):
-                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y3, False, )
-                    if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass + equalizer', True)
-
-                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                        inpText = inpTextX
-                        soxMsg3 = '< highpass + equalizer '
-                        wrkfile  = wrkfile_y3
-
-                sox_y4.wait()
-                sox_y4.terminate()
-                sox_y4 = None
-                if (os.path.exists(wrkfile_y4)):
-                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y4, False, )
-                    if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 treble +2', True)
-
-                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                        inpText = inpTextX
-                        soxMsg3 = '< treble +2 '
-                        wrkfile  = wrkfile_y4
-
-                sox_y5.wait()
-                sox_y5.terminate()
-                sox_y5 = None
-                if (os.path.exists(wrkfile_y5)):
-                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y5, False, )
-                    if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass + treble', True)
-
-                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                        inpText = inpTextX
-                        soxMsg3 = '< highpass + treble '
-                        wrkfile  = wrkfile_y5
-
-                sox_y6.wait()
-                sox_y6.terminate()
-                sox_y6 = None
-                if (os.path.exists(wrkfile_y6)):
-                    inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y6, False, )
-                    if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass + equalizer + treble', True)
-
-                    if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
-                        inpText = inpTextX
-                        soxMsg3 = '< highpass + equalizer + treble '
-                        wrkfile  = wrkfile_y6
-
-        if (wrkfile[-4:].lower() == recfile[-4:].lower()):
-            shutil.copy2(wrkfile, recfile)
-        else:
-            sox = subprocess.Popen(['sox', '-q', wrkfile, recfile, ], \
-                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-            sox.wait()
-            sox.terminate()
-            sox = None
-
-        if (inpPlay == 'on' or inpPlay == 'yes'):
-            sox = subprocess.Popen(['sox', '-q', recfile, '-d', '--norm', ], \
-                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-            sox.wait()
-            sox.terminate()
-            sox = None
-
-        if  ((wrkApi == 'free') or (wrkApi == 'google8k')) \
-        and ((qApiInp != 'free') and (qApiInp != 'google')) \
-        or  ((wrkApi != 'free') or (wrkApi != 'google8k')) and (qApiInp != wrkApi):
             if (os.path.exists(wrkfile)):
+                if (not micDev.isdigit()) or (runMode == 'debug'):
 
-                #inpTextX,api = qVoiceInput(qApiInp, qLangInp, wrkfile, False, )
-                inpTextX,api = qVoiceInput(qApiInp, qLangInp, wrkfile, )
-                if (inpTextX != '' and inpTextX != '!'):
-                    inpText = inpTextX
-                else:
-                    api = wrkApi
+                    sox_x1 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_x1, \
+                            'silence', '1', '0.3', '0.5%', '1', '0.3', '0.5%', ':restart', ], \
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    sox_x2 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_x2, \
+                            'silence', '1', '0.3', '1%', '1', '0.3', '1%', ':restart', ], \
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-        if (os.path.exists(wrkfile_0)):
-            os.remove(wrkfile_0)
-        if (os.path.exists(wrkfile_0s)):
-            os.remove(wrkfile_0s)
-        if (os.path.exists(wrkfile_1)):
-            os.remove(wrkfile_1)
-        if (os.path.exists(wrkfile_1s)):
-            os.remove(wrkfile_1s)
-        if (os.path.exists(wrkfile_2)):
-            os.remove(wrkfile_2)
-        if (os.path.exists(wrkfile_2s)):
-            os.remove(wrkfile_2s)
-        if (os.path.exists(wrkfile_x1)):
-            os.remove(wrkfile_x1)
-        if (os.path.exists(wrkfile_x2)):
-            os.remove(wrkfile_x2)
-        if (os.path.exists(wrkfile_y1)):
-            os.remove(wrkfile_y1)
-        if (os.path.exists(wrkfile_y2)):
-            os.remove(wrkfile_y2)
-        if (os.path.exists(wrkfile_y3)):
-            os.remove(wrkfile_y3)
-        if (os.path.exists(wrkfile_y4)):
-            os.remove(wrkfile_y4)
-        if (os.path.exists(wrkfile_y5)):
-            os.remove(wrkfile_y5)
-        if (os.path.exists(wrkfile_y6)):
-            os.remove(wrkfile_y6)
+                    sox_x1.wait()
+                    sox_x1.terminate()
+                    sox_x1 = None
+                    if (os.path.exists(wrkfile_x1)):
+                        inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_x1, False, )
+                        if (runMode == 'debug'):
+                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step2 silence 0.3s 0.5%', True)
 
-        if (inpText != '' and inpText != '!') and (soxMsg1 != '' or soxMsg2 != '' or soxMsg3 != ''):
-            qFunc.logOutput(' ' + procId + ' Recognition  <<<<' + soxMsg3 + soxMsg2 + soxMsg1 + '<<<<< wav', True)
+                        if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                            inpText = inpTextX
+                            soxMsg2 = '< silence 0.3s 0.5% '
+                            wrkfile  = wrkfile_x1
+
+                    sox_x2.wait()
+                    sox_x2.terminate()
+                    sox_x2 = None
+                    if (os.path.exists(wrkfile_x2)):
+                        inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_x2, False, )
+                        if (runMode == 'debug'):
+                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step2 silence 0.3s 1.0%', True)
+
+                        if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                            inpText = inpTextX
+                            soxMsg2 = '< silence 0.3s 1.0% '
+                            wrkfile  = wrkfile_x2
+
+            if (os.path.exists(wrkfile)):
+                if (not micDev.isdigit()) or (runMode == 'debug'):
+
+                    sox_y1 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y1, \
+                            'highpass', '50', ], \
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    sox_y2 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y2, \
+                            'equalizer', '500', '1.0q', '3', ], \
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    sox_y3 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y3, \
+                            'highpass', '50', 'equalizer', '500', '1.0q', '3', ], \
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    sox_y4 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y4, \
+                            'treble', '+2', ], \
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    sox_y5 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y5, \
+                            'highpass', '50', 'treble', '+2', ], \
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    sox_y6 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y6, \
+                            'highpass', '50', 'equalizer', '500', '1.0q', '3', 'treble', '+2', ], \
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+                    sox_y1.wait()
+                    sox_y1.terminate()
+                    sox_y1 = None
+                    if (os.path.exists(wrkfile_y1)):
+                        inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y1, False, )
+                        if (runMode == 'debug'):
+                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass 50', True)
+
+                        if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                            inpText = inpTextX
+                            soxMsg3 = '< highpass 50 '
+                            wrkfile  = wrkfile_y1
+
+                    sox_y2.wait()
+                    sox_y2.terminate()
+                    sox_y2 = None
+                    if (os.path.exists(wrkfile_y2)):
+                        inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y2, False, )
+                        if (runMode == 'debug'):
+                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 equalizer 500 1.0q 3', True)
+
+                        if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                            inpText = inpTextX
+                            soxMsg3 = '< equalizer 500 1.0q 3 '
+                            wrkfile  = wrkfile_y2
+
+                    sox_y3.wait()
+                    sox_y3.terminate()
+                    sox_y3 = None
+                    if (os.path.exists(wrkfile_y3)):
+                        inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y3, False, )
+                        if (runMode == 'debug'):
+                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass + equalizer', True)
+
+                        if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                            inpText = inpTextX
+                            soxMsg3 = '< highpass + equalizer '
+                            wrkfile  = wrkfile_y3
+
+                    sox_y4.wait()
+                    sox_y4.terminate()
+                    sox_y4 = None
+                    if (os.path.exists(wrkfile_y4)):
+                        inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y4, False, )
+                        if (runMode == 'debug'):
+                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 treble +2', True)
+
+                        if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                            inpText = inpTextX
+                            soxMsg3 = '< treble +2 '
+                            wrkfile  = wrkfile_y4
+
+                    sox_y5.wait()
+                    sox_y5.terminate()
+                    sox_y5 = None
+                    if (os.path.exists(wrkfile_y5)):
+                        inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y5, False, )
+                        if (runMode == 'debug'):
+                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass + treble', True)
+
+                        if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                            inpText = inpTextX
+                            soxMsg3 = '< highpass + treble '
+                            wrkfile  = wrkfile_y5
+
+                    sox_y6.wait()
+                    sox_y6.terminate()
+                    sox_y6 = None
+                    if (os.path.exists(wrkfile_y6)):
+                        inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y6, False, )
+                        if (runMode == 'debug'):
+                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass + equalizer + treble', True)
+
+                        if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
+                            inpText = inpTextX
+                            soxMsg3 = '< highpass + equalizer + treble '
+                            wrkfile  = wrkfile_y6
+
+            if (wrkfile[-4:].lower() == recfile[-4:].lower()):
+                shutil.copy2(wrkfile, recfile)
+            else:
+                sox = subprocess.Popen(['sox', '-q', wrkfile, recfile, ], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                sox.wait()
+                sox.terminate()
+                sox = None
+
+            if (inpPlay == 'on' or inpPlay == 'yes'):
+                sox = subprocess.Popen(['sox', '-q', recfile, '-d', '--norm', ], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                sox.wait()
+                sox.terminate()
+                sox = None
+
+            if  ((wrkApi == 'free') or (wrkApi == 'google8k')) \
+            and ((qApiInp != 'free') and (qApiInp != 'google')) \
+            or  ((wrkApi != 'free') or (wrkApi != 'google8k')) and (qApiInp != wrkApi):
+                if (os.path.exists(wrkfile)):
+
+                    #inpTextX,api = qVoiceInput(qApiInp, qLangInp, wrkfile, False, )
+                    inpTextX,api = qVoiceInput(qApiInp, qLangInp, wrkfile, )
+                    if (inpTextX != '' and inpTextX != '!'):
+                        inpText = inpTextX
+                    else:
+                        api = wrkApi
+
+            if (os.path.exists(wrkfile_0)):
+                os.remove(wrkfile_0)
+            if (os.path.exists(wrkfile_0s)):
+                os.remove(wrkfile_0s)
+            if (os.path.exists(wrkfile_1)):
+                os.remove(wrkfile_1)
+            if (os.path.exists(wrkfile_1s)):
+                os.remove(wrkfile_1s)
+            if (os.path.exists(wrkfile_2)):
+                os.remove(wrkfile_2)
+            if (os.path.exists(wrkfile_2s)):
+                os.remove(wrkfile_2s)
+            if (os.path.exists(wrkfile_x1)):
+                os.remove(wrkfile_x1)
+            if (os.path.exists(wrkfile_x2)):
+                os.remove(wrkfile_x2)
+            if (os.path.exists(wrkfile_y1)):
+                os.remove(wrkfile_y1)
+            if (os.path.exists(wrkfile_y2)):
+                os.remove(wrkfile_y2)
+            if (os.path.exists(wrkfile_y3)):
+                os.remove(wrkfile_y3)
+            if (os.path.exists(wrkfile_y4)):
+                os.remove(wrkfile_y4)
+            if (os.path.exists(wrkfile_y5)):
+                os.remove(wrkfile_y5)
+            if (os.path.exists(wrkfile_y6)):
+                os.remove(wrkfile_y6)
+
+            if (inpText != '' and inpText != '!') and (soxMsg1 != '' or soxMsg2 != '' or soxMsg3 != ''):
+                qFunc.logOutput(' ' + procId + ' Recognition  <<<<' + soxMsg3 + soxMsg2 + soxMsg1 + '<<<<< wav', True)
+
+
 
         if (inpText == ''):
             inpText = '!'

@@ -89,9 +89,9 @@ import speech_api_julius
 
 
 
-qApiInp     = 'free'
-qApiTrn     = qApiInp
-qApiOut     = qApiInp
+qApiInp     = 'julius'
+qApiTrn     = 'free'
+qApiOut     = qApiTrn
 if (qOS == 'windows'):
     qApiOut = 'winos'
 if (qOS == 'darwin'):
@@ -230,19 +230,19 @@ class main_audio:
         trareader_switch = 'on'
 
         if (self.runMode == 'handsfree'):
-            julius_switch    = 'off'
+            julius_switch    = 'on'
             sttreader_switch = 'off'
             trareader_switch = 'off'
         if (self.runMode == 'translator'):
-            julius_switch    = 'off'
+            julius_switch    = 'on'
             sttreader_switch = 'off'
             trareader_switch = 'on'
         if (self.runMode == 'speech') or (self.runMode == 'number'):
-            julius_switch    = 'off'
+            julius_switch    = 'on'
             sttreader_switch = 'on'
             trareader_switch = 'off'
         if (self.runMode == 'camera'):
-            julius_switch    = 'off'
+            julius_switch    = 'on'
             sttreader_switch = 'off'
             trareader_switch = 'off'
 
