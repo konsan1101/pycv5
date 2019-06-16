@@ -380,8 +380,8 @@ if __name__ == '__main__':
     coreCV_thread = proc_coreCV('coreCV', '0', )
     coreCV_thread.start()
 
-    shutil.copy2('vision__cv_qrcode.jpg', qPath_v_jpg + 'vision__cv_qrcode.jpg')
-    shutil.copy2('vision__ocr_photo.jpg', qPath_v_jpg + 'vision__ocr_photo.jpg')
+    shutil.copy2('_photos/_photo_qrcode.jpg', qPath_v_jpg + '_photo_qrcode.jpg')
+    shutil.copy2('_photos/_photo_ocr_meter.jpg', qPath_v_jpg + '_photo_ocr_meter.jpg')
 
     chktime = time.time()
     while (int(time.time() - chktime) < 15):

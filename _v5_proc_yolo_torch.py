@@ -368,7 +368,7 @@ if __name__ == '__main__':
     yolo_torch_thread = proc_yolo_torch('yolotorch', '0', )
     yolo_torch_thread.start()
 
-    inp = cv2.imread('vision__cv_qrcode.jpg')
+    inp = cv2.imread('_photos/_photo_qrcode.jpg')
     inp = cv2.resize(inp, (960, 540))
 
     chktime = time.time()

@@ -231,8 +231,8 @@ if __name__ == '__main__':
         print('authenticate:', res1, res2)
         if (res1 == True) and (res2 == True):
 
-            file = 'vision__cv_photo.jpg'
-            temp = 'temp_cv_photo.jpg'
+            file = '_photos/_photo_cv.jpg'
+            temp = 'temp_photo_cv.jpg'
 
             res = azureAPI.convert(inpImage=file, outImage=temp, bw=False, )
             if (res == True):
@@ -251,8 +251,8 @@ if __name__ == '__main__':
                     for text in res:
                         print('ocr:', text, '(' + api + ')' )
 
-            file = 'vision__ocr_photo.jpg'
-            temp = 'temp_ocr_photo.jpg'
+            file = '_photos/_photo_ocr_meter.jpg'
+            temp = 'temp_photo_ocr_meter.jpg'
 
             res = azureAPI.convert(inpImage=file, outImage=temp, bw=True, )
             if (res == True):

@@ -1256,7 +1256,7 @@ def proc_control(cn_r, cn_s, ):
     qFunc.logOutput('speechCtrl:start')
     control_start=time.time()
 
-    if (str(micDev) != 'file'):
+    if (not micDev.isdigit()):
         qFunc.busySet(qBusy_a_ctrl,  True)
 
         #qFunc.busyCheck(qBusy_a_ctrl , 3)
@@ -1269,7 +1269,7 @@ def proc_control(cn_r, cn_s, ):
         speechtext = u'こんにちは。' + runMode + u'機能を起動しました。'
         control_speech('00', 'control', runMode, micDev, qApiTrn, qApiOut, qLangInp, qLangOut, speechtext, )
 
-    if (str(micDev) != 'file') and (runMode=='handsfree'):
+    if (micDev.isdigit()) and (runMode=='handsfree'):
         speechtext = '翻訳機能を起動しました。'
         control_speech('01', 'control', runMode, micDev, qApiTrn, qApiOut, qLangInp, qLangOut, speechtext, )
 
@@ -1290,7 +1290,7 @@ def proc_control(cn_r, cn_s, ):
         control_sub(   '22', 'control', runMode, micDev, speechtext, 'en', )
         time.sleep(20.00)
 
-    if (str(micDev) != 'file'):
+    if (not micDev.isdigit()):
         speechtext = u'全ての準備が整いました。スタンバイしています。'
         control_speech('88', 'control', runMode, micDev, qApiTrn, qApiOut, qLangInp, qLangOut, speechtext, )
 
@@ -1442,7 +1442,7 @@ def proc_control(cn_r, cn_s, ):
                         pass
                         result = 'NG'
 
-                #if (str(micDev) == 'file'):
+                #if (not micDev.isdigit()):
                 #    if (result == 'OK'):
                 #        cn_s.put(['END', ''])
                 #        time.sleep( 5.00)
@@ -1518,7 +1518,7 @@ def stt_sub(seq, fileId, runMode, micDev, file, ):
         inpOutput= qPath_a_STT  + fileId + '.' + qLangInp + '.txt'
         trnInput = ''
         trnOutput= ''
-        if (micDev != 'file'):
+        if (not micDev.isdigit()):
             trnInput = inpOutput
             trnOutput= qPath_a_TRA  + fileId + '.' + qLangInp + '.' + qLangTrn[:2] + '.stt.translate.txt'
         txtInput = ''
@@ -1537,7 +1537,7 @@ def stt_sub(seq, fileId, runMode, micDev, file, ):
 
     if (True):
         sync = False
-        if (str(micDev) == 'file'):
+        if (not micDev.isdigit()):
             if (seq[-1:] == '0'):
                 sync = True
 
@@ -1561,7 +1561,7 @@ def stt_sub(seq, fileId, runMode, micDev, file, ):
             api.terminate()
             api = None
 
-        if (str(micDev) == 'file'):
+        if (not micDev.isdigit()):
             if (sync == True):
                 time.sleep(20.00)
 
@@ -1627,7 +1627,7 @@ def proc_sttcore(cn_r, cn_s, ):
                 files = glob.glob(path + '*')
                 if (len(files) > 0):
 
-                    if (str(micDev) == 'file'):
+                    if (not micDev.isdigit()):
                         for f in files:
                             qFunc.logOutput(f)
 
@@ -1683,7 +1683,7 @@ def proc_sttcore(cn_r, cn_s, ):
                                 sox.terminate()
                                 sox = None
 
-                                if (str(micDev) != 'file'):
+                                if (micDev.isdigit()):
                                     os.remove(file)
 
                                 if (os.path.exists(wrkfile)):
@@ -1699,7 +1699,7 @@ def proc_sttcore(cn_r, cn_s, ):
                                         if (micType == 'bluetooth') or (micGuide == 'on' or micGuide == 'sound'):
                                             qFunc.busyCheck(qBusy_a_inp , 3)
 
-                                    if (micDev == 'file'):
+                                    if (not micDev.isdigit()):
                                         qFunc.logOutput('')
                                         qFunc.logOutput('stt_core__:' + fileId + u' → ' + wrkfile[:-4])
 
@@ -1711,7 +1711,7 @@ def proc_sttcore(cn_r, cn_s, ):
                         pass
                         result = 'NG'
 
-                if (str(micDev) == 'file'):
+                if (not micDev.isdigit()):
                     if (result == 'OK'):
                         cn_s.put(['END', ''])
                         time.sleep( 5.00)
@@ -1795,7 +1795,7 @@ def tts_sub(seq, fileId, runMode, micDev, file, txtText, ):
 
     if (True):
         sync = False
-        if (str(micDev) == 'file'):
+        if (not micDev.isdigit()):
             if (seq[-1:] == '0'):
                 sync = True
 
@@ -1819,7 +1819,7 @@ def tts_sub(seq, fileId, runMode, micDev, file, txtText, ):
             api.terminate()
             api = None
 
-        if (str(micDev) == 'file'):
+        if (not micDev.isdigit()):
             if (sync == True):
                 time.sleep(5.00)
 
@@ -1885,7 +1885,7 @@ def proc_ttscore(cn_r, cn_s, ):
                 files = glob.glob(path + '*')
                 if (len(files) > 0):
 
-                    if (str(micDev) == 'file'):
+                    if (not micDev.isdigit()):
                         for f in files:
                             qFunc.logOutput(f)
 
@@ -1947,7 +1947,7 @@ def proc_ttscore(cn_r, cn_s, ):
                                     except:
                                         w = None
 
-                                if (str(micDev) != 'file'):
+                                if (micDev.isdigit()):
                                     os.remove(file)
 
                                 if (os.path.exists(wrkfile)):
@@ -1963,7 +1963,7 @@ def proc_ttscore(cn_r, cn_s, ):
                                         if (micType == 'bluetooth') or (micGuide == 'on' or micGuide == 'sound'):
                                             qFunc.busyCheck(qBusy_a_inp , 3)
 
-                                    if (micDev == 'file'):
+                                    if (not micDev.isdigit()):
                                         qFunc.logOutput('')
                                         qFunc.logOutput('tts_core__:' + fileId + u' → ' + wrkfile)
 
@@ -1975,7 +1975,7 @@ def proc_ttscore(cn_r, cn_s, ):
                         pass
                         result = 'NG'
 
-                if (str(micDev) == 'file'):
+                if (not micDev.isdigit()):
                     if (result == 'OK'):
                         cn_s.put(['END', ''])
                         time.sleep( 5.00)
@@ -2015,7 +2015,7 @@ def main_init(runMode, micDev, ):
     qFunc.makeDirs('temp/_log/',   False)
     qFunc.makeDirs('temp/_cache/', False)
 
-    if (str(micDev) != 'file'):
+    if (micDev.isdigit()):
         qFunc.makeDirs(qPath_a_ctrl, True )
         qFunc.makeDirs(qPath_a_inp,  True )
         qFunc.makeDirs(qPath_a_wav,  True )
@@ -2093,7 +2093,7 @@ if (__name__ == '__main__'):
 
     if (len(sys.argv) >= 3):
         micDev   = str(sys.argv[2]).lower()
-        if (str(micDev) == 'file'):
+        if (not micDev.isdigit()):
            micGuide = 'off' 
     if (len(sys.argv) >= 4):
         micType  = str(sys.argv[3]).lower()
@@ -2157,7 +2157,7 @@ if (__name__ == '__main__'):
                     #], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, )
                     #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
         time.sleep(2.00)
-        if (str(micDev) == 'file'):
+        if (not micDev.isdigit()):
             voice2wav.wait()
             voice2wav.terminate()
             voice2wav = None
@@ -2198,7 +2198,7 @@ if (__name__ == '__main__'):
 
         # check sttcore_last and ttscore_last
 
-        if (str(micDev) == 'file'):
+        if (not micDev.isdigit()):
             if (sttcore_last == 0):
                 sttcore_last = time.time()
             if (ttscore_last == 0):
@@ -2211,7 +2211,7 @@ if (__name__ == '__main__'):
         # Thread timeout check
 
         if (control_beat != 0):
-          if (str(micDev) != 'file'):
+          if (micDev.isdigit()):
             sec = int(time.time() - control_beat)
             if (sec > 60):
                 qFunc.logOutput('___main___:control_proc 60s')
@@ -2223,7 +2223,7 @@ if (__name__ == '__main__'):
                 control_pass = 0
 
         if (sttcore_beat != 0):
-          if (str(micDev) != 'file'):
+          if (micDev.isdigit()):
             sec = int(time.time() - sttcore_beat)
             if (sec > 60):
                 qFunc.logOutput('___main___:sttcore_proc 60s')
@@ -2235,7 +2235,7 @@ if (__name__ == '__main__'):
                 sttcore_pass = 0
 
         if (ttscore_beat != 0):
-          if (str(micDev) != 'file'):
+          if (micDev.isdigit()):
             sec = int(time.time() - ttscore_beat)
             if (sec > 60):
                 qFunc.logOutput('___main___:ttscore_proc 60s')

@@ -461,13 +461,13 @@ class main_audio:
             if (True):
 
                 # 音声ファイル処理（バッチ）時の自動終了
-                if (self.micDev == 'file'):
+                if (not self.micDev.isdigit()):
                     if  (int(time.time() - voice2wav_thread.proc_last) > 60) \
                     and (int(time.time() - playvoice_thread.proc_last) > 60):
                         break
 
                 # マイク切り替え時、自動復旧処理
-                if (self.micDev != 'file'):
+                if (self.micDev.isdigit()):
                     if  (int(time.time() - voice2wav_thread.proc_last) > 30):
                         adintool_thread.stop()
                         adintool_thread.start()
@@ -694,7 +694,7 @@ if __name__ == '__main__':
 
         if (len(sys.argv) >= 3):
             micDev   = str(sys.argv[2]).lower()
-            if (str(micDev) == 'file'):
+            if (not micDev.isdigit()):
                 micGuide = 'off' 
         if (len(sys.argv) >= 4):
             micType  = str(sys.argv[3]).lower()
@@ -759,13 +759,13 @@ if __name__ == '__main__':
     qFunc.remove(qCtrl_translate_sjis     )
 
     qFunc.makeDirs(qPath_a_ctrl, True )
-    if (str(micDev) != 'file'):
+    if (micDev.isdigit()):
         qFunc.makeDirs(qPath_a_inp,  True )
     qFunc.makeDirs(qPath_a_wav,  True )
     qFunc.makeDirs(qPath_a_jul,  True )
     qFunc.makeDirs(qPath_a_STT,  True )
     qFunc.makeDirs(qPath_a_TRA,  True )
-    if (str(micDev) != 'file'):
+    if (micDev.isdigit()):
         qFunc.makeDirs(qPath_a_TTS,  True )
         qFunc.makeDirs(qPath_a_play, True )
 

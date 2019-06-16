@@ -4,7 +4,7 @@
 import cv2
  
 if __name__ == '__main__':
-    file_name = 'vision__cv_qrcode.jpg'
+    file_name = '_photos/_photo_qrcode.jpg'
     input_image = cv2.imread(file_name)
     output_image = input_image.copy()
     detector = cv2.QRCodeDetector()
@@ -13,6 +13,6 @@ if __name__ == '__main__':
         print(f'decoded data: {data}')
         for i in range(4):
             cv2.line(output_image, tuple(points[i][0]), tuple(points[(i + 1) % len(points)][0]), (0, 0, 255), 4)
-        cv2.imwrite('temp_cv_qrcode.jpg', output_image)
+        cv2.imwrite('temp_photo_qrcode.jpg', output_image)
         print(f'QR code version: {((straight_qrcode.shape[0] - 21) / 4) + 1}')
 

@@ -261,11 +261,11 @@ class proc_coreTTS:
 
                                 if (os.path.exists(work_file)):
 
-                                    if (str(self.micDev) != 'file'):
+                                    if (self.micDev.isdigit()):
                                         os.remove(proc_file)
 
                                     # ログ
-                                    if (self.runMode == 'debug') or (str(self.micDev) == 'file'):
+                                    if (self.runMode == 'debug') or (not self.micDev.isdigit()):
                                         qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
 
                                     # 結果出力
@@ -384,7 +384,7 @@ class proc_coreTTS:
 
         if (True):
             sync = False
-            if (str(self.micDev) == 'file'):
+            if (not self.micDev.isdigit()):
                 if (seq4[-1:] == '0'):
                     sync = True
 
@@ -410,7 +410,7 @@ class proc_coreTTS:
                 api.terminate()
                 api = None
 
-            if (str(self.micDev) == 'file'):
+            if (not self.micDev.isdigit()):
                 if (sync == True):
                     time.sleep(5.00)
 

@@ -212,7 +212,7 @@ class proc_adintool:
                 # on ?
                 sw = 'off'
                 if  (qFunc.busyCheck(qBusy_dev_mic, 1) != 'busy'):
-                    if (str(self.micDev) != 'file'):
+                    if (self.micDev.isdigit()):
                         if (self.micType == 'usb'):
                                 sw = 'on'
                         else:

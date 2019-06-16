@@ -337,8 +337,8 @@ if __name__ == '__main__':
     vin2jpg_thread = proc_vin2jpg('vin2jpg', '0', )
     vin2jpg_thread.start()
 
-    shutil.copy2('vision__cv_qrcode.jpg', qPath_v_inp + 'vision__cv_qrcode.jpg')
-    shutil.copy2('vision__ocr_photo.jpg', qPath_v_inp + 'vision__ocr_photo.jpg')
+    shutil.copy2('_photos/_photo_qrcode.jpg', qPath_v_inp + '_photo_qrcode.jpg')
+    shutil.copy2('_photos/_photo_ocr_meter.jpg', qPath_v_inp + '_photo_ocr_meter.jpg')
 
     chktime = time.time()
     while (int(time.time() - chktime) < 15):

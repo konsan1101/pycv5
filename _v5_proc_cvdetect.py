@@ -376,7 +376,7 @@ if __name__ == '__main__':
     cvdetect_thread = proc_cvdetect('detect', '0', )
     cvdetect_thread.start()
 
-    inp = cv2.imread('vision__cv_face.jpg')
+    inp = cv2.imread('_photos/_photo_face.jpg')
     cvdetect_thread.put(['[img]', inp.copy()])
 
     chktime = time.time()

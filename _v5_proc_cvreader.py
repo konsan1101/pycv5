@@ -361,7 +361,7 @@ if __name__ == '__main__':
     cvreader_thread = proc_cvreader('reader', '0', )
     cvreader_thread.start()
 
-    inp = cv2.imread('vision__cv_qrcode.jpg')
+    inp = cv2.imread('_photos/_photo_qrcode.jpg')
     cvreader_thread.put(['[img]', inp.copy()])
 
     chktime = time.time()

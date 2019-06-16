@@ -129,7 +129,7 @@ def proc_audio(cn_r, cn_s, ):
 
 
 
-    if (str(micDev) != 'file'):
+    if (micDev.isdigit()):
         if (bakSox_run == True):
             bakSox_run = False
             if (not bakSox_sbp is None):
@@ -190,7 +190,7 @@ def proc_audio(cn_r, cn_s, ):
                 audio_busy = True
                 audio_last = time.time()
 
-                if (str(micDev) != 'file') and (adinsvr_run == False):
+                if (micDev.isdigit()) and (adinsvr_run == False):
                     adinsvr_run = True
                     #now=datetime.datetime.now()
                     #filename=qPath_a_inp + now.strftime('%H%M%S') +'.julius'
@@ -202,7 +202,7 @@ def proc_audio(cn_r, cn_s, ):
                         qFunc.guide('_up')
 
                 sw = 'off'
-                if (str(micDev) != 'file'):
+                if (micDev.isdigit()):
                     if (micType == 'usb'):
                         sw = 'on'
                     else:
@@ -369,7 +369,7 @@ def v2w_wave_sub(micDev, seq4, fileId, file, f2, f2size, bytebase, minSize, maxS
                 now=datetime.datetime.now()
                 stamp=now.strftime('%Y%m%d.%H%M%S')
 
-                if (str(micDev) != 'file'):
+                if (micDev.isdigit()):
                      sec=int((f2size-44)/2/16000)
                 else:
                      sec=int(bytebase/2/16000)
@@ -405,7 +405,7 @@ def v2w_wave_sub(micDev, seq4, fileId, file, f2, f2size, bytebase, minSize, maxS
                         julius_API[j] = speech_api_julius.proc_julius('julius', jx, )
                         julius_API[j].start()
 
-                if (str(micDev) != 'file'):
+                if (micDev.isdigit()):
                         try:
                             frec=f3.replace(qPath_a_wav, '')
                             frec=qPath_rec + frec[:-4] + '.mp3'
@@ -447,7 +447,7 @@ def v2w_wave_sub(micDev, seq4, fileId, file, f2, f2size, bytebase, minSize, maxS
                     os.remove(f4)
                 else:
 
-                    if (str(micDev) != 'file'):
+                    if (micDev.isdigit()):
                         sec=int((f4size-44)/2/16000)
                     else:
                         sec=int(bytebase/2/16000) + (nn-1)*15
@@ -483,7 +483,7 @@ def v2w_wave_sub(micDev, seq4, fileId, file, f2, f2size, bytebase, minSize, maxS
                         julius_API[j] = speech_api_julius.proc_julius('julius', jx, )
                         julius_API[j].start()
 
-                    if (str(micDev) != 'file'):
+                    if (micDev.isdigit()):
                         try:
                             frec=f3.replace(qPath_a_wav, '')
                             frec=qPath_rec + frec[:-4] + '.mp3'
@@ -647,12 +647,12 @@ def proc_v2w_wave(cn_r, cn_s, ):
                                 sox.terminate()
                                 sox = None
 
-                                if (str(micDev) != 'file'):
+                                if (micDev.isdigit()):
                                     os.remove(file)
 
                                 if (os.path.exists(wrkfile)):
 
-                                    if (runMode == 'debug' or str(micDev) == 'file'):
+                                    if (runMode == 'debug') or (not micDev.isdigit()):
                                         qFunc.logOutput('v2w_wave__:' + fileId + u' → ' + wrkfile[:-4])
 
                                     wrksize = 0
@@ -668,14 +668,14 @@ def proc_v2w_wave(cn_r, cn_s, ):
 
                                     v2w_wave_sub(micDev, seq4, fileId, file, wrkfile, wrksize, bytebase, minSize, maxSize, )
 
-                                    if (str(micDev) == 'file'):
+                                    if (not micDev.isdigit()):
                                         bytebase += wrksize - 44
 
                     except:
                         pass
                         result = 'NG'
 
-                if (str(micDev) == 'file'):
+                if (not micDev.isdigit()):
                     if (result == 'OK'):
                         cn_s.put(['END', ''])
                         time.sleep( 5.00)
@@ -716,7 +716,7 @@ def main_init(micDev, ):
     qFunc.makeDirs('temp/_log/',   False)
     qFunc.makeDirs('temp/_cache/', False)
 
-    if (str(micDev) != 'file'):
+    if (micDev.isdigit()):
         qFunc.makeDirs(qPath_a_ctrl, False)
         qFunc.makeDirs(qPath_a_inp,  True )
         qFunc.makeDirs(qPath_a_wav,  True )
@@ -791,7 +791,7 @@ if (__name__ == '__main__'):
         runMode  = str(sys.argv[1]).lower()
     if (len(sys.argv) >= 3):
         micDev   = str(sys.argv[2]).lower()
-        if (str(micDev) == 'file'):
+        if (not micDev.isdigit()):
            micGuide = 'off' 
     if (len(sys.argv) >= 4):
         micType  = str(sys.argv[3]).lower()
@@ -837,14 +837,14 @@ if (__name__ == '__main__'):
 
         # check v2w_wave_last
 
-        if (str(micDev) == 'file'):
+        if (not micDev.isdigit()):
             if (v2w_wave_last == 0):
                 v2w_wave_last = time.time()
             sec = int(time.time() - v2w_wave_last)
             if (sec > 90):
                 break
 
-        if (str(micDev) != 'file'):
+        if (micDev.isdigit()):
             if (qFunc.busyCheck(qBusy_a_ctrl, 0) == 'busy' or \
                 qFunc.busyCheck(qBusy_a_STT,  0) == 'busy' or \
                 qFunc.busyCheck(qBusy_a_TTS,  0) == 'busy' or \
@@ -861,7 +861,7 @@ if (__name__ == '__main__'):
         # Thread timeout check
 
         if (audio_beat != 0):
-          if (str(micDev) != 'file'):
+          if (micDev.isdigit()):
             sec = int(time.time() - audio_beat)
             if (sec > 60):
                 qFunc.logOutput('v2w_main__:audio_proc 60s')
@@ -895,7 +895,7 @@ if (__name__ == '__main__'):
                     qFunc.guide('_down')
 
         if (v2w_wave_beat != 0):
-          if (str(micDev) != 'file'):
+          if (micDev.isdigit()):
             sec = int(time.time() - v2w_wave_beat)
             if (sec > 60):
                 qFunc.logOutput('v2w_main__:v2w_wave_proc 60s')

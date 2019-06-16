@@ -729,9 +729,9 @@ def speech_batch(runMode, micDev,
         sox_0s.terminate()
         sox_0s = None
         if (os.path.exists(wrkfile_0s)):
-            #if (str(micDev) == 'file') or (runMode == 'debug') \
+            #if (not micDev.isdigit()) or (runMode == 'debug') \
             #or (inpText == '') or (inpText == '!'):
-            if (str(micDev) == 'file') or (runMode == 'debug'):
+            if (not micDev.isdigit()) or (runMode == 'debug'):
                 inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_0s, False, )
                 if (runMode == 'debug'):
                     qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 sox silence 0.5s 0%', True)
@@ -745,9 +745,9 @@ def speech_batch(runMode, micDev,
         sox_1.terminate()
         sox_1 = None
         if (os.path.exists(wrkfile_1)):
-            #if (str(micDev) == 'file') or (runMode == 'debug') \
+            #if (not micDev.isdigit()) or (runMode == 'debug') \
             #or (inpText == '') or (inpText == '!'):
-            if (str(micDev) == 'file') or (runMode == 'debug'):
+            if (not micDev.isdigit()) or (runMode == 'debug'):
                 inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_1, False, )
                 if (runMode == 'debug'):
                     qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 --norm', True)
@@ -761,7 +761,7 @@ def speech_batch(runMode, micDev,
         sox_1s.terminate()
         sox_1s = None
         if (os.path.exists(wrkfile_1s)):
-            if (str(micDev) == 'file') or (runMode == 'debug') \
+            if (not micDev.isdigit()) or (runMode == 'debug') \
             or (inpText == '') or (inpText == '!'):
                 inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_1s, False, )
                 if (runMode == 'debug'):
@@ -776,9 +776,9 @@ def speech_batch(runMode, micDev,
         sox_2.terminate()
         sox_2 = None
         if (os.path.exists(wrkfile_2)):
-            #if (str(micDev) == 'file') or (runMode == 'debug') \
+            #if (not micDev.isdigit()) or (runMode == 'debug') \
             #or (inpText == '') or (inpText == '!'):
-            if (str(micDev) == 'file') or (runMode == 'debug'):
+            if (not micDev.isdigit()) or (runMode == 'debug'):
                 inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_2, False, )
                 if (runMode == 'debug'):
                     qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 gain +12', True)
@@ -792,9 +792,9 @@ def speech_batch(runMode, micDev,
         sox_2s.terminate()
         sox_2s = None
         if (os.path.exists(wrkfile_2s)):
-            #if (str(micDev) == 'file') or (runMode == 'debug') \
+            #if (not micDev.isdigit()) or (runMode == 'debug') \
             #or (inpText == '') or (inpText == '!'):
-            if (str(micDev) == 'file') or (runMode == 'debug'):
+            if (not micDev.isdigit()) or (runMode == 'debug'):
                 inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_2s, False, )
                 if (runMode == 'debug'):
                     qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 gain +12 silence 0.5s 0.1%', True)
@@ -808,7 +808,7 @@ def speech_batch(runMode, micDev,
             wrkfile  = wrkfile_0
 
         if (os.path.exists(wrkfile)):
-            if (str(micDev) == 'file') or (runMode == 'debug'):
+            if (not micDev.isdigit()) or (runMode == 'debug'):
 
                 sox_x1 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_x1, \
                          'silence', '1', '0.3', '0.5%', '1', '0.3', '0.5%', ':restart', ], \
@@ -844,7 +844,7 @@ def speech_batch(runMode, micDev,
                         wrkfile  = wrkfile_x2
 
         if (os.path.exists(wrkfile)):
-            if (str(micDev) == 'file') or (runMode == 'debug'):
+            if (not micDev.isdigit()) or (runMode == 'debug'):
 
                 sox_y1 = subprocess.Popen(['sox', '-q', wrkfile, wrkfile_y1, \
                          'highpass', '50', ], \

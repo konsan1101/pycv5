@@ -875,12 +875,12 @@ if __name__ == '__main__':
     overlay_thread = proc_overlay('overlay', '00', )
     overlay_thread.start()
 
-    cam1   = cv2.imread('vision__cv_photo.jpg')
-    cam2   = cv2.imread('vision__ocr_photo.jpg')
-    comp   = cv2.imread('vision__cv_photo.jpg')
-    reader = cv2.imread('vision__cv_qrcode.jpg')
-    detect = cv2.imread('vision__cv_face.jpg')
-    txt    = cv2.imread('vision__ocr_hallo.jpg')
+    cam1   = cv2.imread('_photos/_photo_cv.jpg')
+    cam2   = cv2.imread('_photos/_photo_ocr_meter.jpg')
+    comp   = cv2.imread('_photos/_photo_face.jpg')
+    reader = cv2.imread('_photos/_photo_qrcode.jpg')
+    detect = cv2.imread('_photos/_photo_face.jpg')
+    txt    = cv2.imread('_photos/_photo_ocr_doc.jpg')
 
     overlay_thread.put(['[camzoom]', True         ])
     overlay_thread.put(['[dspzoom]', True         ])

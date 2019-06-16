@@ -173,7 +173,7 @@ def proc_playvoice(cn_r, cn_s, ):
                                 sox.terminate()
                                 sox = None
 
-                                if (str(micDev) != 'file'):
+                                if (micDev.isdigit()):
                                     os.remove(file)
 
                                 if (os.path.exists(wrkfile)):
@@ -189,7 +189,7 @@ def proc_playvoice(cn_r, cn_s, ):
                                         if (micType == 'bluetooth') or (micGuide == 'on' or micGuide == 'sound'):
                                             qFunc.busyCheck(qBusy_a_inp, 3)
 
-                                    if (runMode == 'debug' or str(micDev) == 'file'):
+                                    if (runMode == 'debug') or (not micDev.isdigit()):
                                         qFunc.logOutput('play_voice:' + fileId + u' → ' + wrkfile[:-4])
 
                                     playvoice_last = time.time()
@@ -197,7 +197,7 @@ def proc_playvoice(cn_r, cn_s, ):
                                     sox=subprocess.Popen(['sox', '-q', wrkfile, '-d', '--norm', ], \
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-                                    #if (str(micDev) == 'file'):
+                                    #if (not micDev.isdigit()):
                                     if (runMode=='debug' or runMode=='handsfree'):
                                         sox.wait()
                                         sox.terminate()
@@ -207,7 +207,7 @@ def proc_playvoice(cn_r, cn_s, ):
                         pass
                         result = 'NG'
 
-                if (str(micDev) == 'file'):
+                if (not micDev.isdigit()):
                     if (result == 'OK'):
                         cn_s.put(['END', ''])
                         time.sleep( 5.00)
@@ -247,7 +247,7 @@ def main_init(micDev, ):
     qFunc.makeDirs('temp/_log/',   False)
     qFunc.makeDirs('temp/_cache/', False)
 
-    if (str(micDev) != 'file'):
+    if (micDev.isdigit()):
         qFunc.makeDirs(qPath_a_ctrl, False)
         qFunc.makeDirs(qPath_a_inp,  False)
         qFunc.makeDirs(qPath_a_wav,  False)
@@ -346,7 +346,7 @@ if (__name__ == '__main__'):
 
         # check voice2wav_last
 
-        if (str(micDev) == 'file'):
+        if (not micDev.isdigit()):
             if (playvoice_last == 0):
                 playvoice_last = time.time()
             sec = int(time.time() - playvoice_last)
@@ -356,7 +356,7 @@ if (__name__ == '__main__'):
         # Thread timeout check
 
         if (playvoice_beat != 0):
-          if (str(micDev) != 'file'):
+          if (micDev.isdigit()):
             sec = int(time.time() - playvoice_beat)
             if (sec > 60):
                 qFunc.logOutput('play_main_:playvoice_proc 60s')

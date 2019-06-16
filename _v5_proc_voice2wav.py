@@ -261,11 +261,11 @@ class proc_voice2wav:
 
                                 if (os.path.exists(work_file)):
 
-                                    if (str(self.micDev) != 'file'):
+                                    if (self.micDev.isdigit()):
                                         os.remove(proc_file)
 
                                     # ログ
-                                    if (self.runMode == 'debug') or (str(self.micDev) == 'file'):
+                                    if (self.runMode == 'debug') or (not self.micDev.isdigit()):
                                         qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
 
                                     # ビジー設定
@@ -288,7 +288,7 @@ class proc_voice2wav:
                                     self.proc_last = time.time()
                                     self.sub_proc(seq4, proc_file, work_file, proc_name, work_size, base_byte, cn_s, )
 
-                                    if (str(self.micDev) == 'file'):
+                                    if (not self.micDev.isdigit()):
                                         base_byte += work_size - 44
 
                                     time.sleep(0.50)
@@ -345,7 +345,7 @@ class proc_voice2wav:
 
         if (work_size >= int(self.minSize) and work_size <= int(self.maxSize+2000)):
 
-                    if (str(self.micDev) != 'file'):
+                    if (self.micDev.isdigit()):
                         sec=int((work_size-44)/2/16000)
                     else:
                         sec=int(base_byte/2/16000)
@@ -362,7 +362,7 @@ class proc_voice2wav:
                     try:
                         shutil.copy2(work_file, fwork)
                         shutil.copy2(work_file, fjuli)
-                        if (str(self.micDev) != 'file'):
+                        if (self.micDev.isdigit()):
                             sox  = subprocess.Popen(['sox', '-q', work_file, '-r', '16000', '-b', '16', '-c', '1', frec, ], \
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                             sox.wait()
@@ -406,7 +406,7 @@ class proc_voice2wav:
                     nn = 0
                 else:
 
-                    if (str(self.micDev) != 'file'):
+                    if (self.micDev.isdigit()):
                         sec = int((ftrim_size-44)/2/16000)
                     else:
                         sec = int(base_byte/2/16000) + (nn-1)*sep_sec
@@ -423,7 +423,7 @@ class proc_voice2wav:
                     try:
                         shutil.copy2(ftrim, fwork)
                         shutil.copy2(ftrim, fjuli)
-                        if (str(self.micDev) != 'file'):
+                        if (self.micDev.isdigit()):
                             sox  = subprocess.Popen(['sox', '-q', ftrim, '-r', '16000', '-b', '16', '-c', '1', frec, ], \
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                             sox.wait()

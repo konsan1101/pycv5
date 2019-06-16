@@ -247,7 +247,7 @@ class proc_controlv:
                                     qFunc.remove(proc_file)
 
                                     # ログ
-                                    #if (self.runMode == 'debug') or (str(self.micDev) == 'file'):
+                                    #if (self.runMode == 'debug') or (not self.micDev.isdigit()):
                                     #    qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
 
                                     # 結果出力

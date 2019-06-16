@@ -268,11 +268,11 @@ class proc_coreSTT:
 
                                 if (os.path.exists(work_file)):
 
-                                    if (str(self.micDev) != 'file'):
+                                    if (self.micDev.isdigit()):
                                         os.remove(proc_file)
 
                                     # ログ
-                                    if (self.runMode == 'debug') or (str(self.micDev) == 'file'):
+                                    if (self.runMode == 'debug') or (not self.micDev.isdigit()):
                                         qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
 
                                     # 結果出力
@@ -383,7 +383,7 @@ class proc_coreSTT:
             inpOutput= qPath_a_STT  + proc_name + '.' + inpLang + '.txt'
             trnInput = ''
             trnOutput= ''
-            if (self.micDev == 'file'):
+            if (not self.micDev.isdigit()):
                 trnInput = inpOutput
                 trnOutput= qPath_a_TRA  + proc_name + '.' + inpLang + '.' + trnLang[:2] + '.stt.translate.txt'
             txtInput = ''
@@ -402,7 +402,7 @@ class proc_coreSTT:
 
         if (True):
             sync = False
-            if (str(self.micDev) == 'file'):
+            if (not self.micDev.isdigit()):
                 if (seq4[-1:] == '0'):
                     sync = True
 
@@ -428,7 +428,7 @@ class proc_coreSTT:
                 api.terminate()
                 api = None
 
-            if (str(self.micDev) == 'file'):
+            if (not self.micDev.isdigit()):
                 if (sync == True):
                     time.sleep(10.00)
 
