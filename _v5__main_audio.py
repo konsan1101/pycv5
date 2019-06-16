@@ -89,7 +89,7 @@ import speech_api_julius
 
 
 
-qApiInp     = 'julius'
+qApiInp     = 'free'
 qApiTrn     = 'free'
 qApiOut     = qApiTrn
 if (qOS == 'windows'):
