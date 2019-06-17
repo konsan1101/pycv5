@@ -185,99 +185,97 @@ class proc_controla:
 
 
             # 処理
-            if (True):
+            path = self.path
+            path_files = glob.glob(path + '*.txt')
+            if (len(path_files) > 0):
 
-                path = self.path
-                path_files = glob.glob(path + '*.txt')
-                if (len(path_files) > 0):
+                #try:
+                if (True):
 
-                    #try:
-                    if (True):
+                    for f in path_files:
 
-                        for f in path_files:
+                        # 停止要求確認
+                        if (self.breakFlag.is_set()):
+                            self.breakFlag.clear()
+                            self.proc_step = '9'
+                            break
 
-                            # 停止要求確認
-                            if (self.breakFlag.is_set()):
-                                self.breakFlag.clear()
-                                self.proc_step = '9'
-                                break
+                        proc_file = f.replace('\\', '/')
 
-                            proc_file = f.replace('\\', '/')
+                        if (proc_file[-4:].lower() == '.txt' and proc_file[-8:].lower() != '.wrk.txt'):
+                            f1 = proc_file
+                            f2 = proc_file[:-4] + '.wrk.txt'
+                            try:
+                                os.rename(f1, f2)
+                                proc_file = f2
+                            except:
+                                pass
 
-                            if (proc_file[-4:].lower() == '.txt' and proc_file[-8:].lower() != '.wrk.txt'):
-                                f1 = proc_file
-                                f2 = proc_file[:-4] + '.wrk.txt'
-                                try:
-                                    os.rename(f1, f2)
-                                    proc_file = f2
-                                except:
-                                    pass
+                        if (proc_file[-8:].lower() == '.wrk.txt'):
+                            f1 = proc_file
+                            f2 = proc_file[:-8] + proc_file[-4:]
+                            try:
+                                os.rename(f1, f2)
+                                proc_file = f2
+                            except:
+                                pass
 
-                            if (proc_file[-8:].lower() == '.wrk.txt'):
-                                f1 = proc_file
-                                f2 = proc_file[:-8] + proc_file[-4:]
-                                try:
-                                    os.rename(f1, f2)
-                                    proc_file = f2
-                                except:
-                                    pass
+                            # 実行カウンタ
+                            self.proc_last = time.time()
+                            self.proc_seq += 1
+                            if (self.proc_seq > 9999):
+                                self.proc_seq = 1
+                            seq4 = '{:04}'.format(self.proc_seq)
+                            seq2 = '{:02}'.format(self.proc_seq)
 
-                                # 実行カウンタ
+                            proc_name = proc_file.replace(path, '')
+                            proc_name = proc_name[:-4]
+
+                            work_name = self.proc_id + '.' + seq2
+                            work_file = qPath_work + work_name + '.txt'
+                            if (os.path.exists(work_file)):
+                                os.remove(work_file)
+
+                            if (proc_file[-9:].lower() != '_sjis.txt'):
+                                proc_txts, proc_text = qFunc.txtsRead(proc_file, encoding='utf-8', exclusive=False, )
+                            else:
+                                proc_txts, proc_text = qFunc.txtsRead(proc_file, encoding='shift_jis', exclusive=False, )
+                            if (proc_text != '') and (proc_text != '!'):
+                                qFunc.txtsWrite(work_file, txts=[proc_text], encoding='utf-8', exclusive=False, mode='w', )
+
+                            if (os.path.exists(work_file)):
+
+                                qFunc.remove(proc_file)
+
+                                # ログ
+                                #if (self.runMode == 'debug') or (not self.micDev.isdigit()):
+                                #    qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
+
+                                # 結果出力
+                                if (cn_s.qsize() < 99):
+                                    out_name  = '[txts]'
+                                    out_value = proc_txts
+                                    cn_s.put([out_name, out_value])
+
+                                # ビジー設定
+                                if (not os.path.exists(fileBsy)):
+                                    qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                                    if (str(self.id) == '0'):
+                                        qFunc.busySet(qBusy_a_ctrl, True)
+
+                                    #qFunc.busyCheck(qBusy_a_ctrl , 3)
+                                    #qFunc.busyCheck(qBusy_a_STT  , 3)
+                                    #qFunc.busyCheck(qBusy_a_TTS  , 3)
+                                    #qFunc.busyCheck(qBusy_a_play , 3)
+                                    if (self.micType == 'bluetooth') or (self.micGuide == 'on' or self.micGuide == 'sound'):
+                                        qFunc.busyCheck(qBusy_a_inp , 3)
+
+                                # 処理
                                 self.proc_last = time.time()
-                                self.proc_seq += 1
-                                if (self.proc_seq > 9999):
-                                    self.proc_seq = 1
-                                seq4 = '{:04}'.format(self.proc_seq)
-                                seq2 = '{:02}'.format(self.proc_seq)
+                                self.sub_proc(seq4, proc_file, work_file, proc_name, proc_text, cn_s, )
 
-                                proc_name = proc_file.replace(path, '')
-                                proc_name = proc_name[:-4]
-
-                                work_name = self.proc_id + '.' + seq2
-                                work_file = qPath_work + work_name + '.txt'
-                                if (os.path.exists(work_file)):
-                                    os.remove(work_file)
-
-                                if (proc_file[-9:].lower() != '_sjis.txt'):
-                                    proc_txts, proc_text = qFunc.txtsRead(proc_file, encoding='utf-8', exclusive=False, )
-                                else:
-                                    proc_txts, proc_text = qFunc.txtsRead(proc_file, encoding='shift_jis', exclusive=False, )
-                                if (proc_text != '') and (proc_text != '!'):
-                                    qFunc.txtsWrite(work_file, txts=[proc_text], encoding='utf-8', exclusive=False, mode='w', )
-
-                                if (os.path.exists(work_file)):
-
-                                    qFunc.remove(proc_file)
-
-                                    # ログ
-                                    #if (self.runMode == 'debug') or (not self.micDev.isdigit()):
-                                    #    qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
-
-                                    # 結果出力
-                                    if (cn_s.qsize() < 99):
-                                        out_name  = '[txts]'
-                                        out_value = proc_txts
-                                        cn_s.put([out_name, out_value])
-
-                                    # ビジー設定
-                                    if (not os.path.exists(fileBsy)):
-                                        qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
-                                        if (str(self.id) == '0'):
-                                            qFunc.busySet(qBusy_a_ctrl, True)
-
-                                        #qFunc.busyCheck(qBusy_a_ctrl , 3)
-                                        #qFunc.busyCheck(qBusy_a_STT  , 3)
-                                        #qFunc.busyCheck(qBusy_a_TTS  , 3)
-                                        #qFunc.busyCheck(qBusy_a_play , 3)
-                                        if (self.micType == 'bluetooth') or (self.micGuide == 'on' or self.micGuide == 'sound'):
-                                            qFunc.busyCheck(qBusy_a_inp , 3)
-
-                                    # 処理
-                                    self.proc_last = time.time()
-                                    self.sub_proc(seq4, proc_file, work_file, proc_name, proc_text, cn_s, )
-
-                    #except:
-                    #    pass
+                #except:
+                #    pass
 
 
 

@@ -188,113 +188,111 @@ class proc_voice2wav:
 
 
             # 処理
-            if (True):
+            path = self.path
+            path_files = glob.glob(path + '*')
+            if (len(path_files) > 0):
 
-                path = self.path
-                path_files = glob.glob(path + '*')
-                if (len(path_files) > 0):
+                if (os.name != 'nt'):
+                    time.sleep(1.00)
 
-                    if (os.name != 'nt'):
-                        time.sleep(1.00)
+                #try:
+                if (True):
 
-                    #try:
-                    if (True):
+                    base_byte = 0
+                    for f in path_files:
 
-                        base_byte = 0
-                        for f in path_files:
+                        # 停止要求確認
+                        if (self.breakFlag.is_set()):
+                            self.breakFlag.clear()
+                            self.proc_step = '9'
+                            break
 
-                            # 停止要求確認
-                            if (self.breakFlag.is_set()):
-                                self.breakFlag.clear()
-                                self.proc_step = '9'
-                                break
+                        proc_file = f.replace('\\', '/')
 
-                            proc_file = f.replace('\\', '/')
+                        if (proc_file[-4:].lower() == '.wav' and proc_file[-8:].lower() != '.wrk.wav'):
+                            f1 = proc_file
+                            f2 = proc_file[:-4] + '.wrk.wav'
+                            try:
+                                os.rename(f1, f2)
+                                proc_file = f2
+                            except:
+                                pass
+                        if (proc_file[-4:].lower() == '.mp3' and proc_file[-8:].lower() != '.wrk.mp3'):
+                            f1 = proc_file
+                            f2 = proc_file[:-4] + '.wrk.mp3'
+                            try:
+                                os.rename(f1, f2)
+                                proc_file = f2
+                            except:
+                                pass
 
-                            if (proc_file[-4:].lower() == '.wav' and proc_file[-8:].lower() != '.wrk.wav'):
-                                f1 = proc_file
-                                f2 = proc_file[:-4] + '.wrk.wav'
+                        if (proc_file[-8:].lower() == '.wrk.wav' or proc_file[-8:].lower() == '.wrk.mp3'):
+                            f1 = proc_file
+                            f2 = proc_file[:-8] + proc_file[-4:]
+                            try:
+                                os.rename(f1, f2)
+                                proc_file = f2
+                            except:
+                                pass
+
+                            # 実行カウンタ
+                            self.proc_last = time.time()
+                            self.proc_seq += 1
+                            if (self.proc_seq > 9999):
+                                self.proc_seq = 1
+                            seq4 = '{:04}'.format(self.proc_seq)
+                            seq2 = '{:02}'.format(self.proc_seq)
+
+                            proc_name = proc_file.replace(path, '')
+                            proc_name = proc_name[:-4]
+
+                            work_name = self.proc_id + '.' + seq2
+                            work_file = qPath_work + work_name + '.wav'
+                            if (os.path.exists(work_file)):
+                                os.remove(work_file)
+
+                            sox = subprocess.Popen(['sox', '-q', proc_file, '-r', '16000', '-b', '16', '-c', '1', work_file, ], \
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                            sox.wait()
+                            sox.terminate()
+                            sox = None
+
+                            if (os.path.exists(work_file)):
+
+                                if (self.micDev.isdigit()):
+                                    os.remove(proc_file)
+
+                                # ログ
+                                if (self.runMode == 'debug') or (not self.micDev.isdigit()):
+                                    qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
+
+                                # ビジー設定
+                                if (not os.path.exists(fileBsy)):
+                                    qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                                    if (str(self.id) == '0'):
+                                        qFunc.busySet(qBusy_a_wav, True)
+
+                                # ファイルサイズ
+                                work_size = 0
                                 try:
-                                    os.rename(f1, f2)
-                                    proc_file = f2
+                                    rb = open(work_file, 'rb')
+                                    work_size = sys.getsizeof(rb.read())
+                                    rb.close
+                                    rb = None
                                 except:
-                                    pass
-                            if (proc_file[-4:].lower() == '.mp3' and proc_file[-8:].lower() != '.wrk.mp3'):
-                                f1 = proc_file
-                                f2 = proc_file[:-4] + '.wrk.mp3'
-                                try:
-                                    os.rename(f1, f2)
-                                    proc_file = f2
-                                except:
-                                    pass
+                                    rb = None
 
-                            if (proc_file[-8:].lower() == '.wrk.wav' or proc_file[-8:].lower() == '.wrk.mp3'):
-                                f1 = proc_file
-                                f2 = proc_file[:-8] + proc_file[-4:]
-                                try:
-                                    os.rename(f1, f2)
-                                    proc_file = f2
-                                except:
-                                    pass
-
-                                # 実行カウンタ
+                                # ファイル分割処理
                                 self.proc_last = time.time()
-                                self.proc_seq += 1
-                                if (self.proc_seq > 9999):
-                                    self.proc_seq = 1
-                                seq4 = '{:04}'.format(self.proc_seq)
-                                seq2 = '{:02}'.format(self.proc_seq)
+                                self.sub_proc(seq4, proc_file, work_file, proc_name, work_size, base_byte, cn_s, )
 
-                                proc_name = proc_file.replace(path, '')
-                                proc_name = proc_name[:-4]
+                                if (not self.micDev.isdigit()):
+                                    base_byte += work_size - 44
 
-                                work_name = self.proc_id + '.' + seq2
-                                work_file = qPath_work + work_name + '.wav'
-                                if (os.path.exists(work_file)):
-                                    os.remove(work_file)
-
-                                sox = subprocess.Popen(['sox', '-q', proc_file, '-r', '16000', '-b', '16', '-c', '1', work_file, ], \
-                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                                sox.wait()
-                                sox.terminate()
-                                sox = None
-
-                                if (os.path.exists(work_file)):
-
-                                    if (self.micDev.isdigit()):
-                                        os.remove(proc_file)
-
-                                    # ログ
-                                    if (self.runMode == 'debug') or (not self.micDev.isdigit()):
-                                        qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
-
-                                    # ビジー設定
-                                    if (not os.path.exists(fileBsy)):
-                                        qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
-                                        if (str(self.id) == '0'):
-                                            qFunc.busySet(qBusy_a_wav, True)
-
-                                    # ファイルサイズ
-                                    work_size = 0
-                                    try:
-                                        rb = open(work_file, 'rb')
-                                        work_size = sys.getsizeof(rb.read())
-                                        rb.close
-                                        rb = None
-                                    except:
-                                        rb = None
-
-                                    # ファイル分割処理
-                                    self.proc_last = time.time()
-                                    self.sub_proc(seq4, proc_file, work_file, proc_name, work_size, base_byte, cn_s, )
-
-                                    if (not self.micDev.isdigit()):
-                                        base_byte += work_size - 44
-
-                                    time.sleep(0.50)
-
-                    #except:
-                    #    pass
+                                time.sleep(0.50)
+                    
+                #except:
+                #    pass
 
 
 
@@ -302,6 +300,10 @@ class proc_voice2wav:
             qFunc.remove(fileBsy)
             if (str(self.id) == '0'):
                 qFunc.busySet(qBusy_a_wav, False)
+
+            # バッチ実行時は終了
+            if (not self.micDev.isdigit()):
+                break
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \

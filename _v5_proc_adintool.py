@@ -207,110 +207,109 @@ class proc_adintool:
 
 
             # 処理
-            if (True):
 
-                # on ?
-                sw = 'off'
-                if  (qFunc.busyCheck(qBusy_dev_mic, 1) != 'busy'):
-                    if (self.micDev.isdigit()):
-                        if (self.micType == 'usb'):
-                                sw = 'on'
-                        else:
-                            if  (qFunc.busyCheck(qBusy_a_ctrl,  1) != 'busy') \
-                            and (qFunc.busyCheck(qBusy_a_wav,   1) != 'busy') \
-                            and (qFunc.busyCheck(qBusy_a_STT,   1) != 'busy') \
-                            and (qFunc.busyCheck(qBusy_a_TTS,   1) != 'busy') \
-                            and (qFunc.busyCheck(qBusy_a_TRA,   1) != 'busy') \
-                            and (qFunc.busyCheck(qBusy_a_play,  1) != 'busy'):
-                                sw = 'on'
+            # on ?
+            sw = 'off'
+            if  (qFunc.busyCheck(qBusy_dev_mic, 1) != 'busy'):
+                if (self.micDev.isdigit()):
+                    if (self.micType == 'usb'):
+                            sw = 'on'
+                    else:
+                        if  (qFunc.busyCheck(qBusy_a_ctrl,  1) != 'busy') \
+                        and (qFunc.busyCheck(qBusy_a_wav,   1) != 'busy') \
+                        and (qFunc.busyCheck(qBusy_a_STT,   1) != 'busy') \
+                        and (qFunc.busyCheck(qBusy_a_TTS,   1) != 'busy') \
+                        and (qFunc.busyCheck(qBusy_a_TRA,   1) != 'busy') \
+                        and (qFunc.busyCheck(qBusy_a_play,  1) != 'busy'):
+                            sw = 'on'
 
-                # off -> on
-                if (sw == 'on'):
-                    if (adintool_exe is None):
+            # off -> on
+            if (sw == 'on'):
+                if (adintool_exe is None):
 
-                        # 実行カウンタ
-                        self.proc_last = time.time()
-                        self.proc_seq += 1
-                        if (self.proc_seq > 9999):
-                            self.proc_seq = 1
+                    # 実行カウンタ
+                    self.proc_last = time.time()
+                    self.proc_seq += 1
+                    if (self.proc_seq > 9999):
+                        self.proc_seq = 1
 
-                        # ビジー設定 (ready)
-                        if (not os.path.exists(fileBsy)):
-                            qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
-                        if (str(self.id) == '0'):
-                            qFunc.busySet(qBusy_a_inp, True)
-
-                        # ガイド音
-                        if (self.micGuide == 'on' or self.micGuide == 'sound'):
-                            qFunc.guide('_ready')
-
-                        if (True):
-                            nowTime = datetime.datetime.now()
-                            filename = self.path + nowTime.strftime('%Y%m%d.%H%M%S') +'.adintool'
-                            adintool_exe = subprocess.Popen(['adintool', '-in', 'mic', \
-                                            '-rewind', adin_rewind, '-headmargin', adin_headmg, '-tailmargin', adin_tailmg, \
-                                            '-fvad', vadLevel, '-lv', self.micLevel, \
-                                            '-out', 'file', '-filename', filename, '-startid', '5001', ] , \
-                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-
-                    if (adintool_gui is None) and (os.name == 'nt'):
-                        if (self.micGuide == 'on' or self.micGuide == 'display'):
-                            adintool_gui = subprocess.Popen(['adintool-gui', '-in', 'mic', \
-                                            '-rewind', adin_rewind, '-headmargin', adin_headmg, '-tailmargin', adin_tailmg, \
-                                            '-lv', self.micLevel,] , \
-                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-
-                # off, accept ?
-                sw = 'on'
-                if (qFunc.busyCheck(qBusy_dev_mic, 0) == 'busy'):
-                        sw = 'off'
-                if (self.micType == 'bluetooth'):
-                    if (qFunc.busyCheck(qBusy_a_ctrl,  0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_a_wav,   0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_a_STT,   0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_a_TTS,   0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_a_TRA,   0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_a_play,  0) == 'busy'):
-                        sw = 'off'
-                if (not adintool_exe is None):
-                    files = glob.glob(self.path + '*')
-                    if (len(files) > 0):
-                        chktime = time.time()
-                        while (len(files) > 0) and ((time.time() - chktime) < 2):
-                            time.sleep(0.20)
-                            files = glob.glob(self.path + '*')
-                        if (len(files) == 0):
-                            sw = 'accept'
-
-                # on -> off, accept
-                if (sw == 'off') or (sw == 'accept'):
-
-                    # adintool 終了
-                    if (not adintool_gui is None):
-                        adintool_gui.terminate()
-                        adintool_gui = None
-
-                    if (self.micType == 'bluetooth'):
-
-                        # adintool 終了
-                        if (not adintool_exe is None):
-                            adintool_exe.terminate()
-                            adintool_exe = None
-
-                        # ビジー解除 (!ready)
-                        qFunc.remove(fileBsy)
-                        if (str(self.id) == '0'):
-                            qFunc.busySet(qBusy_a_inp, False)
+                    # ビジー設定 (ready)
+                    if (not os.path.exists(fileBsy)):
+                        qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                    if (str(self.id) == '0'):
+                        qFunc.busySet(qBusy_a_inp, True)
 
                     # ガイド音
-                    if (sw == 'accept'):
-                        if (self.micGuide == 'on') or (self.micGuide == 'sound'):
-                            qFunc.guide('_accept')
+                    if (self.micGuide == 'on' or self.micGuide == 'sound'):
+                        qFunc.guide('_ready')
 
-                            if (self.runMode == 'debug') \
-                            or (self.runMode == 'handsfree') \
-                            or (self.runMode == 'translator'):
-                                time.sleep(4.00)
+                    if (True):
+                        nowTime = datetime.datetime.now()
+                        filename = self.path + nowTime.strftime('%Y%m%d.%H%M%S') +'.adintool'
+                        adintool_exe = subprocess.Popen(['adintool', '-in', 'mic', \
+                                        '-rewind', adin_rewind, '-headmargin', adin_headmg, '-tailmargin', adin_tailmg, \
+                                        '-fvad', vadLevel, '-lv', self.micLevel, \
+                                        '-out', 'file', '-filename', filename, '-startid', '5001', ] , \
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+                if (adintool_gui is None) and (os.name == 'nt'):
+                    if (self.micGuide == 'on' or self.micGuide == 'display'):
+                        adintool_gui = subprocess.Popen(['adintool-gui', '-in', 'mic', \
+                                        '-rewind', adin_rewind, '-headmargin', adin_headmg, '-tailmargin', adin_tailmg, \
+                                        '-lv', self.micLevel,] , \
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+            # off, accept ?
+            sw = 'on'
+            if (qFunc.busyCheck(qBusy_dev_mic, 0) == 'busy'):
+                    sw = 'off'
+            if (self.micType == 'bluetooth'):
+                if (qFunc.busyCheck(qBusy_a_ctrl,  0) == 'busy') \
+                or (qFunc.busyCheck(qBusy_a_wav,   0) == 'busy') \
+                or (qFunc.busyCheck(qBusy_a_STT,   0) == 'busy') \
+                or (qFunc.busyCheck(qBusy_a_TTS,   0) == 'busy') \
+                or (qFunc.busyCheck(qBusy_a_TRA,   0) == 'busy') \
+                or (qFunc.busyCheck(qBusy_a_play,  0) == 'busy'):
+                    sw = 'off'
+            if (not adintool_exe is None):
+                files = glob.glob(self.path + '*')
+                if (len(files) > 0):
+                    chktime = time.time()
+                    while (len(files) > 0) and ((time.time() - chktime) < 2):
+                        time.sleep(0.20)
+                        files = glob.glob(self.path + '*')
+                    if (len(files) == 0):
+                        sw = 'accept'
+
+            # on -> off, accept
+            if (sw == 'off') or (sw == 'accept'):
+
+                # adintool 終了
+                if (not adintool_gui is None):
+                    adintool_gui.terminate()
+                    adintool_gui = None
+
+                if (self.micType == 'bluetooth'):
+
+                    # adintool 終了
+                    if (not adintool_exe is None):
+                        adintool_exe.terminate()
+                        adintool_exe = None
+
+                    # ビジー解除 (!ready)
+                    qFunc.remove(fileBsy)
+                    if (str(self.id) == '0'):
+                        qFunc.busySet(qBusy_a_inp, False)
+
+                # ガイド音
+                if (sw == 'accept'):
+                    if (self.micGuide == 'on') or (self.micGuide == 'sound'):
+                        qFunc.guide('_accept')
+
+                        if (self.runMode == 'debug') \
+                        or (self.runMode == 'handsfree') \
+                        or (self.runMode == 'translator'):
+                            time.sleep(4.00)
 
 
 

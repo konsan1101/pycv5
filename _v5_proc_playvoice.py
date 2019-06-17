@@ -185,115 +185,113 @@ class proc_playvoice:
 
 
             # 処理
-            if (True):
+            path = self.path
+            path_files = glob.glob(path + '*')
+            if (len(path_files) > 0):
 
-                path = self.path
-                path_files = glob.glob(path + '*')
-                if (len(path_files) > 0):
+                #try:
+                if (True):
 
-                    #try:
-                    if (True):
+                    for f in path_files:
 
-                        for f in path_files:
+                        # 停止要求確認
+                        if (self.breakFlag.is_set()):
+                            self.breakFlag.clear()
+                            self.proc_step = '9'
+                            break
 
-                            # 停止要求確認
-                            if (self.breakFlag.is_set()):
-                                self.breakFlag.clear()
-                                self.proc_step = '9'
-                                break
+                        proc_file = f.replace('\\', '/')
 
-                            proc_file = f.replace('\\', '/')
+                        if (proc_file[-4:].lower() == '.wav' and proc_file[-8:].lower() != '.wrk.wav'):
+                            f1 = proc_file
+                            f2 = proc_file[:-4] + '.wrk.wav'
+                            try:
+                                os.rename(f1, f2)
+                                proc_file = f2
+                            except:
+                                pass
+                        if (proc_file[-4:].lower() == '.mp3' and proc_file[-8:].lower() != '.wrk.mp3'):
+                            f1 = proc_file
+                            f2 = proc_file[:-4] + '.wrk.mp3'
+                            try:
+                                os.rename(f1, f2)
+                                proc_file = f2
+                            except:
+                                pass
 
-                            if (proc_file[-4:].lower() == '.wav' and proc_file[-8:].lower() != '.wrk.wav'):
-                                f1 = proc_file
-                                f2 = proc_file[:-4] + '.wrk.wav'
-                                try:
-                                    os.rename(f1, f2)
-                                    proc_file = f2
-                                except:
-                                    pass
-                            if (proc_file[-4:].lower() == '.mp3' and proc_file[-8:].lower() != '.wrk.mp3'):
-                                f1 = proc_file
-                                f2 = proc_file[:-4] + '.wrk.mp3'
-                                try:
-                                    os.rename(f1, f2)
-                                    proc_file = f2
-                                except:
-                                    pass
+                        if (proc_file[-8:].lower() == '.wrk.wav' or proc_file[-8:].lower() == '.wrk.mp3'):
+                            f1 = proc_file
+                            f2 = proc_file[:-8] + proc_file[-4:]
+                            try:
+                                os.rename(f1, f2)
+                                proc_file = f2
+                            except:
+                                pass
 
-                            if (proc_file[-8:].lower() == '.wrk.wav' or proc_file[-8:].lower() == '.wrk.mp3'):
-                                f1 = proc_file
-                                f2 = proc_file[:-8] + proc_file[-4:]
-                                try:
-                                    os.rename(f1, f2)
-                                    proc_file = f2
-                                except:
-                                    pass
+                            # 実行カウンタ
+                            self.proc_last = time.time()
+                            self.proc_seq += 1
+                            if (self.proc_seq > 9999):
+                                self.proc_seq = 1
+                            seq4 = '{:04}'.format(self.proc_seq)
+                            seq2 = '{:02}'.format(self.proc_seq)
 
-                                # 実行カウンタ
-                                self.proc_last = time.time()
-                                self.proc_seq += 1
-                                if (self.proc_seq > 9999):
-                                    self.proc_seq = 1
-                                seq4 = '{:04}'.format(self.proc_seq)
-                                seq2 = '{:02}'.format(self.proc_seq)
+                            proc_name = proc_file.replace(path, '')
+                            proc_name = proc_name[:-4]
 
-                                proc_name = proc_file.replace(path, '')
-                                proc_name = proc_name[:-4]
+                            work_name = self.proc_id + '.' + seq2
+                            work_file = qPath_work + work_name + '.mp3'
+                            if (os.path.exists(work_file)):
+                                os.remove(work_file)
 
-                                work_name = self.proc_id + '.' + seq2
-                                work_file = qPath_work + work_name + '.mp3'
-                                if (os.path.exists(work_file)):
-                                    os.remove(work_file)
+                            sox = subprocess.Popen(['sox', '-q', proc_file, '-r', '16000', '-b', '16', '-c', '1', work_file, ], \
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                            sox.wait()
+                            sox.terminate()
+                            sox = None
 
-                                sox = subprocess.Popen(['sox', '-q', proc_file, '-r', '16000', '-b', '16', '-c', '1', work_file, ], \
-                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                                sox.wait()
-                                sox.terminate()
-                                sox = None
+                            if (os.path.exists(work_file)):
 
-                                if (os.path.exists(work_file)):
+                                if (self.micDev.isdigit()):
+                                    os.remove(proc_file)
 
-                                    if (self.micDev.isdigit()):
-                                        os.remove(proc_file)
+                                # ログ
+                                if (self.runMode == 'debug') or (not self.micDev.isdigit()):
+                                    qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
 
-                                    # ログ
-                                    if (self.runMode == 'debug') or (not self.micDev.isdigit()):
-                                        qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
+                                # 結果出力
+                                if (cn_s.qsize() < 99):
+                                    out_name  = 'filename'
+                                    out_value = work_file
+                                    cn_s.put([out_name, out_value])
 
-                                    # 結果出力
-                                    if (cn_s.qsize() < 99):
-                                        out_name  = 'filename'
-                                        out_value = work_file
-                                        cn_s.put([out_name, out_value])
+                                # ビジー設定
+                                if (not os.path.exists(fileBsy)):
+                                    qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                                    if (str(self.id) == '0'):
+                                        qFunc.busySet(qBusy_a_play, True)
 
-                                    # ビジー設定
-                                    if (not os.path.exists(fileBsy)):
-                                        qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
-                                        if (str(self.id) == '0'):
-                                            qFunc.busySet(qBusy_a_play, True)
+                                    if (self.micType == 'bluetooth') or (self.micGuide == 'on' or self.micGuide == 'sound'):
+                                        qFunc.busyCheck(qBusy_a_inp, 3)
 
-                                        if (self.micType == 'bluetooth') or (self.micGuide == 'on' or self.micGuide == 'sound'):
-                                            qFunc.busyCheck(qBusy_a_inp, 3)
+                                # 音声再生
+                                if (qFunc.busyCheck(qBusy_dev_spk, 0) == 'busy'):
+                                    qFunc.logOutput('spk_busy!_:' + work_name, )
+                                else:
+                                    
+                                    sox=subprocess.Popen(['sox', '-q', work_file, '-d', '--norm', ], \
+                                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-                                    # 音声再生
-                                    if (qFunc.busyCheck(qBusy_dev_spk, 0) == 'busy'):
-                                        qFunc.logOutput('spk_busy!_:' + work_name, )
-                                    else:
-                                        
-                                        sox=subprocess.Popen(['sox', '-q', work_file, '-d', '--norm', ], \
-                                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                                    if (self.runMode=='debug') or (self.runMode=='handsfree') \
+                                    or (self.runMode=='camera'):
+                                        sox.wait()
+                                        sox.terminate()
+                                        sox = None
 
-                                        if (self.runMode=='debug') or (self.runMode=='handsfree') \
-                                        or (self.runMode=='camera'):
-                                            sox.wait()
-                                            sox.terminate()
-                                            sox = None
+                                time.sleep(0.50)
 
-                                    time.sleep(0.50)
-
-                    #except:
-                    #    pass
+                #except:
+                #    pass
 
 
 
@@ -301,6 +299,10 @@ class proc_playvoice:
             qFunc.remove(fileBsy)
             if (str(self.id) == '0'):
                 qFunc.busySet(qBusy_a_play, False)
+
+            # バッチ実行時は終了
+            if (not self.micDev.isdigit()):
+                break
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \

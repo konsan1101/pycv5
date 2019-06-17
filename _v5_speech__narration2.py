@@ -76,6 +76,13 @@ if __name__ == '__main__':
                 if (len(f)>100):
                     f = f[:100] + u'…'
 
+                f1 = 'narration/tts/' + fileId[:-4] + '.txt'
+                f2 = 'narration/tts/' + fileId[:-4] + '.[' + f + '].txt'
+                try:
+                    os.rename(f1, f2)
+                except:
+                    pass
+
                 f1 = 'narration/mp3/' + fileId[:-4] + '.text2vocal.mp3'
                 f2 = 'narration/mp3/' + fileId[:-4] + '.[' + f + '].mp3'
                 try:

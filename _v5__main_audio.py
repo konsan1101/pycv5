@@ -246,6 +246,11 @@ class main_audio:
             sttreader_switch = 'off'
             trareader_switch = 'off'
 
+        if (not self.micDev.isdigit()):
+            julius_switch    = 'off'
+            sttreader_switch = 'off'
+            trareader_switch = 'off'
+
         # 待機ループ
         self.proc_step = '5'
 
@@ -462,8 +467,9 @@ class main_audio:
 
                 # 音声ファイル処理（バッチ）時の自動終了
                 if (not self.micDev.isdigit()):
-                    if  (int(time.time() - voice2wav_thread.proc_last) > 60) \
-                    and (int(time.time() - playvoice_thread.proc_last) > 60):
+                    if  (int(time.time() - coreSTT_thread.proc_last) > 60) \
+                    and (int(time.time() - coreTTS_thread.proc_last) > 60):
+                        qFunc.txtsWrite(qCtrl_control_audio, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
                         break
 
                 # マイク切り替え時、自動復旧処理
