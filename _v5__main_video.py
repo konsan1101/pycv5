@@ -99,9 +99,9 @@ import _v5_proc_coreCV
 
 runMode    = 'handsfree'
 
-qApiCV     = 'google'
+qApiCV     = 'azure'
 qApiOCR    = qApiCV
-qApiTrn    = 'free'
+qApiTrn    = qApiCV
 qLangCV    = 'ja'
 qLangOCR   = qLangCV
 qLangTrn   = 'en'
