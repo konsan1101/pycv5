@@ -321,7 +321,7 @@ class proc_controlv:
                 out_value = 'reset'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text == u'シャッター') or (proc_text.find(u'写真') >=0):
+            elif (proc_text == u'シャッター') or (proc_text.find(u'写真') >=0) or (proc_text.find(u'撮影') >=0):
                 out_name  = 'control'
                 out_value = 'shutter'
                 cn_s.put([out_name, out_value])

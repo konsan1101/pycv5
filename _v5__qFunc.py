@@ -740,17 +740,19 @@ class qBusy_status_txts_class(object):
 
 class qFPS_class(object):
     def __init__(self):
-        self.start = cv2.getTickCount()
-        self.count = 0
-        self.FPS   = 0
+        self.start     = cv2.getTickCount()
+        self.count     = 0
+        self.FPS       = 0
+        self.lastcheck = time.time()
     def get(self):
         self.count += 1
-        if (self.count >= 30):
+        if (self.count >= 15) or ((time.time() - self.lastcheck) > 5):
             nowTick  = cv2.getTickCount()
             diffSec  = (nowTick - self.start) / cv2.getTickFrequency()
             self.FPS = 1 / (diffSec / self.count)
             self.start = cv2.getTickCount()
             self.count = 0
+            self.lastcheck = time.time()
         return self.FPS
 
 

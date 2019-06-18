@@ -18,8 +18,8 @@ import base64
 import vision_api_google_key as google_key
 
 # google 機械翻訳
-import speech_api_google     as a_google_api
-import speech_api_google_key as a_google_key
+#import speech_api_google     as a_google_api
+#import speech_api_google_key as a_google_key
 
 
 
@@ -164,12 +164,12 @@ class VisionAPI:
                             try:
                                 for label in response['labelAnnotations']:
                                     text = label['description']
-                                    a_googleAPI = a_google_api.SpeechAPI()
-                                    a_res = a_googleAPI.authenticate('tra', a_google_key.getkey('tra'), )
-                                    if (a_res == True):
-                                        outText, api = a_googleAPI.translate(inpText=text, inpLang='en', outLang=lang, )
-                                        if (outText != ''):
-                                            text = outText
+                                    #a_googleAPI = a_google_api.SpeechAPI()
+                                    #a_res = a_googleAPI.authenticate('tra', a_google_key.getkey('tra'), )
+                                    #if (a_res == True):
+                                    #    outText, api = a_googleAPI.translate(inpText=text, inpLang='en', outLang=lang, )
+                                    #    if (outText != ''):
+                                    #        text = outText
                                     detect_label += str(text) + ','
                                     detect_label = detect_label.strip()
                             except:
@@ -177,12 +177,12 @@ class VisionAPI:
                             try:
                                 for landmark in response['landmarkAnnotations']:
                                     text = landmark['description']
-                                    a_googleAPI = a_google_api.SpeechAPI()
-                                    a_res = a_googleAPI.authenticate('tra', a_google_key.getkey('tra'), )
-                                    if (a_res == True):
-                                        outText, api = a_googleAPI.translate(inpText=text, inpLang='en', outLang=lang, )
-                                        if (outText != ''):
-                                            text = outText
+                                    #a_googleAPI = a_google_api.SpeechAPI()
+                                    #a_res = a_googleAPI.authenticate('tra', a_google_key.getkey('tra'), )
+                                    #if (a_res == True):
+                                    #    outText, api = a_googleAPI.translate(inpText=text, inpLang='en', outLang=lang, )
+                                    #    if (outText != ''):
+                                    #        text = outText
                                     detect_landmark += str(text) + ','
                                     detect_landmark = detect_landmark.strip()
                             except:

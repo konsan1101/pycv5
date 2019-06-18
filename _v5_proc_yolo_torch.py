@@ -167,11 +167,14 @@ class proc_yolo_torch:
         bbox_attrs = 5 + num_classes
         
         print("Loading network.....")
-        model = Darknet('yolo3_torch/cfg/yolov3.cfg')
-        model.load_weights('yolo3_torch/yolov3.weights')
+        #model = Darknet('yolo3_torch/cfg/yolov3.cfg')
+        #model.load_weights('yolo3_torch/yolov3.weights')
+        #model.net_info["height"] = 416
+        model = Darknet('yolo3_torch/cfg/yolov3-tiny.cfg')
+        model.load_weights('yolo3_torch/yolov3-tiny.weights')
+        model.net_info["height"] = 416
         print("Network successfully loaded")
 
-        model.net_info["height"] = 416
         inp_dim = int(model.net_info["height"])
         assert inp_dim % 32 == 0 
         assert inp_dim > 32
@@ -185,6 +188,10 @@ class proc_yolo_torch:
 
         classes = load_classes("yolo3_torch/data/coco.names")
         colors = pkl.load(open("yolo3_torch/data/pallete", "rb"))
+
+        # ＦＰＳ計測
+        qFPS_class = _v5__qFunc.qFPS_class()
+        qFPS_last  = time.time()
 
         # 待機ループ
         self.proc_step = '5'
@@ -276,35 +283,57 @@ class proc_yolo_torch:
                                 
                 out_img = orig_im.copy()
                 for detect in output:
-                    x1 = int(detect[1])
-                    y1 = int(detect[2])
-                    x2 = int(detect[3])
-                    y2 = int(detect[4])
-                    cl = int(detect[-1])
-                    sc = float(detect[-2])
+                    try:
+                        x1 = int(detect[1])
+                        y1 = int(detect[2])
+                        x2 = int(detect[3])
+                        y2 = int(detect[4])
+                        cl = int(detect[-1])
+                        sc = float(detect[-2])
 
-                    label = '{} {:.2f}'.format(classes[cl], sc)
-                    #color = random.choice(colors)
-                    color = colors[ cl % len(colors) ]
+                        if ((x2-x1)>10) and ((y2-y1)>10):
 
-                    cv2.rectangle(out_img, (x1, y1), (x2, y2), color, 2)
+                            label = '{} {:.2f}'.format(classes[cl], sc)
+                            #color = random.choice(colors)
+                            color = colors[ cl % len(colors) ]
 
-                    # 認識画像出力
-                    if (classes[cl] == 'person') \
-                    or (classes[cl] == 'car'):
+                            cv2.rectangle(out_img, (x1, y1), (x2, y2), color, 2)
 
-                        if (x1 != x2):
+                            # 認識画像出力
+                            if (classes[cl] == 'person') \
+                            or (classes[cl] == 'car'):
 
-                            # 結果出力
-                            out_name  = '[array]'
-                            out_value = orig_im[y1:y2, x1:x2].copy()
-                            cn_s.put([out_name, out_value])
+                                # 結果出力
+                                out_name  = '[array]'
+                                out_value = orig_im[y1:y2, x1:x2].copy()
+                                cn_s.put([out_name, out_value])
 
-                    t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 1 , 1)[0]
-                    x2 = x1 + t_size[0] + 3
-                    y1 = y2 - t_size[1] - 4
-                    cv2.rectangle(out_img, (x1, y1), (x2, y2), color, -1)
-                    cv2.putText(out_img, label, (x1, y1 + t_size[1] + 2), cv2.FONT_HERSHEY_PLAIN, 1, [225,255,255], 1)
+                        t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 1 , 1)[0]
+                        x2 = x1 + t_size[0] + 3
+                        y1 = y2 - t_size[1] - 4
+                        cv2.rectangle(out_img, (x1, y1), (x2, y2), color, -1)
+                        cv2.putText(out_img, label, (x1, y1 + t_size[1] + 2), cv2.FONT_HERSHEY_PLAIN, 1, [225,255,255], 1)
+
+                    except:
+                        pass
+
+
+                out_height, out_width = out_img.shape[:2]
+
+                # ＦＰＳ計測
+                fps = qFPS_class.get()
+                if (int(time.time() - qFPS_last) > 5):
+                    qFPS_last  = time.time()
+
+                    # 結果出力(fps)
+                    out_name  = 'fps'
+                    out_value = '{:.2f}'.format(fps)
+                    cn_s.put([out_name, out_value])
+
+                    # 結果出力(reso)
+                    out_name  = 'reso'
+                    out_value = str(out_width) + 'x' + str(out_height)
+                    cn_s.put([out_name, out_value])
 
                 # 結果出力
                 out_name  = '[img]'

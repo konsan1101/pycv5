@@ -240,6 +240,10 @@ class proc_yolo_keras:
 
         font = ImageFont.truetype(font='_fonts/_vision_font_ipaexg.ttf', size=18, )
 
+        # ＦＰＳ計測
+        qFPS_class = _v5__qFunc.qFPS_class()
+        qFPS_last  = time.time()
+
         # 待機ループ
         self.proc_step = '5'
 
@@ -399,12 +403,29 @@ class proc_yolo_keras:
                     draw.text(text_origin, label, fill=(0, 0, 0), font=font)
                     del draw
 
-                # 結果出力
-                if (hit_count != 0):
-                    out_name  = '[img]'
-                    #out_value = np.asarray(image)
-                    out_value = np.asarray(output)
+
+                out_img = np.asarray(output)
+                out_height, out_width = out_img.shape[:2]
+
+                # ＦＰＳ計測
+                fps = qFPS_class.get()
+                if (int(time.time() - qFPS_last) > 5):
+                    qFPS_last  = time.time()
+
+                    # 結果出力(fps)
+                    out_name  = 'fps'
+                    out_value = '{:.2f}'.format(fps)
                     cn_s.put([out_name, out_value])
+
+                    # 結果出力(reso)
+                    out_name  = 'reso'
+                    out_value = str(out_width) + 'x' + str(out_height)
+                    cn_s.put([out_name, out_value])
+
+                # 結果出力
+                out_name  = '[img]'
+                out_value = out_img.copy()
+                cn_s.put([out_name, out_value])
 
                 time.sleep(0.50)
 

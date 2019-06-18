@@ -97,7 +97,7 @@ import _v5_proc_coreCV
 
 
 
-runMode    = 'camera'
+runMode    = 'handsfree'
 
 qApiCV     = 'azure'
 qApiOCR    = qApiCV
@@ -294,6 +294,9 @@ class main_video:
         cvdetect1_last_put = time.time()
         cvdetect2_last_put = time.time()
         yolo_last_put      = time.time()
+
+        main_img    = None
+        display_img = None
 
         onece = True
 
@@ -597,120 +600,151 @@ class main_video:
                 if (inp_name.lower() == 'cam2zoom'):
                     camera_thread2.put(['camzoom', inp_value ])
 
-            # 処理
-            if (True):
+            # シャッター
+            if (inp_name.lower() == 'shutter'):
 
-                # 動画ファイル処理（バッチ）時の自動終了
-                if (not self.cam1Dev.isdigit()):
-                    if  (int(time.time() - camera_thread1.proc_last) > 60):
-                        break
+                # 撮影ログ
+                if (not main_img is None):
+                    overlay_thread.put(['[array]', main_img ])
 
-                # 制御処理
-                control = ''
+                # 写真撮影（画像と表示中画面の保管）
+                nowTime = datetime.datetime.now()
+                stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
+                filename1 = qPath_rec     + stamp + '.photo.jpg'
+                filename2 = qPath_v_photo + stamp + '.photo.jpg'
+                filename3 = qCtrl_result_photo
+                filename4 = qPath_rec     + stamp + '.screen.jpg'
+                filename5 = qPath_v_photo + stamp + '.screen.jpg'
+                filename6 = qCtrl_result_screen
+                try:
+                    if (not main_img is None):
+                        cv2.imwrite(filename1, main_img)
+                        cv2.imwrite(filename2, main_img)
+                        cv2.imwrite(filename3, main_img)
+                    if (not display_img is None):
+                        cv2.imwrite(filename4, display_img)
+                        cv2.imwrite(filename5, display_img)
+                        cv2.imwrite(filename6, display_img)
+                except:
+                    pass
 
-                if (not controlv_thread is None):
-                    while (controlv_thread.proc_r.qsize() != 0):
-                        res_data  = controlv_thread.get()
-                        res_name  = res_data[0]
-                        res_value = res_data[1]
-                        if (res_name == 'control'):
-                            control = res_value
+                # ＡＩ画像認識処理へ
+                filename0 = qPath_v_inp   + stamp + '.photo.jpg'
+                #try:
+                if (not main_img is None):
+                    cv2.imwrite(filename0, main_img)
+                #except:
+                #    pass
+
+
+
+            # 動画ファイル処理（バッチ）時の自動終了
+            if (not self.cam1Dev.isdigit()):
+                if  (int(time.time() - camera_thread1.proc_last) > 60):
+                    break
+
+            # 制御処理
+            control = ''
+
+            if (not controlv_thread is None):
+                while (controlv_thread.proc_r.qsize() != 0):
+                    res_data  = controlv_thread.get()
+                    res_name  = res_data[0]
+                    res_value = res_data[1]
+                    if (res_name == 'control'):
+                        control = res_value
+                        # 結果出力
+                        if (cn_s.qsize() < 99):
+                            out_name  = res_name
+                            out_value = res_value
+                            cn_s.put([out_name, out_value])
+
+                    if (res_name == '[txts]'):
+                        if (not txt2img_thread is None):
                             # 結果出力
                             if (cn_s.qsize() < 99):
                                 out_name  = res_name
                                 out_value = res_value
-                                cn_s.put([out_name, out_value])
+                                txt2img_thread.put([out_name, out_value])
 
-                        if (res_name == '[txts]'):
-                            if (not txt2img_thread is None):
-                                # 結果出力
-                                if (cn_s.qsize() < 99):
-                                    out_name  = res_name
-                                    out_value = res_value
-                                    txt2img_thread.put([out_name, out_value])
+            if  (cn_s.qsize() == 0) \
+            and (overlay_thread.proc_s.qsize() == 0):
 
-                if  (cn_s.qsize() == 0) \
-                and (overlay_thread.proc_s.qsize() == 0):
+                # 画像入力（メインカメラ）
+                while (camera_thread1.proc_r.qsize() != 0):
+                    res_data  = camera_thread1.get()
+                    res_name  = res_data[0]
+                    res_value = res_data[1]
+                    if (res_name == 'fps'):
+                        overlay_thread.put(['cam1_fps', res_value ])
+                    if (res_name == 'reso'):
+                        overlay_thread.put(['cam1_reso', res_value ])
+                    if (res_name == '[img]'):
+                        main_img = res_value.copy()
 
-                    # 画像入力（メインカメラ）
-                    while (camera_thread1.proc_r.qsize() != 0):
-                        res_data  = camera_thread1.get()
+                        if (qFunc.busyCheck(qBusy_dev_cam, 0) != 'busy'):
+
+                            # 画像識別（ＱＲ）
+                            if (int(time.time() - cvreader_last_put) >= 1):
+                                if (not cvreader_thread is None):
+                                    if (cvreader_thread.proc_s.qsize() == 0):
+                                        cvreader_thread.put(['[img]', main_img ])
+                                        cvreader_last_put = time.time()
+
+                            # 画像識別（顔等）
+                            if  (int(time.time() - cvdetect1_last_put) >= 1):
+                                if (not cvdetect_thread1 is None):
+                                    if (cvdetect_thread1.proc_s.qsize() == 0):
+                                        cvdetect_thread1.put(['[img]', main_img ])
+                                        cvdetect1_last_put = time.time()
+                            
+                            # 画像識別（自動車等）
+                            if  (int(time.time() - cvdetect2_last_put) >= 1):
+                                if (not cvdetect_thread2 is None):
+                                    if (cvdetect_thread2.proc_s.qsize() == 0):
+                                        cvdetect_thread2.put(['[img]', main_img ])
+                                        cvdetect2_last_put = time.time()
+
+                            # 画像識別（YOLO）keras
+                            if  (int(time.time() - yolo_last_put) >= 1):
+                                if (not yolo_keras_thread is None):
+                                    if (yolo_keras_thread.proc_s.qsize() == 0):
+                                        yolo_keras_thread.put(['[img]', main_img ])
+                                        yolo_last_put = time.time()
+
+                            # 画像識別（YOLO）torch
+                            if (int(time.time() - yolo_last_put) >= (1/yolo_torch_max)/2):
+                                i = yolo_torch_seq
+                                if (not yolo_torch_thread[i] is None):
+                                    if (yolo_torch_thread[i].proc_s.qsize() == 0):
+                                        yolo_torch_thread[i].put(['[img]', main_img ])
+                                        yolo_last_put = time.time()
+                                        #print('yolo put ' + str(i))
+                                        yolo_torch_seq += 1
+                                        yolo_torch_seq = yolo_torch_seq % yolo_torch_max
+                                        break
+
+                        # 画像合成（メイン画像）
+                        overlay_thread.put(['[cam1]', main_img ])
+
+                        break
+
+                # 画像入力（ワイプカメラ）
+                if (not camera_thread2 is None):
+                    while (camera_thread2.proc_r.qsize() != 0):
+                        res_data  = camera_thread2.get()
                         res_name  = res_data[0]
                         res_value = res_data[1]
                         if (res_name == 'fps'):
-                            overlay_thread.put(['cam1_fps', res_value ])
+                            overlay_thread.put(['cam2_fps', res_value ])
                         if (res_name == 'reso'):
-                            overlay_thread.put(['cam1_reso', res_value ])
+                            overlay_thread.put(['cam2_reso', res_value ])
                         if (res_name == '[img]'):
-                            main_img = res_value.copy()
+                            wipe_img = res_value.copy()
 
-                            if (qFunc.busyCheck(qBusy_dev_cam, 0) != 'busy'):
-
-                                # 画像識別（ＱＲ）
-                                if (int(time.time() - cvreader_last_put) >= 1):
-                                    if (not cvreader_thread is None):
-                                        if (cvreader_thread.proc_s.qsize() == 0):
-                                            cvreader_thread.put(['[img]', main_img ])
-                                            cvreader_last_put = time.time()
-                                # 画像識別（顔等）
-                                if  (int(time.time() - cvdetect1_last_put) >= 1):
-                                    if (not cvdetect_thread1 is None):
-                                        if (cvdetect_thread1.proc_s.qsize() == 0):
-                                            cvdetect_thread1.put(['[img]', main_img ])
-                                            cvdetect1_last_put = time.time()
-                                # 画像識別（自動車等）
-                                if  (int(time.time() - cvdetect1_last_put) >= 1):
-                                    if (not cvdetect_thread2 is None):
-                                        if (cvdetect_thread2.proc_s.qsize() == 0):
-                                            cvdetect_thread2.put(['[img]', main_img ])
-                                            cvdetect1_last_put = time.time()
-
-                                # 画像識別（YOLO）keras
-                                if  (int(time.time() - yolo_last_put) >= 1):
-                                    if (not yolo_keras_thread is None):
-                                        if (yolo_keras_thread.proc_s.qsize() == 0):
-                                            yolo_keras_thread.put(['[img]', main_img ])
-                                            yolo_last_put = time.time()
-
-                                # 画像識別（YOLO）torch
-                                if (int(time.time() - yolo_last_put) >= 1):
-                                    i = yolo_torch_seq
-                                    if (not yolo_torch_thread[i] is None):
-                                        if (yolo_torch_thread[i].proc_s.qsize() == 0):
-                                            yolo_torch_thread[i].put(['[img]', main_img ])
-                                            yolo_last_put = time.time()
-                                            print('yolo put ' + str(i))
-                                            yolo_torch_seq += 1
-                                            yolo_torch_seq = yolo_torch_seq % yolo_torch_max
-                                            break
-
-                            # 画像合成（メイン画像）
-                            overlay_thread.put(['[cam1]', main_img ])
-
-                            # 結果出力
-                            if (cn_s.qsize() < 99):
-                                out_name  = '[main_img]'
-                                out_value = main_img
-                                cn_s.put([out_name, out_value])
-
+                            # 画像合成（ワイプ画像）
+                            overlay_thread.put(['[cam2]', wipe_img ])
                             break
-
-                    # 画像入力（ワイプカメラ）
-                    if (not camera_thread2 is None):
-                        while (camera_thread2.proc_r.qsize() != 0):
-                            res_data  = camera_thread2.get()
-                            res_name  = res_data[0]
-                            res_value = res_data[1]
-                            if (res_name == 'fps'):
-                                overlay_thread.put(['cam2_fps', res_value ])
-                            if (res_name == 'reso'):
-                                overlay_thread.put(['cam2_reso', res_value ])
-                            if (res_name == '[img]'):
-                                wipe_img = res_value.copy()
-
-                                # 画像合成（ワイプ画像）
-                                overlay_thread.put(['[cam2]', wipe_img ])
-                                break
 
                 # 画像合成（ＱＲ　識別結果）
                 if (not cvreader_thread is None):
@@ -757,6 +791,10 @@ class main_video:
                         res_data  = yolo_keras_thread.get()
                         res_name  = res_data[0]
                         res_value = res_data[1]
+                        if (res_name == 'fps'):
+                            overlay_thread.put(['comp_fps', res_value ])
+                        if (res_name == 'reso'):
+                            overlay_thread.put(['comp_reso', res_value ])
                         if (res_name == '[img]'):
                             yolo_img = res_value.copy()
                             overlay_thread.put(['[comp]', yolo_img ])
@@ -773,8 +811,12 @@ class main_video:
                             res_data  = yolo_torch_thread[i].get()
                             res_name  = res_data[0]
                             res_value = res_data[1]
+                            if (res_name == 'fps'):
+                                overlay_thread.put(['comp_fps', '{:.2f}'.format(float(res_value) * yolo_torch_max) ])
+                            if (res_name == 'reso'):
+                                overlay_thread.put(['comp_reso', res_value ])
                             if (res_name == '[img]'):
-                                print('yolo get '+str(i))
+                                #print('yolo get '+str(i))
                                 yolo_img = res_value.copy()
                                 overlay_thread.put(['[comp]', yolo_img ])
                             if (res_name == '[array]'):
@@ -1188,7 +1230,6 @@ if __name__ == '__main__':
     qFunc.busySet(qBusy_dev_cam, False)
     qFunc.busySet(qBusy_dev_dsp, False)
 
-    main_img    = None
     display_img = None
 
     display = None
@@ -1261,8 +1302,6 @@ if __name__ == '__main__':
             if (res_name == 'control'):
                 control  = res_value
                 break
-            if (res_name == '[main_img]'):
-                main_img = res_value.copy()
             if (res_name == '[display_img]'):
                 display_img = res_value.copy()
 
@@ -1370,9 +1409,6 @@ if __name__ == '__main__':
         # シャッター
         if (control == 'shutter'):
 
-            # シャッター音
-            qFunc.guide('_shutter', sync=False)
-
             ## 白表示
             display_height, display_width = display_img.shape[:2]
             white_img = np.zeros((display_height,display_width,3), np.uint8)
@@ -1382,49 +1418,26 @@ if __name__ == '__main__':
             if (cv2.waitKey(1) >= 0):
                 qFunc.logOutput('key accept !', )
 
-            # 写真撮影（画像と表示中画面の保管）
-            nowTime = datetime.datetime.now()
-            stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
-            filename1 = qPath_rec     + stamp + '.photo.jpg'
-            filename2 = qPath_v_photo + stamp + '.photo.jpg'
-            filename3 = qCtrl_result_photo
-            filename4 = qPath_rec     + stamp + '.screen.jpg'
-            filename5 = qPath_v_photo + stamp + '.screen.jpg'
-            filename6 = qCtrl_result_screen
-            try:
-                if (not main_img is None):
-                    cv2.imwrite(filename1, main_img.copy())
-                    cv2.imwrite(filename2, main_img.copy())
-                    cv2.imwrite(filename3, main_img.copy())
-                if (not display_img is None):
-                    cv2.imwrite(filename4, display_img.copy())
-                    cv2.imwrite(filename5, display_img.copy())
-                    cv2.imwrite(filename6, display_img.copy())
-            except:
-                pass
+            # シャッター音
+            qFunc.guide('_shutter', sync=False)
 
-            # ＡＩ画像認識処理へ
-            filename0 = qPath_v_inp   + stamp + '.photo.jpg'
-            #try:
-            if (not main_img is None):
-                cv2.imwrite(filename0, main_img.copy())
-            #except:
-            #    pass
+            # シャッター
+            main_video.put(['shutter',  ''])
+
+
 
         # 終了操作
         if (runMode == 'camera'):
+            if (qFunc.busyCheck(qBusy_dev_dsp, 0) == 'busy'): 
+                qFunc.txtsWrite(qCtrl_control_main,  txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_video, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                break
+
             if (control == 'enter') \
             or (control == 'cancel') \
             or (control == 'close'):
                 qFunc.txtsWrite(qCtrl_result_video, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
-
-                if (runMode == 'camera'):
-                    qFunc.txtsWrite(qCtrl_control_main,  txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-                    qFunc.txtsWrite(qCtrl_control_video, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-
-                break
-
-
+                qFunc.busySet(qBusy_dev_dsp, True)
 
         # アイドリング
         if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
