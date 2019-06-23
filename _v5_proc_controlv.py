@@ -311,14 +311,21 @@ class proc_controlv:
 
     def sub_proc(self, seq4, proc_file, work_file, proc_name, proc_text, cn_s, ):
 
-        name  = ''
-        value = ''
-
         if (cn_s.qsize() < 99):
 
             if (proc_text.find(u'リセット') >=0):
                 out_name  = 'control'
                 out_value = 'reset'
+                cn_s.put([out_name, out_value])
+
+            if (proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0):
+                out_name  = 'control'
+                out_value = 'shutdown'
+                cn_s.put([out_name, out_value])
+
+            if (proc_text == u'バルス'):
+                out_name  = 'control'
+                out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
             elif (proc_text == u'シャッター') or (proc_text.find(u'写真') >=0) or (proc_text.find(u'撮影') >=0):
