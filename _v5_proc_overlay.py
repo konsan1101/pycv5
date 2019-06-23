@@ -494,7 +494,7 @@ class proc_overlay:
             or  (inp_name.lower() == '[cam1]')) \
             and (cn_s.qsize() == 0):
 
-                if (self.runMode != 'debug') and (self.runMode != 'handsfree'):
+                if (self.runMode != 'debug'):
                     display_mode = 'cam1'
                 else:
                     display_mode = 'comp'
@@ -777,7 +777,10 @@ class proc_overlay:
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
             or (qFunc.busyCheck(qBusy_dev_dsp, 0) == 'busy'):
                 time.sleep(1.00)
-            time.sleep(0.02)
+            if (cn_r.qsize() == 0):
+                time.sleep(0.10)
+            else:
+                time.sleep(0.02)
 
 
 

@@ -345,10 +345,7 @@ class proc_camera:
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
             or (qFunc.busyCheck(qBusy_dev_cam, 0) == 'busy'):
                 time.sleep(1.00)
-            if (int(self.camFps) > 15):
-                time.sleep(0.02)
-            else:
-                time.sleep(0.05)
+            time.sleep((1/int(self.camFps))/2)
 
 
 
