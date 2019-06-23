@@ -106,8 +106,10 @@ venv.bak/
 *key*
 
 julius/
-sox/
 temp/
-yolo3*/
+_yolo3*/
+yolo3_keras/yolov3.weights
+yolo3_keras_data/yolo.h5
+yolo3_torch/yolov3.weights
 
 
