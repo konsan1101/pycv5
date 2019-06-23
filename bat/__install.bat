@@ -76,7 +76,8 @@ python -m pip  install --upgrade gtts-token
 ECHO;
 ECHO IBM Watson
 rem pip  install --upgrade watson-developer-cloud==1.0.2
-python -m pip  install --upgrade watson-developer-cloud
+rem python -m pip  install --upgrade watson-developer-cloud
+python -m pip  install --upgrade ibm-watson
 
 ECHO;
 ECHO yolo keras

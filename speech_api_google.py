@@ -317,7 +317,7 @@ if __name__ == '__main__':
             res, api = googleAPI.recognize(inpWave=file2, inpLang='en', api='google', )
             print('recognize:', res, '(' + api + ')' )
 
-            file2 = 'speech_api_docomo.wav'
+            file2 = '_sounds/_sound_hallo.wav'
             sox = subprocess.Popen(['sox', file2, '-d', '-q'])
             sox.wait()
             sox.terminate()

@@ -13,7 +13,8 @@ import json
 
 
 # watson 音声認識、翻訳機能、音声合成
-import watson_developer_cloud as watson
+#import watson_developer_cloud as watson
+import ibm_watson as watson
 import speech_api_watson_key  as watson_key
 
 

@@ -276,7 +276,7 @@ if __name__ == '__main__':
         print('authenticate:', res, )
         if (res == True):
 
-            file='speech_api_docomo.wav'
+            file='_sounds/_sound_hallo.wav'
 
             res, api = docomoAPI.recognize(inpWave=file, inpLang='ja-JP', )
             print('recognize:', res, '(' + api + ')' )
