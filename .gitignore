@@ -103,13 +103,13 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+*key*
+
 julius/model/dnn/logicalTri
 julius/model/dnn/logicalTri.bin
 temp/
 yolo3_keras/yolov3.weights
 yolo3_keras_data/yolo.h5
 yolo3_torch/yolov3.weights
-
-*key*
 
 
