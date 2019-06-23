@@ -298,6 +298,16 @@ class main_video:
         main_img    = None
         display_img = None
 
+        cam1Stretch = self.cam1Stretch
+        cam1Rotate  = self.cam1Rotate
+        cam1Zoom    = self.cam1Zoom
+        cam2Stretch = self.cam2Stretch
+        cam2Rotate  = self.cam2Rotate
+        cam2Zoom    = self.cam2Zoom
+        dspStretch  = self.dspStretch
+        dspRotate   = self.dspRotate
+        dspZoom     = self.dspZoom
+
         onece = True
 
         while (self.proc_step == '5'):
@@ -562,46 +572,114 @@ class main_video:
                 cn_s.put([out_name, out_value])
 
             # 連携情報
-            if (not overlay_thread is None):
-                if (inp_name.lower() == '[camzoom]'):
+            if (inp_name.lower() == '[camzoom]'):
+                if (not overlay_thread is None):
                     self.camzoom_flag = inp_value
                     overlay_thread.put([inp_name, inp_value ])
-                if (inp_name.lower() == '[dspzoom]'):
+            if (inp_name.lower() == '[dspzoom]'):
+                if (not overlay_thread is None):
                     self.dspzoom_flag = inp_value
                     overlay_thread.put([inp_name, inp_value ])
-                if (inp_name.lower() == '[enter]'):
+            if (inp_name.lower() == '[enter]'):
+                if (not overlay_thread is None):
                     self.enter_flag = inp_value
                     overlay_thread.put([inp_name, inp_value ])
-                if (inp_name.lower() == '[cancel]'):
+            if (inp_name.lower() == '[cancel]'):
+                if (not overlay_thread is None):
                     self.cancel_flag = inp_value
                     overlay_thread.put([inp_name, inp_value ])
-                if (inp_name.lower() == 'dspstretch'):
-                    overlay_thread.put(['dspstretch', inp_value ])
-                if (inp_name.lower() == 'dsprotate'):
-                    overlay_thread.put(['dsprotate', inp_value ])
-                if (inp_name.lower() == 'dspzoom'):
-                    overlay_thread.put(['dspzoom', inp_value ])
 
-            if (not txt2img_thread is None):
-                if (inp_name.lower() == '[txts]'):
-                    txt2img_thread.put(['[txts]', inp_value ])
-            if (not camera_thread1 is None):
-                if (inp_name.lower() == 'cam1stretch'):
-                    camera_thread1.put(['camstretch', inp_value ])
-                if (inp_name.lower() == 'cam1rotate'):
-                    camera_thread1.put(['camrotate', inp_value ])
-                if (inp_name.lower() == 'cam1zoom'):
-                    camera_thread1.put(['camzoom', inp_value ])
-            if (not camera_thread2 is None):
-                if (inp_name.lower() == 'cam2stretch'):
-                    camera_thread2.put(['camstretch', inp_value ])
-                if (inp_name.lower() == 'cam2rotate'):
-                    camera_thread2.put(['camrotate', inp_value ])
-                if (inp_name.lower() == 'cam2zoom'):
-                    camera_thread2.put(['camzoom', inp_value ])
+            # 動画ファイル処理（バッチ）時の自動終了
+            if (not self.cam1Dev.isdigit()):
+                if  (int(time.time() - camera_thread1.proc_last) > 60):
+                    break
+
+            # 制御処理
+            control = ''
+
+            if (inp_name.lower() == 'control'):
+                control = inp_value.lower()
+
+            else:
+
+                if (not controlv_thread is None):
+                    while (controlv_thread.proc_r.qsize() != 0):
+                        res_data  = controlv_thread.get()
+                        res_name  = res_data[0]
+                        res_value = res_data[1]
+                        if (res_name == 'control'):
+                            control = res_value
+                            # 結果出力
+                            if (cn_s.qsize() < 99):
+                                out_name  = res_name
+                                out_value = res_value
+                                cn_s.put([out_name, out_value])
+                            break
+
+                        if (res_name == '[txts]'):
+                            if (not txt2img_thread is None):
+                                # 結果出力
+                                if (cn_s.qsize() < 99):
+                                    out_name  = res_name
+                                    out_value = res_value
+                                    txt2img_thread.put([out_name, out_value])
+
+            # リセット
+            if (control == 'reset'):
+                cam1Stretch = self.cam1Stretch
+                cam1Rotate  = self.cam1Rotate
+                cam1Zoom    = self.cam1Zoom
+                cam2Stretch = self.cam2Stretch
+                cam2Rotate  = self.cam2Rotate
+                cam2Zoom    = self.cam2Zoom
+                dspStretch  = self.dspStretch
+                dspRotate   = self.dspRotate
+                dspZoom     = self.dspZoom
+
+                if (not camera_thread1 is None):
+                    camera_thread1.put(['camstretch', cam1Stretch ])
+                    camera_thread1.put(['camrotate', cam1Rotate ])
+                    camera_thread1.put(['camzoom', cam1Zoom ])
+                if (not camera_thread2 is None):
+                    camera_thread2.put(['camstretch', cam2Stretch ])
+                    camera_thread2.put(['camrotate', cam2Rotate ])
+                    camera_thread2.put(['camzoom', cam2Zoom ])
+                if (not overlay_thread is None):
+                    overlay_thread.put(['dspstretch', dspStretch ])
+                    overlay_thread.put(['dsprotate', dspRotate ])
+                    overlay_thread.put(['dspzoom', dspZoom ])
+
+            # カメラ操作
+            if (control == 'zoomout') or (control == 'camzoom-reset'):
+                cam1Zoom    = '1.0'
+                if (not camera_thread1 is None):
+                    camera_thread1.put(['camzoom', cam1Zoom ])
+            if (control == 'zoomin') or (control == 'camzoom-zoom'):
+                cam1Zoom    = '{:.1f}'.format(float(cam1Zoom) + 0.5)
+                print(cam1Zoom)
+                if (not camera_thread1 is None):
+                    camera_thread1.put(['camzoom', cam1Zoom ])
+            if (control == 'stretch'):
+                cam1Stretch = str(int(cam1Stretch) + 10)
+                if (not camera_thread1 is None):
+                    camera_thread1.put(['camstretch',  cam1Stretch ])
+            if (control == 'rotate'):
+                cam1Rotate  = str(int(cam1Rotate)  + 45)
+                if (not camera_thread1 is None):
+                    camera_thread1.put(['camrotate',   cam1Rotate  ])
+
+            # 表示操作
+            if (control == 'dspzoom-reset'):
+                dspZoom    = '1.0'
+                if (not overlay_thread is None):
+                    overlay_thread.put(['dspzoom', dspZoom ])
+            if (control == 'dspzoom-zoom'):
+                dspZoom    = '{:.1f}'.format(float(dspZoom) + 0.5)
+                if (not overlay_thread is None):
+                    overlay_thread.put(['dspzoom', dspZoom ])
 
             # シャッター
-            if (inp_name.lower() == 'shutter'):
+            if (control == 'shutter'):
 
                 # 撮影ログ
                 if (not main_img is None):
@@ -635,37 +713,6 @@ class main_video:
                     cv2.imwrite(filename0, main_img)
                 #except:
                 #    pass
-
-
-
-            # 動画ファイル処理（バッチ）時の自動終了
-            if (not self.cam1Dev.isdigit()):
-                if  (int(time.time() - camera_thread1.proc_last) > 60):
-                    break
-
-            # 制御処理
-            control = ''
-
-            if (not controlv_thread is None):
-                while (controlv_thread.proc_r.qsize() != 0):
-                    res_data  = controlv_thread.get()
-                    res_name  = res_data[0]
-                    res_value = res_data[1]
-                    if (res_name == 'control'):
-                        control = res_value
-                        # 結果出力
-                        if (cn_s.qsize() < 99):
-                            out_name  = res_name
-                            out_value = res_value
-                            cn_s.put([out_name, out_value])
-
-                    if (res_name == '[txts]'):
-                        if (not txt2img_thread is None):
-                            # 結果出力
-                            if (cn_s.qsize() < 99):
-                                out_name  = res_name
-                                out_value = res_value
-                                txt2img_thread.put([out_name, out_value])
 
             if  (cn_s.qsize() == 0) \
             and (overlay_thread.proc_s.qsize() == 0):
@@ -1356,55 +1403,22 @@ if __name__ == '__main__':
                     # 左クリック　写真撮影と入力画像をＡＩ画像認識処理へ
                     if (mouse1 == 'l-click') and (mouse2 == 'l'):
                         control = 'shutter'
+                        main_video.put(['control', 'shutter'])
 
                     # ズーム操作
                     if (mouse2 == 'camzoom-reset'):
-                        cam1Zoom = '1.0'
-                        main_video.put(['cam1zoom', cam1Zoom])
+                        main_video.put(['control', 'camzoom-reset'])
                     if (mouse2 == 'camzoom-zoom'):
-                        cam1Zoom = '{:.1f}'.format(float(cam1Zoom) + 0.5)
-                        main_video.put(['cam1zoom', cam1Zoom])
+                        print('camzoom-zoom')
+                        main_video.put(['control', 'camzoom-zoom'])
                     if (mouse2 == 'dspzoom-reset'):
-                        dspZoom = '1.0'
-                        main_video.put(['dspzoom',  dspZoom])
+                        main_video.put(['control', 'dspzoom-reset'])
                     if (mouse2 == 'dspzoom-zoom'):
-                        dspZoom = '{:.1f}'.format(float(dspZoom) + 0.5)
-                        main_video.put(['dspzoom',  dspZoom])
+                        main_video.put(['control', 'dspzoom-zoom'])
 
                 break
 
 
-
-        # リセット
-        if (control == 'reset'):
-            cam1Stretch = '0'
-            main_video.put(['cam1stretch', cam1Stretch ])
-            cam1Rotate  = '0'
-            main_video.put(['cam1rotate',  cam1Rotate  ])
-            cam1Zoom    = '1.0'
-            main_video.put(['cam1zoom',    cam1Zoom    ])
-            dspStretch  = '0'
-            main_video.put(['dspstretch',  dspStretch  ])
-            dspRotate   = '0'
-            main_video.put(['dsprotate',   dspRotate   ])
-            dspZoom     = '1.0'
-            main_video.put(['dspzoom',     dspZoom     ])
-
-        # ズーム操作
-        if (control == 'stretch'):
-            cam1Stretch = str(int(cam1Stretch) + 10)
-            main_video.put(['cam1stretch',  cam1Stretch ])
-        if (control == 'rotate'):
-            cam1Rotate  = str(int(cam1Rotate)  + 45)
-            main_video.put(['cam1rotate',   cam1Rotate  ])
-        if (control == 'zoomin'):
-            cam1Zoom    = '{:.1f}'.format(float(cam1Zoom) + 0.5)
-            main_video.put(['cam1zoom',     cam1Zoom    ])
-        if (control == 'zoomout'):
-            cam1Zoom    = '1.0'
-            main_video.put(['cam1zoom',     cam1Zoom    ])
-            dspZoom     = '1.0'
-            main_video.put(['dspzoom',      dspZoom     ])
 
         # シャッター
         if (control == 'shutter'):
@@ -1420,9 +1434,6 @@ if __name__ == '__main__':
 
             # シャッター音
             qFunc.guide('_shutter', sync=False)
-
-            # シャッター
-            main_video.put(['shutter',  ''])
 
 
 
