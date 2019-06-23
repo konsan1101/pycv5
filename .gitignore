@@ -104,6 +104,8 @@ venv.bak/
 .mypy_cache/
 
 *key*
+*key.py
+*key.json
 
 julius/model/dnn/logicalTri
 julius/model/dnn/logicalTri.bin
