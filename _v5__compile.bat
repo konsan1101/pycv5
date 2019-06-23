@@ -16,6 +16,9 @@ pause
 rem copy "C:\Users\kondou\Documents\GitHub\pycv5\dist\_v5__main_video.exe"   "_v5__main_video.exe"
 rem del  "_v5__main_video.spec"
 
+rd build /s /q
+rd dist /s /q
+
 pause
 
 
