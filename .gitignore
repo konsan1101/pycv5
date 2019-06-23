@@ -103,8 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-*key*
-
 julius/model/dnn/logicalTri
 julius/model/dnn/logicalTri.bin
 temp/
