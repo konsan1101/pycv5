@@ -406,7 +406,7 @@ class qFunc_class:
             if (qOS != 'darwin'):
                 return 960,540
             else:
-                return 1280,800
+                return 960,540
 
         elif (reso=='4k'):
                 return 4096,2160

@@ -97,7 +97,7 @@ import _v5_proc_coreCV
 
 
 
-runMode    = 'handsfree'
+runMode    = 'camera'
 
 qApiCV     = 'google'
 qApiOCR    = qApiCV
@@ -1120,6 +1120,11 @@ if __name__ == '__main__':
         cam2Rotate  = '0'
         cam2Zoom    = '1.0'
 
+        dspMode     = 'half'
+        dspStretch  = '0'
+        dspRotate   = '0'
+        dspZoom     = '1.0'
+
         chk = False
         while (chk == False) and (cam1Dev > '0'):
             try:
@@ -1142,10 +1147,9 @@ if __name__ == '__main__':
                 cam1Dev  = '0'
                 cam2Dev  = '1'
 
-        dspMode     = 'half'
-        dspStretch  = '0'
-        dspRotate   = '0'
-        dspZoom     = '1.0'
+        #if (cam1Dev == cam2Dev):
+        #    print('cam1Dev == cam2Dev')
+        #    cam2Dev = 'none'
 
         codeRead    = 'qr'
         casName1    = 'face'
