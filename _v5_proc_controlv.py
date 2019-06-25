@@ -353,6 +353,21 @@ class proc_controlv:
                 out_value = 'stretch'
                 cn_s.put([out_name, out_value])
             
+            elif (proc_text.find(u'背景') >=0):
+                out_name  = 'control'
+                out_value = 'background'
+                cn_s.put([out_name, out_value])
+            
+            elif (proc_text.find(u'ブラック') >=0):
+                out_name  = 'control'
+                out_value = 'black'
+                cn_s.put([out_name, out_value])
+            
+            elif (proc_text.find(u'ホワイト') >=0):
+                out_name  = 'control'
+                out_value = 'whites'
+                cn_s.put([out_name, out_value])
+            
             elif (proc_text.find(u'ここ') >=0) or (proc_text.find(u'これ') >=0) \
             or   (proc_text.find(u'そこ') >=0) or (proc_text.find(u'それ') >=0) \
             or   (proc_text.find(u'あそこ') >=0) or (proc_text.find(u'あれ') >=0):

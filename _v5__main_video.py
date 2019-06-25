@@ -170,10 +170,25 @@ class main_video:
         self.proc_seq  = 0
 
         # 変数設定
-        self.camzoom_flag = True
-        self.dspzoom_flag = True
-        self.enter_flag   = True
-        self.cancel_flag  = True
+        self.flag_camzoom    = 'off'
+        self.flag_dspzoom    = 'off'
+        self.flag_enter      = 'off'
+        self.flag_cancel     = 'off'
+        self.flag_background = 'on'
+        self.flag_black      = 'on'
+        self.flag_white      = 'off'
+        if (self.runMode == 'debug'):
+            self.flag_camzoom    = 'on'
+            self.flag_dspzoom    = 'on'
+            self.flag_enter      = 'on'
+            self.flag_cancel     = 'on'
+        if (self.runMode == 'handsfree'):
+            self.flag_camzoom    = 'on'
+            self.flag_dspzoom    = 'on'
+        if (self.runMode == 'camera'):
+            self.flag_camzoom    = 'on'
+            self.flag_enter      = 'on'
+            self.flag_cancel     = 'on'
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -285,8 +300,6 @@ class main_video:
 
         busy_status_txts = _v5__qFunc.qBusy_status_txts_class()
 
-
-
         # 待機ループ
         self.proc_step = '5'
 
@@ -298,15 +311,23 @@ class main_video:
         main_img    = None
         display_img = None
 
-        cam1Stretch = self.cam1Stretch
-        cam1Rotate  = self.cam1Rotate
-        cam1Zoom    = self.cam1Zoom
-        cam2Stretch = self.cam2Stretch
-        cam2Rotate  = self.cam2Rotate
-        cam2Zoom    = self.cam2Zoom
-        dspStretch  = self.dspStretch
-        dspRotate   = self.dspRotate
-        dspZoom     = self.dspZoom
+        cam1Stretch     = self.cam1Stretch
+        cam1Rotate      = self.cam1Rotate
+        cam1Zoom        = self.cam1Zoom
+        cam2Stretch     = self.cam2Stretch
+        cam2Rotate      = self.cam2Rotate
+        cam2Zoom        = self.cam2Zoom
+        dspStretch      = self.dspStretch
+        dspRotate       = self.dspRotate
+        dspZoom         = self.dspZoom
+
+        flag_camzoom    = self.flag_camzoom
+        flag_dspzoom    = self.flag_dspzoom
+        flag_enter      = self.flag_enter
+        flag_cancel     = self.flag_cancel
+        flag_background = self.flag_background
+        flag_black      = self.flag_black
+        flag_white      = self.flag_white
 
         onece = True
 
@@ -368,18 +389,10 @@ class main_video:
                                     )
                 overlay_thread.start()
 
-                if (self.runMode == 'debug'):
-                    overlay_thread.put(['[camzoom]', True ])
-                    overlay_thread.put(['[dspzoom]', True ])
-                    overlay_thread.put(['[enter]',   True ])
-                    overlay_thread.put(['[cancel]',  True ])
-                if (self.runMode == 'handsfree'):
-                    overlay_thread.put(['[camzoom]', True ])
-                    overlay_thread.put(['[dspzoom]', True ])
-                if (self.runMode == 'camera'):
-                    overlay_thread.put(['[camzoom]', True ])
-                    overlay_thread.put(['[enter]',   True ])
-                    overlay_thread.put(['[cancel]',  True ])
+                overlay_thread.put(['falg_camzoom', flag_camzoom ])
+                overlay_thread.put(['falg_dspzoom', falg_dspzoom ])
+                overlay_thread.put(['falg_enter',   falg_enter   ])
+                overlay_thread.put(['falg_cancel',  falg_cancel  ])
 
                 if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'画面表示が有効です。', 'wait':0, })
@@ -626,15 +639,23 @@ class main_video:
 
             # リセット
             if (control == 'reset'):
-                cam1Stretch = self.cam1Stretch
-                cam1Rotate  = self.cam1Rotate
-                cam1Zoom    = self.cam1Zoom
-                cam2Stretch = self.cam2Stretch
-                cam2Rotate  = self.cam2Rotate
-                cam2Zoom    = self.cam2Zoom
-                dspStretch  = self.dspStretch
-                dspRotate   = self.dspRotate
-                dspZoom     = self.dspZoom
+                cam1Stretch     = self.cam1Stretch
+                cam1Rotate      = self.cam1Rotate
+                cam1Zoom        = self.cam1Zoom
+                cam2Stretch     = self.cam2Stretch
+                cam2Rotate      = self.cam2Rotate
+                cam2Zoom        = self.cam2Zoom
+                dspStretch      = self.dspStretch
+                dspRotate       = self.dspRotate
+                dspZoom         = self.dspZoom
+
+                flag_camzoom    = self.flag_camzoom
+                flag_dspzoom    = self.flag_dspzoom
+                flag_enter      = self.flag_enter
+                flag_cancel     = self.flag_cancel
+                flag_background = self.flag_background
+                flag_black      = self.flag_black
+                flag_white      = self.flag_white
 
                 if (not camera_thread1 is None):
                     camera_thread1.put(['camstretch', cam1Stretch ])
@@ -647,6 +668,10 @@ class main_video:
                 if (not overlay_thread is None):
                     overlay_thread.put(['dspstretch', dspStretch ])
                     overlay_thread.put(['dsprotate', dspRotate ])
+                    overlay_thread.put(['dspzoom', dspZoom ])
+                    overlay_thread.put(['flag_camzoom', flag_camzoom ])
+                    overlay_thread.put(['flag_dspzoom', flag_dspzoom ])
+                    overlay_thread.put(['flag_background', flag_background ])
                     overlay_thread.put(['dspzoom', dspZoom ])
 
             # カメラ操作
@@ -677,6 +702,12 @@ class main_video:
                 dspZoom    = '{:.1f}'.format(float(dspZoom) + 0.5)
                 if (not overlay_thread is None):
                     overlay_thread.put(['dspzoom', dspZoom ])
+
+            # 背景操作
+            if (control == 'background'):
+                background = (background + 1) % 2
+                if (not overlay_thread is None):
+                    overlay_thread.put(['backgroud', backgroud ])
 
             # シャッター
             if (control == 'shutter'):
@@ -1303,21 +1334,6 @@ if __name__ == '__main__':
 
         main_video.start()
 
-        # 表示オプション
-
-        if (runMode == 'debug'):
-            main_video.put(['[camzoom]', True ])
-            main_video.put(['[dspzoom]', True ])
-            main_video.put(['[enter]',   True ])
-            main_video.put(['[cancel]',  True ])
-        if (runMode == 'handsfree'):
-            main_video.put(['[camzoom]', True ])
-            main_video.put(['[dspzoom]', True ])
-        if (runMode == 'camera'):
-            main_video.put(['[camzoom]', True ])
-            main_video.put(['[enter]',   True ])
-            main_video.put(['[cancel]',  True ])
-
     # 待機ループ
 
     show_onece = True
@@ -1413,7 +1429,6 @@ if __name__ == '__main__':
                     if (mouse2 == 'camzoom-reset'):
                         main_video.put(['control', 'camzoom-reset'])
                     if (mouse2 == 'camzoom-zoom'):
-                        print('camzoom-zoom')
                         main_video.put(['control', 'camzoom-zoom'])
                     if (mouse2 == 'dspzoom-reset'):
                         main_video.put(['control', 'dspzoom-reset'])
