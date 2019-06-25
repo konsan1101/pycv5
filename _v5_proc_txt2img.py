@@ -254,29 +254,29 @@ class proc_txt2img:
                     else:
                         draw_width = int(50 + 9 * maxlen)
 
-                if (inp_name.lower() == '[status]') \
-                or (self.flag_blackwhite != 'white'):
+                if (self.flag_blackwhite != 'white'):
                     text_img  = Image.new('RGB', (draw_width, draw_height), (255,255,255))
                 else:
                     text_img  = Image.new('RGB', (draw_width, draw_height), (  0,  0,  0))
                 text_draw = ImageDraw.Draw(text_img)
 
-                if (inp_name.lower() == '[status]'):
-                    for i in range(0, len(texts)):
+                for i in range(0, len(texts)):
+
+                    if (self.flag_blackwhite != 'white'):
+                        txt_color = (  0,  0,  0)
+                    else:
+                        txt_color = (255,255,255)
+
+                    if (inp_name.lower() == '[status]'):
                         if (texts[i].find('busy' )>=0) \
                         or (texts[i].find('slow' )>=0) \
                         or (texts[i].find('disable' )>=0):
                             text_draw.rectangle((0, 30*i+5, draw_width, 30*(i+1)-1), fill=(0x00, 0x00, 0xff))
+                            txt_color = (  0,  0,  0)
                         if (texts[i].find('ready' )>=0):
                             text_draw.rectangle((0, 30*i+5, draw_width, 30*(i+1)-1), fill=(0x00, 0xff, 0x00))
+                            txt_color = (  0,  0,  0)
 
-                if (inp_name.lower() == '[status]') \
-                or (self.flag_blackwhite != 'white'):
-                    txt_color = (  0,  0,  0)
-                else:
-                    txt_color = (255,255,255)
-
-                for i in range(0, len(texts)):
                     if (texts[i][2:3] != ','):
                             text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=txt_color)
                     else:
