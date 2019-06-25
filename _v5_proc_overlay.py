@@ -96,16 +96,24 @@ class proc_overlay:
         self.proc_seq  = 0
 
         # 変数設定
-        self.blue_img = np.zeros((240,320,3), np.uint8)
-        cv2.rectangle(self.blue_img,(0,0),(320,240),(255,0,0),-1)
+        self.blue_mini  = np.zeros((240,320,3), np.uint8)
+        self.black_mini = np.zeros((240,320,3), np.uint8)
+        self.white_mini = np.zeros((240,320,3), np.uint8)
+        cv2.rectangle(self.blue_mini ,(0,0),(320,240),(255,  0,  0),-1)
+        cv2.rectangle(self.black_mini,(0,0),(320,240),(  0,  0,  0),-1)
+        cv2.rectangle(self.white_mini,(0,0),(320,240),(255,255,255),-1)
+        self.blue_img = self.blue_mini.copy()
         cv2.putText(self.blue_img, 'No Image !', (40,80), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,255))
-        self.out_img = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
+        self.blue_img  = cv2.resize(self.blue_img.copy(), (self.dspWidth, self.dspHeight ))
+        self.black_img = cv2.resize(self.black_mini     , (self.dspWidth, self.dspHeight ))
+        self.white_img = cv2.resize(self.white_mini     , (self.dspWidth, self.dspHeight ))
 
-        self.camzoom_flag = False
-        self.dspzoom_flag = False
-        self.enter_flag   = False
-        self.enter_flag   = False
-        self.cancel_flag  = False
+        self.flag_camzoom    = 'off'
+        self.flag_dspzoom    = 'off'
+        self.flag_enter      = 'off'
+        self.flag_cancel     = 'off'
+        self.flag_background = 'on'
+        self.flag_blackwhite = 'black'
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -165,28 +173,28 @@ class proc_overlay:
 
         # 変数設定
         cam1_time       = time.time()
-        cam1_base       = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
-        cam1_mini       = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
+        cam1_base       = self.blue_img.copy()
+        cam1_mini       = self.blue_mini.copy()
         cam1_fps        = ''
         cam1_reso       = ''
         cam2_time       = time.time()
-        cam2_base       = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
-        cam2_mini       = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
+        cam2_base       = self.blue_img.copy()
+        cam2_mini       = self.blue_mini.copy()
         cam2_fps        = ''
         cam2_reso       = ''
         comp_time       = time.time()
-        comp_base       = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
-        comp_mini       = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
+        comp_base       = self.blue_img.copy()
+        comp_mini       = self.blue_mini.copy()
         comp_fps        = ''
         comp_reso       = ''
         reader_time     = time.time()
         reader_img      = None
         cvdetect1_time  = time.time()
-        cvdetect1_base  = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
+        cvdetect1_base  = self.blue_img.copy()
         detect1_time    = time.time()
         detect1_img     = None
         cvdetect2_time  = time.time()
-        cvdetect2_base  = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
+        cvdetect2_base  = self.blue_img.copy()
         detect2_time    = time.time()
         detect2_img     = None
         status_time     = time.time()
@@ -242,6 +250,20 @@ class proc_overlay:
                 out_value = 'ready'
                 cn_s.put([out_name, out_value])
 
+            # 表示連携
+            elif (inp_name.lower() == 'flag_camzoom'):
+                self.flag_camzoom = inp_value
+            elif (inp_name.lower() == 'flag_dspzoom'):
+                self.flag_dspzoom = inp_value
+            elif (inp_name.lower() == 'flag_enter'):
+                self.flag_enter = inp_value
+            elif (inp_name.lower() == 'flag_cancel'):
+                self.flag_cancel = inp_value
+            elif (inp_name.lower() == 'flag_background'):
+                self.flag_background = inp_value
+            elif (inp_name.lower() == 'flag_blackwhite'):
+                self.flag_blackwhite = inp_value
+
             # 連携情報
             elif (inp_name.lower() == 'dspstretch'):
                 self.dspStretch = inp_value
@@ -258,34 +280,6 @@ class proc_overlay:
                 self.proc_seq += 1
                 if (self.proc_seq > 9999):
                     self.proc_seq = 1
-
-                # 入力 ZOOM 表示
-                if (inp_name.lower() == '[camzoom]'):
-                    if (inp_value != False):                    
-                        self.camzoom_flag = True
-                    else:
-                        self.camzoom_flag = False
-
-                # 出力 ZOOM 表示
-                if (inp_name.lower() == '[dspzoom]'):
-                    if (inp_value != False):                    
-                        self.dspzoom_flag = True
-                    else:
-                        self.dspzoom_flag = False
-
-                # ENTER 表示
-                if (inp_name.lower() == '[enter]'):
-                    if (inp_value != False):                    
-                        self.enter_flag = True
-                    else:
-                        self.enter_flag = False
-
-                # CANCEL 表示
-                if (inp_name.lower() == '[cancel]'):
-                    if (inp_value != False):                    
-                        self.cancel_flag = True
-                    else:
-                        self.cancel_flag = False
 
                 # カメラ１（メイン画像）
                 if (inp_name.lower() == '[img]') \
@@ -538,6 +532,14 @@ class proc_overlay:
                         wipe_mini2 = cam2_mini.copy()
                         wipe_time2 = cam2_time
 
+                if (self.flag_background == 'off'):
+                    if (self.flag_blackwhite != 'white'):
+                        base_base  = self.black_img.copy()
+                    else:
+                        base_base  = self.white_img.copy()
+                    wipe_mini1 = None
+                    wipe_mini2 = None
+
                 # ベース画像
                 if (int(time.time() - base_time) <= 10):
                     display_img = base_base.copy()
@@ -545,7 +547,7 @@ class proc_overlay:
                     display_img = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
 
                 # 左下基準
-                if (self.enter_flag == False) and (self.cancel_flag == False):
+                if (self.flag_enter != 'on') and (self.flag_cancel != 'on'):
                     over_y = self.dspHeight - 50
                 else:
                     over_y = self.dspHeight - 120
@@ -664,7 +666,7 @@ class proc_overlay:
                             over_y += over_height + 20
 
                 # 右下基準
-                if (self.enter_flag == False) and (self.cancel_flag == False):
+                if (self.flag_enter != 'on') and (self.flag_cancel != 'on'):
                     over_y = self.dspHeight - 50
                 else:
                     over_y = self.dspHeight - 120
@@ -672,8 +674,8 @@ class proc_overlay:
 
                 # 台形補正
                 if (int(self.dspStretch) != 0):
-                    x = int((self.dspWidth/2) * abs(int(elf.dspStretch))/100)
-                    if (int(elf.dspStretch) > 0):
+                    x = int((self.dspWidth/2) * abs(int(self.dspStretch))/100)
+                    if (int(self.dspStretch) > 0):
                         perspective1 = np.float32([ [x, 0], [self.dspWidth-x, 0], [self.dspWidth, self.dspHeight], [0, self.dspHeight] ])
                     else:
                         perspective1 = np.float32([ [0, 0], [self.dspWidth, 0], [self.dspWidth-x, self.dspHeight], [x, self.dspHeight] ])
@@ -704,14 +706,14 @@ class proc_overlay:
                     display_img = cv2.resize(zm_img, (self.dspWidth, self.dspHeight))
 
                 # 入力 ZOOM 表示
-                if (self.camzoom_flag == True):
+                if (self.flag_camzoom == 'on'):
                     cv2.putText(display_img, 'RESET', (35,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,0))
                     cv2.rectangle(display_img,(35,40),(115,60),(255,0,0),1)
                     cv2.putText(display_img, 'ZOOM', (145,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,0))
                     cv2.rectangle(display_img,(135,40),(215,60),(255,255,0),1)
 
                 # 出力 ZOOM 表示
-                if (self.dspzoom_flag == True):
+                if (self.flag_dspzoom == 'on'):
                     cv2.putText(display_img, 'RESET', (self.dspWidth-230,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,0))
                     cv2.rectangle(display_img,(self.dspWidth-230,40),(self.dspWidth-150,60),(255,0,0),1)
                     cv2.putText(display_img, 'ZOOM', (self.dspWidth-120,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,0))
@@ -732,12 +734,12 @@ class proc_overlay:
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = alpha_img
 
                 # ENTER 表示
-                if (self.enter_flag == True):
+                if (self.flag_enter == 'on'):
                     cv2.putText(display_img, 'ENTER', (self.dspWidth-260,self.dspHeight-55), cv2.FONT_HERSHEY_COMPLEX, 2, (255,255,255))
                     cv2.rectangle(display_img,(self.dspWidth-265,self.dspHeight-105),(self.dspWidth-35,self.dspHeight-50),(255,255,255),2)
 
                 # CANCEL 表示
-                if (self.cancel_flag == True):
+                if (self.flag_cancel == 'on'):
                     cv2.putText(display_img, 'CANCEL', (40,self.dspHeight-55), cv2.FONT_HERSHEY_COMPLEX, 2, (0,0,255))
                     cv2.rectangle(display_img,(35,self.dspHeight-105),(300,self.dspHeight-50),(0,0,255),2)
 
@@ -813,16 +815,16 @@ class proc_overlay:
             # ENTER,CANCEL
             if ((not MousePointX is None) and (not MousePointY is None)):
                 if   (MousePointY < 80):
-                    if   (self.camzoom_flag == True) \
+                    if   (self.flag_camzoom == 'on') \
                     and  (MousePointX >= 0) and (MousePointX <= 125):
                         return 'l-click', 'camzoom-reset'
-                    elif (self.camzoom_flag == True) \
+                    elif (self.flag_camzoom == 'on') \
                     and  (MousePointX > 125) and (MousePointX <= 250):
                         return 'l-click', 'camzoom-zoom'
-                    elif (self.dspzoom_flag == True) \
+                    elif (self.flag_dspzoom == 'on') \
                     and  (MousePointX >= self.dspWidth - 250) and (MousePointX <= self.dspWidth - 125):
                         return 'l-click', 'dspzoom-reset'
-                    elif (self.dspzoom_flag == True) \
+                    elif (self.flag_dspzoom == 'on') \
                     and  (MousePointX > self.dspWidth -125):
                         return 'l-click', 'dspzoom-zoom'
                     else:
@@ -831,10 +833,10 @@ class proc_overlay:
                 and  (MousePointY <= self.dspHeight-150):
                         return 'l-click', 'l'
                 elif (MousePointY >  self.dspHeight-150):
-                    if   (self.cancel_flag == True) \
+                    if   (self.flag_cancel == 'on') \
                     and  (MousePointX >= 0) and (MousePointX <= 350):
                         return 'l-click', 'cancel'
-                    elif (self.enter_flag == True) \
+                    elif (self.flag_enter == 'on') \
                     and  (MousePointX >= self.dspWidth - 350) and (MousePointX <= self.dspWidth):
                         return 'l-click', 'enter'
                     else:
@@ -885,10 +887,10 @@ if __name__ == '__main__':
     detect = cv2.imread('_photos/_photo_face.jpg')
     txt    = cv2.imread('_photos/_photo_ocr_doc.jpg')
 
-    overlay_thread.put(['[camzoom]', True         ])
-    overlay_thread.put(['[dspzoom]', True         ])
-    overlay_thread.put(['[enter]',   True         ])
-    overlay_thread.put(['[cancel]',  True         ])
+    overlay_thread.put(['flag_camzoom', 'on'      ])
+    overlay_thread.put(['flag_dspzoom', 'on'      ])
+    overlay_thread.put(['flag_enter',   'on'      ])
+    overlay_thread.put(['flag_cancel',  'on'      ])
     overlay_thread.put(['[cam1]',   cam1.copy()   ])
     overlay_thread.put(['[cam2]',   cam2.copy()   ])
     overlay_thread.put(['[comp]',   comp.copy()   ])

@@ -175,8 +175,7 @@ class main_video:
         self.flag_enter      = 'off'
         self.flag_cancel     = 'off'
         self.flag_background = 'on'
-        self.flag_black      = 'on'
-        self.flag_white      = 'off'
+        self.flag_blackwhite = 'black'
         if (self.runMode == 'debug'):
             self.flag_camzoom    = 'on'
             self.flag_dspzoom    = 'on'
@@ -326,8 +325,7 @@ class main_video:
         flag_enter      = self.flag_enter
         flag_cancel     = self.flag_cancel
         flag_background = self.flag_background
-        flag_black      = self.flag_black
-        flag_white      = self.flag_white
+        flag_blackwhite = self.flag_blackwhite
 
         onece = True
 
@@ -389,10 +387,12 @@ class main_video:
                                     )
                 overlay_thread.start()
 
-                overlay_thread.put(['falg_camzoom', flag_camzoom ])
-                overlay_thread.put(['falg_dspzoom', falg_dspzoom ])
-                overlay_thread.put(['falg_enter',   falg_enter   ])
-                overlay_thread.put(['falg_cancel',  falg_cancel  ])
+                overlay_thread.put(['flag_camzoom'   , flag_camzoom    ])
+                overlay_thread.put(['flag_dspzoom'   , flag_dspzoom    ])
+                overlay_thread.put(['flag_enter'     , flag_enter      ])
+                overlay_thread.put(['flag_cancel'    , flag_cancel     ])
+                overlay_thread.put(['flag_background', flag_background ])
+                overlay_thread.put(['flag_blackwhite', flag_blackwhite ])
 
                 if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'画面表示が有効です。', 'wait':0, })
@@ -440,6 +440,9 @@ class main_video:
                                     runMode=self.runMode,
                                     )
                 txt2img_thread.start()
+
+                txt2img_thread.put(['flag_background', flag_background ])
+                txt2img_thread.put(['flag_blackwhite', flag_blackwhite ])
 
                 if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'認識文字の表示が有効です。', 'wait':0, })
@@ -584,24 +587,6 @@ class main_video:
                 out_value = 'ready'
                 cn_s.put([out_name, out_value])
 
-            # 連携情報
-            if (inp_name.lower() == '[camzoom]'):
-                if (not overlay_thread is None):
-                    self.camzoom_flag = inp_value
-                    overlay_thread.put([inp_name, inp_value ])
-            if (inp_name.lower() == '[dspzoom]'):
-                if (not overlay_thread is None):
-                    self.dspzoom_flag = inp_value
-                    overlay_thread.put([inp_name, inp_value ])
-            if (inp_name.lower() == '[enter]'):
-                if (not overlay_thread is None):
-                    self.enter_flag = inp_value
-                    overlay_thread.put([inp_name, inp_value ])
-            if (inp_name.lower() == '[cancel]'):
-                if (not overlay_thread is None):
-                    self.cancel_flag = inp_value
-                    overlay_thread.put([inp_name, inp_value ])
-
             # 動画ファイル処理（バッチ）時の自動終了
             if (not self.cam1Dev.isdigit()):
                 if  (int(time.time() - camera_thread1.proc_last) > 60):
@@ -654,25 +639,27 @@ class main_video:
                 flag_enter      = self.flag_enter
                 flag_cancel     = self.flag_cancel
                 flag_background = self.flag_background
-                flag_black      = self.flag_black
-                flag_white      = self.flag_white
+                flag_blackwhite = self.flag_blackwhite
 
                 if (not camera_thread1 is None):
-                    camera_thread1.put(['camstretch', cam1Stretch ])
-                    camera_thread1.put(['camrotate', cam1Rotate ])
-                    camera_thread1.put(['camzoom', cam1Zoom ])
+                    camera_thread1.put(['camstretch'     , cam1Stretch     ])
+                    camera_thread1.put(['camrotate'      , cam1Rotate      ])
+                    camera_thread1.put(['camzoom'        , cam1Zoom        ])
                 if (not camera_thread2 is None):
-                    camera_thread2.put(['camstretch', cam2Stretch ])
-                    camera_thread2.put(['camrotate', cam2Rotate ])
-                    camera_thread2.put(['camzoom', cam2Zoom ])
+                    camera_thread2.put(['camstretch'     , cam2Stretch     ])
+                    camera_thread2.put(['camrotate'      , cam2Rotate      ])
+                    camera_thread2.put(['camzoom'        , cam2Zoom        ])
                 if (not overlay_thread is None):
-                    overlay_thread.put(['dspstretch', dspStretch ])
-                    overlay_thread.put(['dsprotate', dspRotate ])
-                    overlay_thread.put(['dspzoom', dspZoom ])
-                    overlay_thread.put(['flag_camzoom', flag_camzoom ])
-                    overlay_thread.put(['flag_dspzoom', flag_dspzoom ])
+                    overlay_thread.put(['dspstretch'     , dspStretch      ])
+                    overlay_thread.put(['dsprotate'      , dspRotate       ])
+                    overlay_thread.put(['dspzoom'        , dspZoom         ])
+                    overlay_thread.put(['flag_camzoom'   , flag_camzoom    ])
+                    overlay_thread.put(['flag_dspzoom'   , flag_dspzoom    ])
                     overlay_thread.put(['flag_background', flag_background ])
-                    overlay_thread.put(['dspzoom', dspZoom ])
+                    overlay_thread.put(['flag_blackwhite', flag_blackwhite ])
+                if (not txt2img_thread is None):
+                    txt2img_thread.put(['flag_background', flag_background ])
+                    txt2img_thread.put(['flag_blackwhite', flag_blackwhite ])
 
             # カメラ操作
             if (control == 'zoomout') or (control == 'camzoom-reset'):
@@ -705,9 +692,26 @@ class main_video:
 
             # 背景操作
             if (control == 'background'):
-                background = (background + 1) % 2
+                if (flag_background == 'on'):
+                    flag_background == 'off'
+                if (flag_background == 'off'):
+                    flag_background == 'on'
                 if (not overlay_thread is None):
-                    overlay_thread.put(['backgroud', backgroud ])
+                    overlay_thread.put(['flag_background', flag_background ])
+                if (not txt2img_thread is None):
+                    txt2img_thread.put(['flag_background', flag_background ])
+            if (control == 'black'):
+                flag_blackwhite == 'black'
+                if (not overlay_thread is None):
+                    overlay_thread.put(['flag_blackwhite', flag_blackwhite ])
+                if (not txt2img_thread is None):
+                    txt2img_thread.put(['flag_blackwhite', flag_blackwhite ])
+            if (control == 'white'):
+                flag_blackwhite == 'white'
+                if (not overlay_thread is None):
+                    overlay_thread.put(['flag_blackwhite', flag_blackwhite ])
+                if (not txt2img_thread is None):
+                    txt2img_thread.put(['flag_blackwhite', flag_blackwhite ])
 
             # シャッター
             if (control == 'shutter'):

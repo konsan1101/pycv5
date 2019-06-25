@@ -365,7 +365,7 @@ class proc_controlv:
             
             elif (proc_text.find(u'ホワイト') >=0):
                 out_name  = 'control'
-                out_value = 'whites'
+                out_value = 'white'
                 cn_s.put([out_name, out_value])
             
             elif (proc_text.find(u'ここ') >=0) or (proc_text.find(u'これ') >=0) \
