@@ -94,6 +94,10 @@ class proc_txt2img:
         self.proc_step = '0'
         self.proc_seq  = 0
 
+        # 変数設定
+        self.flag_background = 'on'
+        self.flag_blackwhite = 'black'
+
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
@@ -195,11 +199,21 @@ class proc_txt2img:
             if (not os.path.exists(fileRdy)):
                 qFunc.txtsWrite(fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
 
+            # ステータス応答
+            if (inp_name.lower() == 'status'):
+                out_name  = inp_name
+                out_value = 'ready'
+                cn_s.put([out_name, out_value])
 
+            # 表示連携
+            elif (inp_name.lower() == 'flag_background'):
+                self.flag_background = inp_value
+            elif (inp_name.lower() == 'flag_blackwhite'):
+                self.flag_blackwhite = inp_value
 
             # 処理
-            if (inp_name.lower() == '[txts]') \
-            or (inp_name.lower() == '[status]'):
+            elif (inp_name.lower() == '[txts]') \
+              or (inp_name.lower() == '[status]'):
 
                 # 実行カウンタ
                 self.proc_last = time.time()
@@ -240,7 +254,11 @@ class proc_txt2img:
                     else:
                         draw_width = int(50 + 9 * maxlen)
 
-                text_img  = Image.new('RGB', (draw_width, draw_height), (0xff, 0xff, 0xff))
+                if (inp_name.lower() == '[status]') \
+                or (self.flag_blackwhite != 'white'):
+                    text_img  = Image.new('RGB', (draw_width, draw_height), (255,255,255))
+                else:
+                    text_img  = Image.new('RGB', (draw_width, draw_height), (  0,  0,  0))
                 text_draw = ImageDraw.Draw(text_img)
 
                 if (inp_name.lower() == '[status]'):
@@ -252,16 +270,22 @@ class proc_txt2img:
                         if (texts[i].find('ready' )>=0):
                             text_draw.rectangle((0, 30*i+5, draw_width, 30*(i+1)-1), fill=(0x00, 0xff, 0x00))
 
+                if (inp_name.lower() == '[status]') \
+                or (self.flag_blackwhite != 'white'):
+                    txt_color = (  0,  0,  0)
+                else:
+                    txt_color = (255,255,255)
+
                 for i in range(0, len(texts)):
                     if (texts[i][2:3] != ','):
-                            text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=(0x00, 0x00, 0x00))
+                            text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=txt_color)
                     else:
                         if   (texts[i][:3] == 'zh,'):
-                            text_draw.text((5, 30*i + font18_zhy), texts[i], font=font18_zh, fill=(0x00, 0x00, 0x00))
+                            text_draw.text((5, 30*i + font18_zhy), texts[i], font=font18_zh, fill=txt_color)
                         elif (texts[i][:3] == 'ko,'):
-                            text_draw.text((5, 30*i + font18_koy), texts[i], font=font18_ko, fill=(0x00, 0x00, 0x00))
+                            text_draw.text((5, 30*i + font18_koy), texts[i], font=font18_ko, fill=txt_color)
                         else:
-                            text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=(0x00, 0x00, 0x00))
+                            text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=txt_color)
 
                 # 結果出力
                 if (inp_name.lower() == '[txts]'):
@@ -335,6 +359,8 @@ if __name__ == '__main__':
         cv2.imshow('Display', img )
         cv2.waitKey(1)
         time.sleep(5)
+
+    txt2img_thread.put(['flag_blackwhite', 'white'])
 
     txt2img_thread.put(['[txts]', [u'こんにちは', u'はじめまして']])
     resdata = txt2img_thread.checkGet()

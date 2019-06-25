@@ -544,8 +544,8 @@ class proc_overlay:
                 if (int(time.time() - base_time) <= 10):
                     display_img = base_base.copy()
                 else:
-                    display_img = cv2.resize(self.blue_img, (self.dspWidth, self.dspHeight ))
-
+                    display_img = self.blue_img.copy()
+                    
                 # 左下基準
                 if (self.flag_enter != 'on') and (self.flag_cancel != 'on'):
                     over_y = self.dspHeight - 50
@@ -706,18 +706,20 @@ class proc_overlay:
                     display_img = cv2.resize(zm_img, (self.dspWidth, self.dspHeight))
 
                 # 入力 ZOOM 表示
-                if (self.flag_camzoom == 'on'):
-                    cv2.putText(display_img, 'RESET', (35,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,0))
-                    cv2.rectangle(display_img,(35,40),(115,60),(255,0,0),1)
-                    cv2.putText(display_img, 'ZOOM', (145,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,0))
-                    cv2.rectangle(display_img,(135,40),(215,60),(255,255,0),1)
+                if (self.flag_background == 'on'):
+                    if (self.flag_camzoom == 'on'):
+                        cv2.putText(display_img, 'RESET', (35,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (  0,255,  0))
+                        cv2.rectangle(display_img,(35,40),(115,60), (  0,255,  0),1)
+                        cv2.putText(display_img, 'ZOOM', (145,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,  0))
+                        cv2.rectangle(display_img,(135,40),(215,60),(255,255,  0),1)
 
                 # 出力 ZOOM 表示
-                if (self.flag_dspzoom == 'on'):
-                    cv2.putText(display_img, 'RESET', (self.dspWidth-230,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,0))
-                    cv2.rectangle(display_img,(self.dspWidth-230,40),(self.dspWidth-150,60),(255,0,0),1)
-                    cv2.putText(display_img, 'ZOOM', (self.dspWidth-120,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,0))
-                    cv2.rectangle(display_img,(self.dspWidth-130,40),(self.dspWidth-50,60),(255,255,0),1)
+                if (self.flag_background == 'on'):
+                    if (self.flag_dspzoom == 'on'):
+                        cv2.putText(display_img, 'RESET', (self.dspWidth-230,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (  0,255,  0))
+                        cv2.rectangle(display_img,(self.dspWidth-230,40),(self.dspWidth-150,60),(  0,255,  0),1)
+                        cv2.putText(display_img, 'ZOOM', (self.dspWidth-120,57),  cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,  0))
+                        cv2.rectangle(display_img,(self.dspWidth-130,40),(self.dspWidth-50,60), (255,255,  0),1)
 
                 # ステータス画像 alpha blending
                 if (int(time.time() - status_time) <= 30) and (not status_img is None):
@@ -734,14 +736,16 @@ class proc_overlay:
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = alpha_img
 
                 # ENTER 表示
-                if (self.flag_enter == 'on'):
-                    cv2.putText(display_img, 'ENTER', (self.dspWidth-260,self.dspHeight-55), cv2.FONT_HERSHEY_COMPLEX, 2, (255,255,255))
-                    cv2.rectangle(display_img,(self.dspWidth-265,self.dspHeight-105),(self.dspWidth-35,self.dspHeight-50),(255,255,255),2)
+                if (self.flag_background == 'on'):
+                    if (self.flag_enter == 'on'):
+                        cv2.putText(display_img, 'ENTER', (self.dspWidth-260,self.dspHeight-55), cv2.FONT_HERSHEY_COMPLEX, 2, (255,255,255))
+                        cv2.rectangle(display_img,(self.dspWidth-265,self.dspHeight-105),(self.dspWidth-35,self.dspHeight-50),(255,255,255),2)
 
                 # CANCEL 表示
-                if (self.flag_cancel == 'on'):
-                    cv2.putText(display_img, 'CANCEL', (40,self.dspHeight-55), cv2.FONT_HERSHEY_COMPLEX, 2, (0,0,255))
-                    cv2.rectangle(display_img,(35,self.dspHeight-105),(300,self.dspHeight-50),(0,0,255),2)
+                if (self.flag_background == 'on'):
+                    if (self.flag_cancel == 'on'):
+                        cv2.putText(display_img, 'CANCEL', (40,self.dspHeight-55), cv2.FONT_HERSHEY_COMPLEX, 2, (0,0,255))
+                        cv2.rectangle(display_img,(35,self.dspHeight-105),(300,self.dspHeight-50),(0,0,255),2)
 
                 # 入力ＦＰＳ overlay
                 puttext = display_mode + ':'
@@ -966,7 +970,7 @@ if __name__ == '__main__':
             break
 
         if (overlay_thread.proc_s.qsize() == 0):
-            overlay_thread.put(['[main]', main.copy() ])
+            overlay_thread.put(['[cam1]', cam1.copy() ])
 
         time.sleep(0.01)
 

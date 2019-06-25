@@ -692,22 +692,22 @@ class main_video:
 
             # 背景操作
             if (control == 'background'):
-                if (flag_background == 'on'):
-                    flag_background == 'off'
-                if (flag_background == 'off'):
-                    flag_background == 'on'
+                if   (flag_background == 'on'):
+                    flag_background = 'off'
+                elif (flag_background == 'off'):
+                    flag_background = 'on'
                 if (not overlay_thread is None):
                     overlay_thread.put(['flag_background', flag_background ])
                 if (not txt2img_thread is None):
                     txt2img_thread.put(['flag_background', flag_background ])
             if (control == 'black'):
-                flag_blackwhite == 'black'
+                flag_blackwhite = 'black'
                 if (not overlay_thread is None):
                     overlay_thread.put(['flag_blackwhite', flag_blackwhite ])
                 if (not txt2img_thread is None):
                     txt2img_thread.put(['flag_blackwhite', flag_blackwhite ])
             if (control == 'white'):
-                flag_blackwhite == 'white'
+                flag_blackwhite = 'white'
                 if (not overlay_thread is None):
                     overlay_thread.put(['flag_blackwhite', flag_blackwhite ])
                 if (not txt2img_thread is None):
@@ -1071,16 +1071,16 @@ class main_video:
             # ENTER,CANCEL
             if ((not MousePointX is None) and (not MousePointY is None)):
                 if   (MousePointY < 80):
-                    if   (self.camzoom_flag == True) \
+                    if   (self.flag_camzoom == 'on') \
                     and  (MousePointX >= 0) and (MousePointX <= 125):
                         return 'l-click', 'camzoom-reset'
-                    elif (self.camzoom_flag == True) \
+                    elif (self.flag_camzoom == 'on') \
                     and  (MousePointX > 125) and (MousePointX <= 250):
                         return 'l-click', 'camzoom-zoom'
-                    elif (self.dspzoom_flag == True) \
+                    elif (self.flag_dspzoom == 'on') \
                     and  (MousePointX >= self.dspWidth - 250) and (MousePointX <= self.dspWidth - 125):
                         return 'l-click', 'dspzoom-reset'
-                    elif (self.dspzoom_flag == True) \
+                    elif (self.flag_dspzoom == 'on') \
                     and  (MousePointX > self.dspWidth -125):
                         return 'l-click', 'dspzoom-zoom'
                     else:
@@ -1089,10 +1089,10 @@ class main_video:
                 and  (MousePointY <= self.dspHeight-150):
                         return 'l-click', 'l'
                 elif (MousePointY >  self.dspHeight-150):
-                    if   (self.cancel_flag == True) \
+                    if   (self.flag_cancel == 'on') \
                     and  (MousePointX >= 0) and (MousePointX <= 350):
                         return 'l-click', 'cancel'
-                    elif (self.enter_flag == True) \
+                    elif (self.flag_enter == 'on') \
                     and  (MousePointX >= self.dspWidth - 350) and (MousePointX <= self.dspWidth):
                         return 'l-click', 'enter'
                     else:
@@ -1432,6 +1432,7 @@ if __name__ == '__main__':
                     # ズーム操作
                     if (mouse2 == 'camzoom-reset'):
                         main_video.put(['control', 'camzoom-reset'])
+                        main_video.put(['control', 'background'])
                     if (mouse2 == 'camzoom-zoom'):
                         main_video.put(['control', 'camzoom-zoom'])
                     if (mouse2 == 'dspzoom-reset'):
