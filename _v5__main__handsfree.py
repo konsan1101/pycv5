@@ -278,7 +278,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ドコモ知識データベースを終了しました。', 'wait':0, })
 
         if (len(speechs) != 0):
-            qFunc.speech(id=main_id, speechs=speechs, )
+            qFunc.speech(id=main_id, speechs=speechs, lang='', )
 
         if (onece == True):
             onece = False
@@ -288,7 +288,7 @@ if __name__ == '__main__':
                 time.sleep(40)
                 speechs = []
                 speechs.append({ 'text':u'全ての準備が整いました。スタンバイしています。', 'wait':0, })
-                qFunc.speech(id=main_id, speechs=speechs, )
+                qFunc.speech(id=main_id, speechs=speechs, lang='', )
 
         # アイドリング
         if  (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):

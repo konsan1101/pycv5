@@ -97,7 +97,8 @@ if (qOS == 'windows'):
 if (qOS == 'darwin'):
     qApiOut = 'macos'
 qLangInp    = 'ja'
-qLangTrn    = 'en,fr,'
+#qLangTrn    = 'en,fr,'
+qLangTrn    = 'en'
 qLangTxt    = qLangInp
 qLangOut    = qLangTrn[:2]
 
@@ -440,7 +441,7 @@ class main_audio:
                 trareader_thread = None
 
             if (len(speechs) != 0):
-                qFunc.speech(id=self.proc_id, speechs=speechs, )
+                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             if (onece == True):
                 onece = False
@@ -450,7 +451,7 @@ class main_audio:
                 or   (self.runMode == 'camera'):
                     speechs = []
                     speechs.append({ 'text':u'ハンズフリー機能は有効です。', 'wait':0, })
-                    qFunc.speech(id=self.proc_id, speechs=speechs, )
+                    qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # レディー設定
             if (not os.path.exists(fileRdy)):

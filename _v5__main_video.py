@@ -565,7 +565,7 @@ class main_video:
                 coreCV_thread = None
 
             if (len(speechs) != 0):
-                qFunc.speech(id=self.proc_id, speechs=speechs, )
+                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             if (onece == True):
                 onece = False
@@ -575,7 +575,7 @@ class main_video:
                 or   (self.runMode == 'camera'):
                     speechs = []
                     speechs.append({ 'text':u'カメラ機能は有効です。', 'wait':0, })
-                    qFunc.speech(id=self.proc_id, speechs=speechs, )
+                    qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # レディ設定
             if (not os.path.exists(fileRdy)):

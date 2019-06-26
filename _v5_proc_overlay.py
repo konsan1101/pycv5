@@ -567,8 +567,9 @@ class proc_overlay:
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
 
-                            over_x2 += over_width + 10
                             over_y -= 10
+                            if (over_x2 == over_x):
+                                over_x2 += over_width + 10
 
                 # ワイプ画像２ overlay
                 if (int(time.time() - wipe_time2) <= 5) and (not wipe_mini2 is None):
@@ -581,6 +582,9 @@ class proc_overlay:
                         and ((over_y + over_height) < self.dspHeight):
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
+
+                            if (over_x2 == over_x):
+                                over_x2 += over_width + 10
 
                 over_y = over_y2
                 over_x = over_x2
