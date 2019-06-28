@@ -97,7 +97,7 @@ import _v5_proc_coreCV
 
 
 
-runMode    = 'camera'
+runMode    = 'hansfree'
 
 qApiCV     = 'google'
 qApiOCR    = qApiCV
