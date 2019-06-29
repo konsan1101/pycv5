@@ -1,5 +1,5 @@
 @ECHO OFF
-CALL __setpath.bat
+rem CALL __setpath.bat
 
 rem brew install lame
 rem brew install sox
