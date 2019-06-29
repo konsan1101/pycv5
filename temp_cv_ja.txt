@@ -1,0 +1,6 @@
+[landmark] ja (google)
+ Kaminarimon,
+
+[label] ja (google)
+ Place of worship,Shrine,Temple,Chinese architecture,Shinto shrine,Building,Japanese architecture,Architecture,Temple,Crowd,
+

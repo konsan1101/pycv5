@@ -451,10 +451,10 @@ if (__name__ == '__main__'):
     procId   = '00'
     fileId   = 'temp_sample'
 
-    inpCV    = 'vision__cv_photo.jpg'
+    inpCV    = '_photos/_photo_cv.jpg'
     tmpCV    = 'temp_cv_photo.jpg'
     outCV    = 'temp_cv_ja.txt'
-    inpOCR   = 'vision__ocr_photo.jpg'
+    inpOCR   = '_photos/_photo_ocr_meter.jpg'
     tmpOCR   = 'temp_ocr_photo.jpg'
     outOCR   = 'temp_ocr_ja.txt'
     outTrn   = 'temp_ocr_en.txt'
