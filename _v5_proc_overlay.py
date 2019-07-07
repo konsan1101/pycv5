@@ -488,10 +488,11 @@ class proc_overlay:
             or  (inp_name.lower() == '[cam1]')) \
             and (cn_s.qsize() == 0):
 
-                if (self.runMode != 'debug'):
-                    display_mode = 'cam1'
-                else:
-                    display_mode = 'comp'
+                display_mode = 'camera'
+                if (self.runMode == 'debug'):
+                    display_mode = 'debug'
+                elif (self.runMode == 'hud'):
+                    display_mode = 'hud'
 
                 base_base    = None
                 base_time    = time.time()
@@ -501,8 +502,27 @@ class proc_overlay:
                 wipe_time1   = time.time()
                 wipe_mini2   = None
                 wipe_time2   = time.time()
+                wipe_mini3   = None
+                wipe_time3   = time.time()
+                wipe_mini4   = None
+                wipe_time4   = time.time()
 
-                if (display_mode == 'cam1'):
+                if (display_mode == 'debug'):
+                    if (not comp_base is None):
+                        base_base  = comp_base.copy()
+                        base_time  = comp_time
+                        if (comp_fps != ''):
+                            base_txt1  = comp_fps + 'fps'
+                        if (comp_reso != ''):
+                            base_txt2  = comp_reso
+                    if (not cam1_mini is None):
+                        wipe_mini1 = cam1_mini.copy()
+                        wipe_time1 = cam1_time
+                    if (not cam2_mini is None):
+                        wipe_mini2 = cam2_mini.copy()
+                        wipe_time2 = cam2_time
+
+                if (display_mode == 'camera'):
                     if (not cam1_base is None):
                         base_base  = cam1_base.copy()
                         base_time  = cam1_time
@@ -517,20 +537,16 @@ class proc_overlay:
                         wipe_mini2 = comp_mini.copy()
                         wipe_time2 = comp_time
 
-                if (display_mode == 'comp'):
+                if (display_mode == 'hud'):
                     if (not comp_base is None):
-                        base_base  = comp_base.copy()
-                        base_time  = comp_time
-                        if (comp_fps != ''):
-                            base_txt1  = comp_fps + 'fps'
-                        if (comp_reso != ''):
-                            base_txt2  = comp_reso
+                        base_base  = self.black_img.copy()
+                        base_time  = time.time()
                     if (not cam1_mini is None):
-                        wipe_mini1 = cam1_mini.copy()
-                        wipe_time1 = cam1_time
+                        wipe_mini3 = cam1_mini.copy()
+                        wipe_time3 = cam1_time
                     if (not cam2_mini is None):
-                        wipe_mini2 = cam2_mini.copy()
-                        wipe_time2 = cam2_time
+                        wipe_mini4 = cam2_mini.copy()
+                        wipe_time4 = cam2_time
 
                 if (self.flag_background == 'off'):
                     if (self.flag_blackwhite != 'white'):
@@ -551,8 +567,8 @@ class proc_overlay:
                     over_y = self.dspHeight - 50
                 else:
                     over_y = self.dspHeight - 120
-                over_y2 = over_y
                 over_x  = 20
+                over_y2 = over_y
                 over_x2 = over_x
 
                 # ワイプ画像１ overlay
@@ -567,9 +583,8 @@ class proc_overlay:
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
 
-                            over_y -= 10
-                            if (over_x2 == over_x):
-                                over_x2 += over_width + 10
+                            over_y  -= 10
+                            over_x2  = over_x + over_width + 10
 
                 # ワイプ画像２ overlay
                 if (int(time.time() - wipe_time2) <= 5) and (not wipe_mini2 is None):
@@ -583,8 +598,7 @@ class proc_overlay:
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
 
-                            if (over_x2 == over_x):
-                                over_x2 += over_width + 10
+                            over_x2  = over_x + over_width + 10
 
                 over_y = over_y2
                 over_x = over_x2
@@ -606,8 +620,47 @@ class proc_overlay:
                         over_y += over_height
 
                 # 右上基準
-                over_y = 70
-                over_x = self.dspWidth - int(self.dspWidth * 0.10)
+                over_y  = 70
+                over_x  = self.dspWidth - int(self.dspWidth * 0.10)
+                over_y2 = over_y
+                over_x2 = over_x
+
+                # ワイプ画像３ overlay
+                if (int(time.time() - wipe_time3) <= 5) and (not wipe_mini3 is None):
+                        over_img = wipe_mini3.copy()
+                        over_height, over_width = over_img.shape[:2]
+
+                        over_x -= over_width
+                        if  (over_x >=0) and (over_y >=0) \
+                        and ((over_x + over_width) < self.dspWidth) \
+                        and ((over_y + over_height) < self.dspHeight):
+                            display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
+                            cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
+
+                            over_y += over_height + 10
+                            over_x2 = over_x - 10
+
+                        over_x += over_width                        
+
+                # ワイプ画像４ overlay
+                if (int(time.time() - wipe_time4) <= 5) and (not wipe_mini4 is None):
+                        over_img = wipe_mini4.copy()
+                        over_height, over_width = over_img.shape[:2]
+
+                        over_x -= over_width
+                        if  (over_x >=0) and (over_y >=0) \
+                        and ((over_x + over_width) < self.dspWidth) \
+                        and ((over_y + over_height) < self.dspHeight):
+                            display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
+                            cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
+
+                            over_y += over_height + 10
+                            over_x2 = over_x - 10
+
+                        over_x += over_width                        
+
+                over_y = over_y2
+                over_x = over_x2
 
                 # リーダー画像 overlay
                 if (int(time.time() - reader_time) <= 5) and (not reader_img is None):

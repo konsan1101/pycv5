@@ -97,7 +97,7 @@ import _v5_proc_coreCV
 
 
 
-runMode    = 'hansfree'
+runMode    = 'hud'
 
 qApiCV     = 'google'
 qApiOCR    = qApiCV
@@ -184,6 +184,8 @@ class main_video:
         if (self.runMode == 'handsfree'):
             self.flag_camzoom    = 'on'
             self.flag_dspzoom    = 'on'
+        if (self.runMode == 'hud'):
+            self.flag_blackwhite = 'white'
         if (self.runMode == 'camera'):
             self.flag_camzoom    = 'on'
             self.flag_enter      = 'on'
@@ -284,6 +286,15 @@ class main_video:
             yolo_torch_switch = 'on'
             vin2jpg_switch    = 'on'
             coreCV_switch     = 'on'
+        if (self.runMode == 'hud'):
+            camera_switch2    = 'off'
+            cvreader_switch   = 'on'
+            cvdetect_switch1  = 'off'
+            cvdetect_switch2  = 'off'
+            yolo_keras_switch = 'off'
+            yolo_torch_switch = 'off'
+            vin2jpg_switch    = 'off'
+            coreCV_switch     = 'off'
         if (self.runMode == 'camera'):
             camera_switch2    = 'off'
             cvreader_switch   = 'on'
@@ -572,6 +583,7 @@ class main_video:
 
                 if   (self.runMode == 'debug') \
                 or   (self.runMode == 'handsfree') \
+                or   (self.runMode == 'hud') \
                 or   (self.runMode == 'camera'):
                     speechs = []
                     speechs.append({ 'text':u'カメラ機能が有効です。', 'wait':0, })
@@ -1462,7 +1474,8 @@ if __name__ == '__main__':
 
 
         # 終了操作
-        if (runMode == 'camera'):
+        if (runMode == 'camera') \
+        or (runMode == 'hud'):
             if (qFunc.busyCheck(qBusy_dev_dsp, 0) == 'busy'): 
                 qFunc.txtsWrite(qCtrl_control_main,  txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.txtsWrite(qCtrl_control_video, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
