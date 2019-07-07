@@ -86,7 +86,7 @@ qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
 
 
 
-runMode  = 'handsfree'
+runMode  = 'hud'
 
 
 
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, ..., ')
 
-    #runMode  debug, handsfree, translator, speech, number, camera,
+    #runMode  debug, handsfree, translator, speech, number, hud, camera,
 
     # パラメータ
 
@@ -166,6 +166,8 @@ if __name__ == '__main__':
             pass
         elif (runMode == 'number'):
             pass
+        elif (runMode == 'hud'):
+            main_video_switch = 'on'
         elif (runMode == 'camera'):
             main_video_switch = 'on'
         else:
@@ -204,6 +206,8 @@ if __name__ == '__main__':
                 speechs.append({ 'text':u'ハンズフリーコントロールシステムをデバッグモードで起動しました。', 'wait':0, })
             elif (runMode == 'handsfree'):
                 speechs.append({ 'text':u'ハンズフリー翻訳機能を起動しました。', 'wait':0, })
+            elif (runMode == 'hud'):
+                speechs.append({ 'text':u'ヘッドアップディスプレイ機能を起動しました。', 'wait':0, })
             elif (runMode == 'camera'):
                 speechs.append({ 'text':u'ハンズフリーカメラ機能を起動しました。', 'wait':0, })
 

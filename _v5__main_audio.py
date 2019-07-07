@@ -104,7 +104,7 @@ qLangOut    = qLangTrn[:2]
 
 
 # debug
-runMode      = 'speech'
+runMode      = 'hud'
 
 
 
@@ -230,6 +230,10 @@ class main_audio:
         trareader_thread = None
         trareader_switch = 'on'
 
+        if (self.runMode == 'debug'):
+            julius_switch    = 'on'
+            sttreader_switch = 'on'
+            trareader_switch = 'on'
         if (self.runMode == 'handsfree'):
             julius_switch    = 'on'
             sttreader_switch = 'off'
@@ -239,6 +243,10 @@ class main_audio:
             sttreader_switch = 'off'
             trareader_switch = 'on'
         if (self.runMode == 'speech') or (self.runMode == 'number'):
+            julius_switch    = 'on'
+            sttreader_switch = 'on'
+            trareader_switch = 'off'
+        if (self.runMode == 'hud'):
             julius_switch    = 'on'
             sttreader_switch = 'on'
             trareader_switch = 'off'
@@ -299,7 +307,8 @@ class main_audio:
                                     )
                 controla_thread.start()
 
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'音声制御機能が有効です。', 'wait':0, })
 
             if (not controla_thread is None) and (controla_switch != 'on'):
@@ -315,7 +324,8 @@ class main_audio:
                                     )
                 adintool_thread.start()
 
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'マイク入力機能が有効です。', 'wait':0, })
 
             if (not adintool_thread is None) and (adintool_switch != 'on'):
@@ -331,7 +341,8 @@ class main_audio:
                                     )
                 voice2wav_thread.start()
 
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'音響補正機能が有効です。', 'wait':0, })
 
             if (not voice2wav_thread is None) and (voice2wav_switch != 'on'):
@@ -350,7 +361,8 @@ class main_audio:
                 coreSTT_thread.start()
 
                 speechs = []
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'ＡＩ音声認識機能が有効です。', 'wait':0, })
                     speechs.append({ 'text':u'ＡＩ機械翻訳機能が有効です。', 'wait':0, })
 
@@ -369,7 +381,8 @@ class main_audio:
                                     )
                 coreTTS_thread.start()
 
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'ＡＩ音声合成機能が有効です。', 'wait':0, })
 
             if (not coreTTS_thread is None) and (coreTTS_switch != 'on'):
@@ -385,7 +398,8 @@ class main_audio:
                                     )
                 playvoice_thread.start()
 
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'スピーカー出力機能が有効です。', 'wait':0, })
 
             if (not playvoice_thread is None) and (playvoice_switch != 'on'):
@@ -400,7 +414,8 @@ class main_audio:
                                     )
                 julius_thread.start()
 
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'ＪＵＬＩＵＳローカル音声認識機能が有効です。', 'wait':0, })
 
             if (not julius_thread is None) and (julius_switch != 'on'):
@@ -416,7 +431,8 @@ class main_audio:
                                     )
                 sttreader_thread.start()
 
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'音声認識結果のテキスト連携機能が有効です。', 'wait':0, })
 
             if (not sttreader_thread is None) and (sttreader_switch != 'on'):
@@ -432,7 +448,8 @@ class main_audio:
                                     )
                 trareader_thread.start()
 
-                if (self.runMode == 'debug') or (self.runMode == 'handsfree'):
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'機械翻訳結果のテキスト連携機能が有効です。', 'wait':0, })
 
             if (not trareader_thread is None) and (trareader_switch != 'on'):
@@ -448,6 +465,7 @@ class main_audio:
 
                 if   (self.runMode == 'debug') \
                 or   (self.runMode == 'handsfree') \
+                or   (self.runMode == 'hud') \
                 or   (self.runMode == 'camera'):
                     speechs = []
                     speechs.append({ 'text':u'ハンズフリー機能が有効です。', 'wait':0, })
@@ -663,7 +681,7 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, mic..., ')
 
-    #runMode  debug, handsfree, translator, speech, number, camera,
+    #runMode  debug, handsfree, translator, speech, number, hud, camera,
     #micDev   num or file
     #micType  usb or bluetooth
     #micGuide off, on, display, sound
@@ -695,6 +713,9 @@ if __name__ == '__main__':
         if (runMode == 'speech') or (runMode == 'number'):
             micType   = 'usb'
             micGuide  = 'display'
+        if (runMode == 'hud'):
+            micType   = 'bluetooth'
+            micGuide  = 'off'
         if (runMode == 'camera'):
             micType   = 'bluetooth'
             micGuide  = 'off'
