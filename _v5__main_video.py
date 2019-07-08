@@ -393,7 +393,7 @@ class main_video:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'カメラ制御が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'カメラ制御は、有効です。', 'wait':0, })
 
             if (not controlv_thread is None) and (controlv_switch != 'on'):
                 controlv_thread.stop()
@@ -417,7 +417,7 @@ class main_video:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'画面表示機能が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'画面表示機能は、有効です。', 'wait':0, })
 
             if (not overlay_thread is None) and (overlay_switch != 'on'):
                 overlay_thread.stop()
@@ -434,7 +434,7 @@ class main_video:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'カメラ１入力機能が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'カメラ１入力機能は、有効です。', 'wait':0, })
 
             if (not camera_thread1 is None) and (camera_switch1 != 'on'):
                 camera_thread1.stop()
@@ -451,7 +451,7 @@ class main_video:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'カメラ２入力機能が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'カメラ２入力機能は、有効です。', 'wait':0, })
 
             if (not camera_thread2 is None) and (camera_switch2 != 'on'):
                 camera_thread2.stop()
@@ -470,7 +470,7 @@ class main_video:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'認識文字の表示機能が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'認識文字の表示機能は、有効です。', 'wait':0, })
 
             if (not txt2img_thread is None) and (txt2img_switch != 'on'):
                 txt2img_thread.stop()
@@ -487,7 +487,7 @@ class main_video:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'ＱＲコード認識機能が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'ＱＲコード認識機能は、有効です。', 'wait':0, })
 
             if (not cvreader_thread is None) and (cvreader_switch != 'on'):
                 cvreader_thread.stop()
@@ -504,7 +504,7 @@ class main_video:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'オープンＣＶ画像認識機能が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'オープンＣＶ画像認識機能は、有効です。', 'wait':0, })
 
             if (not cvdetect_thread1 is None) and (cvdetect_switch1 != 'on'):
                 cvdetect_thread1.stop()
@@ -534,7 +534,7 @@ class main_video:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'画像認識（Ｋｅｒａｓ）機能が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'画像認識（Ｋｅｒａｓ）機能は、有効です。', 'wait':0, })
 
             if (not yolo_keras_thread is None) and (yolo_keras_switch != 'on'):
                 yolo_keras_thread.stop()
@@ -553,7 +553,7 @@ class main_video:
                     if (i == 0):
                         if (self.runMode == 'debug') \
                         or (self.runMode == 'handsfree'):
-                            speechs.append({ 'text':u'画像認識（Ｐｙｔｏｒｃｈ）機能が有効です。', 'wait':0, })
+                            speechs.append({ 'text':u'画像認識（Ｐｙｔｏｒｃｈ）機能は、有効です。', 'wait':0, })
 
             for i in range(yolo_torch_max):
                 if (not yolo_torch_thread[i] is None) and (yolo_torch_switch != 'on'):
@@ -571,7 +571,7 @@ class main_video:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'写真認識機能が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'写真認識機能は、有効です。', 'wait':0, })
 
             if (not vin2jpg_thread is None) and (vin2jpg_switch != 'on'):
                 vin2jpg_thread.stop()
@@ -588,7 +588,7 @@ class main_video:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'ＡＩ画像認識機能が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'ＡＩ画像認識機能は、有効です。', 'wait':0, })
 
             if (not coreCV_thread is None) and (coreCV_switch != 'on'):
                 coreCV_thread.stop()                
@@ -606,7 +606,7 @@ class main_video:
                 or (self.runMode == 'hud') \
                 or (self.runMode == 'camera'):
                     speechs = []
-                    speechs.append({ 'text':u'カメラ機能が有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'カメラ機能の準備は、完了です。', 'wait':0, })
                     qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # レディ設定

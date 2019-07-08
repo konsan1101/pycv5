@@ -203,13 +203,13 @@ if __name__ == '__main__':
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             if   (runMode == 'debug'):
-                speechs.append({ 'text':u'ハンズフリーコントロールシステムをデバッグモードで起動しました。', 'wait':0, })
+                speechs.append({ 'text':u'ハンズフリーコントロールシステムをデバッグモードで、起動しました。', 'wait':0, })
             elif (runMode == 'handsfree'):
-                speechs.append({ 'text':u'ハンズフリー翻訳機能を起動しました。', 'wait':0, })
+                speechs.append({ 'text':u'ハンズフリー翻訳機能を、起動しました。', 'wait':0, })
             elif (runMode == 'hud'):
-                speechs.append({ 'text':u'ヘッドアップディスプレイ機能を起動しました。', 'wait':0, })
+                speechs.append({ 'text':u'ヘッドアップディスプレイ機能を、起動しました。', 'wait':0, })
             elif (runMode == 'camera'):
-                speechs.append({ 'text':u'ハンズフリーカメラ機能を起動しました。', 'wait':0, })
+                speechs.append({ 'text':u'ハンズフリーカメラ機能を、起動しました。', 'wait':0, })
 
         if (not main_audio_run is None) and (main_audio_switch != 'on'):
             #main_audio_run.wait()
@@ -220,66 +220,66 @@ if __name__ == '__main__':
             main_video_run = subprocess.Popen(['python', qPython_main_video, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-            speechs.append({ 'text':u'カメラ機能を起動しました。', 'wait':0, })
+            speechs.append({ 'text':u'カメラ機能を、起動しました。', 'wait':0, })
 
         if (not main_video_run is None) and (main_video_switch != 'on'):
             #main_video_run.wait()
             main_video_run.terminate()
             main_video_run = None
 
-            speechs.append({ 'text':u'カメラ機能を終了しました。', 'wait':0, })
+            speechs.append({ 'text':u'カメラ機能を、終了しました。', 'wait':0, })
 
         if (bgm_run is None) and (bgm_switch == 'on'):
             bgm_run = subprocess.Popen(['python', qPython_bgm, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-            speechs.append({ 'text':u'ＢＧＭ再生機能を起動しました。', 'wait':0, })
+            speechs.append({ 'text':u'ＢＧＭ再生機能を、起動しました。', 'wait':0, })
 
         if (not bgm_run is None) and (bgm_switch != 'on'):
             #bgm_run.wait()
             bgm_run.terminate()
             bgm_run = None
 
-            speechs.append({ 'text':u'ＢＧＭ再生機能を終了しました。', 'wait':0, })
+            speechs.append({ 'text':u'ＢＧＭ再生機能を、終了しました。', 'wait':0, })
 
         if (web_run is None) and (web_switch == 'on'):
             web_run = subprocess.Popen(['python', qPython_web, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-            speechs.append({ 'text':u'ブラウザー連携機能を起動しました。', 'wait':0, })
+            speechs.append({ 'text':u'ブラウザー連携機能を、起動しました。', 'wait':0, })
 
         if (not web_run is None) and (web_switch != 'on'):
             #web_run.wait()
             web_run.terminate()
             web_run = None
 
-            speechs.append({ 'text':u'ブラウザー連携機能を終了しました。', 'wait':0, })
+            speechs.append({ 'text':u'ブラウザー連携機能を、終了しました。', 'wait':0, })
 
         if (chatting_run is None) and (chatting_switch == 'on'):
             chatting_run = subprocess.Popen(['python', qPython_chatting, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-            speechs.append({ 'text':u'ドコモ雑談連携機能を起動しました。', 'wait':0, })
+            speechs.append({ 'text':u'ドコモ雑談連携機能を、起動しました。', 'wait':0, })
 
         if (not chatting_run is None) and (chatting_switch != 'on'):
             #chatting_run.wait()
             chatting_run.terminate()
             chatting_run = None
 
-            speechs.append({ 'text':u'ドコモ雑談連携機能を終了しました。', 'wait':0, })
+            speechs.append({ 'text':u'ドコモ雑談連携機能を、終了しました。', 'wait':0, })
 
         if (knowledge_run is None) and (knowledge_switch == 'on'):
             knowledge_run = subprocess.Popen(['python', qPython_knowledge, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-            speechs.append({ 'text':u'ドコモ知識データベースを起動しました。', 'wait':0, })
+            speechs.append({ 'text':u'ドコモ知識データベースを、起動しました。', 'wait':0, })
 
         if (not knowledge_run is None) and (knowledge_switch != 'on'):
             #knowledge_run.wait()
             knowledge_run.terminate()
             knowledge_run = None
 
-            speechs.append({ 'text':u'ドコモ知識データベースを終了しました。', 'wait':0, })
+            speechs.append({ 'text':u'ドコモ知識データベースを、終了しました。', 'wait':0, })
 
         if (len(speechs) != 0):
             qFunc.speech(id=main_id, speechs=speechs, lang='', )

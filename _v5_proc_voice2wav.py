@@ -193,7 +193,7 @@ class proc_voice2wav:
             if (len(path_files) > 0):
 
                 if (os.name != 'nt'):
-                    time.sleep(1.00)
+                    time.sleep(0.50)
 
                 #try:
                 if (True):

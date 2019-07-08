@@ -350,7 +350,8 @@ class proc_coreSTT:
         trnLang = self.qLangTrn
         outLang = self.qLangOut
 
-        if (self.runMode == 'debug') or (self.runMode == 'learning'):
+        if (self.runMode == 'debug') \
+        or (self.runMode == 'learning'):
             inpInput = work_file
             inpOutput= qPath_a_STT  + proc_name + '.' + inpLang + '.txt'
             trnInput = inpOutput
@@ -363,7 +364,9 @@ class proc_coreSTT:
             txtPlay  = 'off'
             outPlay  = 'off'
 
-        elif (self.runMode == 'handsfree') or (self.runMode == 'translator'):
+        elif (self.runMode == 'handsfree') \
+        or   (self.runMode == 'translator') \
+        or   (self.runMode == 'hud'):
             inpInput = work_file
             inpOutput= qPath_a_STT  + proc_name + '.' + inpLang + '.txt'
             trnInput = inpOutput
@@ -376,7 +379,10 @@ class proc_coreSTT:
             txtPlay  = 'off'
             outPlay  = 'off'
 
-        else: # (self.runMode == 'speech') or (self.runMode == 'number'):
+        # elif (self.runMode == 'speech') \
+        # or   (self.runMode == 'number') \
+        # or   (self.runMode == 'camera'):
+        else: 
             inpInput = work_file
             inpOutput= qPath_a_STT  + proc_name + '.' + inpLang + '.txt'
             trnInput = ''
