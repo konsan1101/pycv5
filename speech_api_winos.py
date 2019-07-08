@@ -9,7 +9,8 @@ import subprocess
 
 import platform    # platform.system().lower() #windows,darwin,linux
 if (platform.system().lower() == 'windows'):
-    import win32com.client as wincl
+    #import win32com.client as wincl
+    import win32com.client
     import win32api
 
 
@@ -84,23 +85,28 @@ class SpeechAPI:
                     stml += outText
                     stml += '</voice></speak>'
 
+                    engine = None
                     try:
-                        engine = wincl.Dispatch('SAPI.SpVoice')
+                        #engine = wincl.Dispatch('SAPI.SpVoice')
+                        engine = win32com.client.Dispatch('SAPI.SpVoice')
                         #engine.Speak(stml)
                     except:
-                        print('wincl.Dispatch(SAPI.SpVoice) is error !')
+                        print('win32com.client.Dispatch(SAPI.SpVoice) is error !', lang, outGender.lower(), )
 
-                    try:
-                        stream = wincl.Dispatch('SAPI.SpFileStream')
-                    except:
-                        print('wincl.Dispatch(SAPI.SpFileStream) is error !')
+                    if (not engine is None):
+                        try:
+                            #stream = wincl.Dispatch('SAPI.SpFileStream')
+                            stream = win32com.client.Dispatch('SAPI.SpFileStream')
 
-                    stream.open(outFile, 3, False)
-                    #for speaker in engine.GetAudioOutputs():
-                    #    print(speaker.GetDescription())
-                    engine.AudioOutputStream = stream
-                    engine.Speak(stml)
-                    stream.close()
+                            stream.open(outFile, 3, False)
+                            #for speaker in engine.GetAudioOutputs():
+                            #    print(speaker.GetDescription())
+                            engine.AudioOutputStream = stream
+                            engine.Speak(stml)
+                            stream.close()
+
+                        except:
+                            print('win32com.client.Dispatch(SAPI.SpFileStream) is error !')
 
                     if (os.path.exists(outFile)):
                         rb = open(outFile, 'rb')
