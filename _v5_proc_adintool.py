@@ -295,6 +295,7 @@ class proc_adintool:
                     if (not adintool_exe is None):
                         adintool_exe.terminate()
                         adintool_exe = None
+                        time.sleep(1.00)
 
                     # ビジー解除 (!ready)
                     qFunc.remove(fileBsy)

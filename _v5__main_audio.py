@@ -104,7 +104,7 @@ qLangOut    = qLangTrn[:2]
 
 
 # debug
-runMode      = 'hud'
+runMode      = 'handsfree'
 
 
 
@@ -309,7 +309,7 @@ class main_audio:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'音声制御機能は、有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'「音声制御」の機能が有効になりました。', 'wait':0, })
 
             if (not controla_thread is None) and (controla_switch != 'on'):
                 controla_thread.stop()
@@ -326,7 +326,7 @@ class main_audio:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'マイク入力機能は、有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'「マイク入力」の機能が有効になりました。', 'wait':0, })
 
             if (not adintool_thread is None) and (adintool_switch != 'on'):
                 adintool_thread.stop()                
@@ -343,7 +343,7 @@ class main_audio:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'音響補正機能は、有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'「音響補正」の機能が有効になりました。', 'wait':0, })
 
             if (not voice2wav_thread is None) and (voice2wav_switch != 'on'):
                 voice2wav_thread.stop()                
@@ -363,8 +363,8 @@ class main_audio:
                 speechs = []
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'ＡＩ音声認識は、有効です。', 'wait':0, })
-                    speechs.append({ 'text':u'ＡＩ機械翻訳は、有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'「ＡＩ音声認識」の機能が有効になりました。', 'wait':0, })
+                    speechs.append({ 'text':u'「ＡＩ機械翻訳」の機能が有効になりました。', 'wait':0, })
 
             if (not coreSTT_thread is None) and (coreSTT_switch != 'on'):
                 coreSTT_thread.stop()                
@@ -383,7 +383,7 @@ class main_audio:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'ＡＩ音声合成は、有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'「ＡＩ音声合成」の機能が有効になりました。', 'wait':0, })
 
             if (not coreTTS_thread is None) and (coreTTS_switch != 'on'):
                 coreTTS_thread.stop()                
@@ -400,7 +400,7 @@ class main_audio:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'スピーカー出力は、有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'「スピーカー出力」の機能が有効になりました。', 'wait':0, })
 
             if (not playvoice_thread is None) and (playvoice_switch != 'on'):
                 playvoice_thread.stop()                
@@ -416,7 +416,7 @@ class main_audio:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'ＪＵＬＩＵＳローカル音声認識機能は、有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'「ＪＵＬＩＵＳローカル音声認識」の機能が有効になりました。', 'wait':0, })
 
             if (not julius_thread is None) and (julius_switch != 'on'):
                 julius_thread.stop()                
@@ -433,7 +433,7 @@ class main_audio:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'音声認識結果のテキスト連携機能は、有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'「音声認識結果のテキスト連携」の機能が有効になりました。', 'wait':0, })
 
             if (not sttreader_thread is None) and (sttreader_switch != 'on'):
                 sttreader_thread.stop()                
@@ -450,7 +450,7 @@ class main_audio:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'機械翻訳結果のテキスト連携機能は、有効です。', 'wait':0, })
+                    speechs.append({ 'text':u'「機械翻訳結果のテキスト連携」の機能が有効になりました。', 'wait':0, })
 
             if (not trareader_thread is None) and (trareader_switch != 'on'):
                 trareader_thread.stop()                
@@ -468,7 +468,7 @@ class main_audio:
                 or   (self.runMode == 'hud') \
                 or   (self.runMode == 'camera'):
                     speechs = []
-                    speechs.append({ 'text':u'ハンズフリー機能の準備は、完了です。', 'wait':0, })
+                    speechs.append({ 'text':u'「ハンズフリー機能」の準備が完了しました。', 'wait':0, })
                     qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # レディー設定
