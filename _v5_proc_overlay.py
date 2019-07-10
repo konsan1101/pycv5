@@ -172,6 +172,8 @@ class proc_overlay:
         qFunc.remove(fileBsy)
 
         # 変数設定
+        shutter_time    = time.time()
+        shutter_img     = None
         cam1_time       = time.time()
         cam1_base       = self.blue_img.copy()
         cam1_mini       = self.blue_mini.copy()
@@ -280,6 +282,15 @@ class proc_overlay:
                 self.proc_seq += 1
                 if (self.proc_seq > 9999):
                     self.proc_seq = 1
+
+                # カメラ１（メイン画像）
+                if (inp_name.lower() == '[shutter]'):
+                    try:
+                        image_img = inp_value.copy()
+                        shutter_time = time.time()
+                        shutter_img  = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
+                    except:
+                        print(inp_name.lower() + ' error!')
 
                 # カメラ１（メイン画像）
                 if (inp_name.lower() == '[img]') \
@@ -488,9 +499,9 @@ class proc_overlay:
             or  (inp_name.lower() == '[cam1]')) \
             and (cn_s.qsize() == 0):
 
-                display_mode = 'camera'
+                display_mode = 'cam'
                 if (self.runMode == 'debug'):
-                    display_mode = 'debug'
+                    display_mode = 'dbg'
                 elif (self.runMode == 'hud'):
                     display_mode = 'hud'
 
@@ -507,7 +518,7 @@ class proc_overlay:
                 wipe_mini4   = None
                 wipe_time4   = time.time()
 
-                if (display_mode == 'debug'):
+                if (display_mode == 'dbg'):
                     if (not comp_base is None):
                         base_base  = comp_base.copy()
                         base_time  = comp_time
@@ -522,7 +533,7 @@ class proc_overlay:
                         wipe_mini2 = cam2_mini.copy()
                         wipe_time2 = cam2_time
 
-                if (display_mode == 'camera'):
+                if (display_mode == 'cam'):
                     if (not cam1_base is None):
                         base_base  = cam1_base.copy()
                         base_time  = cam1_time
@@ -564,7 +575,7 @@ class proc_overlay:
                     
                 # 左下基準
                 if (self.flag_enter != 'on') and (self.flag_cancel != 'on'):
-                    over_y = self.dspHeight - 50
+                    over_y = self.dspHeight - 70
                 else:
                     over_y = self.dspHeight - 120
                 over_x  = 20
@@ -582,9 +593,10 @@ class proc_overlay:
                         and ((over_y + over_height) < self.dspHeight):
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
-
                             over_y  -= 10
                             over_x2  = over_x + over_width + 10
+                        else:
+                            over_y += over_height
 
                 # ワイプ画像２ overlay
                 if (int(time.time() - wipe_time2) <= 5) and (not wipe_mini2 is None):
@@ -597,8 +609,9 @@ class proc_overlay:
                         and ((over_y + over_height) < self.dspHeight):
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
-
                             over_x2  = over_x + over_width + 10
+                        else:
+                            over_y += over_height
 
                 over_y = over_y2
                 over_x = over_x2
@@ -615,7 +628,6 @@ class proc_overlay:
                         and ((over_y + over_height) < self.dspHeight):
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
-
                             over_x += over_width + 10
                         over_y += over_height
 
@@ -636,10 +648,8 @@ class proc_overlay:
                         and ((over_y + over_height) < self.dspHeight):
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
-
                             over_y += over_height + 10
                             over_x2 = over_x - 10
-
                         over_x += over_width                        
 
                 # ワイプ画像４ overlay
@@ -653,14 +663,9 @@ class proc_overlay:
                         and ((over_y + over_height) < self.dspHeight):
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
-
                             over_y += over_height + 10
                             over_x2 = over_x - 10
-
                         over_x += over_width                        
-
-                over_y = over_y2
-                over_x = over_x2
 
                 # リーダー画像 overlay
                 if (int(time.time() - reader_time) <= 5) and (not reader_img is None):
@@ -673,8 +678,12 @@ class proc_overlay:
                         and ((over_y + over_height) < self.dspHeight):
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
-                            over_y += over_height + 20
+                            over_y += over_height + 10
+                            over_x2 = over_x - 10
                         over_x += over_width
+
+                over_y = over_y2
+                over_x = over_x2
 
                 # 認識画像(1) overlay
                 if (int(time.time() - detect1_time) <= 5) and (not detect1_img is None):
@@ -718,13 +727,16 @@ class proc_overlay:
                         and ((over_x + over_width) < self.dspWidth) \
                         and ((over_y + over_height) < self.dspHeight):
                             source_img = display_img[over_y:over_y+over_height, over_x:over_x+over_width]
-                            alpha_img  = cv2.addWeighted(source_img, 0.4, over_img, 0.6, 0.0)
+                            if (self.flag_blackwhite == 'white'):
+                                alpha_img  = cv2.addWeighted(source_img, 0.4, over_img, 0.6, 0.0)
+                            else:
+                                alpha_img  = cv2.addWeighted(source_img, 0.2, over_img, 0.8, 0.0)
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = alpha_img
-                            over_y += over_height + 20
+                            over_y += over_height + 10
 
                 # 右下基準
                 if (self.flag_enter != 'on') and (self.flag_cancel != 'on'):
-                    over_y = self.dspHeight - 50
+                    over_y = self.dspHeight - 70
                 else:
                     over_y = self.dspHeight - 120
                 over_x = self.dspWidth - 10
@@ -789,7 +801,10 @@ class proc_overlay:
                         and ((over_x + over_width) < self.dspWidth) \
                         and ((over_y + over_height) < self.dspHeight):
                             source_img = display_img[over_y:over_y+over_height, over_x:over_x+over_width]
-                            alpha_img  = cv2.addWeighted(source_img, 0.4, over_img, 0.6, 0.0)
+                            if (self.flag_blackwhite == 'white'):
+                                alpha_img  = cv2.addWeighted(source_img, 0.4, over_img, 0.6, 0.0)
+                            else:
+                                alpha_img  = cv2.addWeighted(source_img, 0.2, over_img, 0.8, 0.0)
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = alpha_img
 
                 # ENTER 表示
@@ -827,6 +842,10 @@ class proc_overlay:
                     else:
                         puttext += ' (Zoom=' + self.dspZoom + ')'
                         cv2.putText(display_img, puttext, (self.dspWidth - 260,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
+
+                # シャッターイメージ
+                if (int(time.time() - shutter_time) <= 5) and (not shutter_img is None):
+                    display_img = shutter_img.copy()
 
                 # 結果出力
                 self.out_img = display_img.copy()

@@ -295,12 +295,13 @@ class proc_adintool:
                     if (not adintool_exe is None):
                         adintool_exe.terminate()
                         adintool_exe = None
-                        time.sleep(1.00)
 
                     # ビジー解除 (!ready)
                     qFunc.remove(fileBsy)
                     if (str(self.id) == '0'):
                         qFunc.busySet(qBusy_a_inp, False)
+
+                    time.sleep(1.00)
 
                 # ガイド音
                 if (sw == 'accept'):

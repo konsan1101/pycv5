@@ -153,6 +153,10 @@ class proc_voice2wav:
         # 待機ループ
         self.proc_step = '5'
 
+        check_file = ''
+        check_size = 0
+        check_time = time.time()
+
         while (self.proc_step == '5'):
             self.proc_beat = time.time()
 
@@ -192,14 +196,13 @@ class proc_voice2wav:
             path_files = glob.glob(path + '*')
             if (len(path_files) > 0):
 
-                if (os.name != 'nt'):
-                    time.sleep(1.50)
-
                 #try:
                 if (True):
 
-                    base_byte = 0
+                    base_byte  = 0
+                    file_count = 0
                     for f in path_files:
+                        file_count += 1
 
                         # 停止要求確認
                         if (self.breakFlag.is_set()):
@@ -208,6 +211,32 @@ class proc_voice2wav:
                             break
 
                         proc_file = f.replace('\\', '/')
+
+                        # 書込み途中チェック
+                        if (os.name != 'nt'):
+                            if (len(path_files) == file_count):
+
+                                # ファイルサイズ
+                                proc_size = 0
+                                try:
+                                    rb = open(proc_file, 'rb')
+                                    proc_size = sys.getsizeof(rb.read())
+                                    rb.close
+                                    rb = None
+                                except:
+                                    rb = None
+
+                                # 変化？
+                                if (proc_file != check_file) \
+                                or (proc_size != check_size):
+                                    check_file = proc_file
+                                    check_size = proc_size
+                                    check_time = time.time()
+                                    break
+                                else:
+                                    # 変化なしで1秒経過？
+                                    if ((time.time() - check_time)<1):
+                                        break
 
                         if (proc_file[-4:].lower() == '.wav' and proc_file[-8:].lower() != '.wrk.wav'):
                             f1 = proc_file

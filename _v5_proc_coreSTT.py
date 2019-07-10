@@ -406,7 +406,12 @@ class proc_coreSTT:
 
         if (True):
             sync = False
-            if (not self.micDev.isdigit()):
+            if (not self.micDev.isdigit()) \
+            or ((self.micType == 'bluetooth') \
+            and ((self.runMode == 'debug') \
+              or (self.runMode == 'handsfree') \
+              or (self.runMode == 'translator') \
+              or (self.runMode == 'hud'))):
                 #if (seq4[-1:] == '0'):
                 sync = True
 

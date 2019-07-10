@@ -750,7 +750,8 @@ class main_video:
 
                 # 撮影ログ
                 if (not main_img is None):
-                    overlay_thread.put(['[array]', main_img ])
+                    overlay_thread.put(['[shutter]', main_img ])
+                    overlay_thread.put(['[array]',   main_img ])
 
                 # 写真撮影（画像と表示中画面の保管）
                 nowTime = datetime.datetime.now()
@@ -1187,7 +1188,7 @@ if __name__ == '__main__':
         cam2Rotate  = '0'
         cam2Zoom    = '1.0'
 
-        dspMode     = 'full-'
+        dspMode     = 'full'
         dspStretch  = '0'
         dspRotate   = '0'
         dspZoom     = '1.0'
