@@ -370,12 +370,15 @@ class proc_controlv:
             
             elif (proc_text.find(u'ここ')   >=0) \
             or   (proc_text.find(u'これ')   >=0) \
+            or   (proc_text.find(u'こちら') >=0) \
             or   (proc_text.find(u'こっち') >=0) \
             or   (proc_text.find(u'そこ')   >=0) \
             or   (proc_text.find(u'それ')   >=0) \
+            or   (proc_text.find(u'そちら') >=0) \
             or   (proc_text.find(u'そっち') >=0) \
             or   (proc_text.find(u'あそこ') >=0) \
             or   (proc_text.find(u'あれ')   >=0) \
+            or   (proc_text.find(u'あちら') >=0) \
             or   (proc_text.find(u'あっち') >=0):
                 if (self.runMode == 'camera'):
                     out_name  = '[txts]'

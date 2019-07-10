@@ -289,7 +289,7 @@ class proc_coreTTS:
                                 self.proc_last = time.time()
                                 self.sub_proc(seq4, proc_file, work_file, proc_name, proc_text, )
 
-                                time.sleep(0.50)
+                                time.sleep(1.00)
 
                 #except:
                 #    pass
@@ -390,8 +390,7 @@ class proc_coreTTS:
             or ((self.micType == 'bluetooth') \
             and ((self.runMode == 'debug') \
               or (self.runMode == 'handsfree') \
-              or (self.runMode == 'translator') \
-              or (self.runMode == 'hud'))):
+              or (self.runMode == 'translator'))):
                 #if (seq4[-1:] == '0'):
                 sync = True
 

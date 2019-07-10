@@ -296,7 +296,7 @@ class proc_coreSTT:
                                 self.proc_last = time.time()
                                 self.sub_proc(seq4, proc_file, work_file, proc_name, )
 
-                                time.sleep(0.50)
+                                time.sleep(1.00)
 
                 #except:
                 #    pass
@@ -365,8 +365,7 @@ class proc_coreSTT:
             outPlay  = 'off'
 
         elif (self.runMode == 'handsfree') \
-        or   (self.runMode == 'translator') \
-        or   (self.runMode == 'hud'):
+        or   (self.runMode == 'translator'):
             inpInput = work_file
             inpOutput= qPath_a_STT  + proc_name + '.' + inpLang + '.txt'
             trnInput = inpOutput
@@ -379,7 +378,8 @@ class proc_coreSTT:
             txtPlay  = 'off'
             outPlay  = 'off'
 
-        # elif (self.runMode == 'speech') \
+        # elif (self.runMode == 'hud') \
+        # or   (self.runMode == 'speech') \
         # or   (self.runMode == 'number') \
         # or   (self.runMode == 'camera'):
         else: 
@@ -410,8 +410,7 @@ class proc_coreSTT:
             or ((self.micType == 'bluetooth') \
             and ((self.runMode == 'debug') \
               or (self.runMode == 'handsfree') \
-              or (self.runMode == 'translator') \
-              or (self.runMode == 'hud'))):
+              or (self.runMode == 'translator'))):
                 #if (seq4[-1:] == '0'):
                 sync = True
 

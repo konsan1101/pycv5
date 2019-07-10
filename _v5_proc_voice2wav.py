@@ -234,8 +234,8 @@ class proc_voice2wav:
                                     check_time = time.time()
                                     break
                                 else:
-                                    # 変化なしで1秒経過？
-                                    if ((time.time() - check_time)<1):
+                                    # 変化なしでn秒経過？
+                                    if ((time.time() - check_time)<0.50):
                                         break
 
                         if (proc_file[-4:].lower() == '.wav' and proc_file[-8:].lower() != '.wrk.wav'):
@@ -318,7 +318,7 @@ class proc_voice2wav:
                                 if (not self.micDev.isdigit()):
                                     base_byte += work_size - 44
 
-                                time.sleep(0.50)
+                                time.sleep(1.00)
                     
                 #except:
                 #    pass
