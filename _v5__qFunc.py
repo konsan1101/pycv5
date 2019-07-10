@@ -19,6 +19,7 @@ import ctypes
 import array
 
 import cv2
+import pyautogui         
 
 
 
@@ -68,6 +69,8 @@ class qFunc_class:
         self.qLogFlie = qPath_log + nowTime.strftime('%Y%m%d-%H%M%S') + '.log'
         self.qLogDisp = True
         self.qLogOutf = True
+        self.qScreenWidth  = 0
+        self.qScreenHeight = 0
         
     def __del__(self, ):
         pass
@@ -391,22 +394,27 @@ class qFunc_class:
         return False
 
     def getResolution(self, reso='full', ):
-        if   (reso=='full'): 
-            if (qOS != 'darwin'):
-                return 1920,1080  # win,other
-            else:
-                return 2560,1600  # mac
-        if   (reso=='full+'):
-            if (qOS != 'darwin'):
-                #return 1920+40,1080+40
-                return 1280+40,720+40
-            else:
-                return 2560+40,1600+40
-        elif (reso=='half'):
-            if (qOS != 'darwin'):
-                return 960,540
-            else:
-                return 960,540
+        if (reso == 'full')  \
+        or (reso == 'full+') \
+        or (reso == 'full-'):
+            if (self.qScreenWidth == 0):
+                try:
+                    s = pyautogui.screenshot()
+                    s.save('temp/screenshot.jpg')
+                    img = cv2.imread('temp/screenshot.jpg')
+                    self.qScreenHeight, self.qScreenWidth = img.shape[:2]
+                except:
+                    self.qScreenHeight =  720
+                    self.qScreenWidth  = 1280
+
+        if   (reso == 'full'): 
+            return self.qScreenWidth, self.qScreenHeight
+        if   (reso == 'full+'):
+            return self.qScreenWidth + 40, self.qScreenHeight + 40
+        if   (reso == 'full-'):
+            return int(self.qScreenWidth*0.8), int(self.qScreenHeight*0.8)
+        elif (reso == 'half'):
+            return int(self.qScreenWidth/2), int(self.qScreenHeight/2)
 
         elif (reso=='4k'):
                 return 4096,2160
