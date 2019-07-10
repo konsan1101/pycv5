@@ -45,6 +45,7 @@ python -m pip  install --upgrade pyflakes
 python -m pip  install --upgrade pylint
 python -m pip  install --upgrade pep8
 python -m pip  install --upgrade matplotlib
+python -m pip  install --upgrade pyautogui
 
 ECHO;
 ECHO âπê∫
