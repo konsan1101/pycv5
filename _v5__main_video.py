@@ -778,10 +778,13 @@ class main_video:
                 except:
                     pass
 
+                print('photo')
+
                 if (last_txts != ''):
                     if ((time.time() - last_time) < 10.00):
                             #try:
                             filename = qFunc.txt2filetxt(last_txt[0])
+                            print(filename)
                             filename1 = qPath_rec     + stamp + '.' + filename + '.jpg'
                             filename2 = qPath_v_photo + stamp + '.' + filename + 'photo.jpg'
                             if (not main_img is None):
