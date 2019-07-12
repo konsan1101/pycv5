@@ -319,6 +319,26 @@ class qFunc_class:
                     r = None
                     return False, ''
 
+    def txt2filetxt(self, txt='', ):
+        ftxt = txt.replace(' ','_')
+        ftxt = ftxt.replace(u'　','_')
+        ftxt = ftxt.replace(u'、','_')
+        ftxt = ftxt.replace(u'。','_')
+        ftxt = ftxt.replace('"','_')
+        ftxt = ftxt.replace('$','_')
+        ftxt = ftxt.replace('%','_')
+        ftxt = ftxt.replace('&','_')
+        ftxt = ftxt.replace("'",'_')
+        ftxt = ftxt.replace('\\','_')
+        ftxt = ftxt.replace('|','_')
+        ftxt = ftxt.replace('*','_')
+        ftxt = ftxt.replace('/','_')
+        ftxt = ftxt.replace('?','_')
+        ftxt = ftxt.replace(':',',')
+        ftxt = ftxt.replace('<','_')
+        ftxt = ftxt.replace('>','_')
+        return ftxt
+
     def notePad(self, txt='', cr=False, lf=True, ):
         winTitle  = u'無題 - メモ帳'
         if (os.name != 'nt'):

@@ -182,23 +182,7 @@ def qVoiceInput(useApi='free', inpLang='auto', inpFile='_sounds/_sound_hallo.wav
 
 def qTranslator_cacheFile(useApi='free', inpLang='ja', outLang='en', inpText=u'こんにちわ', ):
     if (inpText != '') and (inpText != '!'):
-        f = inpText.replace(' ','_')
-        f = f.replace(u'　','_')
-        f = f.replace(u'、','_')
-        f = f.replace(u'。','_')
-        f = f.replace('"','_')
-        f = f.replace('$','_')
-        f = f.replace('%','_')
-        f = f.replace('&','_')
-        f = f.replace("'",'_')
-        f = f.replace('\\','_')
-        f = f.replace('|','_')
-        f = f.replace('*','_')
-        f = f.replace('/','_')
-        f = f.replace('?','_')
-        f = f.replace(':',',')
-        f = f.replace('<','_')
-        f = f.replace('>','_')
+        f = qFunc.txt2filetxt(inpText)
         if (inpLang == 'ja'):
             f = f.replace('_','')
         while (f[:1] == '_'):
@@ -344,23 +328,7 @@ def qTranslator(useApi='free', inpLang='ja', outLang='en', inpText=u'こんに�
 
 def qVoiceOutput_cacheFile(useApi='free', outLang='en', outText='Hallo', ):
     if (outText != '') and (outText != '!'):
-        f = outText.replace(' ','_')
-        f = f.replace(u'　','_')
-        f = f.replace(u'、','_')
-        f = f.replace(u'。','_')
-        f = f.replace('"','_')
-        f = f.replace('$','_')
-        f = f.replace('%','_')
-        f = f.replace('&','_')
-        f = f.replace("'",'_')
-        f = f.replace('\\','_')
-        f = f.replace('|','_')
-        f = f.replace('*','_')
-        f = f.replace('/','_')
-        f = f.replace('?','_')
-        f = f.replace(':',',')
-        f = f.replace('<','_')
-        f = f.replace('>','_')
+        f = qFunc.txt2filetxt(outText)
         if (outLang == 'ja'):
             f = f.replace('_','')
         while (f[:1] == '_'):
