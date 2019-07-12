@@ -329,7 +329,7 @@ class main_video:
 
         main_img    = None
         display_img = None
-        last_txts   = ''
+        last_txts   = None
         last_time   = time.time()
 
         cam1Stretch     = self.cam1Stretch
@@ -778,16 +778,14 @@ class main_video:
                 except:
                     pass
 
-                print('photo')
-                if ((time.time() - last_time) < 10.00):
+                if (not last_txts is None):
+                    if ((time.time() - last_time) < 10.00):
                             #try:
-                            filename = qFunc.txt2filetxt(last_txt[0])
-                            print(filename)
-                            filename1 = qPath_rec     + stamp + '.' + filename + '.jpg'
-                            filename2 = qPath_v_photo + stamp + '.' + filename + 'photo.jpg'
-                            if (not main_img is None):
-                                cv2.imwrite(filename1, main_img)
-                                cv2.imwrite(filename2, main_img)
+                            filename   = qFunc.txt2filetxt(last_txts[0])
+                            filename1t = qPath_rec     + stamp + '.' + filename + '.jpg'
+                            filename2t = qPath_v_photo + stamp + '.' + filename + '.jpg'
+                            shutil.copy2(filename1, filename1t)
+                            shutil.copy2(filename2, filename2t)
                             #except:
                             #pass
 
