@@ -145,18 +145,28 @@ class proc_julius:
 
         # julius 起動
         if (self.runMode == 'number'):
-            julius = subprocess.Popen(['julius', '-input', 'adinnet', '-adport', portId, \
-                                    '-C', 'julius/_jconf_20180313dnn999.jconf', '-dnnconf', 'julius/julius.dnnconf', \
-                                    #'-charconv', 'utf-8', 'sjis', '-logfile', fileLog, '-quiet', ], \
-                                    '-logfile', fileLog, '-quiet', ], \
-                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, )
+            if (os.name == 'nt'):
+                julius = subprocess.Popen(['julius', '-input', 'adinnet', '-adport', portId, \
+                                        '-C', 'julius/_jconf_20180313dnn999.jconf', '-dnnconf', 'julius/julius.dnnconf', \
+                                        '-charconv', 'utf-8', 'sjis', '-logfile', fileLog, '-quiet', ], \
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, )
+            else:
+                julius = subprocess.Popen(['julius', '-input', 'adinnet', '-adport', portId, \
+                                        '-C', 'julius/_jconf_20180313dnn999.jconf', '-dnnconf', 'julius/julius.dnnconf', \
+                                        '-logfile', fileLog, '-quiet', ], \
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, )
         else:
-            julius = subprocess.Popen(['julius', '-input', 'adinnet', '-adport', portId, \
-                                    '-C', 'julius/_jconf_20180313dnn.jconf', '-dnnconf', 'julius/julius.dnnconf', \
-                                    #'-charconv', 'utf-8', 'sjis', '-logfile', fileLog, '-quiet', ], \
-                                    '-logfile', fileLog, '-quiet', ], \
-                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, )
-            time.sleep(0.50)
+            if (os.name == 'nt'):
+                julius = subprocess.Popen(['julius', '-input', 'adinnet', '-adport', portId, \
+                                        '-C', 'julius/_jconf_20180313dnn.jconf', '-dnnconf', 'julius/julius.dnnconf', \
+                                        '-charconv', 'utf-8', 'sjis', '-logfile', fileLog, '-quiet', ], \
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, )
+            else:
+                julius = subprocess.Popen(['julius', '-input', 'adinnet', '-adport', portId, \
+                                        '-C', 'julius/_jconf_20180313dnn.jconf', '-dnnconf', 'julius/julius.dnnconf', \
+                                        '-logfile', fileLog, '-quiet', ], \
+                                        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, )
+        time.sleep(0.50)
 
         # julius 待機
         chktime = time.time()

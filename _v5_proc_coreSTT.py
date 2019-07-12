@@ -57,8 +57,8 @@ qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
 
 # 音声処理 api
-#import       _v5_api_speech
-#api_speech = _v5_api_speech.api_speech_class()
+import       _v5_api_speech
+api_speech = _v5_api_speech.api_speech_class()
 
 
 
@@ -414,27 +414,27 @@ class proc_coreSTT:
                 #if (seq4[-1:] == '0'):
                 sync = True
 
-            #res = api_speech.execute(sync,
-            #        self.runMode, self.micDev, 
-            #        self.qApiInp, self.qApiTrn, self.qApiOut, 
-            #        self.qLangInp, self.qLangTrn, self.qLangTxt, self.qLangOut,
-            #        'STT'+str(seq4), proc_name, 
-            #        inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput, 
-            #        inpPlay, txtPlay, outPlay, 
-            #        )
-
-            api = subprocess.Popen(['python', '_v5_api_speech.py',
+            res = api_speech.execute(sync,
                     self.runMode, self.micDev, 
                     self.qApiInp, self.qApiTrn, self.qApiOut, 
                     self.qLangInp, self.qLangTrn, self.qLangTxt, self.qLangOut,
                     'STT'+str(seq4), proc_name, 
                     inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput, 
                     inpPlay, txtPlay, outPlay, 
-                    ],)
-            if (sync == True):
-                api.wait()
-                api.terminate()
-                api = None
+                    )
+
+            #api = subprocess.Popen(['python', '_v5_api_speech.py',
+            #        self.runMode, self.micDev, 
+            #        self.qApiInp, self.qApiTrn, self.qApiOut, 
+            #        self.qLangInp, self.qLangTrn, self.qLangTxt, self.qLangOut,
+            #        'STT'+str(seq4), proc_name, 
+            #        inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput, 
+            #        inpPlay, txtPlay, outPlay, 
+            #        ],)
+            #if (sync == True):
+            #    api.wait()
+            #    api.terminate()
+            #    api = None
 
             #if (not self.micDev.isdigit()):
             #    if (sync == True):
