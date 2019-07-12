@@ -49,14 +49,14 @@ python -m pip  install --upgrade pyautogui
 
 ECHO;
 ECHO 音声
-python -m pip  install --upgrade pyaudio
+rem python -m pip  install --upgrade pyaudio
 python -m pip  install --upgrade wave
 python -m pip  install --upgrade sounddevice
 python -m pip  install --upgrade speechrecognition
 
 ECHO;
 ECHO マイクロソフト
-python -m pip  install --upgrade mstranslator
+rem python -m pip  install --upgrade mstranslator
 python -m pip  install --upgrade cognitive_face
 python -m pip  install --upgrade pywin32
 
