@@ -329,6 +329,8 @@ class main_video:
 
         main_img    = None
         display_img = None
+        last_txts   = ''
+        last_time   = time.time()
 
         cam1Stretch     = self.cam1Stretch
         cam1Rotate      = self.cam1Rotate
@@ -648,6 +650,8 @@ class main_video:
 
                         if (res_name == '[txts]'):
                             if (not txt2img_thread is None):
+                                last_txts   = res_value
+                                last_time   = time.time()
                                 # 結果出力
                                 if (cn_s.qsize() < 99):
                                     out_name  = res_name
@@ -773,6 +777,18 @@ class main_video:
                         cv2.imwrite(filename6, display_img)
                 except:
                     pass
+
+                if (last_txts != ''):
+                    if ((time.time() - last_time) < 5.00):
+                        try:
+                            filename = qFunc.txt2filetxt(last_txt[0])
+                            filename1 = qPath_rec     + stamp + '.' + filename + '.jpg'
+                            filename2 = qPath_v_photo + stamp + '.' + filename + 'photo.jpg'
+                            if (not main_img is None):
+                                cv2.imwrite(filename1, main_img)
+                                cv2.imwrite(filename2, main_img)
+                        except:
+                            pass
 
                 # ＡＩ画像認識処理へ
                 filename0 = qPath_v_inp   + stamp + '.photo.jpg'
