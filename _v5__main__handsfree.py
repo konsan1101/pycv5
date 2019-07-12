@@ -86,7 +86,7 @@ qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
 
 
 
-runMode  = 'camera'
+runMode  = 'handsfree'
 
 
 
