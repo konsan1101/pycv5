@@ -779,16 +779,16 @@ class main_video:
                     pass
 
                 if (last_txts != ''):
-                    if ((time.time() - last_time) < 5.00):
-                        try:
+                    if ((time.time() - last_time) < 10.00):
+                            #try:
                             filename = qFunc.txt2filetxt(last_txt[0])
                             filename1 = qPath_rec     + stamp + '.' + filename + '.jpg'
                             filename2 = qPath_v_photo + stamp + '.' + filename + 'photo.jpg'
                             if (not main_img is None):
                                 cv2.imwrite(filename1, main_img)
                                 cv2.imwrite(filename2, main_img)
-                        except:
-                            pass
+                            #except:
+                            #pass
 
                 # ＡＩ画像認識処理へ
                 filename0 = qPath_v_inp   + stamp + '.photo.jpg'
