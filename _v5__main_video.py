@@ -779,9 +779,7 @@ class main_video:
                     pass
 
                 print('photo')
-
-                if (last_txts != ''):
-                    if ((time.time() - last_time) < 10.00):
+                if ((time.time() - last_time) < 10.00):
                             #try:
                             filename = qFunc.txt2filetxt(last_txt[0])
                             print(filename)
