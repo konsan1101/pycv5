@@ -86,11 +86,16 @@ python -m pip  install --upgrade keras
 python -m pip  install --upgrade tensorflow
 
 ECHO;
-ECHO yolo pytorch
-python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-win_amd64.whl
-python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp37-cp37m-win_amd64.whl
+ECHO yolo pytorch 36
+python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-win_amd64.whl
+python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-win_amd64.whl
 python -m pip  install pandas
 
+rem ECHO;
+rem ECHO yolo pytorch 37
+rem python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-win_amd64.whl
+rem python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp37-cp37m-win_amd64.whl
+rem python -m pip  install pandas
 
 PAUSE
 
