@@ -780,14 +780,14 @@ class main_video:
 
                 if (not last_txts is None):
                     if ((time.time() - last_time) < 10.00):
-                            #try:
+                        try:
                             filename   = qFunc.txt2filetxt(last_txts[0])
                             filename1t = qPath_rec     + stamp + '.' + filename + '.jpg'
                             filename2t = qPath_v_photo + stamp + '.' + filename + '.jpg'
                             shutil.copy2(filename1, filename1t)
                             shutil.copy2(filename2, filename2t)
-                            #except:
-                            #pass
+                        except:
+                            pass
 
                 # ＡＩ画像認識処理へ
                 filename0 = qPath_v_inp   + stamp + '.photo.jpg'
