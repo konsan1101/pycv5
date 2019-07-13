@@ -1260,7 +1260,7 @@ if __name__ == '__main__':
         cam2Rotate  = '0'
         cam2Zoom    = '1.0'
 
-        dspMode     = 'full'
+        dspMode     = 'full+'
         dspStretch  = '0'
         dspRotate   = '0'
         dspZoom     = '1.0'

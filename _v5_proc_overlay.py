@@ -515,13 +515,13 @@ class proc_overlay:
                             if (image_width < (cam1_width * 0.7)):
                                 msg_width  = int(cam1_width * 0.7)
                                 msg_height = int(msg_width * image_height / image_width)
-                                if (msg_height > (cam1_height * 0.2))
+                                if (msg_height > (cam1_height * 0.2)):
                                     msg_width  = int(msg_width / (msg_height / (cam1_height * 0.2)))
                                     msg_height = int(msg_width * image_height / image_width)
                                 msg_img  = cv2.resize(image_img, (msg_width, msg_height))
 
                         over_x = 20
-                        over_y = 20
+                        over_y = work_height - 40 - msg_height
                         if  (over_x >=0) and (over_y >=0) \
                         and ((over_x + msg_width) < work_width) \
                         and ((over_y + msg_height) < work_height):
