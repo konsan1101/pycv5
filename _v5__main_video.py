@@ -331,7 +331,8 @@ class main_video:
         display_img     = None
         message_txts    = None
         message_time    = time.time()
-        message_img     = None
+        photo_img       = None
+        photo_time      = time.time()
 
         cam1Stretch     = self.cam1Stretch
         cam1Rotate      = self.cam1Rotate
@@ -753,22 +754,29 @@ class main_video:
             if (control == 'shutter'):
 
                 # 撮影ログ
-                if (not main_img is None):
-                    overlay_thread.put(['[shutter]', main_img ])
-                    overlay_thread.put(['[array]',   main_img ])
-
-                # 写真撮影（画像と表示中画面の保管）
-                nowTime = datetime.datetime.now()
-                stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
-                res = self.save_photo(stamp, main_img, display_img, message_txts, message_time, message_img, )
+                logset = False
+                if (not photo_img is None):
+                    if ((time.time() - photo_time) < 5.00):
+                        overlay_thread.put(['[shutter]', photo_img ])
+                        overlay_thread.put(['[array]',   photo_img ])
+                        logset = True
+                if (logset == False):
+                    if (not main_img is None):
+                        overlay_thread.put(['[shutter]', main_img ])
+                        overlay_thread.put(['[array]',   main_img ])
 
                 # ＡＩ画像認識処理へ
+                nowTime = datetime.datetime.now()
+                stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
                 filename0 = qPath_v_inp   + stamp + '.photo.jpg'
                 #try:
                 if (not main_img is None):
                     cv2.imwrite(filename0, main_img)
                 #except:
                 #    pass
+
+                # 写真保存
+                self.save_photo(stamp, main_img, display_img, message_txts, message_time, photo_img, photo_time, )
 
             if  (cn_s.qsize() == 0) \
             and (overlay_thread.proc_s.qsize() == 0):
@@ -984,23 +992,28 @@ class main_video:
                         overlay_thread.put(['[txts_img]', txt_img ])
                     if (res_name == '[message_img]'):
                         message_img = res_value.copy()
-                        overlay_thread.put(['[txts_img]', message_img ])
+                        overlay_thread.put(['[message_img]', message_img ])
                     if (res_name == '[status_img]'):
                         txt_img = res_value.copy()
                         overlay_thread.put(['[status_img]', txt_img ])
 
                 # 画像出力
-                res_data  = overlay_thread.get()
-                res_name  = res_data[0]
-                res_value = res_data[1]
-                if (res_name == '[img]'):
-                    display_img = res_value.copy()
+                if (not overlay_thread is None):
+                    while (overlay_thread.proc_r.qsize() != 0):
+                        res_data  = overlay_thread.get()
+                        res_name  = res_data[0]
+                        res_value = res_data[1]
+                        if (res_name == '[photo_img]'):
+                            photo_img  = res_value.copy()
+                            photo_time = time.time()
+                        if (res_name == '[img]'):
+                            display_img = res_value.copy()
 
-                    # 結果出力
-                    if (cn_s.qsize() < 99):
-                        out_name  = '[display_img]'
-                        out_value = display_img
-                        cn_s.put([out_name, out_value])
+                            # 結果出力
+                            if (cn_s.qsize() < 99):
+                                out_name  = '[display_img]'
+                                out_value = display_img
+                                cn_s.put([out_name, out_value])
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
@@ -1092,40 +1105,65 @@ class main_video:
 
 
 
-    def save_photo(self, stamp, main_img, display_img, message_txts, message_time, message_img, ):
+    def save_photo(self, stamp, main_img, display_img, message_txts, message_time, photo_img, photo_time, ):
 
-        # 写真撮影（画像と表示中画面の保管）
-        filename1 = qPath_rec     + stamp + '.photo.jpg'
-        filename2 = qPath_v_photo + stamp + '.photo.jpg'
-        filename3 = qCtrl_result_photo
-        filename4 = qPath_rec     + stamp + '.screen.jpg'
-        filename5 = qPath_v_photo + stamp + '.screen.jpg'
-        filename6 = qCtrl_result_screen
+        # 写真保存
+        main_file = ''
         try:
             if (not main_img is None):
-                cv2.imwrite(filename1, main_img)
-                cv2.imwrite(filename2, main_img)
-                cv2.imwrite(filename3, main_img)
-            if (not display_img is None):
-                cv2.imwrite(filename4, display_img)
-                cv2.imwrite(filename5, display_img)
-                cv2.imwrite(filename6, display_img)
+                main_file = qPath_rec + 'photo.' + stamp + '.jpg'
+                cv2.imwrite(main_file, main_img)
         except:
-            pass
+            main_file = ''
+        screen_file = ''
+        try:
+            if (not display_img is None):
+                screen_file = qPath_rec + 'screen.' + stamp + '.jpg'
+                cv2.imwrite(screen_file, display_img)
+        except:
+            screen_file = ''
+        photo_file = ''
+        photo_txt  = ''
+        try:
+            if (not message_txts is None):
+                if ((time.time() - message_time) < 5.00):
+                    if (not photo_img is None):
+                        if ((time.time() - photo_time) < 5.00):
+                            photo_txt = '.' + qFunc.txt2filetxt(message_txts[0])
+                            photo_file = qPath_work + stamp + '.jpg'
+                            cv2.imwrite(photo_file, photo_img)
+                            photo_img = None
+        except:
+            photo_file = ''
+            photo_txt  = ''
+        if (photo_file == ''):
+            main_file = ''
 
-        # 
-
-
-        if (not message_txts is None):
-            if ((time.time() - message_time) < 10.00):
-                try:
-                    filename   = qFunc.txt2filetxt(message_txts[0])
-                    filename1t = qPath_rec     + stamp + '.' + filename + '.jpg'
-                    filename2t = qPath_v_photo + stamp + '.' + filename + '.jpg'
-                    shutil.copy2(filename1, filename1t)
-                    shutil.copy2(filename2, filename2t)
-                except:
-                    pass
+        # 写真コピー保存
+        filename1 = qPath_v_photo + 'photo.' + stamp + '.jpg'
+        filename2 = qCtrl_result_photo
+        filename3 = qPath_v_photo + 'screen.' + stamp + '.jpg'
+        filename4 = qCtrl_result_screen
+        filename5 = qPath_rec     + stamp + photo_txt + '.jpg'
+        filename6 = qPath_v_photo + stamp + photo_txt + '.jpg'
+        if (main_file != ''):
+            try:
+                shutil.copy2(main_file,   filename1)
+                shutil.copy2(main_file,   filename2)
+            except:
+                pass
+        if (screen_file != ''):
+            try:
+                shutil.copy2(screen_file, filename3)
+                shutil.copy2(screen_file, filename4)
+            except:
+                pass
+        if (photo_file != ''):
+            try:
+                shutil.copy2(photo_file,  filename5)
+                shutil.copy2(photo_file,  filename6)
+            except:
+                pass
 
 
 

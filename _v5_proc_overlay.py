@@ -283,7 +283,7 @@ class proc_overlay:
                 if (self.proc_seq > 9999):
                     self.proc_seq = 1
 
-                # カメラ１（メイン画像）
+                # シャッター画像
                 if (inp_name.lower() == '[shutter]'):
                     try:
                         image_img = inp_value.copy()
@@ -469,7 +469,8 @@ class proc_overlay:
                         print(inp_name.lower() + ' error!')
 
                 # テキスト画像
-                if (inp_name.lower() == '[txts_img]'):
+                if (inp_name.lower() == '[txts_img]') \
+                or (inp_name.lower() == '[message_img]'):
                     try:
                         image_img = inp_value.copy()
                         image_height, image_width = image_img.shape[:2]
@@ -493,6 +494,48 @@ class proc_overlay:
 
                     except:
                         print(inp_name.lower() + ' error!')
+
+                # メッセージ画像のフィードバック
+                if (inp_name.lower() == '[message_img]'):
+                    image_img = inp_value.copy()
+                    if (not cam1_base is None):
+                        cam1_height, cam1_width = cam1_base.shape[:2]
+                        image_height, image_width = image_img.shape[:2]
+
+                        work_img = cam1_base.copy()
+                        work_height, work_width = work_img.shape[:2]
+                        msg_img  = image_img.copy()
+                        msg_height, msg_width   = msg_img.shape[:2]
+
+                        if (image_width > (cam1_width-40)):
+                            work_width  = int(image_width * 1.5)
+                            work_height = int(work_width * cam1_height / cam1_width)
+                            work_img  = cv2.resize(cam1_base, (work_width, work_height))
+                        else:
+                            if (image_width < (cam1_width * 0.7)):
+                                msg_width  = int(cam1_width * 0.7)
+                                msg_height = int(msg_width * image_height / image_width)
+                                if (msg_height > (cam1_height * 0.2))
+                                    msg_width  = int(msg_width / (msg_height / (cam1_height * 0.2)))
+                                    msg_height = int(msg_width * image_height / image_width)
+                                msg_img  = cv2.resize(image_img, (msg_width, msg_height))
+
+                        over_x = 20
+                        over_y = 20
+                        if  (over_x >=0) and (over_y >=0) \
+                        and ((over_x + msg_width) < work_width) \
+                        and ((over_y + msg_height) < work_height):
+                            source_img = work_img[over_y:over_y+msg_height, over_x:over_x+msg_width]
+                            if (self.flag_blackwhite == 'white'):
+                                alpha_img  = cv2.addWeighted(source_img, 0.4, msg_img, 0.6, 0.0)
+                            else:
+                                alpha_img  = cv2.addWeighted(source_img, 0.2, msg_img, 0.8, 0.0)
+                            work_img[over_y:over_y+msg_height, over_x:over_x+msg_width] = alpha_img
+
+                            # 結果出力
+                            out_name  = '[photo_img]'
+                            out_value = work_img.copy()
+                            cn_s.put([out_name, out_value])
 
             # 画像処理
             if ((inp_name.lower() == '[img]') \
