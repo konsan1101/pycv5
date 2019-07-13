@@ -1,9 +1,6 @@
 @ECHO OFF
 
-c:
-cd c:\pycv5
-
-ECHO I—¹
+ECHO terminate
 taskkill /im python.exe /f       >nul
 taskkill /im adintool-gui.exe /f >nul
 taskkill /im adintool.exe /f     >nul
