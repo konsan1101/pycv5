@@ -64,18 +64,23 @@ qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
 class proc_camera:
 
     def __init__(self, name='thread', id='0', runMode='debug', 
-                    camDev='0', camMode='vga', camStretch='0', camRotate='0', camZoom='1.0', camFps='30', ):
+                    camDev='0', camMode='vga', camStretch='0', camRotate='0', camZoom='1.0', camFps='5', ):
         self.runMode    = runMode
         self.camDev     = camDev
         self.camMode    = camMode
         self.camStretch = camStretch
         self.camRotate  = camRotate
         self.camZoom    = camZoom
-        self.camFps     = camFps
+        self.camFps     = '5'
+        if (self.camFps.isdigit()):
+            self.camFps = str(camFps)
 
-        camWidth, camHeight = qFunc.getResolution(camMode)
-        self.camWidth   = camWidth
-        self.camHeight  = camHeight
+        self.camWidth   = 0
+        self.camHeight  = 0
+        if (camMode != 'default') and (camMode != 'auto'):
+            camWidth, camHeight = qFunc.getResolution(camMode)
+            self.camWidth   = camWidth
+            self.camHeight  = camHeight
 
         self.breakFlag = threading.Event()
         self.breakFlag.clear()
@@ -201,9 +206,15 @@ class proc_camera:
                     else:
                         capture = cv2.VideoCapture(int(self.camDev), cv2.CAP_DSHOW)
                     try:
-                        capture.set(3, int(self.camWidth ))
-                        capture.set(4, int(self.camHeight))
-                        capture.set(5, int(self.camFps   ))
+                        if (int(self.camWidth ) != 0):
+                            capture.set(cv2.CAP_PROP_FRAME_WIDTH,  int(self.camWidth ))
+                            print(self.camWidth)
+                        if (int(self.camHeight) != 0):
+                            capture.set(cv2.CAP_PROP_FRAME_HEIGHT, int(self.camHeight))
+                            print(self.camHeight)
+                        if (int(self.camFps) != 0):
+                            capture.set(cv2.CAP_PROP_FPS,          int(self.camFps   ))
+                            print(self.camFps)
                     except:
                         pass
 
@@ -385,7 +396,7 @@ if __name__ == '__main__':
 
     # ログ設定
     qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d-%H%M%S') + '_' + os.path.basename(__file__) + '.log'
+    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 

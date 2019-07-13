@@ -118,7 +118,7 @@ def control_speech(seq, fileId, runMode, micDev, useApiTrn, useApiOut, inpLang, 
 
     if (True):
         now=datetime.datetime.now()
-        stamp=now.strftime('%Y%m%d-%H%M%S')
+        stamp=now.strftime('%Y%m%d.%H%M%S')
         wrkText = qPath_work + stamp + '.' + seq + '.control.txt'
         wrkOut  = qPath_a_play + stamp + '.' + seq + '.control.mp3'
 
@@ -2066,7 +2066,7 @@ if (__name__ == '__main__'):
 
     # ログ設定
     qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d-%H%M%S') + '_' + os.path.basename(__file__) + '.log'
+    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 

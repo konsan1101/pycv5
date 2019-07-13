@@ -66,7 +66,7 @@ if (__name__ == '__main__'):
 
     # ログ設定
     qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d-%H%M%S') + '_' + os.path.basename(__file__) + '.log'
+    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
@@ -118,7 +118,7 @@ if (__name__ == '__main__'):
         qFunc.busyWait(idolSec=2, maxWait=15, )
 
         now=datetime.datetime.now()
-        stamp=now.strftime('%Y%m%d-%H%M%S')
+        stamp=now.strftime('%Y%m%d.%H%M%S')
 
         if (smart == 'siri'):
             #txt = 'en,Hey, Siri'

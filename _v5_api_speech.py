@@ -613,7 +613,7 @@ def speech_batch(runMode, micDev,
 
     # ログ設定
     qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d-%H%M%S') + '_' + os.path.basename(__file__) + '.log'
+    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
     qFunc.logFileSet(file=qLogFile, display=False, outfile=True, )
     #qFunc.logOutput(qLogFile, )
 
@@ -1418,7 +1418,7 @@ def speech_batch(runMode, micDev,
             speechtext = lang + text
 
             nowTime = datetime.datetime.now()
-            stamp   = nowTime.strftime('%Y%m%d-%H%M%S')
+            stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
             wrkText = qPath_work + stamp + '.' + seq + '.selfcheck.txt'
             wrkOut  = qPath_work + stamp + '.' + seq + '.selfcheck.mp3'
 
@@ -1523,7 +1523,7 @@ if (__name__ == '__main__'):
 
     # ログ設定
     qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d-%H%M%S') + '_' + os.path.basename(__file__) + '.log'
+    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
     qFunc.logFileSet(file=qLogFile, display=False, outfile=True, )
     qFunc.logOutput(qLogFile, )
 

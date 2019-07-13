@@ -66,7 +66,7 @@ class qFunc_class:
 
     def __init__(self, ):
         nowTime = datetime.datetime.now()
-        self.qLogFlie = qPath_log + nowTime.strftime('%Y%m%d-%H%M%S') + '.log'
+        self.qLogFlie = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.log'
         self.qLogDisp = True
         self.qLogOutf = True
         self.qScreenWidth  = 0
@@ -430,7 +430,7 @@ class qFunc_class:
         if   (reso == 'full'): 
             return self.qScreenWidth, self.qScreenHeight
         if   (reso == 'full+'):
-            return self.qScreenWidth + 40, self.qScreenHeight + 40
+            return self.qScreenWidth + 40, self.qScreenHeight + 50
         if   (reso == 'full-'):
             return int(self.qScreenWidth*0.8), int(self.qScreenHeight*0.8)
         elif (reso == 'half'):
@@ -541,7 +541,7 @@ class qFunc_class:
 
         if (text != ''):
             nowTime = datetime.datetime.now()
-            stamp   = nowTime.strftime('%Y%m%d-%H%M%S')
+            stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
             filename = qPath_a_TTS + stamp + '.' + str(id) + '.txt'
 
             return self.txtsWrite(filename, txts=[text], encoding='utf-8', exclusive=False, mode='w', )
@@ -793,7 +793,7 @@ if (__name__ == '__main__'):
     qFunc.init()
 
     nowTime = datetime.datetime.now()
-    logfile = qPath_log + nowTime.strftime('%Y%m%d-%H%M%S') + '_' + os.path.basename(__file__) + '.log'
+    logfile = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
     qFunc.logFileSet(file=logfile, display=True, outfile=True, )
     qFunc.logOutput(logfile, )
 

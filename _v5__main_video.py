@@ -1234,7 +1234,7 @@ if __name__ == '__main__':
     # ログ設定
 
     qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d-%H%M%S') + '_' + os.path.basename(__file__) + '.log'
+    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
@@ -1249,7 +1249,7 @@ if __name__ == '__main__':
     if (True):
 
         cam1Dev     = '9'
-        cam1Mode    = 'full'
+        cam1Mode    = 'default'
         cam1Stretch = '0'
         cam1Rotate  = '0'
         cam1Zoom    = '1.0'
@@ -1260,7 +1260,7 @@ if __name__ == '__main__':
         cam2Rotate  = '0'
         cam2Zoom    = '1.0'
 
-        dspMode     = 'full+'
+        dspMode     = 'full'
         dspStretch  = '0'
         dspRotate   = '0'
         dspZoom     = '1.0'
@@ -1459,8 +1459,10 @@ if __name__ == '__main__':
 
         # ディスプレイ設定
         if (display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) != 'busy'): 
-            cv2.namedWindow('Display', 1)
+            cv2.namedWindow('Display', cv2.WINDOW_NORMAL)
             cv2.moveWindow( 'Display', 0, 0)
+            if (dspMode == 'full'):
+                cv2.setWindowProperty('Display', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN,)
             cv2.waitKey(1)
             display = True
             show_onece = True
