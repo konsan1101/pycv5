@@ -75,7 +75,7 @@ qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
 class proc_yolo_torch:
 
     def __init__(self, name='thread', id='0', runMode='debug',
-                    procMode='320x240', ):
+                    procMode='640x480', ):
         self.runMode   = runMode
         self.procMode  = procMode
         procWidth, procHeight = qFunc.getResolution(procMode)
@@ -167,12 +167,12 @@ class proc_yolo_torch:
         bbox_attrs = 5 + num_classes
         
         print("Loading network.....")
-        #model = Darknet('yolo3_torch/cfg/yolov3.cfg')
-        #model.load_weights('yolo3_torch/yolov3.weights')
-        #model.net_info["height"] = 416
-        model = Darknet('yolo3_torch/cfg/yolov3-tiny.cfg')
-        model.load_weights('yolo3_torch/yolov3-tiny.weights')
+        model = Darknet('yolo3_torch/cfg/yolov3.cfg')
+        model.load_weights('yolo3_torch/yolov3.weights')
         model.net_info["height"] = 416
+        #model = Darknet('yolo3_torch/cfg/yolov3-tiny.cfg')
+        #model.load_weights('yolo3_torch/yolov3-tiny.weights')
+        #model.net_info["height"] = 416
         print("Network successfully loaded")
 
         inp_dim = int(model.net_info["height"])
@@ -294,8 +294,8 @@ class proc_yolo_torch:
                         if ((x2-x1)>10) and ((y2-y1)>10):
 
                             label = '{} {:.2f}'.format(classes[cl], sc)
-                            #color = random.choice(colors)
-                            color = colors[ cl % len(colors) ]
+                            color = random.choice(colors)
+                            #color = colors[ cl % len(colors) ]
 
                             cv2.rectangle(out_img, (x1, y1), (x2, y2), color, 2)
 

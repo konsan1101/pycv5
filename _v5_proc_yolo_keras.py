@@ -92,7 +92,7 @@ class proc_yolo_keras:
             return "      YOLO: Unrecognized attribute name '" + n + "'"
 
     def __init__(self, name='thread', id='0', runMode='debug',
-                    procMode='320x240', ):
+                    procMode='640x480', ):
         self.runMode   = runMode
         self.procMode  = procMode
         procWidth, procHeight = qFunc.getResolution(procMode)
