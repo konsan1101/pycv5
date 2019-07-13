@@ -760,34 +760,7 @@ class main_video:
                 # 写真撮影（画像と表示中画面の保管）
                 nowTime = datetime.datetime.now()
                 stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
-                filename1 = qPath_rec     + stamp + '.photo.jpg'
-                filename2 = qPath_v_photo + stamp + '.photo.jpg'
-                filename3 = qCtrl_result_photo
-                filename4 = qPath_rec     + stamp + '.screen.jpg'
-                filename5 = qPath_v_photo + stamp + '.screen.jpg'
-                filename6 = qCtrl_result_screen
-                try:
-                    if (not main_img is None):
-                        cv2.imwrite(filename1, main_img)
-                        cv2.imwrite(filename2, main_img)
-                        cv2.imwrite(filename3, main_img)
-                    if (not display_img is None):
-                        cv2.imwrite(filename4, display_img)
-                        cv2.imwrite(filename5, display_img)
-                        cv2.imwrite(filename6, display_img)
-                except:
-                    pass
-
-                if (not message_txts is None):
-                    if ((time.time() - message_time) < 10.00):
-                        try:
-                            filename   = qFunc.txt2filetxt(message_txts[0])
-                            filename1t = qPath_rec     + stamp + '.' + filename + '.jpg'
-                            filename2t = qPath_v_photo + stamp + '.' + filename + '.jpg'
-                            shutil.copy2(filename1, filename1t)
-                            shutil.copy2(filename2, filename2t)
-                        except:
-                            pass
+                res = self.save_photo(main_img, display_img, message_txts, message_img, )
 
                 # ＡＩ画像認識処理へ
                 filename0 = qPath_v_inp   + stamp + '.photo.jpg'
@@ -1116,6 +1089,40 @@ class main_video:
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
             self.proc_beat = None
+
+
+
+    def save_photo(self, stamp, main_img, display_img, message_txts, message_img, ):
+
+        # 写真撮影（画像と表示中画面の保管）
+        filename1 = qPath_rec     + stamp + '.photo.jpg'
+        filename2 = qPath_v_photo + stamp + '.photo.jpg'
+        filename3 = qCtrl_result_photo
+        filename4 = qPath_rec     + stamp + '.screen.jpg'
+        filename5 = qPath_v_photo + stamp + '.screen.jpg'
+        filename6 = qCtrl_result_screen
+        try:
+            if (not main_img is None):
+                cv2.imwrite(filename1, main_img)
+                cv2.imwrite(filename2, main_img)
+                cv2.imwrite(filename3, main_img)
+            if (not display_img is None):
+                cv2.imwrite(filename4, display_img)
+                cv2.imwrite(filename5, display_img)
+                cv2.imwrite(filename6, display_img)
+        except:
+            pass
+
+        if (not message_txts is None):
+            if ((time.time() - message_time) < 10.00):
+                try:
+                    filename   = qFunc.txt2filetxt(message_txts[0])
+                    filename1t = qPath_rec     + stamp + '.' + filename + '.jpg'
+                    filename2t = qPath_v_photo + stamp + '.' + filename + '.jpg'
+                    shutil.copy2(filename1, filename1t)
+                    shutil.copy2(filename2, filename2t)
+                except:
+                    pass
 
 
 
