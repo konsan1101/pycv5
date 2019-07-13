@@ -248,8 +248,8 @@ class main_audio:
             trareader_switch = 'off'
         if (self.runMode == 'hud'):
             julius_switch    = 'on'
-            sttreader_switch = 'on'
-            trareader_switch = 'on'
+            sttreader_switch = 'off'
+            trareader_switch = 'off'
         if (self.runMode == 'camera'):
             julius_switch    = 'on'
             sttreader_switch = 'off'

@@ -213,6 +213,7 @@ class proc_txt2img:
 
             # 処理
             elif (inp_name.lower() == '[txts]') \
+              or (inp_name.lower() == '[message_txts]') \
               or (inp_name.lower() == '[status]'):
 
                 # 実行カウンタ
@@ -289,7 +290,11 @@ class proc_txt2img:
 
                 # 結果出力
                 if (inp_name.lower() == '[txts]'):
-                    out_name  = '[img]'
+                    out_name  = '[txts_img]'
+                    out_value = np.asarray(text_img)
+                    cn_s.put([out_name, out_value])
+                if (inp_name.lower() == '[message_txts]'):
+                    out_name  = '[message_img]'
                     out_value = np.asarray(text_img)
                     cn_s.put([out_name, out_value])
                 if (inp_name.lower() == '[status]'):
@@ -353,7 +358,7 @@ if __name__ == '__main__':
 
     txt2img_thread.put(['[txts]', [u'おはようございます']])
     resdata = txt2img_thread.checkGet()
-    if (resdata[0] == '[img]'):
+    if (resdata[0] == '[txts_img]'):
         img = resdata[1].copy()
         cv2.namedWindow('Display',  1)
         cv2.imshow('Display', img )
@@ -364,7 +369,7 @@ if __name__ == '__main__':
 
     txt2img_thread.put(['[txts]', [u'こんにちは', u'はじめまして']])
     resdata = txt2img_thread.checkGet()
-    if (resdata[0] == '[img]'):
+    if (resdata[0] == '[txts_img]'):
         img = resdata[1].copy()
         cv2.namedWindow('Display',  1)
         cv2.imshow('Display', img )

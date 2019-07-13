@@ -328,7 +328,7 @@ class proc_controlv:
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text == u'シャッター') or (proc_text.find(u'写真') >=0) or (proc_text.find(u'撮影') >=0):
+            elif (proc_text == u'シャッター') or (proc_text.find(u'撮影') >=0):
                 out_name  = 'control'
                 out_value = 'shutter'
                 cn_s.put([out_name, out_value])
@@ -379,10 +379,12 @@ class proc_controlv:
             or   (proc_text.find(u'あそこ') >=0) \
             or   (proc_text.find(u'あれ')   >=0) \
             or   (proc_text.find(u'あちら') >=0) \
-            or   (proc_text.find(u'あっち') >=0):
-                if (self.runMode == 'handsfree') \
-                or (self.runMode == 'hud') \
-                or (self.runMode == 'camera'):
+            or   (proc_text.find(u'あっち') >=0) \
+            or   (proc_text.find(u'写真')   >=0) \
+            or   (proc_text.find(u'伝票')   >=0) \
+            or   (proc_text.find(u'計測')   >=0) \
+            or   (proc_text.find(u'測定')   >=0):
+                if (self.runMode == 'camera'):
                     out_name  = '[txts]'
                     out_value = [proc_text]
                     cn_s.put([out_name, out_value])

@@ -327,10 +327,11 @@ class main_video:
         cvdetect2_last_put = time.time()
         yolo_last_put      = time.time()
 
-        main_img    = None
-        display_img = None
-        last_txts   = None
-        last_time   = time.time()
+        main_img        = None
+        display_img     = None
+        message_txts    = None
+        message_time    = time.time()
+        message_img     = None
 
         cam1Stretch     = self.cam1Stretch
         cam1Rotate      = self.cam1Rotate
@@ -650,13 +651,12 @@ class main_video:
 
                         if (res_name == '[txts]'):
                             if (not txt2img_thread is None):
-                                last_txts   = res_value
-                                last_time   = time.time()
+                                message_txts = res_value
+                                message_time = time.time()
+                                message_img  = None
                                 # 結果出力
                                 if (cn_s.qsize() < 99):
-                                    out_name  = res_name
-                                    out_value = res_value
-                                    txt2img_thread.put([out_name, out_value])
+                                    txt2img_thread.put(['[message_txts]', message_txts])
 
             # リセット
             if (control == 'reset'):
@@ -778,10 +778,10 @@ class main_video:
                 except:
                     pass
 
-                if (not last_txts is None):
-                    if ((time.time() - last_time) < 10.00):
+                if (not message_txts is None):
+                    if ((time.time() - message_time) < 10.00):
                         try:
-                            filename   = qFunc.txt2filetxt(last_txts[0])
+                            filename   = qFunc.txt2filetxt(message_txts[0])
                             filename1t = qPath_rec     + stamp + '.' + filename + '.jpg'
                             filename2t = qPath_v_photo + stamp + '.' + filename + '.jpg'
                             shutil.copy2(filename1, filename1t)
@@ -967,7 +967,9 @@ class main_video:
                 if (not txt2img_thread is None):
 
                     # ステータス状況
-                    if (self.runMode != 'camera'):
+                    if (self.runMode == 'debug') \
+                    or (self.runMode == 'handsfree') \
+                    or (self.runMode == 'hud'):
                         res_txts = busy_status_txts.get()
                         if (res_txts != False):
                             txt2img_thread.put(['[status]', res_txts ])
@@ -985,12 +987,16 @@ class main_video:
                     if (res_txts != False):
                         txt2img_thread.put(['[txts]', res_txts ])
                     # ＡＩ音声認識結果Ｉ／Ｆ
-                    if (self.runMode != 'camera'):
+                    if (self.runMode == 'debug') \
+                    or (self.runMode == 'handsfree') \
+                    or (self.runMode == 'hud'):
                         res_txts, txt = qFunc.txtsRead(qCtrl_recognize, encoding='utf-8', exclusive=True, )
                         if (res_txts != False):
                             txt2img_thread.put(['[txts]', res_txts ])
                     # ＡＩ機械翻訳結果Ｉ／Ｆ
-                    if (self.runMode != 'camera'):
+                    if (self.runMode == 'debug') \
+                    or (self.runMode == 'handsfree') \
+                    or (self.runMode == 'hud'):
                         res_txts, txt = qFunc.txtsRead(qCtrl_translate, encoding='utf-8', exclusive=True, )
                         if (res_txts != False):
                             txt2img_thread.put(['[txts]', res_txts ])
@@ -1000,9 +1006,12 @@ class main_video:
                     res_data  = txt2img_thread.get()
                     res_name  = res_data[0]
                     res_value = res_data[1]
-                    if (res_name == '[img]'):
+                    if (res_name == '[txts_img]'):
                         txt_img = res_value.copy()
-                        overlay_thread.put(['[txt]', txt_img ])
+                        overlay_thread.put(['[txts_img]', txt_img ])
+                    if (res_name == '[message_img]'):
+                        message_img = res_value.copy()
+                        overlay_thread.put(['[txts_img]', message_img ])
                     if (res_name == '[status_img]'):
                         txt_img = res_value.copy()
                         overlay_thread.put(['[status_img]', txt_img ])

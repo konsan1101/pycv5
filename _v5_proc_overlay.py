@@ -469,7 +469,7 @@ class proc_overlay:
                         print(inp_name.lower() + ' error!')
 
                 # テキスト画像
-                if (inp_name.lower() == '[txt]'):
+                if (inp_name.lower() == '[txts_img]'):
                     try:
                         image_img = inp_value.copy()
                         image_height, image_width = image_img.shape[:2]
