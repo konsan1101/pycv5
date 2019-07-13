@@ -13,86 +13,86 @@ PAUSE
 
 ECHO;
 ECHO ツール
-rem       pip  install --upgrade pip
-python -m pip  install --upgrade pip
-python -m pip  install --upgrade setuptools
+rem           pip  install --upgrade pip
+    python -m pip  install --upgrade pip
+    python -m pip  install --upgrade setuptools
 
 ECHO;
 ECHO Waiting...5s
-ping localhost -w 1000 -n 5 >>dummyPing.txt
-if exist dummyPing.txt    del dummyPing.txt
+ping localhost -w 1000 -n 5 >nul
 
 ECHO;
 ECHO 通信
-python -m pip  install --upgrade requests
-python -m pip  install --upgrade requests_toolbelt
-python -m pip  install --upgrade uuid
-python -m pip  install --upgrade bs4
-python -m pip  install --upgrade pyopenssl
-python -m pip  install --upgrade grpcio
-python -m pip  install --upgrade grpcio-tools
-python -m pip  install --upgrade feedparser
+    python -m pip  install --upgrade requests
+    python -m pip  install --upgrade requests_toolbelt
+    python -m pip  install --upgrade uuid
+    python -m pip  install --upgrade bs4
+    python -m pip  install --upgrade pyopenssl
+    python -m pip  install --upgrade grpcio
+    python -m pip  install --upgrade grpcio-tools
+    python -m pip  install --upgrade feedparser
 
 ECHO;
 ECHO 画像
-python -m pip  install --upgrade pygame
-python -m pip  install --upgrade pyqtgraph
-python -m pip  install --upgrade pyqt5
-python -m pip  install --upgrade pillow
-python -m pip  install --upgrade numpy
-python -m pip  install --upgrade opencv-python
-python -m pip  install --upgrade pyflakes
-python -m pip  install --upgrade pylint
-python -m pip  install --upgrade pep8
-python -m pip  install --upgrade matplotlib
-python -m pip  install --upgrade pyautogui
+    python -m pip  install --upgrade pygame
+    python -m pip  install --upgrade pyqtgraph
+    python -m pip  install --upgrade pyqt5
+    python -m pip  install --upgrade pillow
+    python -m pip  install --upgrade numpy
+    python -m pip  install --upgrade opencv-python
+    python -m pip  install --upgrade pyflakes
+    python -m pip  install --upgrade pylint
+    python -m pip  install --upgrade pep8
+    python -m pip  install --upgrade matplotlib
+    python -m pip  install --upgrade pyautogui
 
 ECHO;
 ECHO 音声
 rem python -m pip  install --upgrade pyaudio
-python -m pip  install --upgrade wave
-python -m pip  install --upgrade sounddevice
-python -m pip  install --upgrade speechrecognition
+    python -m pip  install --upgrade wave
+    python -m pip  install --upgrade sounddevice
+    python -m pip  install --upgrade speechrecognition
 
 ECHO;
 ECHO マイクロソフト
 rem python -m pip  install --upgrade mstranslator
-python -m pip  install --upgrade cognitive_face
-python -m pip  install --upgrade pywin32
+    python -m pip  install --upgrade cognitive_face
+    python -m pip  install --upgrade pywin32
 
 ECHO;
 ECHO グーグル
-python -m pip  install --upgrade google-cloud-core
-python -m pip  install --upgrade google-cloud-speech
-python -m pip  install --upgrade google-cloud-translate
-python -m pip  install --upgrade google-cloud-vision
-python -m pip  install --upgrade google-api-python-client
-python -m pip  install --upgrade gtts
-python -m pip  install --upgrade googletrans
-python -m pip  install --upgrade goslate
-python -m pip  install --upgrade ggtrans
-python -m pip  uninstall gtts-token
-python -m pip  install --upgrade gtts-token
+    python -m pip  install --upgrade google-cloud-core
+    python -m pip  install --upgrade google-cloud-speech
+    python -m pip  install --upgrade google-cloud-translate
+    python -m pip  install --upgrade google-cloud-vision
+    python -m pip  install --upgrade google-api-python-client
+    python -m pip  install --upgrade gtts
+    python -m pip  install --upgrade googletrans
+    python -m pip  install --upgrade goslate
+    python -m pip  install --upgrade ggtrans
+    python -m pip  uninstall gtts-token
+    python -m pip  install --upgrade gtts-token
 
 ECHO;
 ECHO IBM Watson
-rem pip  install --upgrade watson-developer-cloud==1.0.2
+rem python -m pip  install --upgrade watson-developer-cloud==1.0.2
 rem python -m pip  install --upgrade watson-developer-cloud
-python -m pip  install --upgrade ibm-watson
+    python -m pip  install --upgrade ibm-watson
 
 ECHO;
 ECHO yolo keras
-python -m pip  install --upgrade keras
-python -m pip  install --upgrade tensorflow
+rem python -m pip  install --upgrade tensorflow
+    python -m pip  install --upgrade tensorflow==1.5.0
+    python -m pip  install --upgrade keras
 
 ECHO;
-ECHO yolo pytorch 36
-python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-win_amd64.whl
-python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-win_amd64.whl
-python -m pip  install pandas
+ECHO yolo pytorch (python36)
+    python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-win_amd64.whl
+    python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-win_amd64.whl
+    python -m pip  install pandas
 
 rem ECHO;
-rem ECHO yolo pytorch 37
+rem ECHO yolo pytorch (python37)
 rem python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-win_amd64.whl
 rem python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp37-cp37m-win_amd64.whl
 rem python -m pip  install pandas
