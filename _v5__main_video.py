@@ -760,7 +760,7 @@ class main_video:
                 # 写真撮影（画像と表示中画面の保管）
                 nowTime = datetime.datetime.now()
                 stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
-                res = self.save_photo(main_img, display_img, message_txts, message_img, )
+                res = self.save_photo(stamp, main_img, display_img, message_txts, message_time, message_img, )
 
                 # ＡＩ画像認識処理へ
                 filename0 = qPath_v_inp   + stamp + '.photo.jpg'
@@ -1092,7 +1092,7 @@ class main_video:
 
 
 
-    def save_photo(self, stamp, main_img, display_img, message_txts, message_img, ):
+    def save_photo(self, stamp, main_img, display_img, message_txts, message_time, message_img, ):
 
         # 写真撮影（画像と表示中画面の保管）
         filename1 = qPath_rec     + stamp + '.photo.jpg'
@@ -1112,6 +1112,9 @@ class main_video:
                 cv2.imwrite(filename6, display_img)
         except:
             pass
+
+        # 
+
 
         if (not message_txts is None):
             if ((time.time() - message_time) < 10.00):
