@@ -687,10 +687,15 @@ class main_video:
                     or ((self.cam1Dev_org == '0') and (self.cam2Dev_org == '1')):
                         self.cam1Dev = self.cam2Dev_org
                         self.cam2Dev = self.cam1Dev_org
-                    # nt カメラ2,1の場合
-                    elif ((qOS == 'windows') and (qHOSTNAME == 'kondow-s10')) \
+                    # kondou-s10 カメラ2,1の場合
+                    elif (qHOSTNAME == 'kondow-s10') \
                     and ((self.cam1Dev == '2') and (self.cam2Dev == '1')):
                         self.cam1Dev = '0'
+                    # surface-go カメラ1,2の場合
+                    elif (qHOSTNAME == 'surface-go') \
+                    and ((self.cam1Dev == '0') and (self.cam2Dev == '2')):
+                        self.cam1Dev = '2'
+                        self.cam2Dev = '0'
                     # カメラn,0の場合
                     elif (self.cam1Dev.isdigit()) and (self.cam2Dev == '0'):
                         self.cam1Dev = str(int(self.cam1Dev) - 1)
@@ -1345,13 +1350,17 @@ if __name__ == '__main__':
             else:
                 cam2Dev = '0'
 
-        if (qOS == 'windows') and (qHOSTNAME == 'kondow-s10'):
+        if (qHOSTNAME == 'kondow-s10'):
             if (cam1Dev == '1') and (cam2Dev == '0'):
                 cam1Dev  = '0'
                 cam2Dev  = '1'
             if (cam1Dev == '2') and (cam2Dev == '0'):
                 cam1Dev  = '2'
                 cam2Dev  = '1'
+        if (qHOSTNAME == 'surface-go'):
+            if (cam1Dev == '2') and (cam2Dev == '0'):
+                cam1Dev  = '0'
+                cam2Dev  = '2'
 
         #if (cam1Dev == cam2Dev):
         #    print('cam1Dev == cam2Dev')
