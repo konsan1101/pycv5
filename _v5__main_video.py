@@ -1271,13 +1271,13 @@ if __name__ == '__main__':
 
     if (True):
 
-        cam1Dev     = '9'
+        cam1Dev     = 'auto'
         cam1Mode    = 'full'
         cam1Stretch = '0'
         cam1Rotate  = '0'
         cam1Zoom    = '1.0'
 
-        cam2Dev     = 'none'
+        cam2Dev     = 'auto'
         cam2Mode    = 'vga'
         cam2Stretch = '0'
         cam2Rotate  = '0'
@@ -1288,22 +1288,17 @@ if __name__ == '__main__':
         dspRotate   = '0'
         dspZoom     = '1.0'
 
-        chk = False
-        while (chk == False) and (cam1Dev > '0'):
-            try:
-                dev = cv2.VideoCapture(int(cam1Dev))
-                ret, frame = dev.read()
-                if ret == True:
-                    dev.release()
-                    chk = True
-                else:
-                    cam1Dev = str(int(cam1Dev)-1)
-            except:
-                cam1Dev = str(int(cam1Dev)-1)
-        if (cam1Dev == '0'):
-            cam1Mode = 'vga'
-        if (cam1Dev > '0'):
-            cam2Dev  = '0'
+        if (cam1Dev == 'auto'):
+            if (camDev_max == 'none'):
+                cam1Dev = 'none'
+            else:
+                cam1Dev = camDev_max
+        if (cam2Dev == 'auto'):
+            if (cam1Dev == 'none') \
+            or (cam1Dev == '0'):
+                cam2Dev = 'none'
+            else:
+                cam2Dev = '0'
 
         if (os.name == 'nt'):
             if (cam1Dev == '1') and (cam2Dev == '0'):
