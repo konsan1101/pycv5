@@ -208,13 +208,10 @@ class proc_camera:
                     try:
                         if (int(self.camWidth ) != 0):
                             capture.set(cv2.CAP_PROP_FRAME_WIDTH,  int(self.camWidth ))
-                            print(self.camWidth)
                         if (int(self.camHeight) != 0):
                             capture.set(cv2.CAP_PROP_FRAME_HEIGHT, int(self.camHeight))
-                            print(self.camHeight)
                         if (int(self.camFps) != 0):
                             capture.set(cv2.CAP_PROP_FPS,          int(self.camFps   ))
-                            print(self.camFps)
                     except:
                         pass
 

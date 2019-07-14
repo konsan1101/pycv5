@@ -1248,6 +1248,25 @@ if __name__ == '__main__':
     #runMode  debug, handsfree, hud, camera,
     #cam1Dev  num or file
 
+    # 最終カメラ番号
+    camDev_max = '9'
+    chk = False
+    while (chk == False) and (camDev_max > '0'):
+        try:
+            dev = cv2.VideoCapture(int(camDev_max))
+            ret, frame = dev.read()
+            if ret == True:
+                dev.release()
+                chk = True
+            else:
+                camDev_max = str(int(camDev_max)-1)
+        except:
+            camDev_max = str(int(camDev_max)-1)
+    if (chk == False):
+        camDev_max = 'none'
+
+    print('camDev_max', camDev_max)
+
     # パラメータ
 
     if (True):
