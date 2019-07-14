@@ -954,6 +954,10 @@ class main_video:
                         res_txts = busy_status_txts.get()
                         if (res_txts != False):
                             txt2img_thread.put(['[status]', res_txts ])
+                    else:
+                        res_txts = busy_status_txts.speech()
+                        if (res_txts != False):
+                            txt2img_thread.put(['[status]', res_txts ])
 
                     # ＡＩ画像認識結果
                     res_txts, txt = qFunc.txtsRead(qCtrl_result_cv, encoding='utf-8', exclusive=True, )
@@ -1249,7 +1253,7 @@ if __name__ == '__main__':
     if (True):
 
         cam1Dev     = '9'
-        cam1Mode    = 'default'
+        cam1Mode    = 'full'
         cam1Stretch = '0'
         cam1Rotate  = '0'
         cam1Zoom    = '1.0'

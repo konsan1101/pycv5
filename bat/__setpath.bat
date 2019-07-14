@@ -10,7 +10,7 @@ rem SET PATH=%PATH%;C:\Program Files\sox-14-4-0;
     SET AUDIODRIVER=waveaudio
 
 rem julius
-    SET PATH=%PATH%;C:\pycv5\julius\win;
+    SET PATH=%PATH%;C:\julius\win;
 
 rem vlan
 rem SET PATH=%PATH%;C:\Program Files\VideoLAN\VLC;

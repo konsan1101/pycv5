@@ -764,6 +764,28 @@ class qBusy_status_txts_class(object):
         txts.append('')
         return txts
 
+    def speech(self):
+        change = False
+
+        # ステータス取得
+        check = self.busyCheck(qBusy_a_inp, 0)
+        if (check != self.a_inp):
+            self.a_inp = check
+            change = True
+ 
+        if (change != True):
+            return False
+
+        # 文字列生成
+        txts=[]
+        txts.append('[Speech status]')
+        if (self.a_inp == 'busy'):
+            txts.append(' Input  : ready__')
+        else:
+            txts.append(' Input  : _______')
+
+        return txts
+
 
 
 class qFPS_class(object):

@@ -620,7 +620,7 @@ class proc_overlay:
                 if (self.flag_enter != 'on') and (self.flag_cancel != 'on'):
                     over_y = self.dspHeight - 70
                 else:
-                    over_y = self.dspHeight - 120
+                    over_y = self.dspHeight - 140
                 over_x  = 20
                 over_y2 = over_y
                 over_x2 = over_x
@@ -781,7 +781,7 @@ class proc_overlay:
                 if (self.flag_enter != 'on') and (self.flag_cancel != 'on'):
                     over_y = self.dspHeight - 70
                 else:
-                    over_y = self.dspHeight - 120
+                    over_y = self.dspHeight - 140
                 over_x = self.dspWidth - 10
 
                 # 台形補正
