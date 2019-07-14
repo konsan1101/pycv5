@@ -121,11 +121,13 @@ class main_video:
                                 ):
         self.runMode     = runMode
         self.cam1Dev     = cam1Dev
+        self.cam1Dev_org = cam1Dev
         self.cam1Mode    = cam1Mode
         self.cam1Stretch = cam1Stretch
         self.cam1Rotate  = cam1Rotate
         self.cam1Zoom    = cam1Zoom
         self.cam2Dev     = cam2Dev
+        self.cam2Dev_org = cam2Dev
         self.cam2Mode    = cam2Mode
         self.cam2Stretch = cam2Stretch
         self.cam2Rotate  = cam2Rotate
@@ -657,10 +659,52 @@ class main_video:
                                 message_img  = None
                                 # 結果出力
                                 if (cn_s.qsize() < 99):
+                                    txt2img_thread.put(['[txts]', message_txts])
+
+                        if (res_name == '[message_txts]'):
+                            if (not txt2img_thread is None):
+                                message_txts = res_value
+                                message_time = time.time()
+                                message_img  = None
+                                # 結果出力
+                                if (cn_s.qsize() < 99):
                                     txt2img_thread.put(['[message_txts]', message_txts])
 
+            # カメラ変更１
+            if (control == 'camchange_off'):
+                camera_switch1_org = camera_switch1
+                camera_switch2_org = camera_switch2
+                camera_switch1 = 'off'
+                camera_switch2 = 'off'
+                if (self.cam1Dev != self.cam1Dev_org) \
+                or (self.cam2Dev != self.cam2Dev_org):
+                    self.cam1Dev = self.cam1Dev_org
+                    self.cam2Dev = self.cam2Dev_org
+                else:
+                    # カメラ1,0の場合
+                    if ((self.cam1Dev_org == '1') and (self.cam2Dev_org == '0')) \
+                    or ((self.cam1Dev_org == '0') and (self.cam2Dev_org == '1')):
+                        self.cam1Dev = self.cam2Dev_org
+                        self.cam2Dev = self.cam1Dev_org
+                    # nt カメラ2,1の場合
+                    elif (os.name == 'nt') \
+                    and ((self.cam1Dev == '2') and (self.cam2Dev == '1')):
+                        self.cam1Dev = '0'
+                    # カメラn,0の場合
+                    elif (self.cam1Dev.isdigit()) and (self.cam2Dev == '0'):
+                        self.cam1Dev = str(int(self.cam1Dev) - 1)
+                    # カメラ0,nの場合
+                    elif (self.cam1Dev == '0') and (self.cam2Dev.isdigit()):
+                        self.cam1Dev = str(int(self.cam2Dev) - 1)
+
+            # カメラ変更２
+            if (control == 'camchange_on'):
+                camera_switch1 = camera_switch1_org
+                camera_switch2 = camera_switch2_org
+
             # リセット
-            if (control == 'reset'):
+            if (control == 'reset') \
+            or (control == 'camchange_on'):
                 cam1Stretch     = self.cam1Stretch
                 cam1Rotate      = self.cam1Rotate
                 cam1Zoom        = self.cam1Zoom
@@ -1303,6 +1347,9 @@ if __name__ == '__main__':
         if (os.name == 'nt'):
             if (cam1Dev == '1') and (cam2Dev == '0'):
                 cam1Dev  = '0'
+                cam2Dev  = '1'
+            if (cam1Dev == '2') and (cam2Dev == '0'):
+                cam1Dev  = '2'
                 cam2Dev  = '1'
 
         #if (cam1Dev == cam2Dev):

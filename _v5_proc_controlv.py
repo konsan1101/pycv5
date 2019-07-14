@@ -370,11 +370,11 @@ class proc_controlv:
             
             elif (proc_text.find(u'カメラ変更') >=0):
                 out_name  = 'control'
-                out_value = 'camchange1'
+                out_value = 'camchange_off'
                 cn_s.put([out_name, out_value])
                 time.sleep(2.00)
                 out_name  = 'control'
-                out_value = 'camchange2'
+                out_value = 'camchange_on'
                 cn_s.put([out_name, out_value])
 
             elif (proc_text.find(u'ここ')   >=0) \
@@ -397,13 +397,19 @@ class proc_controlv:
                 if (self.runMode == 'handsfree') \
                 or (self.runMode == 'hud') \
                 or (self.runMode == 'camera'):
-                    out_name  = '[txts]'
+                    out_name  = '[message_txts]'
                     out_value = [proc_text]
                     cn_s.put([out_name, out_value])
                     time.sleep(1.00)
                 out_name  = 'control'
                 out_value = 'shutter'
                 cn_s.put([out_name, out_value])
+
+            else:
+                if (self.runMode == 'camera'):
+                    out_name  = '[txts]'
+                    out_value = [proc_text]
+                    cn_s.put([out_name, out_value])
 
 
 
