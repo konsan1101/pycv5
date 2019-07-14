@@ -104,6 +104,7 @@ class qFunc_class:
 
     def getValue(self, field):
         if (field == 'qOS'           ): return qOS
+        if (field == 'qHOSTNAME'     ): return qHOSTNAME
 
         if (field == 'qPath_log'     ): return qPath_log
         if (field == 'qPath_work'    ): return qPath_work

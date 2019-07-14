@@ -32,6 +32,7 @@ import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
 qOS            = qFunc.getValue('qOS'           )
+qHOSTNAME      = qFunc.getValue('qHOSTNAME'     )
 qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
