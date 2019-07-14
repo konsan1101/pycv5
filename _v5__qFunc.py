@@ -14,6 +14,8 @@ import glob
 
 import platform
 qOS = platform.system().lower() #windows,darwin,linux
+import socket
+qHOSTNAME = socket.gethostname().lower()
 
 import ctypes
 import array
