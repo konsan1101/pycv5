@@ -368,6 +368,15 @@ class proc_controlv:
                 out_value = 'white'
                 cn_s.put([out_name, out_value])
             
+            elif (proc_text.find(u'カメラ変更') >=0):
+                out_name  = 'control'
+                out_value = 'camchange1'
+                cn_s.put([out_name, out_value])
+                time.sleep(2.00)
+                out_name  = 'control'
+                out_value = 'camchange2'
+                cn_s.put([out_name, out_value])
+
             elif (proc_text.find(u'ここ')   >=0) \
             or   (proc_text.find(u'これ')   >=0) \
             or   (proc_text.find(u'こちら') >=0) \
