@@ -157,6 +157,8 @@ class proc_txt2img:
         # フォント
         font18_default  = ImageFont.truetype(qFONT_default['file'], 18, encoding='unic')
         font18_defaulty =                    qFONT_default['offset']
+        font36_default  = ImageFont.truetype(qFONT_default['file'], 36, encoding='unic')
+        font36_defaulty =                    qFONT_default['offset'] * 2
         if (os.path.exists(qFONT_zh['file'])):
             font18_zh  = ImageFont.truetype(qFONT_zh['file']     , 18, encoding='unic')
             font18_zhy =                    qFONT_zh['offset']
@@ -213,8 +215,8 @@ class proc_txt2img:
 
             # 処理
             elif (inp_name.lower() == '[txts]') \
-              or (inp_name.lower() == '[message_txts]') \
-              or (inp_name.lower() == '[status]'):
+              or (inp_name.lower() == '[status]') \
+              or (inp_name.lower() == '[message_txts]'):
 
                 # 実行カウンタ
                 self.proc_last = time.time()
@@ -226,7 +228,7 @@ class proc_txt2img:
                 if (not os.path.exists(fileBsy)):
                     qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
 
-                # 画像処理
+                # 文字列確認
                 texts = inp_value
 
                 maxlen = 0
@@ -247,13 +249,21 @@ class proc_txt2img:
                             if (maxlen < lenstr):
                                 maxlen = lenstr
 
-                draw_width  = int(self.drawWidth)
-                draw_height = int(10 + 30 * len(texts))
-                if (draw_width == 0):
-                    if (inp_name.lower() == '[status]'):
-                        draw_width = 180
-                    else:
-                        draw_width = int(50 + 9 * maxlen)
+                # 描写キャンバス作成
+                if (inp_name.lower() == '[txts]') \
+                or (inp_name.lower() == '[status]'):
+                    draw_width  = int(self.drawWidth)
+                    draw_height = int(10 + 30 * len(texts))
+                    if (draw_width == 0):
+                        if (inp_name.lower() == '[status]'):
+                            draw_width = 180
+                        else:
+                            draw_width = int(50 + 9 * maxlen)
+                if (inp_name.lower() == '[message_txts]'):
+                    draw_width  = int(self.drawWidth)
+                    draw_height = int(20 + 60 * len(texts))
+                    if (draw_width == 0):
+                        draw_width = int(100 + 18 * maxlen)
 
                 if (self.flag_blackwhite != 'white'):
                     text_img  = Image.new('RGB', (draw_width, draw_height), (255,255,255))
@@ -261,6 +271,7 @@ class proc_txt2img:
                     text_img  = Image.new('RGB', (draw_width, draw_height), (  0,  0,  0))
                 text_draw = ImageDraw.Draw(text_img)
 
+                # 文字描写
                 for i in range(0, len(texts)):
 
                     if (self.flag_blackwhite != 'white'):
@@ -268,37 +279,44 @@ class proc_txt2img:
                     else:
                         txt_color = (255,255,255)
 
-                    if (inp_name.lower() == '[status]'):
-                        if (texts[i].find('busy' )>=0) \
-                        or (texts[i].find('slow' )>=0) \
-                        or (texts[i].find('disable' )>=0):
-                            text_draw.rectangle((0, 30*i+5, draw_width, 30*(i+1)-1), fill=(0x00, 0x00, 0xff))
-                            txt_color = (  0,  0,  0)
-                        if (texts[i].find('ready' )>=0):
-                            text_draw.rectangle((0, 30*i+5, draw_width, 30*(i+1)-1), fill=(0x00, 0xff, 0x00))
-                            txt_color = (  0,  0,  0)
+                    if (inp_name.lower() == '[txts]') \
+                    or (inp_name.lower() == '[status]'):
 
-                    if (texts[i][2:3] != ','):
-                            text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=txt_color)
-                    else:
-                        if   (texts[i][:3] == 'zh,'):
-                            text_draw.text((5, 30*i + font18_zhy), texts[i], font=font18_zh, fill=txt_color)
-                        elif (texts[i][:3] == 'ko,'):
-                            text_draw.text((5, 30*i + font18_koy), texts[i], font=font18_ko, fill=txt_color)
+                        if (inp_name.lower() == '[status]'):
+                            if (texts[i].find('busy' )>=0) \
+                            or (texts[i].find('slow' )>=0) \
+                            or (texts[i].find('disable' )>=0):
+                                text_draw.rectangle((0, 30*i+5, draw_width, 30*(i+1)-1), fill=(0x00, 0x00, 0xff))
+                                txt_color = (  0,  0,  0)
+                            if (texts[i].find('ready' )>=0):
+                                text_draw.rectangle((0, 30*i+5, draw_width, 30*(i+1)-1), fill=(0x00, 0xff, 0x00))
+                                txt_color = (  0,  0,  0)
+
+                        if (texts[i][2:3] != ','):
+                                text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=txt_color)
                         else:
-                            text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=txt_color)
+                            if   (texts[i][:3] == 'zh,'):
+                                text_draw.text((5, 30*i + font18_zhy), texts[i], font=font18_zh, fill=txt_color)
+                            elif (texts[i][:3] == 'ko,'):
+                                text_draw.text((5, 30*i + font18_koy), texts[i], font=font18_ko, fill=txt_color)
+                            else:
+                                text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=txt_color)
+
+
+                    if (inp_name.lower() == '[message_txts]'):
+                        text_draw.text((10, 60*i + font36_defaulty), texts[i], font=font36_default, fill=txt_color)
 
                 # 結果出力
                 if (inp_name.lower() == '[txts]'):
                     out_name  = '[txts_img]'
                     out_value = np.asarray(text_img)
                     cn_s.put([out_name, out_value])
-                if (inp_name.lower() == '[message_txts]'):
-                    out_name  = '[message_img]'
-                    out_value = np.asarray(text_img)
-                    cn_s.put([out_name, out_value])
                 if (inp_name.lower() == '[status]'):
                     out_name  = '[status_img]'
+                    out_value = np.asarray(text_img)
+                    cn_s.put([out_name, out_value])
+                if (inp_name.lower() == '[message_txts]'):
+                    out_name  = '[message_img]'
                     out_value = np.asarray(text_img)
                     cn_s.put([out_name, out_value])
 

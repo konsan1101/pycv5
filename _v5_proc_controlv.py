@@ -380,6 +380,7 @@ class proc_controlv:
             or   (proc_text.find(u'あれ')   >=0) \
             or   (proc_text.find(u'あちら') >=0) \
             or   (proc_text.find(u'あっち') >=0) \
+            or   (proc_text.find(u'注意')   >=0) \
             or   (proc_text.find(u'写真')   >=0) \
             or   (proc_text.find(u'伝票')   >=0) \
             or   (proc_text.find(u'計測')   >=0) \
