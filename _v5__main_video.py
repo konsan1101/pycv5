@@ -1338,6 +1338,9 @@ if __name__ == '__main__':
         dspRotate   = '0'
         dspZoom     = '1.0'
 
+        if (os.name == 'nt'):
+            dspMode     = 'full+'
+
         if (cam1Dev == 'auto'):
             if (camDev_max == 'none'):
                 cam1Dev = 'none'
@@ -1362,9 +1365,9 @@ if __name__ == '__main__':
                 cam1Dev  = '0'
                 cam2Dev  = '2'
 
-        #if (cam1Dev == cam2Dev):
-        #    print('cam1Dev == cam2Dev')
-        #    cam2Dev = 'none'
+        if (cam1Dev == cam2Dev):
+            print('cam1Dev == cam2Dev')
+            cam2Dev = 'none'
 
         codeRead    = 'qr'
         casName1    = 'face'
@@ -1535,10 +1538,10 @@ if __name__ == '__main__':
         # ディスプレイ設定
         if (display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) != 'busy'): 
             cv2.namedWindow('Display', cv2.WINDOW_NORMAL)
-            qFunc.winBoarder(winTitle='Display', boarder=False, )
             cv2.moveWindow( 'Display', 0, 0)
             if (dspMode == 'full'):
                 cv2.setWindowProperty('Display', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN,)
+            #qFunc.winBoarder(winTitle='Display', boarder=False, )
             cv2.waitKey(1)
             display = True
             show_onece = True
@@ -1567,6 +1570,7 @@ if __name__ == '__main__':
                         cv2.setMouseCallback('Display', DisplayMouseEvent)
                         if (dspMode == 'full+') or (dspMode == 'full-'):
                             cv2.moveWindow( 'Display', -20, -40)
+                            #qFunc.moveWindowSize(winTitle='Display', posX=-20, posY=-40, dspMode=dspMode, )
                         else:
                             cv2.moveWindow( 'Display',   0,   0)
                         show_onece = False

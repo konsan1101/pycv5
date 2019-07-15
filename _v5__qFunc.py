@@ -342,22 +342,35 @@ class qFunc_class:
         ftxt = ftxt.replace('>','_')
         return ftxt
 
-    def winBoarder(self, winTitle='Display', boarder=False, ):
+
+
+    #def winBoarder(self, winTitle='Display', boarder=False, ):
+    #    if (os.name != 'nt'):
+    #        return False
+    #    parent_handle = ctypes.windll.user32.FindWindowW(0, winTitle)
+    #    if (parent_handle == 0):
+    #        return False
+    #    else:
+    #        if (boarder == False):
+    #            #GCL_HBRBACKGROUND = -10
+    #            #ctypes.windll.user32.SetClassLongA(parent_handle, GCL_HBRBACKGROUND, 0x00000000)
+    #            pass
+    #        else:
+    #            #GCL_HBRBACKGROUND = -10
+    #            #ctypes.windll.user32.SetClassLongA(parent_handle, GCL_HBRBACKGROUND, 0x00FFFFFF)
+    #            pass
+
+    def moveWindowSize(self, winTitle='Display', posX=0, posY=0, dspMode='full+', ):
         if (os.name != 'nt'):
             return False
-
         parent_handle = ctypes.windll.user32.FindWindowW(0, winTitle)
         if (parent_handle == 0):
             return False
         else:
-            if (boarder == False):
-                #GCL_HBRBACKGROUND = -10
-                #ctypes.windll.user32.SetClassLongA(parent_handle, GCL_HBRBACKGROUND, 0x00000000)
-                pass
-            else:
-                #GCL_HBRBACKGROUND = -10
-                #ctypes.windll.user32.SetClassLongA(parent_handle, GCL_HBRBACKGROUND, 0x00FFFFFF)
-                pass
+            dspWidth, dspHeight = self.getResolution(dspMode)
+            HWND_TOP = 0
+            SWP_SHOWWINDOW = 0x0040
+            ctypes.windll.user32.SetWindowPos(parent_handle, HWND_TOP, posX, posY, dspWidth, dspHeight, SWP_SHOWWINDOW)
 
 
 
@@ -452,7 +465,7 @@ class qFunc_class:
         if   (reso == 'full'): 
             return self.qScreenWidth, self.qScreenHeight
         if   (reso == 'full+'):
-            return self.qScreenWidth + 40, self.qScreenHeight + 50
+            return self.qScreenWidth + 30, self.qScreenHeight + 50
         if   (reso == 'full-'):
             return int(self.qScreenWidth*0.8), int(self.qScreenHeight*0.8)
         elif (reso == 'half'):
