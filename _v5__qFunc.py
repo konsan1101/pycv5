@@ -342,6 +342,21 @@ class qFunc_class:
         ftxt = ftxt.replace('>','_')
         return ftxt
 
+    def winFrame(self, winTitle='Display', winFrame=False, ):
+        if (os.name != 'nt'):
+            return False
+
+        parent_handle = ctypes.windll.user32.FindWindowW(0, winTitle)
+        if (parent_handle == 0):
+            return False
+        else:
+            if (winFrame == False):
+                ctypes.windll.user32.SetWindowLongA(parent_handle, -16, 0x80000000)
+            else:
+                ctypes.windll.user32.SetWindowLongA(parent_handle, -16, 0x00800000)
+
+
+
     def notePad(self, txt='', cr=False, lf=True, ):
         winTitle  = u'無題 - メモ帳'
         if (os.name != 'nt'):

@@ -1535,6 +1535,7 @@ if __name__ == '__main__':
         # ディスプレイ設定
         if (display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) != 'busy'): 
             cv2.namedWindow('Display', cv2.WINDOW_NORMAL)
+            qFunc.winFrame(winTitle='Display', winFrame=False, )
             cv2.moveWindow( 'Display', 0, 0)
             if (dspMode == 'full'):
                 cv2.setWindowProperty('Display', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN,)
