@@ -156,22 +156,24 @@ class proc_txt2img:
         qFunc.remove(fileBsy)
 
         # フォント
-        font18_default  = ImageFont.truetype(qFONT_default['file'], 18, encoding='unic')
-        font18_defaulty =                    qFONT_default['offset']
-        font36_default  = ImageFont.truetype(qFONT_default['file'], 36, encoding='unic')
-        font36_defaulty =                    qFONT_default['offset'] * 2
+        font16_default  = ImageFont.truetype(qFONT_default['file'], 16, encoding='unic')
+        font16_defaulty =                    qFONT_default['offset']
+        font32_default  = ImageFont.truetype(qFONT_default['file'], 32, encoding='unic')
+        font32_defaulty =                    qFONT_default['offset'] * 2
+        font48_default  = ImageFont.truetype(qFONT_default['file'], 48, encoding='unic')
+        font48_defaulty =                    qFONT_default['offset'] * 3
         if (os.path.exists(qFONT_zh['file'])):
-            font18_zh  = ImageFont.truetype(qFONT_zh['file']     , 18, encoding='unic')
-            font18_zhy =                    qFONT_zh['offset']
+            font32_zh  = ImageFont.truetype(qFONT_zh['file']     , 32, encoding='unic')
+            font32_zhy =                    qFONT_zh['offset'] * 2
         else:
-            font18_zh  = ImageFont.truetype(qFONT_default['file'], 18, encoding='unic')
-            font18_zhy =                    qFONT_default['offset']
+            font32_zh  = ImageFont.truetype(qFONT_default['file'], 32, encoding='unic')
+            font32_zhy =                    qFONT_default['offset'] * 2
         if (os.path.exists(qFONT_ko['file'])):
-            font18_ko  = ImageFont.truetype(qFONT_ko['file']     , 18, encoding='unic')
-            font18_koy =                    qFONT_ko['offset']
+            font32_ko  = ImageFont.truetype(qFONT_ko['file']     , 32, encoding='unic')
+            font32_koy =                    qFONT_ko['offset'] * 2
         else:
-            font18_ko  = ImageFont.truetype(qFONT_default['file'], 18, encoding='unic')
-            font18_koy =                    qFONT_default['offset']
+            font32_ko  = ImageFont.truetype(qFONT_default['file'], 32, encoding='unic')
+            font32_koy =                    qFONT_default['offset'] * 2
 
         # 待機ループ
         self.proc_step = '5'
@@ -251,20 +253,21 @@ class proc_txt2img:
                                 maxlen = lenstr
 
                 # 描写キャンバス作成
-                if (inp_name.lower() == '[txts]') \
-                or (inp_name.lower() == '[status]'):
+                if (inp_name.lower() == '[status]'):
                     draw_width  = int(self.drawWidth)
-                    draw_height = int(10 + 30 * len(texts))
+                    draw_height = int(10 + (16 + 10) * len(texts))
                     if (draw_width == 0):
-                        if (inp_name.lower() == '[status]'):
-                            draw_width = 180
-                        else:
-                            draw_width = int(50 + 9 * maxlen)
+                        draw_width = 180
+                if (inp_name.lower() == '[txts]'):
+                    draw_width  = int(self.drawWidth)
+                    draw_height = int(16 + (32 + 16) * len(texts))
+                    if (draw_width == 0):
+                        draw_width = int(50 + 16 * maxlen)
                 if (inp_name.lower() == '[message_txts]'):
                     draw_width  = int(self.drawWidth)
-                    draw_height = int(20 + 60 * len(texts))
+                    draw_height = int(24 + (48 + 24) * len(texts))
                     if (draw_width == 0):
-                        draw_width = int(100 + 18 * maxlen)
+                        draw_width = int(100 + 24 * maxlen)
 
                 if (self.flag_blackwhite != 'white'):
                     text_img  = Image.new('RGB', (draw_width, draw_height), (255,255,255))
@@ -280,40 +283,41 @@ class proc_txt2img:
                     else:
                         txt_color = (255,255,255)
 
-                    if (inp_name.lower() == '[txts]') \
-                    or (inp_name.lower() == '[status]'):
+                    if (inp_name.lower() == '[status]'):
 
-                        if (inp_name.lower() == '[status]'):
-                            if (texts[i].find('busy' )>=0) \
-                            or (texts[i].find('slow' )>=0) \
-                            or (texts[i].find('disable' )>=0):
-                                text_draw.rectangle((0, 30*i+5, draw_width, 30*(i+1)-1), fill=(0x00, 0x00, 0xff))
-                                txt_color = (  0,  0,  0)
-                            if (texts[i].find('ready' )>=0):
-                                text_draw.rectangle((0, 30*i+5, draw_width, 30*(i+1)-1), fill=(0x00, 0xff, 0x00))
-                                txt_color = (  0,  0,  0)
+                        if (texts[i].find('busy' )>=0) \
+                        or (texts[i].find('slow' )>=0) \
+                        or (texts[i].find('disable' )>=0):
+                            text_draw.rectangle((0, 5 + (16 + 10)*i, draw_width, (16 + 10)*(i+1)-1), fill=(0x00, 0x00, 0xff))
+                            txt_color = (  0,  0,  0)
+                        if (texts[i].find('ready' )>=0):
+                            text_draw.rectangle((0, 5 + (16 + 10)*i, draw_width, (16 + 10)*(i+1)-1), fill=(0x00, 0xff, 0x00))
+                            txt_color = (  0,  0,  0)
+
+                        text_draw.text((5, (16 + 10)*i + font16_defaulty), texts[i], font=font16_default, fill=txt_color)
+
+                    if (inp_name.lower() == '[txts]'):
 
                         if (texts[i][2:3] != ','):
-                                text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=txt_color)
+                                text_draw.text((16, (32 + 16)*i + font32_defaulty), texts[i], font=font32_default, fill=txt_color)
                         else:
                             if   (texts[i][:3] == 'zh,'):
-                                text_draw.text((5, 30*i + font18_zhy), texts[i], font=font18_zh, fill=txt_color)
+                                text_draw.text((16, (32 + 16)*i + font32_zhy), texts[i], font=font32_zh, fill=txt_color)
                             elif (texts[i][:3] == 'ko,'):
-                                text_draw.text((5, 30*i + font18_koy), texts[i], font=font18_ko, fill=txt_color)
+                                text_draw.text((16, (32 + 16)*i + font32_koy), texts[i], font=font32_ko, fill=txt_color)
                             else:
-                                text_draw.text((5, 30*i + font18_defaulty), texts[i], font=font18_default, fill=txt_color)
-
+                                text_draw.text((16, (32 + 16)*i + font32_defaulty), texts[i], font=font32_default, fill=txt_color)
 
                     if (inp_name.lower() == '[message_txts]'):
-                        text_draw.text((10, 60*i + font36_defaulty), texts[i], font=font36_default, fill=txt_color)
+                        text_draw.text((24, (48 + 24)*i + font48_defaulty), texts[i], font=font48_default, fill=txt_color)
 
                 # 結果出力
-                if (inp_name.lower() == '[txts]'):
-                    out_name  = '[txts_img]'
-                    out_value = np.asarray(text_img)
-                    cn_s.put([out_name, out_value])
                 if (inp_name.lower() == '[status]'):
                     out_name  = '[status_img]'
+                    out_value = np.asarray(text_img)
+                    cn_s.put([out_name, out_value])
+                if (inp_name.lower() == '[txts]'):
+                    out_name  = '[txts_img]'
                     out_value = np.asarray(text_img)
                     cn_s.put([out_name, out_value])
                 if (inp_name.lower() == '[message_txts]'):
