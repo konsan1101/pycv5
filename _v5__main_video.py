@@ -1538,6 +1538,7 @@ if __name__ == '__main__':
         # ディスプレイ設定
         if (display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) != 'busy'): 
             cv2.namedWindow('Display', cv2.WINDOW_NORMAL)
+            #cv2.namedWindow('Display', cv2.WINDOW_AUTOSIZE)
             cv2.moveWindow( 'Display', 0, 0)
             if (dspMode == 'full'):
                 cv2.setWindowProperty('Display', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN,)
@@ -1569,8 +1570,8 @@ if __name__ == '__main__':
                         cv2.imshow('Display', display_img )
                         cv2.setMouseCallback('Display', DisplayMouseEvent)
                         if (dspMode == 'full+') or (dspMode == 'full-'):
-                            cv2.moveWindow( 'Display', -20, -40)
-                            #qFunc.moveWindowSize(winTitle='Display', posX=-20, posY=-40, dspMode=dspMode, )
+                            cv2.moveWindow( 'Display', -20, -48)
+                            qFunc.moveWindowSize(winTitle='Display', posX=-20, posY=-48, dspMode=dspMode, )
                         else:
                             cv2.moveWindow( 'Display',   0,   0)
                         show_onece = False

@@ -465,7 +465,7 @@ class qFunc_class:
         if   (reso == 'full'): 
             return self.qScreenWidth, self.qScreenHeight
         if   (reso == 'full+'):
-            return self.qScreenWidth + 30, self.qScreenHeight + 50
+            return self.qScreenWidth + 20, self.qScreenHeight + 48
         if   (reso == 'full-'):
             return int(self.qScreenWidth*0.8), int(self.qScreenHeight*0.8)
         elif (reso == 'half'):
