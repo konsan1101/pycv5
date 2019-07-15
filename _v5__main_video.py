@@ -1338,8 +1338,8 @@ if __name__ == '__main__':
         dspRotate   = '0'
         dspZoom     = '1.0'
 
-        if (os.name == 'nt'):
-            dspMode     = 'full+'
+        #if (os.name == 'nt'):
+        #    dspMode     = 'full+'
 
         if (cam1Dev == 'auto'):
             if (camDev_max == 'none'):
