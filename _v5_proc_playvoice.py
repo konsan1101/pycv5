@@ -283,8 +283,9 @@ class proc_playvoice:
                                     sox=subprocess.Popen(['sox', '-q', work_file, '-d', '--norm', ], \
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-                                    if (self.runMode=='debug') or (self.runMode=='handsfree') \
-                                    or (self.runMode=='camera'):
+                                    if (self.runMode=='debug') \
+                                    or (self.runMode=='handsfree') \
+                                    or (self.runMode=='translator'):
                                         sox.wait()
                                         sox.terminate()
                                         sox = None

@@ -260,12 +260,12 @@ class proc_txt2img:
                         draw_width = 180
                 if (inp_name.lower() == '[txts]'):
                     draw_width  = int(self.drawWidth)
-                    draw_height = int(16 + (32 + 16) * len(texts))
+                    draw_height = int(10 + (32 + 10) * len(texts))
                     if (draw_width == 0):
                         draw_width = int(50 + 16 * maxlen)
                 if (inp_name.lower() == '[message_txts]'):
                     draw_width  = int(self.drawWidth)
-                    draw_height = int(24 + (48 + 24) * len(texts))
+                    draw_height = int(10 + (48 + 10) * len(texts))
                     if (draw_width == 0):
                         draw_width = int(100 + 24 * maxlen)
 
@@ -299,17 +299,17 @@ class proc_txt2img:
                     if (inp_name.lower() == '[txts]'):
 
                         if (texts[i][2:3] != ','):
-                                text_draw.text((16, (32 + 16)*i + font32_defaulty), texts[i], font=font32_default, fill=txt_color)
+                                text_draw.text((16, (32 + 10)*i + font32_defaulty), texts[i], font=font32_default, fill=txt_color)
                         else:
                             if   (texts[i][:3] == 'zh,'):
-                                text_draw.text((16, (32 + 16)*i + font32_zhy), texts[i], font=font32_zh, fill=txt_color)
+                                text_draw.text((16, (32 + 10)*i + font32_zhy), texts[i], font=font32_zh, fill=txt_color)
                             elif (texts[i][:3] == 'ko,'):
-                                text_draw.text((16, (32 + 16)*i + font32_koy), texts[i], font=font32_ko, fill=txt_color)
+                                text_draw.text((16, (32 + 10)*i + font32_koy), texts[i], font=font32_ko, fill=txt_color)
                             else:
-                                text_draw.text((16, (32 + 16)*i + font32_defaulty), texts[i], font=font32_default, fill=txt_color)
+                                text_draw.text((16, (32 + 10)*i + font32_defaulty), texts[i], font=font32_default, fill=txt_color)
 
                     if (inp_name.lower() == '[message_txts]'):
-                        text_draw.text((24, (48 + 24)*i + font48_defaulty), texts[i], font=font48_default, fill=txt_color)
+                        text_draw.text((24, (48 + 10)*i + font48_defaulty), texts[i], font=font48_default, fill=txt_color)
 
                 # 結果出力
                 if (inp_name.lower() == '[status]'):
