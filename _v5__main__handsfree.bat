@@ -40,28 +40,32 @@ IF %api%@==docomo@  SET apio=winos
 
 :MODE
 ECHO;
-ECHO MODE(1=handsfree,2=hud,3=camera,)選択（入力無しはhandsfree）
+ECHO MODE(1=hud,2=handsfree,3=translator,4=speech,5=camera,)選択（入力無しはhud）
 SET mode=
 SET dev=bluetooth
 SET guide=on
-SET /P mode="1=handsfree,2=translator,3=speech,4=knowledge："
-IF %mode%@==@            SET  mode=handsfree
-IF %mode%@==1@           SET  mode=handsfree
-IF %mode%@==2@           SET  mode=translator
-IF %mode%@==3@           SET  mode=speech
-IF %mode%@==4@           SET  mode=knowledge
-IF %mode%@==handsfree@   SET  dev=usb
+SET /P mode="1=hud,2=handsfree,3=translator,4=speech,5=camera,："
+IF %mode%@==@            SET  mode=hud
+IF %mode%@==1@           SET  mode=hud
+IF %mode%@==2@           SET  mode=handsfree
+IF %mode%@==3@           SET  mode=translator
+IF %mode%@==4@           SET  mode=speech
+IF %mode%@==5@           SET  mode=camera
+IF %mode%@==hud@         SET  dev=usb
+IF %mode%@==hud@         SET  guide=off
+IF %mode%@==hud@         GOTO MODEGO
+IF %mode%@==handsfree@   SET  dev=bluetooth
 IF %mode%@==handsfree@   SET  guide=off
 IF %mode%@==handsfree@   GOTO MODEGO
-IF %mode%@==translator@  SET  dev=usb
-IF %mode%@==translator@  SET  guide=display
+IF %mode%@==translator@  SET  dev=bluetooth
+IF %mode%@==translator@  SET  guide=on
 IF %mode%@==translator@  GOTO MODEGO
 IF %mode%@==speech@      SET  dev=usb
-IF %mode%@==speech@      SET  guide=off
+IF %mode%@==speech@      SET  guide=on
 IF %mode%@==speech@      GOTO MODEGO
-IF %mode%@==knowledge@   SET  dev=bluetooth
-IF %mode%@==knowledge@   SET  guide=on
-IF %mode%@==knowledge@   GOTO MODEGO
+IF %mode%@==camera@      SET  dev=usb
+IF %mode%@==camera@      SET  guide=off
+IF %mode%@==camera@      GOTO MODEGO
 GOTO MODE
 :MODEGO
 
@@ -72,8 +76,10 @@ ECHO python _v5__destroy.py
 ping localhost -w 1000 -n 5 >nul
 
 ECHO;
-ECHO python _v5__main__handsfree.py
-     python _v5__main__handsfree.py
+rem ------------------------------------------------------------------------------InpTrn
+ECHO python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio% ja en
+     python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio%
+rem ------------------------------------------------------------------------------InpTrn
 
 ECHO;
 ECHO python _v5__destroy.py
