@@ -721,80 +721,80 @@ class qBusy_status_txts_class(object):
         txts=[]
         txts.append('[Device control]')
         if (self.dev_cpu == 'busy'):
-            txts.append(' CPU    : slow!__')
+            txts.append(' CPU    : slow!___')
         else:
-            txts.append(' CPU    : _______')
+            txts.append(' CPU    : ________')
         if (self.dev_com == 'busy'):
-            txts.append(' Comm   : disable')
+            txts.append(' Comm   : disable!')
         else:
-            txts.append(' Comm   : _______')
+            txts.append(' Comm   : ________')
         if (self.dev_mic == 'busy'):
-            txts.append(' Mic    : disable')
+            txts.append(' Mic    : disable!')
         else:
-            txts.append(' Mic    : _______')
+            txts.append(' Mic    : ________')
         if (self.dev_spk == 'busy'):
-            txts.append(' Speaker: disable')
+            txts.append(' Speaker: disable!')
         else:
-            txts.append(' Speaker: _______')
+            txts.append(' Speaker: ________')
         if (self.dev_cam == 'busy'):
-            txts.append(' Camera : disable')
+            txts.append(' Camera : disable!')
         else:
-            txts.append(' Camera : _______')
+            txts.append(' Camera : ________')
         if (self.dev_dsp == 'busy'):
-            txts.append(' Display: disable')
+            txts.append(' Display: disable!')
         else:
-            txts.append(' Display: _______')
+            txts.append(' Display: ________')
 
         txts.append('')
         txts.append('[Speech status]')
         if (self.a_ctrl == 'busy'):
-            txts.append(' Ctrl   : busy!__')
+            txts.append(' Ctrl   : run_____')
         else:
-            txts.append(' Ctrl   : _______')
+            txts.append(' Ctrl   : ________')
         if (self.a_inp == 'busy'):
-            txts.append(' Input  : ready__')
+            txts.append(' Input  : ready___')
         else:
-            txts.append(' Input  : _______')
+            txts.append(' Input  : ________')
         if (self.a_wav == 'busy'):
-            txts.append(' Wave   : busy!__')
+            txts.append(' Wave   : busy!___')
         else:
-            txts.append(' Wave   : _______')
+            txts.append(' Wave   : ________')
         if (self.a_STT == 'busy'):
-            txts.append(' STT    : busy!__')
+            txts.append(' STT    : busy!___')
         else:
-            txts.append(' STT    : _______')
+            txts.append(' STT    : ________')
         if (self.a_TTS == 'busy'):
-            txts.append(' TTS    : busy!__')
+            txts.append(' TTS    : busy!___')
         else:
-            txts.append(' TTS    : _______')
+            txts.append(' TTS    : ________')
         if (self.a_TRA == 'busy'):
-            txts.append(' TRA    : busy!__')
+            txts.append(' TRA    : busy!___')
         else:
-            txts.append(' TRA    : _______')
+            txts.append(' TRA    : ________')
 
-        if (self.a_TRA == 'busy'):
-            txts.append(' Play   : busy!__')
+        if (self.a_play == 'busy'):
+            txts.append(' Play   : busy!___')
         else:
-            txts.append(' Play   : _______')
+            txts.append(' Play   : ________')
 
         txts.append('')
         txts.append('[Vision status]')
         if (self.v_ctrl == 'busy'):
-            txts.append(' Ctrl   : busy!__')
+            txts.append(' Ctrl   : run_____')
         else:
-            txts.append(' Ctrl   : _______')
+            txts.append(' Ctrl   : ________')
         if (self.v_inp == 'busy'):
-            txts.append(' Input  : ready__')
+            txts.append(' Input  : ready___')
         else:
-            txts.append(' Input  : _______')
+            txts.append(' Input  : ________')
         if (self.v_jpg == 'busy'):
-            txts.append(' jpeg   : busy!__')
+            txts.append(' jpeg   : busy!___')
         else:
-            txts.append(' jpeg   : _______')
+            txts.append(' jpeg   : ________')
         if (self.v_CV == 'busy'):
-            txts.append(' CV     : busy!__')
+            txts.append(' CV     : busy!___')
         else:
-            txts.append(' CV     : _______')
+            txts.append(' CV     : ________')
 
         txts.append('')
         return txts
