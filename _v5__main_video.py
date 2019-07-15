@@ -1570,8 +1570,8 @@ if __name__ == '__main__':
                         cv2.imshow('Display', display_img )
                         cv2.setMouseCallback('Display', DisplayMouseEvent)
                         if (dspMode == 'full+') or (dspMode == 'full-'):
-                            cv2.moveWindow( 'Display', -20, -48)
-                            qFunc.moveWindowSize(winTitle='Display', posX=-20, posY=-48, dspMode=dspMode, )
+                            cv2.moveWindow( 'Display', -20, -50)
+                            qFunc.moveWindowSize(winTitle='Display', posX=-20, posY=-50, dspMode=dspMode, )
                         else:
                             cv2.moveWindow( 'Display',   0,   0)
                         show_onece = False
