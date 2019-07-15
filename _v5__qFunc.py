@@ -342,7 +342,7 @@ class qFunc_class:
         ftxt = ftxt.replace('>','_')
         return ftxt
 
-    def winFrame(self, winTitle='Display', winFrame=False, ):
+    def winBoarder(self, winTitle='Display', boarder=False, ):
         if (os.name != 'nt'):
             return False
 
@@ -350,10 +350,14 @@ class qFunc_class:
         if (parent_handle == 0):
             return False
         else:
-            if (winFrame == False):
-                ctypes.windll.user32.SetWindowLongA(parent_handle, -16, 0x80000000)
+            if (boarder == False):
+                #GCL_HBRBACKGROUND = -10
+                #ctypes.windll.user32.SetClassLongA(parent_handle, GCL_HBRBACKGROUND, 0x00000000)
+                pass
             else:
-                ctypes.windll.user32.SetWindowLongA(parent_handle, -16, 0x00800000)
+                #GCL_HBRBACKGROUND = -10
+                #ctypes.windll.user32.SetClassLongA(parent_handle, GCL_HBRBACKGROUND, 0x00FFFFFF)
+                pass
 
 
 
