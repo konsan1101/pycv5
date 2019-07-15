@@ -159,21 +159,21 @@ class proc_txt2img:
         font16_default  = ImageFont.truetype(qFONT_default['file'], 16, encoding='unic')
         font16_defaulty =                    qFONT_default['offset']
         font32_default  = ImageFont.truetype(qFONT_default['file'], 32, encoding='unic')
-        font32_defaulty =                    qFONT_default['offset'] * 2
+        font32_defaulty =                    qFONT_default['offset']
         font48_default  = ImageFont.truetype(qFONT_default['file'], 48, encoding='unic')
-        font48_defaulty =                    qFONT_default['offset'] * 3
+        font48_defaulty =                    qFONT_default['offset']
         if (os.path.exists(qFONT_zh['file'])):
             font32_zh  = ImageFont.truetype(qFONT_zh['file']     , 32, encoding='unic')
-            font32_zhy =                    qFONT_zh['offset'] * 2
+            font32_zhy =                    qFONT_zh['offset']
         else:
             font32_zh  = ImageFont.truetype(qFONT_default['file'], 32, encoding='unic')
-            font32_zhy =                    qFONT_default['offset'] * 2
+            font32_zhy =                    qFONT_default['offset']
         if (os.path.exists(qFONT_ko['file'])):
             font32_ko  = ImageFont.truetype(qFONT_ko['file']     , 32, encoding='unic')
-            font32_koy =                    qFONT_ko['offset'] * 2
+            font32_koy =                    qFONT_ko['offset']
         else:
             font32_ko  = ImageFont.truetype(qFONT_default['file'], 32, encoding='unic')
-            font32_koy =                    qFONT_default['offset'] * 2
+            font32_koy =                    qFONT_default['offset']
 
         # 待機ループ
         self.proc_step = '5'
