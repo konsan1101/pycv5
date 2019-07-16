@@ -295,7 +295,7 @@ class main_video:
             cvdetect_switch1  = 'off'
             cvdetect_switch2  = 'off'
             yolo_keras_switch = 'off'
-            yolo_torch_switch = 'on'
+            yolo_torch_switch = 'off'
             vin2jpg_switch    = 'on'
             coreCV_switch     = 'on'
         if (self.runMode == 'hud'):
