@@ -435,7 +435,7 @@ class main_video:
                 camera_thread1 = _v5_proc_camera.proc_camera(
                                     name='camera', id='0',
                                     runMode=self.runMode,
-                                    camDev=self.cam1Dev, camMode=self.cam1Mode, camStretch=self.cam1Stretch, camRotate=self.cam1Rotate, camZoom=self.cam1Zoom, camFps='15',
+                                    camDev=self.cam1Dev, camMode=self.cam1Mode, camStretch=self.cam1Stretch, camRotate=self.cam1Rotate, camZoom=self.cam1Zoom, camFps='5',
                                     )
                 camera_thread1.start()
 
@@ -452,7 +452,7 @@ class main_video:
                 camera_thread2 = _v5_proc_camera.proc_camera(
                                     name='camera', id='1',
                                     runMode=self.runMode,
-                                    camDev=self.cam2Dev, camMode=self.cam2Mode, camStretch=self.cam2Stretch, camRotate=self.cam2Rotate, camZoom=self.cam2Zoom, camFps='5',
+                                    camDev=self.cam2Dev, camMode=self.cam2Mode, camStretch=self.cam2Stretch, camRotate=self.cam2Rotate, camZoom=self.cam2Zoom, camFps='2',
                                     )
                 camera_thread2.start()
 
@@ -1363,7 +1363,7 @@ if __name__ == '__main__':
         if (qHOSTNAME == 'surface-go'):
             if (cam1Dev == '2') and (cam2Dev == '0'):
                 cam1Dev  = '0'
-                cam2Dev  = '2'
+                cam2Dev  = '1'
 
         if (cam1Dev == cam2Dev):
             print('cam1Dev == cam2Dev')
