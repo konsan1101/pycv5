@@ -10,8 +10,10 @@ def getkey(api, key):
         print('vision_api_azure_key.py')
         print('set your key!')
         if (key == 'url'):
+            #return 'your url'
             return 'https://japaneast.api.cognitive.microsoft.com/vision/v1.0/analyze'
         if (key == 'key'):
+            #return 'your key'
             return 'your key'
 
     # azure OCR認識
@@ -19,8 +21,10 @@ def getkey(api, key):
         print('vision_api_azure_key.py')
         print('set your key!')
         if (key == 'url'):
+            #return 'your url'
             return 'https://japaneast.api.cognitive.microsoft.com/vision/v1.0/ocr'
         if (key == 'key'):
+            #return 'your key'
             return 'your key'
 
     return False

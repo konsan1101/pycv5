@@ -10,8 +10,10 @@ def getkey(api, key):
         print('vision_api_google_key.py')
         print('set your key!')
         if (key == 'url'):
+            #return 'your url'
             return 'https://vision.googleapis.com/v1/images:annotate'
         if (key == 'key'):
+            #return 'your key'
             return 'your key'
 
     # google OCR認識
@@ -19,8 +21,10 @@ def getkey(api, key):
         print('vision_api_google_key.py')
         print('set your key!')
         if (key == 'url'):
+            #return 'your url'
             return 'https://vision.googleapis.com/v1/images:annotate'
         if (key == 'key'):
+            #return 'your key'
             return 'your key'
 
     return False
