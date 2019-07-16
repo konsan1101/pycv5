@@ -392,6 +392,14 @@ class proc_controlv:
             or   (proc_text.find(u'あれ')   >=0) \
             or   (proc_text.find(u'あちら') >=0) \
             or   (proc_text.find(u'あっち') >=0) \
+            or   (proc_text.find(u'まえ')   >=0) \
+            or   (proc_text.find(u'前')     >=0) \
+            or   (proc_text.find(u'うしろ') >=0) \
+            or   (proc_text.find(u'後')     >=0) \
+            or   (proc_text.find(u'ひだり') >=0) \
+            or   (proc_text.find(u'左')     >=0) \
+            or   (proc_text.find(u'みぎ')   >=0) \
+            or   (proc_text.find(u'右')     >=0) \
             or   (proc_text.find(u'注意')   >=0) \
             or   (proc_text.find(u'写真')   >=0) \
             or   (proc_text.find(u'伝票')   >=0) \
