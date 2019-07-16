@@ -9,12 +9,14 @@ def getkey(api,):
     if (api == 'stt'):
         print('speech_api_google_key.py')
         print('set your key!')
+        #return 'your key'
         return 'your key'
 
     # google 翻訳機能
     if (api == 'tra'):
         print('speech_api_google_key.py')
         print('set your key!')
+        #return 'your key'
         return 'your key'
 
     # google 音声合成

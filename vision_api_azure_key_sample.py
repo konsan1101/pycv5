@@ -3,7 +3,7 @@
 
 
 
-def getkey(api, key):
+def getkey(api, key, ):
 
     # azure 画像認識
     if (api == 'cv'):

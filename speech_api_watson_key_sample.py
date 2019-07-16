@@ -10,8 +10,10 @@ def getkey(api, key):
         print('speech_api_watson_key.py')
         print('set your key!')
         if (key == 'username'):
+            #return 'your name'
             return 'your name'
         if (key == 'password'):
+            #return 'your key'
             return 'your key'
 
     # Watson 翻訳機能
@@ -19,8 +21,10 @@ def getkey(api, key):
         print('speech_api_watson_key.py')
         print('set your key!')
         if (key == 'username'):
+            #return 'your name'
             return 'your name'
         if (key == 'password'):
+            #return 'your key'
             return 'your key'
 
     # Watson 音声合成
@@ -28,8 +32,10 @@ def getkey(api, key):
         print('speech_api_watson_key.py')
         print('set your key!')
         if (key == 'username'):
+            #return 'your name'
             return 'your name'
         if (key == 'password'):
+            #return 'your key'
             return 'your key'
 
     return False

@@ -23,33 +23,29 @@ class SpeechAPI:
 
     def __init__(self, ):
         self.timeOut   = 10
-        self.stt_ver   = None
         self.stt_token = None
-        self.tra_ver   = None
+        self.stt_url   = None
         self.tra_token = None
-        self.tts_ver   = None
+        self.tra_url   = None
         self.tts_token = None
+        self.tts_url   = None
 
     def setTimeOut(self, timeOut=10, ):
         self.timeOut = timeOut
 
-    def authenticate(self, api, ver, key, ):
+    def authenticate(self, api, key, authurl, procurl, ):
         # azure 音声認識
         if (api == 'stt'):
             if (self.stt_token is None):
-                self.stt_ver = ver
-                if (self.stt_ver == 'bing'):
-                    url  = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
-                    headers = {'Ocp-Apim-Subscription-Key': key}
-                else:
-                    url  = 'https://test-speech-201907.cognitiveservices.azure.com/sts/v1.0/issuetoken'
-                    headers = {
-                              'Content-type': 'application/x-www-form-urlencoded',
-                              'Content-Length': '0',
-                              'Ocp-Apim-Subscription-Key': key,
-                              }
+                self.stt_url = procurl
+                #authurl  = 'https://eastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken'
+                headers = {
+                            'Content-type': 'application/x-www-form-urlencoded',
+                            'Content-Length': '0',
+                            'Ocp-Apim-Subscription-Key': key,
+                            }
                 try:
-                    res = requests.post(url, headers=headers, timeout=self.timeOut, )
+                    res = requests.post(authurl, headers=headers, timeout=self.timeOut, )
                     #print(res)
                     if (res.status_code == 200):
                         #print(res.text)
@@ -62,11 +58,11 @@ class SpeechAPI:
         # azure 翻訳機能
         if (api == 'tra'):
             if (self.tra_token is None):
-                self.tra_ver = ver
-                url  = 'https://test-translator-201907.cognitiveservices.azure.com/sts/v1.0/issuetoken'
+                self.tra_url = procurl
+                #authurl  = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
                 headers = {'Ocp-Apim-Subscription-Key': key}
                 try:
-                    res = requests.post(url, headers=headers, timeout=self.timeOut, )
+                    res = requests.post(authurl, headers=headers, timeout=self.timeOut, )
                     #print(res)
                     if (res.status_code == 200):
                         #print(res.text)
@@ -79,19 +75,15 @@ class SpeechAPI:
         # azure 音声合成
         if (api == 'tts'):
             if (self.tts_token is None):
-                self.tts_ver = ver
-                if (self.tts_ver == 'bing'):
-                    url  = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
-                    headers = {'Ocp-Apim-Subscription-Key': key}
-                else:
-                    url  = 'https://test-speech-201907.cognitiveservices.azure.com/sts/v1.0/issuetoken'
-                    headers = {
-                              'Content-type': 'application/x-www-form-urlencoded',
-                              'Content-Length': '0',
-                              'Ocp-Apim-Subscription-Key': key,
-                              }
+                self.tts_url = procurl
+                #authurl  = 'https://eastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken'
+                headers = {
+                            'Content-type': 'application/x-www-form-urlencoded',
+                            'Content-Length': '0',
+                            'Ocp-Apim-Subscription-Key': key,
+                            }
                 try:
-                    res = requests.post(url, headers=headers, timeout=self.timeOut, )
+                    res = requests.post(authurl, headers=headers, timeout=self.timeOut, )
                     #print(res)
                     if (res.status_code == 200):
                         #print(res.text)
@@ -142,43 +134,22 @@ class SpeechAPI:
                     rb.close
                     rb = None
 
-                    if (self.stt_ver == 'bing'):
-                        url  = 'https://speech.platform.bing.com/recognize/query'
-                        headers = {
-                            'Content-Type': 'audio/wav; samplerate=16000',
-                            'Authorization': 'Bearer ' + self.stt_token,
-                            }
-                        params = {
-                            'version': '3.0',
-                            'requestid': uuid.uuid4(),
-                            'appID': 'D4D52672-91D7-4C74-8AD8-42B1D98141A5',
-                            'format': 'json',
-                            'locale': lang,
-                            'device.os': 'wp7',
-                            'scenarios': 'ulm',
-                            'instanceid': uuid.uuid4(),
-                            }
-                    else:
-                        #url  = 'https://eastasia.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1'
-                        #url  = 'https://test-speech-201907.cognitiveservices.azure.com/speech/recognition/conversation/cognitiveservices/v1'
-                        url  = 'https://japaneast.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1'
-                        headers = {
-                            'Content-Type': 'audio/wav; codec=audio/pcm; samplerate=16000',
-                            'Authorization': 'Bearer ' + self.stt_token,
-                            }
-                        params = {
-                            'language': lang,
-                            'format': 'simple',
-                            }
+                    #procurl  = 'https://eastasia.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1'
+                    procurl  = self.stt_url
+                    headers = {
+                        'Content-Type': 'audio/wav; codec=audio/pcm; samplerate=16000',
+                        'Authorization': 'Bearer ' + self.stt_token,
+                        }
+                    params = {
+                        'language': lang,
+                        'format': 'simple',
+                        }
 
-                    res = requests.post(url, headers=headers, params=params, data=audio, timeout=self.timeOut, )
+                    res = requests.post(procurl, headers=headers, params=params, data=audio, timeout=self.timeOut, )
                     #print(res)
                     if (res.status_code == 200):
                         #print(res.json())
-                        if (self.stt_ver == 'bing'):
-                            res_text = res.json()['header']['lexical']
-                        else:
-                            res_text = res.json()['DisplayText']
+                        res_text = res.json()['DisplayText']
                         if (res_text != ''):
                             res_api = 'azure'
 
@@ -262,7 +233,8 @@ class SpeechAPI:
             if (inp != '') and (out != '') and (inpText != '') and (inpText != '!'):
                 try:
 
-                    url  = 'https://api.microsofttranslator.com/v2/http.svc/Translate'
+                    #procurl  = 'https://api.microsofttranslator.com/v2/http.svc/Translate'
+                    procurl  = self.tra_url
                     headers = {'Content-Type': 'application/xml',}
                     params  = {'appid': 'Bearer ' + self.tra_token,
                                'text': inpText,
@@ -270,7 +242,7 @@ class SpeechAPI:
                                'to': out,
                                'category':'general',
                               }
-                    res = requests.get(url, headers=headers, params=params, timeout=self.timeOut, )
+                    res = requests.get(procurl, headers=headers, params=params, timeout=self.timeOut, )
                     #print(res.status_code)
                     if (res.status_code == 200):
                         #print(res.text)
@@ -361,22 +333,19 @@ class SpeechAPI:
             if (voice != '') and (outText != '') and (outText != '!'):
                 try:
 
-                    if (self.stt_ver == 'bing'):
-                        host = 'speech.platform.bing.com'
-                        path = '/synthesize'
-                        headers = {'Content-type': 'application/ssml+xml', 
-                                   'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3',
-                                   'Authorization': 'Bearer ' + self.tts_token, 
-                                   'User-Agent': 'TTSForPython'}
-                    else:
-                        #host = 'eastasia.tts.speech.microsoft.com'
-                        #host = 'test-speech-201907.cognitiveservices.azure.com'
-                        host = 'japaneast.tts.speech.microsoft.com'
-                        path = '/cognitiveservices/v1'
-                        headers = {'Content-type': 'application/ssml+xml', 
-                                   'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3',
-                                   'Authorization': 'Bearer ' + self.tts_token, 
-                                   'User-Agent': 'TTSForPython'}
+                    #host = 'eastasia.tts.speech.microsoft.com'
+                    #path = '/cognitiveservices/v1'
+
+                    procurl  = self.tts_url
+                    procurl = procurl.replace('https://', '')
+                    s = procurl.find('/')
+                    host = procurl[:s]
+                    path = procurl[s:]
+
+                    headers = {'Content-type': 'application/ssml+xml', 
+                                'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3',
+                                'Authorization': 'Bearer ' + self.tts_token, 
+                                'User-Agent': 'TTSForPython'}
 
                     body = xml.etree.ElementTree.Element('speak', version='1.0')
                     body.set('{http://www.w3.org/XML/1998/namespace}lang', 'en-US')
@@ -410,17 +379,23 @@ if __name__ == '__main__':
         #azureAPI = azure_api.SpeechAPI()
         azureAPI = SpeechAPI()
 
-        ver1, key1 = azure_key.getkey('stt')
-        res1 = azureAPI.authenticate('stt', ver1, key1, )
-        ver2, key2 = azure_key.getkey('tra')
-        res2 = azureAPI.authenticate('tra', ver2, key2, )
-        ver3, key3 = azure_key.getkey('tts')
-        res3 = azureAPI.authenticate('tts', ver3, key3, )
+        key     = azure_key.getkey('stt', 'key', )
+        authurl = azure_key.getkey('stt', 'authurl', )
+        procurl = azure_key.getkey('stt', 'procurl', )
+        res1 = azureAPI.authenticate('stt', key, authurl, procurl, )
+        key     = azure_key.getkey('tra', 'key', )
+        authurl = azure_key.getkey('tra', 'authurl', )
+        procurl = azure_key.getkey('tra', 'procurl', )
+        res2 = azureAPI.authenticate('tra', key, authurl, procurl, )
+        key     = azure_key.getkey('tts', 'key', )
+        authurl = azure_key.getkey('tts', 'authurl', )
+        procurl = azure_key.getkey('tts', 'procurl', )
+        res3 = azureAPI.authenticate('tts', key, authurl, procurl, )
         print('authenticate:', res1, res2, res3)
 
         if (res1 == True) and (res2 == True) and (res3 == True):
 
-            text = 'Hallo'
+            text = 'hallo'
             file = 'temp_voice.mp3'
 
             res, api = azureAPI.vocalize(outText=text, outLang='en', outFile=file)

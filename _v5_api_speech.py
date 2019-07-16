@@ -71,6 +71,9 @@ qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
 qApiInp    = 'free'
 qApiTrn    = 'free'
 qApiOut    = 'free'
+qApiInp    = 'azure'
+qApiTrn    = 'azure'
+qApiOut    = 'azure'
 if (qOS == 'windows'):
     qApiOut = 'winos'
 if (qOS == 'darwin'):
@@ -138,8 +141,10 @@ def qVoiceInput(useApi='free', inpLang='auto', inpFile='_sounds/_sound_hallo.wav
 
     if (resText == '') and (api == 'azure'):
         azureAPI = azure_api.SpeechAPI()
-        ver, key = azure_key.getkey('stt')
-        res = azureAPI.authenticate('stt', ver, key, )
+        key     = azure_key.getkey('stt', 'key', )
+        authurl = azure_key.getkey('stt', 'authurl', )
+        procurl = azure_key.getkey('stt', 'procurl', )
+        res = azureAPI.authenticate('stt', key, authurl, procurl, )
         if (res == True):
             resText, resApi = azureAPI.recognize(inpWave=inpFile, inpLang=inpLang)
         if (resText == '') and (apiRecovery == True):
@@ -283,8 +288,10 @@ def qTranslator(useApi='free', inpLang='ja', outLang='en', inpText=u'こんに�
 
         if (resText == '') and (api == 'azure'):
             azureAPI = azure_api.SpeechAPI()
-            ver, key = azure_key.getkey('tra')
-            res = azureAPI.authenticate('tra', ver, key, )
+            key     = azure_key.getkey('tra', 'key', )
+            authurl = azure_key.getkey('tra', 'authurl', )
+            procurl = azure_key.getkey('tra', 'procurl', )
+            res = azureAPI.authenticate('tra', key, authurl, procurl, )
             if (res == True):
                 resText, resApi = azureAPI.translate(inpText=inpText, inpLang=inpLang, outLang=outLang, )
             if (resText == '') and (apiRecovery == True):
@@ -470,8 +477,10 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
 
         if (resText == '') and (api == 'azure'):
             azureAPI = azure_api.SpeechAPI()
-            ver, key = azure_key.getkey('tts')
-            res = azureAPI.authenticate('tts', ver, key, )
+            key     = azure_key.getkey('tts', 'key', )
+            authurl = azure_key.getkey('tts', 'authurl', )
+            procurl = azure_key.getkey('tts', 'procurl', )
+            res = azureAPI.authenticate('tts', key, authurl, procurl, )
             if (res == True):
                 resText, resApi = azureAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileMp3, )
                 if (resText != ''):
