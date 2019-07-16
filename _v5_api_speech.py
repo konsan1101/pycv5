@@ -1497,27 +1497,27 @@ class api_speech_class:
                 )
 
         # threading
-        #if (sync != True):
-        #    self.speech_proc = threading.Thread(target=speech_batch, args=(
-        #        runMode, micDev,
-        #        qApiInp, qApiTrn, qApiOut, qLangInp, qLangTrn, qLangTxt, qLangOut,
-        #        procId, fileId,
-        #        inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput,
-        #        inpPlay, txtPlay, outPlay,
-        #        ))
-        #    self.speech_proc.setDaemon(True)
-        #    self.speech_proc.start()
-
-        # multiprocessing
         if (sync != True):
-            self.speech_proc = multiprocessing.Process(target=speech_batch, args=(
+            self.speech_proc = threading.Thread(target=speech_batch, args=(
                 runMode, micDev,
                 qApiInp, qApiTrn, qApiOut, qLangInp, qLangTrn, qLangTxt, qLangOut,
                 procId, fileId,
                 inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput,
                 inpPlay, txtPlay, outPlay,
                 ))
+            self.speech_proc.setDaemon(True)
             self.speech_proc.start()
+
+        # multiprocessing
+        #if (sync != True):
+        #    self.speech_proc = multiprocessing.Process(target=speech_batch, args=(
+        #        runMode, micDev,
+        #        qApiInp, qApiTrn, qApiOut, qLangInp, qLangTrn, qLangTxt, qLangOut,
+        #        procId, fileId,
+        #        inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput,
+        #        inpPlay, txtPlay, outPlay,
+        #        ))
+        #    self.speech_proc.start()
 
         #if (sync == True):
         #    self.speech_proc.join()
