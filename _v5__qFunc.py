@@ -748,7 +748,7 @@ class qBusy_status_txts_class(object):
         txts.append('')
         txts.append('[Speech status]')
         if (self.a_ctrl == 'busy'):
-            txts.append(' Ctrl   : run_____')
+            txts.append(' Ctrl   : active__')
         else:
             txts.append(' Ctrl   : ________')
         if (self.a_inp == 'busy'):
@@ -780,11 +780,11 @@ class qBusy_status_txts_class(object):
         txts.append('')
         txts.append('[Vision status]')
         if (self.v_ctrl == 'busy'):
-            txts.append(' Ctrl   : run_____')
+            txts.append(' Ctrl   : active__')
         else:
             txts.append(' Ctrl   : ________')
         if (self.v_inp == 'busy'):
-            txts.append(' Input  : ready___')
+            txts.append(' Input  : active__')
         else:
             txts.append(' Input  : ________')
         if (self.v_jpg == 'busy'):
