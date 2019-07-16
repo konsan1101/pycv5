@@ -19,6 +19,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 qFONT_default = {'file':'_fonts/_vision_font_ipaexg.ttf','offset':8}
+qFONT_status  = {'file':'_fonts/_vision_font_ipag.ttf','offset':8}
 qFONT_zh = {'file':'C:/Windows/Fonts/msyh.ttc', 'offset':5}
 qFONT_ko = {'file':'C:/Windows/Fonts/batang.ttc', 'offset':10}
 
@@ -158,6 +159,8 @@ class proc_txt2img:
         # フォント
         font16_default  = ImageFont.truetype(qFONT_default['file'], 16, encoding='unic')
         font16_defaulty =                    qFONT_default['offset']
+        font16_status   = ImageFont.truetype(qFONT_status[ 'file'], 16, encoding='unic')
+        font16_statusy  =                    qFONT_status[ 'offset']
         font32_default  = ImageFont.truetype(qFONT_default['file'], 32, encoding='unic')
         font32_defaulty =                    qFONT_default['offset']
         font48_default  = ImageFont.truetype(qFONT_default['file'], 48, encoding='unic')
@@ -297,7 +300,7 @@ class proc_txt2img:
                             text_draw.rectangle((0, 5 + (16 + 10)*i, draw_width, (16 + 10)*(i+1)-1), fill=(0x00, 0xff, 0x00))
                             txt_color = (  0,  0,  0)
 
-                        text_draw.text((5, (16 + 10)*i + font16_defaulty), texts[i], font=font16_default, fill=txt_color)
+                        text_draw.text((5, (16 + 10)*i + font16_statusy), texts[i], font=font16_status, fill=txt_color)
 
                     if (inp_name.lower() == '[txts]'):
 
