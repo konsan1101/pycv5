@@ -269,7 +269,7 @@ class proc_controlv:
                 #    pass
 
                 time.sleep(0.50)
-v
+
 
 
             # ビジー解除
