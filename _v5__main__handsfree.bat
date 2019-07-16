@@ -2,7 +2,7 @@
 
 :API
 ECHO;
-ECHO API(free,google,watson,azure,nict,docomo,special)選択（入力無しはfree）
+ECHO API選択（入力無しはfree）
 SET api=
 SET /P api="free,google,watson,azure,nict,docomo,special："
 IF %api%@==@        SET api=free
@@ -40,7 +40,7 @@ IF %api%@==docomo@  SET apio=winos
 
 :MODE
 ECHO;
-ECHO MODE(1=hud,2=handsfree,3=translator,4=speech,5=camera,)選択（入力無しはhud）
+ECHO MODE選択（入力無しはhud）
 SET mode=
 SET dev=bluetooth
 SET guide=on
@@ -68,6 +68,9 @@ IF %mode%@==camera@      SET  guide=off
 IF %mode%@==camera@      GOTO MODEGO
 GOTO MODE
 :MODEGO
+ECHO %mode%
+ECHO %dev%
+ECHO guide %guide%
 
 ECHO;
 ECHO python _v5__destroy.py
