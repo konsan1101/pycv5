@@ -278,6 +278,8 @@ class proc_controla:
                 #except:
                 #    pass
 
+                time.sleep(0.50)
+
 
 
             # ビジー解除

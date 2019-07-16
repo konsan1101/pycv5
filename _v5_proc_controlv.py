@@ -268,6 +268,8 @@ class proc_controlv:
                 #except:
                 #    pass
 
+                time.sleep(0.50)
+v
 
 
             # ビジー解除
