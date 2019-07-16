@@ -1,5 +1,6 @@
 @ECHO OFF
-CALL __setpath.bat
+rem CALL __setpath.bat
+CD ..
 
 ECHO;
 ECHO 入力ファイル存在確認

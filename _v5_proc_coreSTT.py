@@ -414,6 +414,7 @@ class proc_coreSTT:
               or (self.runMode == 'translator'))):
                 #if (seq4[-1:] == '0'):
                 sync = True
+            sync = False
 
             res = api_speech.execute(sync,
                     self.runMode, self.micDev, 

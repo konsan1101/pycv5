@@ -42,7 +42,7 @@ class SpeechAPI:
                     url  = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
                     headers = {'Ocp-Apim-Subscription-Key': key}
                 else:
-                    url  = 'https://eastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken'
+                    url  = 'https://test-speech-201907.cognitiveservices.azure.com/sts/v1.0/issuetoken'
                     headers = {
                               'Content-type': 'application/x-www-form-urlencoded',
                               'Content-Length': '0',
@@ -63,7 +63,7 @@ class SpeechAPI:
         if (api == 'tra'):
             if (self.tra_token is None):
                 self.tra_ver = ver
-                url  = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
+                url  = 'https://test-translator-201907.cognitiveservices.azure.com/sts/v1.0/issuetoken'
                 headers = {'Ocp-Apim-Subscription-Key': key}
                 try:
                     res = requests.post(url, headers=headers, timeout=self.timeOut, )
@@ -84,7 +84,7 @@ class SpeechAPI:
                     url  = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
                     headers = {'Ocp-Apim-Subscription-Key': key}
                 else:
-                    url  = 'https://eastasia.api.cognitive.microsoft.com/sts/v1.0/issueToken'
+                    url  = 'https://test-speech-201907.cognitiveservices.azure.com/sts/v1.0/issuetoken'
                     headers = {
                               'Content-type': 'application/x-www-form-urlencoded',
                               'Content-Length': '0',
@@ -159,7 +159,9 @@ class SpeechAPI:
                             'instanceid': uuid.uuid4(),
                             }
                     else:
-                        url  = 'https://eastasia.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1'
+                        #url  = 'https://eastasia.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1'
+                        #url  = 'https://test-speech-201907.cognitiveservices.azure.com/speech/recognition/conversation/cognitiveservices/v1'
+                        url  = 'https://japaneast.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1'
                         headers = {
                             'Content-Type': 'audio/wav; codec=audio/pcm; samplerate=16000',
                             'Authorization': 'Bearer ' + self.stt_token,
@@ -367,7 +369,9 @@ class SpeechAPI:
                                    'Authorization': 'Bearer ' + self.tts_token, 
                                    'User-Agent': 'TTSForPython'}
                     else:
-                        host = 'eastasia.tts.speech.microsoft.com'
+                        #host = 'eastasia.tts.speech.microsoft.com'
+                        #host = 'test-speech-201907.cognitiveservices.azure.com'
+                        host = 'japaneast.tts.speech.microsoft.com'
                         path = '/cognitiveservices/v1'
                         headers = {'Content-type': 'application/ssml+xml', 
                                    'X-Microsoft-OutputFormat': 'audio-16khz-32kbitrate-mono-mp3',

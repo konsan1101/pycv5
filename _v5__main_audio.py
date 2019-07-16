@@ -487,8 +487,8 @@ class main_audio:
 
                 # 音声ファイル処理（バッチ）時の自動終了
                 if (not self.micDev.isdigit()):
-                    if  (int(time.time() - coreSTT_thread.proc_last) > 60) \
-                    and (int(time.time() - coreTTS_thread.proc_last) > 60):
+                    if  (int(time.time() - coreSTT_thread.proc_last) > 120) \
+                    and (int(time.time() - coreTTS_thread.proc_last) > 120):
                         qFunc.txtsWrite(qCtrl_control_audio, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
                         break
 
