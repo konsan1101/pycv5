@@ -77,7 +77,7 @@ class SpeechAPI:
 
             if (lang != '') and (outText != '') and (outText != '!'):
 
-                #try:
+                try:
 
                     # MS Windows
                     stml  = '<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">'
@@ -87,16 +87,16 @@ class SpeechAPI:
 
                     engine = None
                     if (True):
-                        #try:
+                        try:
                             engine = wincl.Dispatch('SAPI.SpVoice')
                             #engine = win32com.client.Dispatch('SAPI.SpVoice')
                             #engine.Speak(stml)
-                        #except:
-                        #    print('win32com.client.Dispatch(SAPI.SpVoice) is error !', lang, outGender.lower(), )
+                        except:
+                            print('win32com.client.Dispatch(SAPI.SpVoice) is error !', lang, outGender.lower(), )
 
                     stream = None
                     if (not engine is None):
-                        #try:
+                        try:
                             stream = wincl.Dispatch('SAPI.SpFileStream')
                             #stream = win32com.client.Dispatch('SAPI.SpFileStream')
 
@@ -107,8 +107,8 @@ class SpeechAPI:
                             engine.Speak(stml)
                             stream.close()
 
-                        #except:
-                        #    print('win32com.client.Dispatch(SAPI.SpFileStream) is error !')
+                        except:
+                            print('win32com.client.Dispatch(SAPI.SpFileStream) is error !')
 
                     engine = None
                     stream = None
@@ -120,8 +120,8 @@ class SpeechAPI:
                             os.remove(outFile)
                         else:
                             return outText, 'winos'
-                #except:
-                #    pass
+                except:
+                    pass
 
         return '', ''
 
