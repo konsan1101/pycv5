@@ -399,32 +399,35 @@ class api_vision_class:
             procId, fileId, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn, 
             ):
 
-        #vision_batch(
-        #    runMode, camDev,
-        #    qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn,
-        #    procId, fileId, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn, 
-        #    )
+        if (sync == True):
+            vision_batch(
+                runMode, camDev,
+                qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn,
+                procId, fileId, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn, 
+                )
 
         # threading
-        self.vision_proc = threading.Thread(target=vision_batch, args=(
-            runMode, camDev,
-            qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn,
-            procId, fileId, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn,
-            ))
-        self.vision_proc.setDaemon(True)
-        self.vision_proc.start()
+        #if (sync != True):
+        #    self.vision_proc = threading.Thread(target=vision_batch, args=(
+        #        runMode, camDev,
+        #        qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn,
+        #        procId, fileId, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn,
+        #        ))
+        #    self.vision_proc.setDaemon(True)
+        #    self.vision_proc.start()
 
         # multiprocessing.Process
-        #self.vision_proc = multiprocessing.Process(target=vision_batch, args=(
-        #    runMode, camDev,
-        #    qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn,
-        #    procId, fileId, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn,
-        #    ))
-        #self.vision_proc.start()
+        if (sync != True):
+            self.vision_proc = multiprocessing.Process(target=vision_batch, args=(
+                runMode, camDev,
+                qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn,
+                procId, fileId, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn,
+                ))
+            self.vision_proc.start()
 
-        if (sync == True):
-            self.vision_proc.join()
-            self.vision_id = None
+        #if (sync == True):
+        #    self.vision_proc.join()
+        #    self.vision_id = None
 
         return True
 

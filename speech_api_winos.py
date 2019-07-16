@@ -9,8 +9,8 @@ import subprocess
 
 import platform    # platform.system().lower() #windows,darwin,linux
 if (platform.system().lower() == 'windows'):
-    #import win32com.client as wincl
-    import win32com.client
+    import win32com.client as wincl
+    #import win32com.client
     import win32api
 
 
@@ -77,7 +77,7 @@ class SpeechAPI:
 
             if (lang != '') and (outText != '') and (outText != '!'):
 
-                try:
+                #try:
 
                     # MS Windows
                     stml  = '<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">'
@@ -86,17 +86,19 @@ class SpeechAPI:
                     stml += '</voice></speak>'
 
                     engine = None
-                    try:
-                        #engine = wincl.Dispatch('SAPI.SpVoice')
-                        engine = win32com.client.Dispatch('SAPI.SpVoice')
-                        #engine.Speak(stml)
-                    except:
-                        print('win32com.client.Dispatch(SAPI.SpVoice) is error !', lang, outGender.lower(), )
+                    if (True):
+                        #try:
+                            engine = wincl.Dispatch('SAPI.SpVoice')
+                            #engine = win32com.client.Dispatch('SAPI.SpVoice')
+                            #engine.Speak(stml)
+                        #except:
+                        #    print('win32com.client.Dispatch(SAPI.SpVoice) is error !', lang, outGender.lower(), )
 
+                    stream = None
                     if (not engine is None):
-                        try:
-                            #stream = wincl.Dispatch('SAPI.SpFileStream')
-                            stream = win32com.client.Dispatch('SAPI.SpFileStream')
+                        #try:
+                            stream = wincl.Dispatch('SAPI.SpFileStream')
+                            #stream = win32com.client.Dispatch('SAPI.SpFileStream')
 
                             stream.open(outFile, 3, False)
                             #for speaker in engine.GetAudioOutputs():
@@ -105,8 +107,11 @@ class SpeechAPI:
                             engine.Speak(stml)
                             stream.close()
 
-                        except:
-                            print('win32com.client.Dispatch(SAPI.SpFileStream) is error !')
+                        #except:
+                        #    print('win32com.client.Dispatch(SAPI.SpFileStream) is error !')
+
+                    engine = None
+                    stream = None
 
                     if (os.path.exists(outFile)):
                         rb = open(outFile, 'rb')
@@ -115,8 +120,8 @@ class SpeechAPI:
                             os.remove(outFile)
                         else:
                             return outText, 'winos'
-                except:
-                    pass
+                #except:
+                #    pass
 
         return '', ''
 
