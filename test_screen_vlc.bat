@@ -1,12 +1,10 @@
 @echo off
 
-rem start "rec" vlc screen:// :screen-fps=5 --sout=#transcode{vcodec=h264,acodec=none}:standard{access=file,mux=mp4,dst=test.mp4}
-rem start "rec" vlc screen:// :screen-fps=5 --sout=#transcode{vcodec=h264,acodec=none}:standard{access=file,mux=mkv,dst=test.mkv}
-    start "rec" vlc screen:// :screen-fps=5 --sout=#transcode{vcodec=h264,acodec=none}:standard{access=file,mux=flv,dst=test.flv}
+start "rec" vlc screen:// :screen-fps=5 --sout=#transcode{vcodec=h264,acodec=none}:standard{access=file,mux=flv,dst=test.flv} --qt-start-minimized
 
-ping localhost -w 1000 -n 20 >nul
+ping localhost -w 1000 -n 30 >nul
 
-TASKKILL /IM VLC.EXE
+taskkill /im vlc.exe
 
 PAUSE
 
