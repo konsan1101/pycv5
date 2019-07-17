@@ -1301,7 +1301,7 @@ if __name__ == '__main__':
     # 最終カメラ番号
     camDev_max = '9'
     chk = False
-    while (chk == False) and (camDev_max > '0'):
+    while (chk == False) and (camDev_max >= '0'):
         try:
             dev = cv2.VideoCapture(int(camDev_max))
             ret, frame = dev.read()
