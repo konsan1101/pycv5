@@ -19,10 +19,9 @@ from gtts import gTTS
 
 # google 音声認識、翻訳機能、音声合成
 #pip install --upgrade google-cloud-speech
-from google.cloud import speech
-from google.cloud.speech import enums
-from google.cloud.speech import types
-from google.cloud import translate
+#pip install --upgrade google-cloud-translate
+import google.cloud.speech
+import google.cloud.translate
 import speech_api_google_key as google_key
 
 
@@ -114,14 +113,14 @@ class SpeechAPI:
                         sox.terminate()
                         sox = None
 
-                        client = speech.SpeechClient()
-                        config = types.RecognitionConfig(
-                            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+                        client = google.cloud.speech.SpeechClient()
+                        config = google.cloud.speech.types.RecognitionConfig(
+                            encoding=google.cloud.speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
                             sample_rate_hertz=8000,
                             language_code=lang)
                         with io.open(inpWave8k, 'rb') as audio_file:
                             content = audio_file.read()
-                            audio = types.RecognitionAudio(content=content)
+                            audio = google.cloud.speech.types.RecognitionAudio(content=content)
                         res = client.recognize(config, audio)
                         #print(res)
                         res_text  = ''
@@ -139,14 +138,14 @@ class SpeechAPI:
 
                 if (res_text == '') and (api == 'auto' or api == 'google'):
 
-                        client = speech.SpeechClient()
-                        config = types.RecognitionConfig(
-                            encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
+                        client = google.cloud.speech.SpeechClient()
+                        config = google.cloud.speech.types.RecognitionConfig(
+                            encoding=google.cloud.speech.enums.RecognitionConfig.AudioEncoding.LINEAR16,
                             sample_rate_hertz=16000,
                             language_code=lang)
                         with io.open(inpWave, 'rb') as audio_file:
                             content = audio_file.read()
-                            audio = types.RecognitionAudio(content=content)
+                            audio = google.cloud.speech.types.RecognitionAudio(content=content)
                         res = client.recognize(config, audio)
                         #print(res)
                         res_text  = ''
@@ -224,8 +223,8 @@ class SpeechAPI:
                         pass
 
                 if (res_text == '') and (api == 'auto' or api == 'google'):
-                    try:
-                        client = translate.Client()
+                    #try:
+                        client = google.cloud.translate.Client()
                         res = client.translate([inpText], 
                                                source_language=inp,
                                                target_language=out, )
@@ -235,8 +234,8 @@ class SpeechAPI:
                         if (res_text != ''):
                             res_api = 'google'
                             #print(res_text + '(' + res_api + ')')
-                    except:
-                        pass
+                    #except:
+                    #    pass
 
             if (res_text != ''):
                 res_text = str(res_text).strip()
