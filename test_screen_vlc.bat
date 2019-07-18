@@ -12,6 +12,6 @@ vlc vlc://quit
 
 ping localhost -w 1000 -n 5 >nul
 
-taskkill /im vlc.exe /f
+taskkill /im vlc.exe /f /t
 
 
