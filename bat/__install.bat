@@ -12,17 +12,22 @@ rem brew install python-opencv
 PAUSE
 
 ECHO;
-ECHO ツール
+ECHO -----
+ECHO tools
+ECHO -----
 rem           pip  install --upgrade pip
     python -m pip  install --upgrade pip
     python -m pip  install --upgrade setuptools
+    python -m pip  install --upgrade pyinstaller
 
 ECHO;
 ECHO Waiting...5s
 ping localhost -w 1000 -n 5 >nul
 
 ECHO;
-ECHO 通信
+ECHO -------------
+ECHO communication
+ECHO -------------
     python -m pip  install --upgrade requests
     python -m pip  install --upgrade requests_toolbelt
     python -m pip  install --upgrade uuid
@@ -33,7 +38,18 @@ ECHO 通信
     python -m pip  install --upgrade feedparser
 
 ECHO;
-ECHO 画像
+ECHO -----
+ECHO audio
+ECHO -----
+rem python -m pip  install --upgrade pyaudio
+    python -m pip  install --upgrade wave
+    python -m pip  install --upgrade sounddevice
+    python -m pip  install --upgrade speechrecognition
+
+ECHO;
+ECHO ------
+ECHO vision
+ECHO ------
     python -m pip  install --upgrade pygame
     python -m pip  install --upgrade pyqtgraph
     python -m pip  install --upgrade pyqt5
@@ -47,20 +63,47 @@ ECHO 画像
     python -m pip  install --upgrade pyautogui
 
 ECHO;
-ECHO 音声
-rem python -m pip  install --upgrade pyaudio
-    python -m pip  install --upgrade wave
-    python -m pip  install --upgrade sounddevice
-    python -m pip  install --upgrade speechrecognition
+ECHO -----------
+ECHO yolo3 keras
+ECHO -----------
+rem python -m pip  install --upgrade tensorflow
+    python -m pip  install --upgrade tensorflow==1.5.0
+    python -m pip  install --upgrade keras
 
 ECHO;
-ECHO マイクロソフト
+ECHO -------------
+ECHO yolo3 pytorch
+ECHO -------------
+ECHO (python36)
+    python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-win_amd64.whl
+    python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-win_amd64.whl
+    python -m pip  install pandas
+
+ECHO (python37)
+rem python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-win_amd64.whl
+rem python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp37-cp37m-win_amd64.whl
+rem python -m pip  install pandas
+
+ECHO;
+ECHO ----------
+ECHO IBM Watson
+ECHO ----------
+rem python -m pip  install --upgrade watson-developer-cloud==1.0.2
+rem python -m pip  install --upgrade watson-developer-cloud
+    python -m pip  install --upgrade ibm-watson
+
+ECHO;
+ECHO ---------
+ECHO microsoft
+ECHO ---------
 rem python -m pip  install --upgrade mstranslator
     python -m pip  install --upgrade cognitive_face
     python -m pip  install --upgrade pywin32
 
 ECHO;
-ECHO グーグル
+ECHO ------
+ECHO google
+ECHO ------
     python -m pip  install --upgrade google-cloud-core
     python -m pip  install --upgrade google-cloud-speech
     python -m pip  install --upgrade google-cloud-translate
@@ -73,29 +116,7 @@ ECHO グーグル
     python -m pip  uninstall gtts-token
     python -m pip  install --upgrade gtts-token
 
-ECHO;
-ECHO IBM Watson
-rem python -m pip  install --upgrade watson-developer-cloud==1.0.2
-rem python -m pip  install --upgrade watson-developer-cloud
-    python -m pip  install --upgrade ibm-watson
 
-ECHO;
-ECHO yolo keras
-rem python -m pip  install --upgrade tensorflow
-    python -m pip  install --upgrade tensorflow==1.5.0
-    python -m pip  install --upgrade keras
-
-ECHO;
-ECHO yolo pytorch (python36)
-    python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-win_amd64.whl
-    python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-win_amd64.whl
-    python -m pip  install pandas
-
-rem ECHO;
-rem ECHO yolo pytorch (python37)
-rem python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-win_amd64.whl
-rem python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp37-cp37m-win_amd64.whl
-rem python -m pip  install pandas
 
 PAUSE
 
