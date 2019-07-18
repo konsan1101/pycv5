@@ -43,6 +43,8 @@ qPath_v_jpg    = 'temp/v5_2jpg/'
 qPath_v_detect = 'temp/v5_3detect/'
 qPath_v_cv     = 'temp/v5_5cv_txt/'
 qPath_v_photo  = 'temp/v5_7photo/'
+qPath_v_msg    = 'temp/v5_8photo_msg/'
+qPath_v_screen = 'temp/v5_9screen/'
 
 qBusy_dev_cpu  = qPath_work + 'busy_dev_cpu.txt'
 qBusy_dev_com  = qPath_work + 'busy_dev_commnication.txt'
@@ -61,6 +63,7 @@ qBusy_v_ctrl   = qPath_work + 'busy_v_0control.txt'
 qBusy_v_inp    = qPath_work + 'busy_v_1video.txt'
 qBusy_v_jpg    = qPath_work + 'busy_v_2jpg.txt'
 qBusy_v_CV     = qPath_work + 'busy_v_5cv.txt'
+qBusy_v_rec    = qPath_work + 'busy_v_9rec.txt'
 
 
 
@@ -99,6 +102,8 @@ class qFunc_class:
         self.makeDirs(qPath_v_detect, False)
         self.makeDirs(qPath_v_cv,     False)
         self.makeDirs(qPath_v_photo,  False)
+        self.makeDirs(qPath_v_msg,    False)
+        self.makeDirs(qPath_v_screen, False)
 
         return True
 
@@ -124,6 +129,8 @@ class qFunc_class:
         if (field == 'qPath_v_detect'): return qPath_v_detect
         if (field == 'qPath_v_cv'    ): return qPath_v_cv
         if (field == 'qPath_v_photo' ): return qPath_v_photo
+        if (field == 'qPath_v_msg'   ): return qPath_v_msg
+        if (field == 'qPath_v_screen'): return qPath_v_screen
 
         if (field == 'qBusy_dev_cpu' ): return qBusy_dev_cpu
         if (field == 'qBusy_dev_com' ): return qBusy_dev_com
@@ -142,6 +149,7 @@ class qFunc_class:
         if (field == 'qBusy_v_inp'   ): return qBusy_v_inp
         if (field == 'qBusy_v_jpg'   ): return qBusy_v_jpg
         if (field == 'qBusy_v_CV'    ): return qBusy_v_CV
+        if (field == 'qBusy_v_rec'   ): return qBusy_v_rec
 
         print('check program !' + field)
         return None
@@ -543,6 +551,7 @@ class qFunc_class:
         self.busySet(qBusy_v_inp,   Flag)
         self.busySet(qBusy_v_jpg,   Flag)
         self.busySet(qBusy_v_CV,    Flag)
+        self.busySet(qBusy_v_rec,   Flag)
         return True
 
     def busyCheck(self, file, maxWait=0, ):
@@ -628,6 +637,7 @@ class qBusy_status_txts_class(object):
         self.v_inp   = 'none'
         self.v_jpg   = 'none'
         self.v_CV    = 'none'
+        self.v_rec   = 'none'
 
     def busyCheck(self, file, maxWait=0, ):
         if (maxWait != 0):
@@ -713,6 +723,10 @@ class qBusy_status_txts_class(object):
         if (check != self.v_CV):
             self.v_CV = check
             change = True
+        check = self.busyCheck(qBusy_v_rec, 0)
+        if (check != self.v_rec):
+            self.v_rec = check
+            change = True
  
         if (change != True):
             return False
@@ -795,6 +809,10 @@ class qBusy_status_txts_class(object):
             txts.append(' CV     : busy!___')
         else:
             txts.append(' CV     : ________')
+        if (self.v_rec == 'busy'):
+            txts.append(' Rec    : busy!___')
+        else:
+            txts.append(' Rec    : ________')
 
         txts.append('')
         return txts
@@ -813,11 +831,14 @@ class qBusy_status_txts_class(object):
 
         # 文字列生成
         txts=[]
-        txts.append('[Speech status]')
         if (self.a_inp == 'busy'):
-            txts.append(' Input  : ready__')
+            txts.append(' Speech : ready___')
         else:
-            txts.append(' Input  : _______')
+            txts.append(' Speech : ________')
+        if (self.v_rec == 'busy'):
+            txts.append(' Rec    : busy!___')
+        else:
+            txts.append(' Rec    : ________')
 
         return txts
 
@@ -881,7 +902,8 @@ if (__name__ == '__main__'):
     qFunc.logOutput( qBusy_v_ctrl + ' :' + qFunc.busyCheck(qBusy_v_ctrl,  1), )
     qFunc.logOutput( qBusy_v_inp + '  :' + qFunc.busyCheck(qBusy_v_inp,   1), )
     qFunc.logOutput( qBusy_v_jpg + '  :' + qFunc.busyCheck(qBusy_v_jpg,   1), )
-    qFunc.logOutput( qBusy_v_CV + '   :' + qFunc.busyCheck(qBusy_v_CV,   1), )
+    qFunc.logOutput( qBusy_v_CV + '   :' + qFunc.busyCheck(qBusy_v_CV,    1), )
+    qFunc.logOutput( qBusy_v_rec + '  :' + qFunc.busyCheck(qBusy_v_rec,   1), )
 
     qFunc.notePad(txt=u'終了')
 

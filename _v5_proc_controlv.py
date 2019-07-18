@@ -38,6 +38,8 @@ qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
 qPath_v_detect = qFunc.getValue('qPath_v_detect')
 qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
+qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
+qPath_v_screen = qFunc.getValue('qPath_v_screen')
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
 qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
@@ -56,6 +58,7 @@ qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
+qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
 
 
 
@@ -371,6 +374,16 @@ class proc_controlv:
                 out_value = 'white'
                 cn_s.put([out_name, out_value])
             
+            elif (proc_text.find(u'録画') >=0) and (proc_text.find(u'開始') >=0):
+                out_name  = 'recorder'
+                out_value = 'start'
+                cn_s.put([out_name, out_value])
+
+            elif (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
+                out_name  = 'recorder'
+                out_value = 'stop'
+                cn_s.put([out_name, out_value])
+
             elif (proc_text.find(u'カメラ変更') >=0):
                 out_name  = 'control'
                 out_value = 'camchange_off'

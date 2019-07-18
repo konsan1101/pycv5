@@ -59,6 +59,8 @@ qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
 qPath_v_detect = qFunc.getValue('qPath_v_detect')
 qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
+qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
+qPath_v_screen = qFunc.getValue('qPath_v_screen')
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
 qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
@@ -77,6 +79,7 @@ qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
+qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
 
 qApiCV     = 'google'
 qApiOCR    = qApiCV

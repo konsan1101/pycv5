@@ -41,6 +41,8 @@ qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
 qPath_v_detect = qFunc.getValue('qPath_v_detect')
 qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
+qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
+qPath_v_screen = qFunc.getValue('qPath_v_screen')
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
 qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
@@ -59,6 +61,7 @@ qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
+qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
 
 
 
@@ -548,6 +551,8 @@ class proc_overlay:
                     display_mode = 'dbg'
                 elif (self.runMode == 'hud'):
                     display_mode = 'hud'
+                if  (qFunc.busyCheck(qBusy_v_rec , 0) == 'busy'):
+                    display_mode = 'rec'
 
                 base_base    = None
                 base_time    = time.time()
@@ -577,6 +582,15 @@ class proc_overlay:
                         wipe_mini2 = cam2_mini.copy()
                         wipe_time2 = cam2_time
 
+                if (display_mode == 'rec'):
+                    if (not cam1_base is None):
+                        base_base  = cam1_base.copy()
+                        base_time  = cam1_time
+                        if (cam1_fps != ''):
+                            base_txt1  = cam1_fps + 'fps'
+                        if (cam1_reso != ''):
+                            base_txt2  = cam1_reso
+
                 if (display_mode == 'cam'):
                     if (not cam1_base is None):
                         base_base  = cam1_base.copy()
@@ -603,13 +617,14 @@ class proc_overlay:
                         wipe_mini4 = cam2_mini.copy()
                         wipe_time4 = cam2_time
 
-                if (self.flag_background == 'off'):
-                    if (self.flag_blackwhite != 'white'):
-                        base_base  = self.black_img.copy()
-                    else:
-                        base_base  = self.white_img.copy()
-                    wipe_mini1 = None
-                    wipe_mini2 = None
+                if (display_mode != 'rec'):
+                    if (self.flag_background == 'off'):
+                        if (self.flag_blackwhite != 'white'):
+                            base_base  = self.black_img.copy()
+                        else:
+                            base_base  = self.white_img.copy()
+                        wipe_mini1 = None
+                        wipe_mini2 = None
 
                 # ベース画像
                 if (int(time.time() - base_time) <= 10):
@@ -626,8 +641,10 @@ class proc_overlay:
                 over_y2 = over_y
                 over_x2 = over_x
 
-                # ワイプ画像１ overlay
-                if (int(time.time() - wipe_time1) <= 5) and (not wipe_mini1 is None):
+                if (display_mode != 'rec'):
+
+                    # ワイプ画像１ overlay
+                    if (int(time.time() - wipe_time1) <= 5) and (not wipe_mini1 is None):
                         over_img = wipe_mini1.copy()
                         over_height, over_width = over_img.shape[:2]
 
@@ -642,8 +659,8 @@ class proc_overlay:
                         else:
                             over_y += over_height
 
-                # ワイプ画像２ overlay
-                if (int(time.time() - wipe_time2) <= 5) and (not wipe_mini2 is None):
+                    # ワイプ画像２ overlay
+                    if (int(time.time() - wipe_time2) <= 5) and (not wipe_mini2 is None):
                         over_img = wipe_mini2.copy()
                         over_height, over_width = over_img.shape[:2]
 
@@ -657,23 +674,23 @@ class proc_overlay:
                         else:
                             over_y += over_height
 
-                over_y = over_y2
-                over_x = over_x2
+                    over_y = over_y2
+                    over_x = over_x2
 
-                # 配列画像 overlay
-                for i in range(1, ary_max+1):
-                    if (int(time.time() - ary_time[i]) <= 10) and (not ary_img[i] is None):
-                        over_img = ary_img[i].copy()
-                        over_height, over_width = over_img.shape[:2]
+                    # 配列画像 overlay
+                    for i in range(1, ary_max+1):
+                        if (int(time.time() - ary_time[i]) <= 10) and (not ary_img[i] is None):
+                            over_img = ary_img[i].copy()
+                            over_height, over_width = over_img.shape[:2]
 
-                        over_y -= over_height
-                        if  (over_x >=0) and (over_y >=0) \
-                        and ((over_x + over_width) < self.dspWidth) \
-                        and ((over_y + over_height) < self.dspHeight):
-                            display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
-                            cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
-                            over_x += over_width + 10
-                        over_y += over_height
+                            over_y -= over_height
+                            if  (over_x >=0) and (over_y >=0) \
+                            and ((over_x + over_width) < self.dspWidth) \
+                            and ((over_y + over_height) < self.dspHeight):
+                                display_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
+                                cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
+                                over_x += over_width + 10
+                            over_y += over_height
 
                 # 右上基準
                 over_y  = 70
@@ -681,8 +698,10 @@ class proc_overlay:
                 over_y2 = over_y
                 over_x2 = over_x
 
-                # ワイプ画像３ overlay
-                if (int(time.time() - wipe_time3) <= 5) and (not wipe_mini3 is None):
+                if (display_mode != 'rec'):
+
+                    # ワイプ画像３ overlay
+                    if (int(time.time() - wipe_time3) <= 5) and (not wipe_mini3 is None):
                         over_img = wipe_mini3.copy()
                         over_height, over_width = over_img.shape[:2]
 
@@ -696,8 +715,8 @@ class proc_overlay:
                             over_x2 = over_x - 10
                         over_x += over_width                        
 
-                # ワイプ画像４ overlay
-                if (int(time.time() - wipe_time4) <= 5) and (not wipe_mini4 is None):
+                    # ワイプ画像４ overlay
+                    if (int(time.time() - wipe_time4) <= 5) and (not wipe_mini4 is None):
                         over_img = wipe_mini4.copy()
                         over_height, over_width = over_img.shape[:2]
 
@@ -711,8 +730,8 @@ class proc_overlay:
                             over_x2 = over_x - 10
                         over_x += over_width                        
 
-                # リーダー画像 overlay
-                if (int(time.time() - reader_time) <= 5) and (not reader_img is None):
+                    # リーダー画像 overlay
+                    if (int(time.time() - reader_time) <= 5) and (not reader_img is None):
                         over_img = reader_img.copy()
                         over_height, over_width = over_img.shape[:2]
 
@@ -726,11 +745,11 @@ class proc_overlay:
                             over_x2 = over_x - 10
                         over_x += over_width
 
-                over_y = over_y2
-                over_x = over_x2
+                    over_y = over_y2
+                    over_x = over_x2
 
-                # 認識画像(1) overlay
-                if (int(time.time() - detect1_time) <= 5) and (not detect1_img is None):
+                    # 認識画像(1) overlay
+                    if (int(time.time() - detect1_time) <= 5) and (not detect1_img is None):
                         over_img = detect1_img.copy()
                         over_height, over_width = over_img.shape[:2]
 
@@ -743,8 +762,8 @@ class proc_overlay:
                             over_y += over_height + 20
                         over_x += over_width
 
-                # 認識画像(2) overlay
-                if (int(time.time() - detect2_time) <= 5) and (not detect2_img is None):
+                    # 認識画像(2) overlay
+                    if (int(time.time() - detect2_time) <= 5) and (not detect2_img is None):
                         over_img = detect2_img.copy()
                         over_height, over_width = over_img.shape[:2]
 

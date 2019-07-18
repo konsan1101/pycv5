@@ -65,6 +65,8 @@ qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
 qPath_v_detect = qFunc.getValue('qPath_v_detect')
 qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
+qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
+qPath_v_screen = qFunc.getValue('qPath_v_screen')
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
 qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
@@ -83,10 +85,12 @@ qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
+qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
 
 # thread ルーチン群
 import _v5_proc_controlv
 import _v5_proc_overlay
+import _v5_proc_recorder
 import _v5_proc_camera
 import _v5_proc_txt2img
 import _v5_proc_cvreader
@@ -255,6 +259,8 @@ class main_video:
         controlv_switch   = 'on'
         overlay_thread    = None
         overlay_switch    = 'on'
+        recorder_thread   = None
+        recorder_switch   = 'on'
         camera_thread1    = None
         camera_switch1    = 'on'
         camera_thread2    = None
@@ -430,6 +436,23 @@ class main_video:
                 overlay_thread.stop()
                 del overlay_thread
                 overlay_thread = None
+
+            if (recorder_thread is None) and (recorder_switch == 'on'):
+                recorder_thread = _v5_proc_recorder.proc_recorder(
+                                    name='recorder', id='0',
+                                    runMode=self.runMode,
+                                    camDev=self.cam1Dev,
+                                    )
+                recorder_thread.start()
+
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
+                    speechs.append({ 'text':u'「録画制御」の機能が有効になりました。', 'wait':0, })
+
+            if (not recorder_thread is None) and (recorder_switch != 'on'):
+                recorder_thread.stop()
+                del recorder_thread
+                recorder_thread = None
 
             if (camera_thread1 is None) and (camera_switch1 == 'on'):
                 camera_thread1 = _v5_proc_camera.proc_camera(
@@ -655,12 +678,9 @@ class main_video:
 
                         if (res_name == '[txts]'):
                             if (not txt2img_thread is None):
-                                message_txts = res_value
-                                message_time = time.time()
-                                message_img  = None
                                 # 結果出力
-                                if (cn_s.qsize() < 99):
-                                    txt2img_thread.put(['[txts]', message_txts])
+                                if (txt2img_thread.proc_s.qsize() < 99):
+                                    txt2img_thread.put([res_name, res_value])
 
                         if (res_name == '[message_txts]'):
                             if (not txt2img_thread is None):
@@ -668,8 +688,14 @@ class main_video:
                                 message_time = time.time()
                                 message_img  = None
                                 # 結果出力
-                                if (cn_s.qsize() < 99):
+                                if (txt2img_thread.proc_s.qsize() < 99):
                                     txt2img_thread.put(['[message_txts]', message_txts])
+
+                        if (res_name == 'recorder'):
+                            if (not recorder_thread is None):
+                                # 結果出力
+                                if (recorder_thread.proc_s.qsize() < 99):
+                                    recorder_thread.put([res_name, res_value])
 
             # カメラ変更１
             if (control == 'camchange_off'):
@@ -998,9 +1024,10 @@ class main_video:
                 if (not txt2img_thread is None):
 
                     # ステータス状況
-                    if (self.runMode == 'debug') \
-                    or (self.runMode == 'handsfree') \
-                    or (self.runMode == 'hud'):
+                    if  (qFunc.busyCheck(qBusy_v_rec , 0) != 'busy') \
+                    and ((self.runMode == 'debug') \
+                     or  (self.runMode == 'handsfree') \
+                     or  (self.runMode == 'hud')):
                         res_txts = busy_status_txts.get()
                         if (res_txts != False):
                             txt2img_thread.put(['[status]', res_txts ])
@@ -1093,6 +1120,11 @@ class main_video:
                 overlay_thread.stop()
                 del overlay_thread
                 overlay_thread = None
+
+            if (not recorder_thread is None):
+                recorder_thread.stop()
+                del recorder_thread
+                recorder_thread = None
 
             if (not camera_thread1 is None):
                 camera_thread1.stop()
@@ -1194,28 +1226,28 @@ class main_video:
             main_file = ''
 
         # 写真コピー保存
-        filename1 = qPath_v_photo + 'photo.' + stamp + '.jpg'
-        filename2 = qCtrl_result_photo
-        filename3 = qPath_v_photo + 'screen.' + stamp + '.jpg'
-        filename4 = qCtrl_result_screen
-        filename5 = qPath_rec     + stamp + photo_txt + '.jpg'
-        filename6 = qPath_v_photo + stamp + photo_txt + '.jpg'
+        filename_p1 = qPath_v_photo  + 'photo.' + stamp + '.jpg'
+        filename_p2 = qCtrl_result_photo
+        filename_s1 = qPath_v_screen + 'screen.' + stamp + '.jpg'
+        filename_s2 = qCtrl_result_screen
+        filename_m1 = qPath_rec      + stamp + photo_txt + '.jpg'
+        filename_m2 = qPath_v_msg    + stamp + photo_txt + '.jpg'
         if (main_file != ''):
             try:
-                shutil.copy2(main_file,   filename1)
-                shutil.copy2(main_file,   filename2)
+                shutil.copy2(main_file,   filename_p1)
+                shutil.copy2(main_file,   filename_p2)
             except:
                 pass
         if (screen_file != ''):
             try:
-                shutil.copy2(screen_file, filename3)
-                shutil.copy2(screen_file, filename4)
+                shutil.copy2(screen_file, filename_s1)
+                shutil.copy2(screen_file, filename_s2)
             except:
                 pass
         if (photo_file != ''):
             try:
-                shutil.copy2(photo_file,  filename5)
-                shutil.copy2(photo_file,  filename6)
+                shutil.copy2(photo_file,  filename_m1)
+                shutil.copy2(photo_file,  filename_m2)
             except:
                 pass
 
@@ -1491,6 +1523,8 @@ if __name__ == '__main__':
     qFunc.makeDirs(qPath_v_detect, True )
     qFunc.makeDirs(qPath_v_cv,     True )
     qFunc.makeDirs(qPath_v_photo,  True )
+    qFunc.makeDirs(qPath_v_msg,    True )
+    qFunc.makeDirs(qPath_v_screen, True )
 
     qFunc.busyReset_v(False)
 
