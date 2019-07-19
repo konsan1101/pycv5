@@ -3,6 +3,7 @@
 
 import sys
 import os
+import signal
 import shutil
 import queue
 import threading
@@ -664,6 +665,14 @@ class main_audio:
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
             self.proc_beat = None
+
+
+
+# シグナル処理
+def signal_handler(signal_number, stack_frame):
+    print(os.path.basename(__file__), 'accept signal =', signal_number)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 
 
