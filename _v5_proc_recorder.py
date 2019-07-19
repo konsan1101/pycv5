@@ -265,6 +265,13 @@ class proc_recorder:
             # レディ解除
             qFunc.remove(fileRdy)
 
+            # 停止
+            if (rec_ffmpeg != None):
+                rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
+                time.sleep(5.00)
+                rec_ffmpeg.terminate()
+                rec_ffmpeg = None
+
             # ビジー解除
             qFunc.remove(fileBsy)
             if (str(self.id) == '0'):
