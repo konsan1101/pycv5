@@ -847,13 +847,13 @@ class qBusy_status_txts_class(object):
         # 文字列生成
         txts=[]
         if (self.a_inp == 'busy'):
-            txts.append(' Speech : ready___')
+            txts.append(' Speech   : ready__')
         else:
-            txts.append(' Speech : ________')
+            txts.append(' Speech   : _______')
         if (self.v_rec == 'busy'):
-            txts.append(' Rec    : busy!___')
+            txts.append(' Recorder : busy!__')
         else:
-            txts.append(' Rec    : ________')
+            txts.append(' Recorder : _______')
 
         return txts
 

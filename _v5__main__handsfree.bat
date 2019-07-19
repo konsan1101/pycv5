@@ -79,16 +79,16 @@ ECHO python _v5__destroy.py
 ping localhost -w 1000 -n 5 >nul
 
 ECHO;
-rem ------------------------------------------------------------------------------InpTrn
-ECHO python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio% ja en
-     python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio%
-rem ------------------------------------------------------------------------------InpTrn
+rem ------------------------------------------------------------------------------------------InpTrn
+ECHO start "" /b python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio% ja en
+     start "" /b python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio%
+rem ------------------------------------------------------------------------------------------InpTrn
 
-ECHO;
-ECHO python _v5__destroy.py
-     python _v5__destroy.py
+rem ECHO;
+rem ECHO python _v5__destroy.py
+rem      python _v5__destroy.py
 
-ping localhost -w 1000 -n 5 >nul
+rem ping localhost -w 1000 -n 5 >nul
 
 EXIT
 

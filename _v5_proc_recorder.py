@@ -114,7 +114,7 @@ class proc_recorder:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def stop(self, waitMax=10, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -333,7 +333,6 @@ if __name__ == '__main__':
     recorder_thread.put(['recorder', 'stop'])
 
 
-    time.sleep(10.00)
     recorder_thread.stop()
     del recorder_thread
 

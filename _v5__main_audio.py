@@ -94,6 +94,9 @@ import speech_api_julius
 
 
 
+# debug
+runMode      = 'handsfree'
+
 qApiInp     = 'free'
 qApiTrn     = 'free'
 qApiOut     = qApiTrn
@@ -106,10 +109,6 @@ qLangInp    = 'ja'
 qLangTrn    = 'en'
 qLangTxt    = qLangInp
 qLangOut    = qLangTrn[:2]
-
-
-# debug
-runMode      = 'handsfree'
 
 
 
@@ -508,9 +507,7 @@ class main_audio:
                             control = res_value
                             # 結果出力
                             if (cn_s.qsize() < 99):
-                                out_name  = 'control'
-                                out_value = control
-                                cn_s.put([out_name, out_value])
+                                cn_s.put([res_name, res_value])
                             break
 
                 # マイク切り替え時、自動復旧処理
@@ -879,15 +876,18 @@ if __name__ == '__main__':
         # メインプロセス終了
         qFunc.txtsWrite(qCtrl_control_main      ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
+        time.sleep(10.00)
+
         # 外部ＰＧリセット
         qFunc.kill('adintool-gui')
         qFunc.kill('adintool')
         qFunc.kill('julius')
 
-        qFunc.logOutput(main_id + ':bye!')
-
         main_audio.stop()
+        time.sleep(20.00)
         del main_audio
+
+        qFunc.logOutput(main_id + ':bye!')
 
         sys.exit(0)
 

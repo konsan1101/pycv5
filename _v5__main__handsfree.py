@@ -91,7 +91,21 @@ qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
 
 
 
-runMode  = 'hud'
+# debug
+runMode      = 'handsfree'
+
+qApiInp     = 'free'
+qApiTrn     = 'free'
+qApiOut     = qApiTrn
+if (qOS == 'windows'):
+    qApiOut = 'winos'
+if (qOS == 'darwin'):
+    qApiOut = 'macos'
+qLangInp    = 'ja'
+#qLangTrn    = 'en,fr,'
+qLangTrn    = 'en'
+qLangTxt    = qLangInp
+qLangOut    = qLangTrn[:2]
 
 
 
@@ -129,10 +143,88 @@ if __name__ == '__main__':
 
     if (True):
 
+        #runMode     = 'handsfree'
+        micDev      = '0'
+        micType     = 'bluetooth'
+        micGuide    = 'on'
+        micLevel    = '777'
+
         if (len(sys.argv) >= 2):
             runMode  = str(sys.argv[1]).lower()
 
+        if (runMode == 'debug'):
+            micType   = 'bluetooth'
+            micGuide  = 'on'
+        if (runMode == 'handsfree'):
+            micType   = 'bluetooth'
+            micGuide  = 'off'
+        if (runMode == 'translator'):
+            micType   = 'bluetooth'
+            micGuide  = 'display'
+        if (runMode == 'speech') or (runMode == 'number'):
+            micType   = 'usb'
+            micGuide  = 'display'
+        if (runMode == 'hud'):
+            micType   = 'bluetooth'
+            micGuide  = 'off'
+        if (runMode == 'camera'):
+            micType   = 'bluetooth'
+            micGuide  = 'off'
+
+        if (len(sys.argv) >= 3):
+            micDev   = str(sys.argv[2]).lower()
+            if (not micDev.isdigit()):
+                micGuide = 'off' 
+        if (len(sys.argv) >= 4):
+            micType  = str(sys.argv[3]).lower()
+        if (len(sys.argv) >= 5):
+            micGuide = str(sys.argv[4]).lower()
+        if (len(sys.argv) >= 6):
+            p = str(sys.argv[5]).lower()
+            if (p.isdigit() and p != '0'):
+                micLevel = p
+
+        if (len(sys.argv) >= 7):
+            qApiInp  = str(sys.argv[6]).lower()
+            if (qApiInp == 'google') or (qApiInp == 'watson') \
+            or (qApiInp == 'azure')  or (qApiInp == 'nict'):
+                qApiTrn  = qApiInp
+                qApiOut  = qApiInp
+            else:
+                qApiTrn  = 'free'
+                qApiOut  = 'free'
+            if (qApiInp == 'nict'):
+                #qLangTrn = 'en,fr,es,id,my,th,vi,zh,ko,'
+                qLangTrn = 'en,fr,es,id,zh,ko,'
+                qLangOut = qLangTrn[:2]
+        if (len(sys.argv) >= 8):
+            qApiTrn  = str(sys.argv[7]).lower()
+        if (len(sys.argv) >= 9):
+            qApiOut  = str(sys.argv[8]).lower()
+        if (len(sys.argv) >= 10):
+            qLangInp = str(sys.argv[9]).lower()
+            qLangTxt = qLangInp
+        if (len(sys.argv) >= 11):
+            qLangTrn = str(sys.argv[10]).lower()
+            qLangOut = qLangTrn[:2]
+        if (len(sys.argv) >= 12):
+            qLangTxt = str(sys.argv[11]).lower()
+        if (len(sys.argv) >= 13):
+            qLangOut = str(sys.argv[12]).lower()
+
         qFunc.logOutput(main_id + ':runMode  =' + str(runMode  ))
+        qFunc.logOutput(main_id + ':micDev   =' + str(micDev   ))
+        qFunc.logOutput(main_id + ':micType  =' + str(micType  ))
+        qFunc.logOutput(main_id + ':micGuide =' + str(micGuide ))
+        qFunc.logOutput(main_id + ':micLevel =' + str(micLevel ))
+
+        qFunc.logOutput(main_id + ':qApiInp  =' + str(qApiInp  ))
+        qFunc.logOutput(main_id + ':qApiTrn  =' + str(qApiTrn  ))
+        qFunc.logOutput(main_id + ':qApiOut  =' + str(qApiOut  ))
+        qFunc.logOutput(main_id + ':qLangInp =' + str(qLangInp ))
+        qFunc.logOutput(main_id + ':qLangTrn =' + str(qLangTrn ))
+        qFunc.logOutput(main_id + ':qLangTxt =' + str(qLangTxt ))
+        qFunc.logOutput(main_id + ':qLangOut =' + str(qLangOut ))
 
     # 初期設定
 
@@ -205,6 +297,7 @@ if __name__ == '__main__':
         try:
             txts, txt = qFunc.txtsRead(qCtrl_control_main)
             if (txt == '_close_'):
+                time.sleep(10.00)
                 break
         except:
             pass
@@ -214,8 +307,11 @@ if __name__ == '__main__':
         speechs = []
 
         if (main_audio_run is None) and (main_audio_switch == 'on'):
-            main_audio_run = subprocess.Popen(['python', qPython_main_audio, runMode, ], )
-                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            main_audio_run = subprocess.Popen(['python', qPython_main_audio, 
+                                runMode, micDev, micType, micGuide, micLevel,
+                                qApiInp, qApiTrn, qApiOut,
+                                qLangInp, qLangTrn, qLangTxt, qLangOut, ], )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             if   (runMode == 'debug'):
                 speechs.append({ 'text':u'ハンズフリーコントロールシステムをデバッグモードで、起動しました。', 'wait':0, })
@@ -232,8 +328,9 @@ if __name__ == '__main__':
             main_audio_run = None
 
         if (main_video_run is None) and (main_video_switch == 'on'):
-            main_video_run = subprocess.Popen(['python', qPython_main_video, runMode, ], )
-                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            main_video_run = subprocess.Popen(['python', qPython_main_video, 
+                                runMode, ], )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'カメラ機能を、起動しました。', 'wait':0, })
 
@@ -325,19 +422,19 @@ if __name__ == '__main__':
         # プロセス終了(音声以外)
 
         qFunc.txtsWrite(qCtrl_control_main      ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        #qFunc.txtsWrite(qCtrl_control_audio     ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_audio     ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_video     ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_web       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_knowledge ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        
+        time.sleep(60.00)
 
-        time.sleep(10.00)
-
-        #if (not main_audio_run is None):
-        #    #main_audio_run.wait()
-        #    main_audio_run.terminate()
-        #    main_audio_run = None
+        if (not main_audio_run is None):
+            #main_audio_run.wait()
+            main_audio_run.terminate()
+            main_audio_run = None
 
         if (not main_video_run is None):
             #main_video_run.wait()
@@ -364,18 +461,18 @@ if __name__ == '__main__':
             knowledge_run.terminate()
             knowledge_run = None
 
-        time.sleep(10.00)
-
         # プロセス終了(音声)
 
-        qFunc.txtsWrite(qCtrl_control_audio, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        #qFunc.txtsWrite(qCtrl_control_audio, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
-        time.sleep(10.00)
+        #time.sleep(30.00)
 
-        if (not main_audio_run is None):
-            #main_audio_run.wait()
-            main_audio_run.terminate()
-            main_audio_run = None
+        #if (not main_audio_run is None):
+        #    #main_audio_run.wait()
+        #    main_audio_run.terminate()
+        #    main_audio_run = None
+
+        time.sleep(30.00)
 
         qFunc.logOutput(main_id + ':bye!')
 

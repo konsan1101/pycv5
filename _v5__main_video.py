@@ -1730,10 +1730,11 @@ if __name__ == '__main__':
             cv2.destroyWindow('Display')
             cv2.waitKey(1)
 
-        qFunc.logOutput(main_id + ':bye!')
-
         main_video.stop()
+        time.sleep(20.00)
         del main_video
+
+        qFunc.logOutput(main_id + ':bye!')
 
         sys.exit(0)
 
