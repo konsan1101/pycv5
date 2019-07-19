@@ -697,10 +697,6 @@ class main_video:
                                 # 結果出力
                                 if (recorder_thread.proc_s.qsize() < 99):
                                     recorder_thread.put([res_name, res_value])
-                                    try:
-                                        time.sleep(10.00)
-                                    except:
-                                        pass
 
             # カメラ変更１
             if (control == 'camchange_off'):
