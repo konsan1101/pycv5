@@ -98,10 +98,9 @@ runMode  = 'hud'
 # シグナル処理
 def signal_handler(signal_number, stack_frame):
     print(os.path.basename(__file__), 'accept signal =', signal_number)
-    signal_number = 0
-    return False
 
-signal.signal(signal.SIGINT, signal_handler)
+#signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 
 
@@ -378,5 +377,7 @@ if __name__ == '__main__':
             main_audio_run = None
 
         qFunc.logOutput(main_id + ':bye!')
+
+        sys.exit(0)
 
 

@@ -242,8 +242,8 @@ class proc_recorder:
                 stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
                 rec_file   = qPath_v_screen + stamp + '.mp4'
                 rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
-                             '-i', 'desktop', '-r', '5', rec_file, ], \
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                             '-i', 'desktop', '-r', '5', rec_file, ], )#\
+                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                 # ログ
                 qFunc.logOutput(self.proc_id + ':' + u'screen → ' + rec_file + ' start', display=self.logDisp,)
@@ -288,7 +288,8 @@ class proc_recorder:
 def signal_handler(signal_number, stack_frame):
     print(os.path.basename(__file__), 'accept signal =', signal_number)
 
-signal.signal(signal.SIGINT, signal_handler)
+#signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGINT, signal.SIG_IGN)
 
 
 
