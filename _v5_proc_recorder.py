@@ -12,6 +12,8 @@ import time
 import codecs
 import glob
 
+import signal
+
 
 
 # qFunc 共通ルーチン
