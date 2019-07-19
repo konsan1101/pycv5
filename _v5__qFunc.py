@@ -620,6 +620,8 @@ class qFunc_class:
 
 class qBusy_status_txts_class(object):
     def __init__(self):
+        self.check   = ''
+
         self.dev_cpu = 'none'
         self.dev_com = 'none'
         self.dev_mic = 'none'
@@ -652,81 +654,85 @@ class qBusy_status_txts_class(object):
     def get(self):
         change = False
 
+        if (self.check !='get'):
+            change = True
+        self.check = 'get'
+
         # ステータス取得
         check = self.busyCheck(qBusy_dev_cpu, 0)
         if (check != self.dev_cpu):
-            self.dev_cpu = check
             change = True
+        self.dev_cpu = check
         check = self.busyCheck(qBusy_dev_com, 0)
         if (check != self.dev_com):
-            self.dev_com = check
             change = True
+        self.dev_com = check
         check = self.busyCheck(qBusy_dev_mic, 0)
         if (check != self.dev_mic):
-            self.dev_mic = check
             change = True
+        self.dev_mic = check
         check = self.busyCheck(qBusy_dev_spk, 0)
         if (check != self.dev_spk):
-            self.dev_spk = check
             change = True
+        self.dev_spk = check
         check = self.busyCheck(qBusy_dev_cam, 0)
         if (check != self.dev_cam):
-            self.dev_cam = check
             change = True
+        self.dev_cam = check
         check = self.busyCheck(qBusy_dev_dsp, 0)
         if (check != self.dev_dsp):
-            self.dev_dsp = check
             change = True
+        self.dev_dsp = check
 
         check = self.busyCheck(qBusy_a_ctrl, 0)
         if (check != self.a_ctrl):
-            self.a_ctrl = check
             change = True
+        self.a_ctrl = check
         check = self.busyCheck(qBusy_a_inp, 0)
         if (check != self.a_inp):
-            self.a_inp = check
             change = True
+        self.a_inp = check
         check = self.busyCheck(qBusy_a_wav, 0)
         if (check != self.a_wav):
-            self.a_wav = check
             change = True
+        self.a_wav = check
         check = self.busyCheck(qBusy_a_STT, 0)
         if (check != self.a_STT):
-            self.a_STT = check
             change = True
+        self.a_STT = check
         check = self.busyCheck(qBusy_a_TTS, 0)
         if (check != self.a_TTS):
-            self.a_TTS = check
             change = True
+        self.a_TTS = check
         check = self.busyCheck(qBusy_a_TRA, 0)
         if (check != self.a_TRA):
-            self.a_TRA = check
             change = True
+        self.a_TRA = check
         check = self.busyCheck(qBusy_a_play, 0)
         if (check != self.a_play):
-            self.a_play = check
             change = True
+        self.a_play = check
 
         check = self.busyCheck(qBusy_v_ctrl, 0)
         if (check != self.v_ctrl):
-            self.v_ctrl = check
             change = True
+        self.v_ctrl = check
         check = self.busyCheck(qBusy_v_inp, 0)
         if (check != self.v_inp):
-            self.v_inp = check
             change = True
+        self.v_inp = check
         check = self.busyCheck(qBusy_v_jpg, 0)
         if (check != self.v_jpg):
-            self.v_jpg = check
             change = True
+        self.v_jpg = check
         check = self.busyCheck(qBusy_v_CV, 0)
         if (check != self.v_CV):
-            self.v_CV = check
             change = True
+        self.v_CV = check
         check = self.busyCheck(qBusy_v_rec, 0)
         if (check != self.v_rec):
-            self.v_rec = check
             change = True
+        self.v_rec = check
  
         if (change != True):
             return False
@@ -820,15 +826,19 @@ class qBusy_status_txts_class(object):
     def speech(self):
         change = False
 
+        if (self.check !='speech'):
+            change = True
+        self.check = 'speech'
+
         # ステータス取得
         check = self.busyCheck(qBusy_a_inp, 0)
         if (check != self.a_inp):
-            self.a_inp = check
             change = True
+        self.a_inp = check
         check = self.busyCheck(qBusy_v_rec, 0)
         if (check != self.v_rec):
-            self.v_rec = check
             change = True
+        self.v_rec = check
  
         if (change != True):
             return False

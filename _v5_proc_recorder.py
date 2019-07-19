@@ -202,6 +202,9 @@ class proc_recorder:
                     rec_ffmpeg.terminate()
                     rec_ffmpeg = None
 
+                    # ログ
+                    qFunc.logOutput(self.proc_id + ':' + u'screen → ' + rec_file + ' stop', display=self.logDisp,)
+
                 # ビジー解除
                 qFunc.remove(fileBsy)
                 if (str(self.id) == '0'):
@@ -230,6 +233,9 @@ class proc_recorder:
                     rec_ffmpeg.terminate()
                     rec_ffmpeg = None
 
+                    # ログ
+                    qFunc.logOutput(self.proc_id + ':' + u'screen → ' + rec_file + ' stop', display=self.logDisp,)
+
                 # 開始
                 nowTime    = datetime.datetime.now()
                 stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
@@ -237,7 +243,9 @@ class proc_recorder:
                 rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
                              '-i', 'desktop', '-r', '5', rec_file, ], \
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                print(rec_file)
+
+                # ログ
+                qFunc.logOutput(self.proc_id + ':' + u'screen → ' + rec_file + ' start', display=self.logDisp,)
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
@@ -275,6 +283,14 @@ class proc_recorder:
 
 
 
+# シグナル処理
+def signal_handler(signal_number, stack_frame):
+    print(os.path.basename(__file__), 'accept signal =', signal_number)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+
+
 if __name__ == '__main__':
     # 共通クラス
     qFunc.init()
@@ -295,21 +311,19 @@ if __name__ == '__main__':
     time.sleep(10)
 
     recorder_thread.put(['recorder', 'stop'])
-    try:
-        time.sleep(10.00)
-    except:
-        pass
+
+    recorder_thread.put(['recorder', 'start'])
+
+    time.sleep(2)
 
     recorder_thread.put(['recorder', 'start'])
 
     time.sleep(10)
 
     recorder_thread.put(['recorder', 'stop'])
-    try:
-        time.sleep(10.00)
-    except:
-        pass
 
+
+    time.sleep(10.00)
     recorder_thread.stop()
     del recorder_thread
 
