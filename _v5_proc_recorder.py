@@ -198,7 +198,8 @@ class proc_recorder:
                 # 停止
                 if (rec_ffmpeg != None):
                     rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
-                    rec_ffmpeg.terminate(5.00)
+                    time.sleep(5.00)
+                    rec_ffmpeg.terminate()
                     rec_ffmpeg = None
 
                 # ビジー解除
@@ -225,7 +226,8 @@ class proc_recorder:
                 # 停止
                 if (rec_ffmpeg != None):
                     rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
-                    rec_ffmpeg.terminate(5.00)
+                    time.sleep(5.00)
+                    rec_ffmpeg.terminate()
                     rec_ffmpeg = None
 
                 # 開始
@@ -233,8 +235,8 @@ class proc_recorder:
                 stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
                 rec_file   = qPath_v_screen + stamp + '.mp4'
                 rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
-                             '-i', 'desktop', '-r', '5', rec_file, ], ) #\
-                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                             '-i', 'desktop', '-r', '5', rec_file, ], \
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 print(rec_file)
 
             # アイドリング
@@ -293,6 +295,20 @@ if __name__ == '__main__':
     time.sleep(10)
 
     recorder_thread.put(['recorder', 'stop'])
+    try:
+        time.sleep(10.00)
+    except:
+        pass
+
+    recorder_thread.put(['recorder', 'start'])
+
+    time.sleep(10)
+
+    recorder_thread.put(['recorder', 'stop'])
+    try:
+        time.sleep(10.00)
+    except:
+        pass
 
     recorder_thread.stop()
     del recorder_thread
