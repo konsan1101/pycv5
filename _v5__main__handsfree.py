@@ -98,6 +98,8 @@ runMode  = 'hud'
 # シグナル処理
 def signal_handler(signal_number, stack_frame):
     print(os.path.basename(__file__), 'accept signal =', signal_number)
+    signal_number = 0
+    return True
 
 signal.signal(signal.SIGINT, signal_handler)
 
