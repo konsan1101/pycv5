@@ -150,6 +150,10 @@ class proc_recorder:
         qFunc.remove(fileRdy)
         qFunc.remove(fileBsy)
 
+        rec_ffmpeg = None
+        rec_file   = ''
+        rec_time   = time.time()
+
         # 待機ループ
         self.proc_step = '5'
 
@@ -185,15 +189,22 @@ class proc_recorder:
                 out_value = 'ready'
                 cn_s.put([out_name, out_value])
 
-            # 処理
+            # 録画停止
             elif (inp_name.lower() == 'recorder') \
             and  (inp_value.lower() == 'stop'):
+
+                # 停止
+                if (rec_ffmpeg != None):
+                    rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
+                    rec_ffmpeg.terminate(5.00)
+                    rec_ffmpeg = None
 
                 # ビジー解除
                 qFunc.remove(fileBsy)
                 if (str(self.id) == '0'):
                     qFunc.busySet(qBusy_v_rec, False)
 
+            # 録画開始
             elif (inp_name.lower() == 'recorder') \
             and  (inp_value.lower() == 'start'):
 
@@ -208,6 +219,20 @@ class proc_recorder:
                     qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
                     if (str(self.id) == '0'):
                         qFunc.busySet(qBusy_v_rec, True)
+
+                # 停止
+                if (rec_ffmpeg != None):
+                    rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
+                    rec_ffmpeg.terminate(5.00)
+                    rec_ffmpeg = None
+
+                # 開始
+                nowTime    = datetime.datetime.now()
+                stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
+                rec_file   = qPath_v_rec + stamp + '.screen.mp4'
+                rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
+                             '-i', 'desktop', '-r', '5', rec_file, ], \
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
