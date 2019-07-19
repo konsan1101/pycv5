@@ -100,7 +100,8 @@ def signal_handler(signal_number, stack_frame):
     print(os.path.basename(__file__), 'accept signal =', signal_number)
 
 #signal.signal(signal.SIGINT, signal_handler)
-signal.signal(signal.SIGINT, signal.SIG_IGN)
+signal.signal(signal.SIGINT,  signal.SIG_IGN)
+signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 

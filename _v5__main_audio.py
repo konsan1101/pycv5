@@ -496,29 +496,39 @@ class main_audio:
                         qFunc.txtsWrite(qCtrl_control_audio, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
                         break
 
-                # マイク切り替え時、自動復旧処理
-                if (self.micDev.isdigit()):
-                    if  (int(time.time() - voice2wav_thread.proc_last) > 30):
-                        adintool_thread.stop()
-                        adintool_thread.start()
-                        voice2wav_thread.stop()
-                        voice2wav_thread.start()
-
                 # 制御処理
                 control = ''
 
                 if (not controla_thread is None):
-                    res_data  = controla_thread.get()
-                    res_name  = res_data[0]
-                    res_value = res_data[1]
-                    if (res_name == 'control'):
-                        control = res_value
+                    while (controla_thread.proc_r.qsize() != 0):
+                        res_data  = controla_thread.get()
+                        res_name  = res_data[0]
+                        res_value = res_data[1]
+                        if (res_name == 'control'):
+                            control = res_value
+                            # 結果出力
+                            if (cn_s.qsize() < 99):
+                                out_name  = 'control'
+                                out_value = control
+                                cn_s.put([out_name, out_value])
+                            break
 
-                        # 結果出力
-                        if (cn_s.qsize() < 99):
-                            out_name  = 'control'
-                            out_value = control
-                            cn_s.put([out_name, out_value])
+                # マイク切り替え時、自動復旧処理
+                if (control == ''):
+                    if (self.micDev.isdigit()):
+                        if  (int(time.time() - voice2wav_thread.proc_last) > 30):
+                            control = 'reset_mic'
+
+                if (control == 'reset_mic'):
+                    if (adintool_switch == 'on'):
+                        adintool_thread.stop()
+                        adintool_thread.start()
+                    if (voice2wav_switch == 'on'):
+                        voice2wav_thread.stop()
+                        voice2wav_thread.start()
+                    if (julius_switch == 'on'):
+                        julius_thread.stop()
+                        julius_thread.start()
 
                 # 音声入力（マイク入力）
                 if (not adintool_thread is None):
@@ -673,7 +683,8 @@ def signal_handler(signal_number, stack_frame):
     print(os.path.basename(__file__), 'accept signal =', signal_number)
 
 #signal.signal(signal.SIGINT, signal_handler)
-signal.signal(signal.SIGINT, signal.SIG_IGN)
+signal.signal(signal.SIGINT,  signal.SIG_IGN)
+signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 

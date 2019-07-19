@@ -345,6 +345,12 @@ class proc_controla:
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
+            elif (proc_text.find(u'録画') >=0):
+                time.sleep(3.00)
+                out_name  = 'control'
+                out_value = 'reset_mic'
+                cn_s.put([out_name, out_value])
+
 
 
 if __name__ == '__main__':
