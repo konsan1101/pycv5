@@ -825,6 +825,10 @@ class qBusy_status_txts_class(object):
         if (check != self.a_inp):
             self.a_inp = check
             change = True
+        check = self.busyCheck(qBusy_v_rec, 0)
+        if (check != self.v_rec):
+            self.v_rec = check
+            change = True
  
         if (change != True):
             return False
