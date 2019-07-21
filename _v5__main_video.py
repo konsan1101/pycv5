@@ -297,7 +297,7 @@ class main_video:
             vin2jpg_switch    = 'on'
             coreCV_switch     = 'on'
         if (self.runMode == 'handsfree'):
-            camera_switch2    = 'on'
+            camera_switch2    = 'off'
             cvreader_switch   = 'on'
             cvdetect_switch1  = 'off'
             cvdetect_switch2  = 'off'
