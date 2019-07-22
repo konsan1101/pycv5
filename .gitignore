@@ -106,9 +106,8 @@ venv.bak/
 julius/model/dnn/logicalTri
 julius/model/dnn/logicalTri.bin
 temp/
-yolo3_keras/yolov3.weights
-yolo3_keras_data/yolo.h5
-yolo3_torch/yolov3.weights
+yolo3_weights/yolov3.weights
+yolo3_weights/yolo.h5
 
 *key.py
 *key.json

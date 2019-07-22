@@ -172,11 +172,11 @@ class proc_yolo_torch:
         bbox_attrs = 5 + num_classes
         
         print("Loading network.....")
-        model = Darknet('yolo3_torch/cfg/yolov3.cfg')
-        model.load_weights('yolo3_torch/yolov3.weights')
+        model = Darknet('yolo3_weights/yolov3.cfg')
+        model.load_weights('yolo3_weights/yolov3.weights')
         model.net_info["height"] = 416
-        #model = Darknet('yolo3_torch/cfg/yolov3-tiny.cfg')
-        #model.load_weights('yolo3_torch/yolov3-tiny.weights')
+        #model = Darknet('yolo3_weights/yolov3-tiny.cfg')
+        #model.load_weights('yolo3_weights/yolov3-tiny.weights')
         #model.net_info["height"] = 416
         print("Network successfully loaded")
 

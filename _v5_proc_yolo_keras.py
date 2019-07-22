@@ -79,9 +79,9 @@ qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
 
 class proc_yolo_keras:
     _defaults = {
-        "model_path": 'yolo3_keras_data/yolo.h5',
-        "anchors_path": 'yolo3_keras_data/yolo_anchors.txt',
-        "classes_path": 'yolo3_keras_data/coco_classes.txt',
+        "model_path": 'yolo3_weights/yolo.h5',
+        "anchors_path": 'yolo3_keras/data/yolo_anchors.txt',
+        "classes_path": 'yolo3_keras/data/coco_classes.txt',
         #"score" : 0.3,
         "score" : 0.5,
         "iou" : 0.45,
