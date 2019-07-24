@@ -198,7 +198,10 @@ class proc_recorder:
 
                 # 停止
                 if (rec_ffmpeg != None):
-                    rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
+                    if (os.name != 'nt'):
+                        rec_ffmpeg.send_signal(signal.SIGINT)
+                    else:
+                        rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
                     time.sleep(5.00)
                     rec_ffmpeg.terminate()
                     rec_ffmpeg = None
@@ -229,7 +232,10 @@ class proc_recorder:
 
                 # 停止
                 if (rec_ffmpeg != None):
-                    rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
+                    if (os.name != 'nt'):
+                        rec_ffmpeg.send_signal(signal.SIGINT)
+                    else:
+                        rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
                     time.sleep(5.00)
                     rec_ffmpeg.terminate()
                     rec_ffmpeg = None
@@ -241,9 +247,15 @@ class proc_recorder:
                 nowTime    = datetime.datetime.now()
                 stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
                 rec_file   = qPath_v_screen + stamp + '.mp4'
-                rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
-                             '-i', 'desktop', '-r', '5', rec_file, ], )#\
-                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                if (os.name != 'nt'):
+                    # ffmpeg -f avfoundation -list_devices true -i ""
+                    rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
+                                '-i', '1:2', '-r', '5', rec_file, ], )#\
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                else:
+                    rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
+                                '-i', 'desktop', '-r', '5', rec_file, ], )#\
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                 # ログ
                 qFunc.logOutput(self.proc_id + ':' + u'screen → ' + rec_file + ' start', display=self.logDisp,)
@@ -267,7 +279,10 @@ class proc_recorder:
 
             # 停止
             if (rec_ffmpeg != None):
-                rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
+                if (os.name != 'nt'):
+                    rec_ffmpeg.send_signal(signal.SIGINT)
+                else:
+                    rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
                 time.sleep(5.00)
                 rec_ffmpeg.terminate()
                 rec_ffmpeg = None

@@ -4,6 +4,7 @@ rem CALL __setpath.bat
 rem brew install lame
 rem brew install sox
 rem brew install libsox-fmt-all
+rem brew install ffmpeg
 
 rem brew install libopencv-dev
 rem brew install python-opencv
