@@ -10,7 +10,7 @@ qFunc.kill('adintool')
 qFunc.kill('julius')
 
 qFunc.kill('sox')
-qFunc.kill('vlc')
+qFunc.kill('VLC') # Danger!
 qFunc.kill('ffmpeg')
 
 qFunc.kill('python')
