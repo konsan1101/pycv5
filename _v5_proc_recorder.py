@@ -202,7 +202,8 @@ class proc_recorder:
                         rec_ffmpeg.send_signal(signal.SIGINT)
                     else:
                         rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
-                    time.sleep(10.00)
+                    time.sleep(5.00)
+                    rec_ffmpeg.wait()
                     rec_ffmpeg.terminate()
                     rec_ffmpeg = None
 
@@ -237,6 +238,7 @@ class proc_recorder:
                     else:
                         rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
                     time.sleep(5.00)
+                    rec_ffmpeg.wait()
                     rec_ffmpeg.terminate()
                     rec_ffmpeg = None
 
@@ -284,6 +286,7 @@ class proc_recorder:
                 else:
                     rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
                 time.sleep(5.00)
+                rec_ffmpeg.wait()
                 rec_ffmpeg.terminate()
                 rec_ffmpeg = None
 
