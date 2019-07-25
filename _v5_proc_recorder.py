@@ -250,12 +250,12 @@ class proc_recorder:
                 if (os.name != 'nt'):
                     # ffmpeg -f avfoundation -list_devices true -i ""
                     rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
-                                '-i', '1:2', '-r', '5', rec_file, ], )#\
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                                '-i', '1:2', '-r', '5', rec_file, ], \
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 else:
                     rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
-                                '-i', 'desktop', '-r', '5', rec_file, ], )#\
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                                '-i', 'desktop', '-r', '5', rec_file, ], \
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                 # ログ
                 qFunc.logOutput(self.proc_id + ':' + u'screen → ' + rec_file + ' start', display=self.logDisp,)

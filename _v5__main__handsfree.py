@@ -92,7 +92,7 @@ qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
 
 
 # debug
-runMode      = 'handsfree'
+runMode      = 'hud'
 
 qApiInp     = 'free'
 qApiTrn     = 'free'
@@ -289,6 +289,7 @@ if __name__ == '__main__':
     # 待機ループ
 
     onece = True
+    last_alive = time.time()
 
     while (True):
 
@@ -301,6 +302,12 @@ if __name__ == '__main__':
                 break
         except:
             pass
+
+        # 活動メッセージ
+
+        if  ((time.time() - last_alive) > 30):
+            qFunc.logOutput(main_id + ':alive')
+            last_alive = time.time()
 
         # プロセス設定
 

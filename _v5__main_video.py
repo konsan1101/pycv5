@@ -362,6 +362,7 @@ class main_video:
         flag_blackwhite = self.flag_blackwhite
 
         onece = True
+        last_alive = time.time()
 
         while (self.proc_step == '5'):
             self.proc_beat = time.time()
@@ -379,6 +380,11 @@ class main_video:
                 self.breakFlag.clear()
                 self.proc_step = '9'
                 break
+
+            # 活動メッセージ
+            if  ((time.time() - last_alive) > 30):
+                qFunc.logOutput(self.proc_id + ':alive', display=True, )
+                last_alive = time.time()
 
             # キュー取得
             if (cn_r.qsize() > 0):

@@ -95,7 +95,7 @@ import speech_api_julius
 
 
 # debug
-runMode      = 'handsfree'
+runMode      = 'hud'
 
 qApiInp     = 'free'
 qApiTrn     = 'free'
@@ -268,6 +268,7 @@ class main_audio:
         self.proc_step = '5'
 
         onece = True
+        last_alive = time.time()
 
         while (self.proc_step == '5'):
             self.proc_beat = time.time()
@@ -285,6 +286,11 @@ class main_audio:
                 self.breakFlag.clear()
                 self.proc_step = '9'
                 break
+
+            # 活動メッセージ
+            if  ((time.time() - last_alive) > 30):
+                qFunc.logOutput(self.proc_id + ':alive', display=True, )
+                last_alive = time.time()
 
             # キュー取得
             if (cn_r.qsize() > 0):
@@ -519,12 +525,15 @@ class main_audio:
                 if (control == 'reset_mic'):
                     if (adintool_switch == 'on'):
                         adintool_thread.stop()
-                        adintool_thread.start()
                     if (voice2wav_switch == 'on'):
                         voice2wav_thread.stop()
-                        voice2wav_thread.start()
                     if (julius_switch == 'on'):
                         julius_thread.stop()
+                    if (adintool_switch == 'on'):
+                        adintool_thread.start()
+                    if (voice2wav_switch == 'on'):
+                        voice2wav_thread.start()
+                    if (julius_switch == 'on'):
                         julius_thread.start()
 
                 # 音声入力（マイク入力）
