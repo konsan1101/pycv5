@@ -9,6 +9,8 @@ rem brew install ffmpeg
 rem brew install libopencv-dev
 rem brew install python-opencv
 
+rem brew cask install chromedriver
+rem brew install geckodriver
 
 PAUSE
 
