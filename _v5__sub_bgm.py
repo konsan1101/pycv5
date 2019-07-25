@@ -167,12 +167,13 @@ class sub_main:
             self.proc_beat = time.time()
 
             # 終了確認
-            try:
-                txts, txt = qFunc.txtsRead(qCtrl_control_file)
-                if (txt == '_close_'):
-                    break
-            except:
-                pass
+            control = ''
+            txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+            if (txt == '_close_'):
+                break
+            else:
+                qFunc.remove(qCtrl_sub_file)
+                control = txt
 
             # 停止要求確認
             if (self.breakFlag.is_set()):
@@ -180,10 +181,19 @@ class sub_main:
                 self.proc_step = '9'
                 break
 
+            # テスト開始
+            #if (onece == True):
+            #    if  ((time.time() - last_alive) > 5):
+            #        qFunc.txtsWrite(qCtrl_sub_file ,txts=['bgm'], encoding='utf-8', exclusive=True, mode='w', )
+            #        onece = False
+
             # 活動メッセージ
             if  ((time.time() - last_alive) > 30):
                 qFunc.logOutput(self.proc_id + ':alive', display=True, )
                 last_alive = time.time()
+
+                # テスト終了
+                #qFunc.txtsWrite(qCtrl_sub_file ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
             # キュー取得
             if (cn_r.qsize() > 0):
@@ -209,12 +219,15 @@ class sub_main:
                 cn_s.put([out_name, out_value])
 
             # 処理
-            if (True):
+            if (control != ''):
 
-                # アイドリング
-                if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
-                    time.sleep(1.00)
-                time.sleep(0.25)
+                # ビジー設定
+                if (not os.path.exists(fileBsy)):
+                    qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+
+                # オープン
+                txt = control.lower()
+                self.sub_open(txt, )
 
             # ビジー解除
             qFunc.remove(fileBsy)
@@ -233,6 +246,9 @@ class sub_main:
             # レディー解除
             qFunc.remove(fileRdy)
 
+            # クローズ
+            self.sub_close()
+
             # ビジー解除
             qFunc.remove(fileBsy)
 
@@ -247,6 +263,84 @@ class sub_main:
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
             self.proc_beat = None
+
+
+
+    def sub_close(self, ):
+        qFunc.kill('VLC', )
+
+    def sub_open(self, txt, ):
+
+        procBgm = ''
+        if (txt == 'playlist 00'  ) or (txt == 'playlist 0') \
+        or (txt == 'playlist zero') \
+        or (txt == 'bgm') or (txt == 'garageband'):
+            procBgm =  '_00_'
+
+        if (procBgm != ''):
+            self.sub_close()
+
+        if (procBgm != '_close_'):
+            plist = ''
+            pparm = ''
+            if (os.name == 'nt'):
+                if (procBgm == '_00_'):
+                    plist = u'C:\\Users\\Public\\_VLC_GB_プレイリスト.xspf'
+                    pparm = '--qt-start-minimized'
+                if (procBgm == '_01_'):
+                    plist = u'C:\\Users\\Public\\_VLC_etc_プレイリスト.xspf'
+                if (procBgm == '_02_'):
+                    plist = u'C:\\Users\\Public\\_VLC_BABYMETAL_プレイリスト.xspf'
+                if (procBgm == '_03_'):
+                    plist = u'C:\\Users\\Public\\_VLC_Perfume_プレイリスト.xspf'
+                if (procBgm == '_04_'):
+                    plist = u'C:\\Users\\Public\\_VLC_きゃりーぱみゅぱみゅ_プレイリスト.xspf'
+                if (procBgm == '_05_'):
+                    plist = u'C:\\Users\\Public\\_VLC_ワンオク_プレイリスト.xspf'
+                if (procBgm == '_06_'):
+                    plist = u'C:\\Users\\Public\\_VLC_セカオワ_プレイリスト.xspf'
+                if (plist != ''):
+                    try:
+                        if (pparm != ''):
+                            bgm = subprocess.Popen(['VLC', pparm, plist, ], \
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        else:
+                            bgm = subprocess.Popen(['VLC', plist, ], \
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        #bgm.wait()
+                        #bgm.terminate()
+                        #bgm = None
+                    except:
+                        pass
+            else:
+                if (procBgm == '_00_'):
+                    plist = u'/users/kondou/Documents/_VLC_GB_プレイリスト.xspf'
+                    pparm = '--qt-start-minimized'
+                if (procBgm == '_01_'):
+                    plist = u'/users/kondou/Documents/_VLC_etc_プレイリスト.xspf'
+                if (procBgm == '_02_'):
+                    plist = u'/users/kondou/Documents/_VLC_BABYMETAL_プレイリスト.xspf'
+                if (procBgm == '_03_'):
+                    plist = u'/users/kondou/Documents/_VLC_Perfume_プレイリスト.xspf'
+                if (procBgm == '_04_'):
+                    plist = u'/users/kondou/Documents/_VLC_きゃりーぱみゅぱみゅ_プレイリスト.xspf'
+                if (procBgm == '_05_'):
+                    plist = u'/users/kondou/Documents/_VLC_ワンオク_プレイリスト.xspf'
+                if (procBgm == '_06_'):
+                    plist = u'/users/kondou/Documents/_VLC_セカオワ_プレイリスト.xspf'
+                if (plist != ''):
+                    try:
+                        if (pparm != ''):
+                            bgm = subprocess.Popen(['open', '-a', 'VLC', plist, ], \
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        else:
+                            bgm = subprocess.Popen(['open', '-a', 'VLC', plist, ], \
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        #bgm.wait()
+                        #bgm.terminate()
+                        #bgm = None
+                    except:
+                        pass
 
 
 
@@ -287,6 +381,12 @@ if __name__ == '__main__':
 
         qFunc.logOutput(sub_id + ':runMode  =' + str(runMode  ))
 
+    # 初期設定
+
+    txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+    if (txt == '_close_'):
+        qFunc.remove(qCtrl_sub_file)
+
     # 起動
 
     if (True):
@@ -301,12 +401,9 @@ if __name__ == '__main__':
     while (True):
 
         # 終了確認
-        try:
-            txts, txt = qFunc.txtsRead(qCtrl_control_file)
-            if (txt == '_close_'):
-                break
-        except:
-            pass
+        txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+        if (txt == '_close_'):
+            break
 
 
 
@@ -317,7 +414,7 @@ if __name__ == '__main__':
         qFunc.logOutput(sub_id + ':terminate')
 
         sub_main.stop()
-        time.sleep(10.00)
+        time.sleep(5.00)
         del sub_main
 
         qFunc.logOutput(sub_id + ':bye!')

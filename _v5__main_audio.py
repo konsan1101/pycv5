@@ -274,12 +274,9 @@ class main_audio:
             self.proc_beat = time.time()
 
             # 終了確認
-            try:
-                txts, txt = qFunc.txtsRead(qCtrl_control_audio)
-                if (txt == '_close_'):
-                    break
-            except:
-                pass
+            txts, txt = qFunc.txtsRead(qCtrl_control_audio)
+            if (txt == '_close_'):
+                break
 
             # 停止要求確認
             if (self.breakFlag.is_set()):
@@ -592,12 +589,6 @@ class main_audio:
                     if (res_name == '[txts]'):
                         qFunc.notePad(txt=res_value[0])
 
-                # アイドリング
-                if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
-                or (qFunc.busyCheck(qBusy_dev_mic, 0) == 'busy'):
-                    time.sleep(1.00)
-                time.sleep(0.25)
-
             # ビジー解除
             qFunc.remove(fileBsy)
 
@@ -853,12 +844,9 @@ if __name__ == '__main__':
     while (True):
 
         # 終了確認
-        try:
-            txts, txt = qFunc.txtsRead(qCtrl_control_audio)
-            if (txt == '_close_'):
-                break
-        except:
-            pass
+        txts, txt = qFunc.txtsRead(qCtrl_control_audio)
+        if (txt == '_close_'):
+            break
 
         control = ''
 

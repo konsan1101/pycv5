@@ -31,7 +31,8 @@ qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 # Python
 qPython_main_audio = '_v5__main_audio.py'
 qPython_main_video = '_v5__main_video.py'
-qPython_bgm        = '_v5_sub_bgm_control.py'
+qPython_bgm        = '_v5__sub_bgm.py'
+#qPython_bgm        = '_v5_sub_bgm_control.py'
 qPython_web        = '_v5_sub_web_control.py'
 qPython_chatting   = '_v5_sub_chatting_control.py'
 qPython_knowledge  = '_v5_sub_knowledge_control.py'
@@ -295,13 +296,19 @@ if __name__ == '__main__':
 
         # 終了確認
 
-        try:
-            txts, txt = qFunc.txtsRead(qCtrl_control_main)
-            if (txt == '_close_'):
-                time.sleep(10.00)
-                break
-        except:
-            pass
+        control = ''
+        txts, txt = qFunc.txtsRead(qCtrl_control_main)
+        if (txt == '_close_'):
+            break
+        else:
+            qFunc.remove(qCtrl_control_main)
+            control = txt
+
+        # コントロール
+        if (control == 'bgm_start'):
+            bgm_switch = 'on'
+        if (control == 'bgm_stop'):
+            bgm_switch = 'off'
 
         # 活動メッセージ
 
@@ -355,6 +362,8 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ＢＧＭ再生機能を、起動しました。', 'wait':0, })
 
         if (not bgm_run is None) and (bgm_switch != 'on'):
+            qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            time.sleep(10.00)
             #bgm_run.wait()
             bgm_run.terminate()
             bgm_run = None
@@ -368,6 +377,8 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ブラウザー連携機能を、起動しました。', 'wait':0, })
 
         if (not web_run is None) and (web_switch != 'on'):
+            qFunc.txtsWrite(qCtrl_control_web       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            time.sleep(10.00)
             #web_run.wait()
             web_run.terminate()
             web_run = None
@@ -381,6 +392,8 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ドコモ雑談連携機能を、起動しました。', 'wait':0, })
 
         if (not chatting_run is None) and (chatting_switch != 'on'):
+            qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            time.sleep(10.00)
             #chatting_run.wait()
             chatting_run.terminate()
             chatting_run = None
@@ -394,6 +407,8 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ドコモ知識データベースを、起動しました。', 'wait':0, })
 
         if (not knowledge_run is None) and (knowledge_switch != 'on'):
+            qFunc.txtsWrite(qCtrl_control_knowledge ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            time.sleep(10.00)
             #knowledge_run.wait()
             knowledge_run.terminate()
             knowledge_run = None

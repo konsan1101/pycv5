@@ -15,7 +15,7 @@ import glob
 
 
 
-qCtrl_bgm   = 'temp/control_bgm_control.txt'
+qCtrl_bgm   = 'temp/control_bgm.txt'
 
 
 

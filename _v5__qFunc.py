@@ -851,7 +851,7 @@ class qBusy_status_txts_class(object):
         else:
             txts.append(' Speech   : _______')
         if (self.v_rec == 'busy'):
-            txts.append(' Recorder : busy!__')
+            txts.append(' Recorder : rec!___')
         else:
             txts.append(' Recorder : _______')
 

@@ -368,12 +368,9 @@ class main_video:
             self.proc_beat = time.time()
 
             # 終了確認
-            try:
-                txts, txt = qFunc.txtsRead(qCtrl_control_video)
-                if (txt == '_close_'):
-                    break
-            except:
-                pass
+            txts, txt = qFunc.txtsRead(qCtrl_control_video)
+            if (txt == '_close_'):
+                break
 
             # 停止要求確認
             if (self.breakFlag.is_set()):
@@ -1579,12 +1576,9 @@ if __name__ == '__main__':
     while (True):
 
         # 終了確認
-        try:
-            txts, txt = qFunc.txtsRead(qCtrl_control_video)
-            if (txt == '_close_'):
-                break
-        except:
-            pass
+        txts, txt = qFunc.txtsRead(qCtrl_control_video)
+        if (txt == '_close_'):
+            break
 
         # ディスプレイ設定
         if (display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) != 'busy'): 

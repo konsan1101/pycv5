@@ -15,6 +15,17 @@ import glob
 
 
 
+# インターフェース
+qCtrl_control_main       = 'temp/control_main.txt'
+qCtrl_control_audio      = 'temp/control_audio.txt'
+qCtrl_control_video      = 'temp/control_video.txt'
+qCtrl_control_bgm        = 'temp/control_bgm.txt'
+qCtrl_control_web        = 'temp/control_web.txt'
+qCtrl_control_chatting   = 'temp/control_chatting.txt'
+qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
+
+
+
 # qFunc 共通ルーチン
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
@@ -95,6 +106,9 @@ class proc_controla:
         self.proc_last = None
         self.proc_step = '0'
         self.proc_seq  = 0
+
+        # 変数
+        self.run_bgm   = False
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -328,6 +342,9 @@ class proc_controla:
 
     def sub_proc(self, seq4, proc_file, work_file, proc_name, proc_text, cn_s, ):
 
+        if (self.run_bgm == True):
+            qFunc.txtsWrite(qCtrl_control_bgm ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+
         if (cn_s.qsize() < 99):
 
             if (proc_text.find(u'リセット') >=0):
@@ -349,6 +366,16 @@ class proc_controla:
                 out_name  = 'control'
                 out_value = 'reset_mic'
                 cn_s.put([out_name, out_value])
+
+            elif ((proc_text.find(u'ＢＧＭ') >=0) or (proc_text.find('BGM') >=0)) \
+            and (proc_text.find(u'開始') >=0):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['bgm_start'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_bgm = True
+
+            elif ((proc_text.find(u'ＢＧＭ') >=0) or (proc_text.find('BGM') >=0)) \
+            and (proc_text.find(u'終了') >=0):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['bgm_stop'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_bgm   = False
 
 
 
