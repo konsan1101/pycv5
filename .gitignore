@@ -103,7 +103,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-.vscode
+.xvscode
 julius/model/dnn/logicalTri
 julius/model/dnn/logicalTri.bin
 temp/
