@@ -119,7 +119,7 @@ class proc_recorder:
 
         self.breakFlag.set()
         chktime = time.time()
-        while (not self.proc_beat is None) or (int(time.time() - chktime) < waitMax):
+        while (not self.proc_beat is None) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
 
     def put(self, data, ):

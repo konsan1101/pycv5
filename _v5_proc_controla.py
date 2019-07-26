@@ -132,7 +132,7 @@ class proc_controla:
 
         self.breakFlag.set()
         chktime = time.time()
-        while (not self.proc_beat is None) or (int(time.time() - chktime) < waitMax):
+        while (not self.proc_beat is None) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
 
     def put(self, data, ):
@@ -362,7 +362,7 @@ class proc_controla:
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text.find(u'録画') >=0):
+            elif (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
                 out_name  = 'control'
                 out_value = 'reset_mic'
                 cn_s.put([out_name, out_value])

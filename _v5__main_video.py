@@ -3,7 +3,6 @@
 
 import sys
 import os
-import signal
 import shutil
 import queue
 import threading
@@ -221,7 +220,7 @@ class main_video:
 
         self.breakFlag.set()
         chktime = time.time()
-        while (not self.proc_beat is None) or (int(time.time() - chktime) < waitMax):
+        while (not self.proc_beat is None) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
 
     def put(self, data, ):
@@ -1314,6 +1313,7 @@ def DisplayMouseEvent(event, x, y, flags, param):
 
 
 # シグナル処理
+import signal
 def signal_handler(signal_number, stack_frame):
     print(os.path.basename(__file__), 'accept signal =', signal_number)
 

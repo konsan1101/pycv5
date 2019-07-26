@@ -3,7 +3,6 @@
 
 import sys
 import os
-import signal
 import shutil
 import queue
 import threading
@@ -123,7 +122,7 @@ class sub_main:
 
         self.breakFlag.set()
         chktime = time.time()
-        while (not self.proc_beat is None) or (int(time.time() - chktime) < waitMax):
+        while (not self.proc_beat is None) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
 
     def put(self, data, ):
@@ -345,6 +344,7 @@ class sub_main:
 
 
 # シグナル処理
+import signal
 def signal_handler(signal_number, stack_frame):
     print(os.path.basename(__file__), 'accept signal =', signal_number)
 

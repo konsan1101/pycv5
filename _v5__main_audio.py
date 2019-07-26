@@ -3,7 +3,6 @@
 
 import sys
 import os
-import signal
 import shutil
 import queue
 import threading
@@ -175,7 +174,7 @@ class main_audio:
 
         self.breakFlag.set()
         chktime = time.time()
-        while (not self.proc_beat is None) or (int(time.time() - chktime) < waitMax):
+        while (not self.proc_beat is None) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
 
     def put(self, data, ):
@@ -525,7 +524,9 @@ class main_audio:
                     if (voice2wav_switch == 'on'):
                         voice2wav_thread.stop()
                     if (julius_switch == 'on'):
+                        print('julius_thread stop')
                         julius_thread.stop()
+                        print('julius_thread stop ok')
                     if (adintool_switch == 'on'):
                         adintool_thread.start()
                     if (voice2wav_switch == 'on'):
@@ -676,6 +677,7 @@ class main_audio:
 
 
 # シグナル処理
+import signal
 def signal_handler(signal_number, stack_frame):
     print(os.path.basename(__file__), 'accept signal =', signal_number)
 
