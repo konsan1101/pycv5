@@ -524,9 +524,7 @@ class main_audio:
                     if (voice2wav_switch == 'on'):
                         voice2wav_thread.stop()
                     if (julius_switch == 'on'):
-                        print('julius_thread stop')
                         julius_thread.stop()
-                        print('julius_thread stop ok')
                     if (adintool_switch == 'on'):
                         adintool_thread.start()
                     if (voice2wav_switch == 'on'):
