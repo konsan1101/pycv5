@@ -99,7 +99,11 @@ class sub_main:
         self.proc_step = '0'
         self.proc_seq  = 0
 
-        self.exec_id   = None 
+        self.exec_id   = None
+        self.rec_file  = ''
+        self.rec_file1 = ''
+        self.rec_file2 = ''
+        self.rec_limit = None
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -222,6 +226,14 @@ class sub_main:
                 cn_s.put([out_name, out_value])
 
             # 処理
+            if (not self.rec_limit is None):
+                if (time.time() > self.rec_limit):
+                    self.rec_limit = None
+                    
+                    # クローズ
+                    self.sub_close()
+
+            # 処理
             if (control != ''):
 
                 # オープン
@@ -301,7 +313,7 @@ class sub_main:
         if (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
             self.sub_close()
 
-        if (proc_text.find(u'録画') >=0) and (proc_text.find(u'開始') >=0):
+        elif (proc_text.find(u'録画') >=0):
             if (not self.exec_id is None):
                 self.sub_close()
 
@@ -314,21 +326,27 @@ class sub_main:
             # 開始
             nowTime    = datetime.datetime.now()
             stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
-            self.rec_file   = stamp + '.flv'
-            self.rec_file1  = qPath_v_screen + self.rec_file
-            self.rec_file2  = qPath_rec      + self.rec_file
+            self.rec_file  = stamp + '.flv'
+            self.rec_file1 = qPath_v_screen + self.rec_file
+            self.rec_file2 = qPath_rec      + self.rec_file
+
+            if (proc_text.find(u'開始') >=0):
+                self.rec_limit = None
+            else:
+                self.rec_limit = time.time() + 60
+
             if (os.name != 'nt'):
                 # ffmpeg -f avfoundation -list_devices true -i ""
                 self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
                             '-i', '1:2', '-r', '5', self.rec_file1, ], \
-                            stdin=subprocess.PIPE, \
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                            stdin=subprocess.PIPE, )
+                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
             else:
                 # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
                 self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
                             '-i', 'desktop', '-r', '5', self.rec_file1, ], \
-                            stdin=subprocess.PIPE, \
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                            stdin=subprocess.PIPE, )
+                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             # ログ
             qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' start', display=self.logDisp,)
