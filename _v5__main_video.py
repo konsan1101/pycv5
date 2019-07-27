@@ -259,6 +259,11 @@ class main_video:
         # 初期設定
         self.proc_step = '1'
 
+        txts, txt = qFunc.txtsRead(qCtrl_control_video)
+        if (txts != False):
+            if (txt == '_close_'):
+                qFunc.remove(qCtrl_control_video)
+
         # 変数
         controlv_thread   = None
         controlv_switch   = 'on'
@@ -373,8 +378,9 @@ class main_video:
 
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_video)
-            if (txt == '_close_'):
-                break
+            if (txts != False):
+                if (txt == '_close_'):
+                    break
 
             # 停止要求確認
             if (self.breakFlag.is_set()):
@@ -1574,8 +1580,9 @@ if __name__ == '__main__':
 
         # 終了確認
         txts, txt = qFunc.txtsRead(qCtrl_control_video)
-        if (txt == '_close_'):
-            break
+        if (txts != False):
+            if (txt == '_close_'):
+                break
 
         # ディスプレイ設定
         if (display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) != 'busy'): 

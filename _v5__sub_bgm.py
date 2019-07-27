@@ -164,8 +164,9 @@ class sub_main:
         self.proc_step = '1'
 
         txts, txt = qFunc.txtsRead(qCtrl_sub_file)
-        if (txt == '_close_'):
-            qFunc.remove(qCtrl_sub_file)
+        if (txts != False):
+            if (txt == '_close_'):
+                qFunc.remove(qCtrl_sub_file)
 
         # 待機ループ
         self.proc_step = '5'
@@ -179,11 +180,12 @@ class sub_main:
             # 終了確認
             control = ''
             txts, txt = qFunc.txtsRead(qCtrl_sub_file)
-            if (txt == '_close_'):
-                break
-            else:
-                qFunc.remove(qCtrl_sub_file)
-                control = txt
+            if (txts != False):
+                if (txt == '_close_'):
+                    break
+                else:
+                    qFunc.remove(qCtrl_sub_file)
+                    control = txt
 
             # 停止要求確認
             if (self.breakFlag.is_set()):
@@ -433,8 +435,9 @@ if __name__ == '__main__':
     # 初期設定
 
     txts, txt = qFunc.txtsRead(qCtrl_sub_file)
-    if (txt == '_close_'):
-        qFunc.remove(qCtrl_sub_file)
+    if (txts != False):
+        if (txt == '_close_'):
+            qFunc.remove(qCtrl_sub_file)
 
     # 起動
 
@@ -454,8 +457,9 @@ if __name__ == '__main__':
 
         # 終了確認
         txts, txt = qFunc.txtsRead(qCtrl_sub_file)
-        if (txt == '_close_'):
-            break
+        if (txts != False):
+            if (txt == '_close_'):
+                break
 
         # デバッグ
         if (runMode == 'debug'):

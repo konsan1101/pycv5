@@ -195,7 +195,7 @@ class qFunc_class:
                         files = glob.glob(path + '*')
                         for f in files:
                             try:
-                                os.remove(f)
+                                self.remove(f)
                             except:
                                 pass
         except:
@@ -225,30 +225,30 @@ class qFunc_class:
                 pass
         return False
 
-    def remove(self, filename, maxWait=0.50, ):
+    def remove(self, filename, maxWait=1, ):
         if (not os.path.exists(filename)):
             return True
+
+        if (maxWait == 0):
+            try:
+                os.remove(filename)            
+                return True
+            except:
+                return False
         else:
-            if (maxWait == 0):
+            chktime = time.time()
+            while (os.path.exists(filename)) and ((time.time() - chktime) <= maxWait):
                 try:
                     os.remove(filename)            
                     return True
                 except:
-                    return False
-            else:
-                chktime = time.time()
-                while (os.path.exists(filename)) and ((time.time() - chktime) <= maxWait):
-                    try:
-                        os.remove(filename)            
-                        return True
-                    except:
-                        pass
-                    time.sleep(0.10)
+                    pass
+                time.sleep(0.10)
 
-                if (not os.path.exists(filename)):
-                    return True
-                else:
-                    return False
+            if (not os.path.exists(filename)):
+                return True
+            else:
+                return False
 
     def copy(self, fromFile, toFile, ):
         try:
@@ -273,12 +273,12 @@ class qFunc_class:
                 w = None
                 return False
         else:
-            res = self.remove(filename, maxWait=1, )
+            res = self.remove(filename, )
             if (res == False):
                 return False
             else:
                 f2 = filename[:-4] + '.tmp.txt'
-                res = self.remove(f2, maxWait=1, )
+                res = self.remove(f2, )
                 if (res == False):
                     return False
                 else:
@@ -298,6 +298,9 @@ class qFunc_class:
                         return False
 
     def txtsRead(self, filename, encoding='utf-8', exclusive=False, ):
+        if (not os.path.exists(filename)):
+            return False, ''
+
         if (exclusive == False):
             try:
                 txts = []
@@ -316,7 +319,7 @@ class qFunc_class:
                 return False, ''
         else:
             f2 = filename[:-4] + '.wrk.txt'
-            res = self.remove(f2, maxWait=1, )
+            res = self.remove(f2, )
             if (res == False):
                 return False
             else:
@@ -332,7 +335,7 @@ class qFunc_class:
                         txts.append(t)
                     r.close
                     r = None
-                    self.remove(f2, maxWait=1, )
+                    self.remove(f2, )
                     return txts, txt
                 except:
                     r = None
@@ -529,7 +532,7 @@ class qFunc_class:
             chktime = time.time()
             while (os.path.exists(file)) and ((time.time() - chktime) < 1):
                 try:
-                    os.remove(file)
+                    self.remove(file, )
                     return True
                 except:
                     pass

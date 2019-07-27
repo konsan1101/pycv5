@@ -213,6 +213,11 @@ class main_audio:
         # 初期設定
         self.proc_step = '1'
 
+        txts, txt = qFunc.txtsRead(qCtrl_control_audio)
+        if (txts != False):
+            if (txt == '_close_'):
+                qFunc.remove(qCtrl_control_audio)
+
         # 外部ＰＧリセット
         qFunc.kill('adintool-gui')
         qFunc.kill('adintool')
@@ -279,8 +284,9 @@ class main_audio:
 
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_audio)
-            if (txt == '_close_'):
-                break
+            if (txts != False):
+                if (txt == '_close_'):
+                    break
 
             # 停止要求確認
             if (self.breakFlag.is_set()):
@@ -851,8 +857,9 @@ if __name__ == '__main__':
 
         # 終了確認
         txts, txt = qFunc.txtsRead(qCtrl_control_audio)
-        if (txt == '_close_'):
-            break
+        if (txts != False):
+            if (txt == '_close_'):
+                break
 
         control = ''
 
