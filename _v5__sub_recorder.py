@@ -326,14 +326,17 @@ class sub_main:
             # 開始
             nowTime    = datetime.datetime.now()
             stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
-            self.rec_file  = stamp + '.flv'
-            self.rec_file1 = qPath_v_screen + self.rec_file
-            self.rec_file2 = qPath_rec      + self.rec_file
-
             if (proc_text.find(u'開始') >=0):
                 self.rec_limit = None
+                self.rec_file  = qPath_work     + stamp + '.flv'
+                self.rec_file1 = qPath_v_screen + stamp + '.flv'
+                self.rec_file2 = qPath_rec      + stamp + '.flv'
             else:
-                self.rec_limit = time.time() + 60
+                self.rec_limit = time.time() + 20
+                self.rec_file  = qPath_work + stamp + '.flv'
+                rec_txt = '.' + qFunc.txt2filetxt(proc_text)
+                self.rec_file1 = qPath_v_screen + stamp + rec_txt + '.flv'
+                self.rec_file2 = qPath_rec      + stamp + rec_txt + '.flv'
 
             if (os.name != 'nt'):
                 # ffmpeg -f avfoundation -list_devices true -i ""
