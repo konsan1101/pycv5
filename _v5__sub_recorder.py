@@ -18,7 +18,7 @@ import glob
 
 
 # インターフェース
-qCtrl_sub_file           = 'temp/control_rec.txt'
+qCtrl_sub_file           = 'temp/control_recorder.txt'
 
 
 

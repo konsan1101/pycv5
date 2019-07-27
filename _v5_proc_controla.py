@@ -17,6 +17,7 @@ import glob
 qCtrl_control_main       = 'temp/control_main.txt'
 qCtrl_control_audio      = 'temp/control_audio.txt'
 qCtrl_control_video      = 'temp/control_video.txt'
+qCtrl_control_recorder   = 'temp/control_recorder.txt'
 qCtrl_control_bgm        = 'temp/control_bgm.txt'
 qCtrl_control_web        = 'temp/control_web.txt'
 qCtrl_control_chatting   = 'temp/control_chatting.txt'
@@ -106,7 +107,11 @@ class proc_controla:
         self.proc_seq  = 0
 
         # 変数
-        self.run_bgm   = False
+        self.run_recorder  = True
+        self.run_bgm       = True
+        self.run_web       = True
+        self.run_chatting  = True
+        self.run_knowledge = True
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -347,8 +352,17 @@ class proc_controla:
 
     def sub_proc(self, seq4, proc_file, work_file, proc_name, proc_text, cn_s, ):
 
-        if (self.run_bgm == True):
-            qFunc.txtsWrite(qCtrl_control_bgm ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+        # インターフェース
+        if (self.run_recorder  == True):
+            qFunc.txtsWrite(qCtrl_control_recorder  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+        if (self.run_bgm       == True):
+            qFunc.txtsWrite(qCtrl_control_bgm       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+        if (self.run_web       == True):
+            qFunc.txtsWrite(qCtrl_control_web       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+        if (self.run_chatting  == True):
+            qFunc.txtsWrite(qCtrl_control_chatting  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+        if (self.run_knowledge == True):
+            qFunc.txtsWrite(qCtrl_control_knowledge ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
 
         if (cn_s.qsize() < 99):
 
@@ -375,7 +389,7 @@ class proc_controla:
             elif ((proc_text.find(u'ＢＧＭ') >=0) or (proc_text.find('BGM') >=0)) \
             and (proc_text.find(u'終了') >=0):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['bgm_stop'], encoding='utf-8', exclusive=True, mode='w', )
-                self.run_bgm   = False
+                self.run_bgm = False
 
 
 
