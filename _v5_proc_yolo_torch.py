@@ -3,8 +3,6 @@
 
 import sys
 import os
-import signal
-import shutil
 import queue
 import threading
 import subprocess

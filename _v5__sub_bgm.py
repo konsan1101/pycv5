@@ -3,7 +3,6 @@
 
 import sys
 import os
-import shutil
 import queue
 import threading
 import subprocess
@@ -451,14 +450,14 @@ if __name__ == '__main__':
             break
 
         # テスト開始
-        if  ((time.time() - main_start) > 5):
-            if (onece == True):
-                onece = False
-                qFunc.txtsWrite(qCtrl_sub_file ,txts=['bgm'], encoding='utf-8', exclusive=True, mode='w', )
+        #if  ((time.time() - main_start) > 5):
+        #    if (onece == True):
+        #        onece = False
+        #        qFunc.txtsWrite(qCtrl_sub_file ,txts=['bgm'], encoding='utf-8', exclusive=True, mode='w', )
 
         # テスト終了
-        if  ((time.time() - main_start) > 30):
-            qFunc.txtsWrite(qCtrl_sub_file ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        #if  ((time.time() - main_start) > 30):
+        #    qFunc.txtsWrite(qCtrl_sub_file ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
     # 終了
 

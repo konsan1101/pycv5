@@ -3,8 +3,6 @@
 
 import sys
 import os
-import signal
-import shutil
 import queue
 import threading
 import subprocess
@@ -403,8 +401,8 @@ class proc_voice2wav:
                     frec  = qPath_rec   + stamp + '.' + proc_name + '(000).' + tm + '.mp3'
 
                     try:
-                        shutil.copy2(work_file, fwork)
-                        shutil.copy2(work_file, fjuli)
+                        qFunc.copy(work_file, fwork)
+                        qFunc.copy(work_file, fjuli)
                         if (self.micDev.isdigit()):
                             sox  = subprocess.Popen(['sox', '-q', work_file, '-r', '16000', '-b', '16', '-c', '1', frec, ], \
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -464,8 +462,8 @@ class proc_voice2wav:
                     frec  = qPath_rec   + stamp + '.' + proc_name + '(' + '{:03}'.format(nn) + ').' + tm + '.mp3'
 
                     try:
-                        shutil.copy2(ftrim, fwork)
-                        shutil.copy2(ftrim, fjuli)
+                        qFunc.copy(ftrim, fwork)
+                        qFunc.copy(ftrim, fjuli)
                         if (self.micDev.isdigit()):
                             sox  = subprocess.Popen(['sox', '-q', ftrim, '-r', '16000', '-b', '16', '-c', '1', frec, ], \
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )

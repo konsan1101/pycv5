@@ -3,8 +3,6 @@
 
 import sys
 import os
-import signal
-import shutil
 import queue
 import threading
 import subprocess
@@ -368,7 +366,7 @@ if __name__ == '__main__':
     playvoice_thread = proc_playvoice('playvoice', '0', )
     playvoice_thread.start()
 
-    shutil.copy2('_sounds/_sound_hallo.wav', qPath_a_play + '_sound_hallo.wav')
+    qFunc.copy('_sounds/_sound_hallo.wav', qPath_a_play + '_sound_hallo.wav')
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):

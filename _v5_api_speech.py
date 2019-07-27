@@ -3,8 +3,6 @@
 
 import sys
 import os
-import signal
-import shutil
 import queue
 import threading
 import subprocess
@@ -356,7 +354,7 @@ def qVoiceOutput_fromCache(useApi='free', outLang='en', outText='Hallo', outFile
         if (os.path.exists(cacheFile)):
             try:
                 if (cacheFile[-4:].lower() == outFile[-4:].lower()):
-                    shutil.copy2(cacheFile, outFile)
+                    qFunc.copy(cacheFile, outFile)
                     return True
                 else:
                     sox = subprocess.Popen(['sox', '-q', cacheFile, outFile, ], \
@@ -386,7 +384,7 @@ def qVoiceOutput_toCache(useApi='free', outLang='en', outText='Hallo', tempFile=
 
     try:
         if (tempFile[-4:].lower() == cacheFile[-4:].lower()):
-            shutil.copy2(tempFile, cacheFile)
+            qFunc.copy(tempFile, cacheFile)
             return True
         else:
             sox = subprocess.Popen(['sox', '-q', tempFile, cacheFile, ], \
@@ -466,7 +464,7 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
                 resText, resApi = watsonAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileMp3, )
                 if (resText != ''):
                     if (tempFileMp3[-4:].lower() == outFile[-4:].lower()):
-                        shutil.copy2(tempFileMp3, outFile)
+                        qFunc.copy(tempFileMp3, outFile)
                     else:
                         sox = subprocess.Popen(['sox', '-q', tempFileMp3, outFile, ], \
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -486,7 +484,7 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
                 resText, resApi = azureAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileMp3, )
                 if (resText != ''):
                     if (tempFileMp3[-4:].lower() == outFile[-4:].lower()):
-                        shutil.copy2(tempFileMp3, outFile)
+                        qFunc.copy(tempFileMp3, outFile)
                     else:
                         sox = subprocess.Popen(['sox', '-q', tempFileMp3, outFile, ], \
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -503,7 +501,7 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
                 resText, resApi = winosAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileWav, )
                 if (resText != ''):
                     if (tempFileWav[-4:].lower() == outFile[-4:].lower()):
-                        shutil.copy2(tempFileWav, outFile)
+                        qFunc.copy(tempFileWav, outFile)
                     else:
                         sox = subprocess.Popen(['sox', '-q', tempFileWav, outFile, ], \
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -520,7 +518,7 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
                 resText, resApi = macosAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileWav, )
                 if (resText != ''):
                     if (tempFileWav[-4:].lower() == outFile[-4:].lower()):
-                        shutil.copy2(tempFileWav, outFile)
+                        qFunc.copy(tempFileWav, outFile)
                     else:
                         sox = subprocess.Popen(['sox', '-q', tempFileWav, outFile, ], \
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -539,7 +537,7 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
                 resText, resApi = nictAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileWav, )
                 if (resText != ''):
                     if (tempFileWav[-4:].lower() == outFile[-4:].lower()):
-                        shutil.copy2(tempFileWav, outFile)
+                        qFunc.copy(tempFileWav, outFile)
                     else:
                         sox = subprocess.Popen(['sox', '-q', tempFileWav, outFile, ], \
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -556,7 +554,7 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
                 resText, resApi = hoyaAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileWav, )
                 if (resText != ''):
                     if (tempFileWav[-4:].lower() == outFile[-4:].lower()):
-                        shutil.copy2(tempFileWav, outFile)
+                        qFunc.copy(tempFileWav, outFile)
                     else:
                         sox = subprocess.Popen(['sox', '-q', tempFileWav, outFile, ], \
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -583,7 +581,7 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
                     resText, resApi = googleAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileMp3, api='free', )
                 if (resText != ''):
                     if (tempFileMp3[-4:].lower() == outFile[-4:].lower()):
-                        shutil.copy2(tempFileMp3, outFile)
+                        qFunc.copy(tempFileMp3, outFile)
                     else:
                         sox = subprocess.Popen(['sox', '-q', tempFileMp3, outFile, ], \
                               stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -946,7 +944,7 @@ def speech_batch(runMode, micDev,
                             wrkfile  = wrkfile_y6
 
             if (wrkfile[-4:].lower() == recfile[-4:].lower()):
-                shutil.copy2(wrkfile, recfile)
+                qFunc.copy(wrkfile, recfile)
             else:
                 sox = subprocess.Popen(['sox', '-q', wrkfile, recfile, ], \
                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -1325,7 +1323,7 @@ def speech_batch(runMode, micDev,
         if (os.path.exists(recfile)):
 
             if (recfile[-4:].lower() == txtOutput[-4:].lower()):
-                shutil.copy2(recfile, txtOutput)
+                qFunc.copy(recfile, txtOutput)
             else:
                 sox = subprocess.Popen(['sox', '-q', recfile, txtOutput, ], \
                       stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -1394,7 +1392,7 @@ def speech_batch(runMode, micDev,
         if (os.path.exists(recfile)):
 
             if (recfile[-4:].lower() == outOutput[-4:].lower()):
-                shutil.copy2(recfile, outOutput)
+                qFunc.copy(recfile, outOutput)
             else:
                 sox = subprocess.Popen(['sox', '-q', recfile, outOutput, ], \
                       stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -1457,9 +1455,9 @@ def speech_batch(runMode, micDev,
 
             if (os.path.exists(wrkOut)):
                 wrkPlay = qPath_a_play + stamp + '.' + fileId + '.mp3'
-                shutil.copy2(wrkOut, wrkPlay)
+                qFunc.copy(wrkOut, wrkPlay)
                 wrkInput = qPath_a_inp + stamp + '.' + fileId + '.mp3'
-                shutil.copy2(wrkOut, wrkInput)
+                qFunc.copy(wrkOut, wrkInput)
 
                 time.sleep(3.00)
                 self.wait(idolSec=3, maxWait=60)

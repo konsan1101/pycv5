@@ -3,8 +3,6 @@
 
 import sys
 import os
-import signal
-import shutil
 import queue
 import threading
 import subprocess
@@ -150,7 +148,7 @@ def proc_audio(cn_r, cn_s, ):
             if (os.path.exists(audio_bakWav)):
                 qFunc.logOutput('audio_inp_:recovery ' + audio_bakLast)
 
-                #shutil.copy2(audio_bakWav, audio_bakLast)
+                #qFunc.copy(audio_bakWav, audio_bakLast)
                 sox = subprocess.Popen(['sox', '-q', audio_bakWav, audio_bakLast, ], \
                       stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 sox.wait()
@@ -384,11 +382,11 @@ def v2w_wave_sub(micDev, seq4, fileId, file, f2, f2size, bytebase, minSize, maxS
                 tm='{:02}{:02}{:02}'.format(hh,mm,ss)
 
                 f3=qPath_a_wav + stamp + '.' + fileId + '(000).' + tm + '.wav'
-                shutil.copy2(f2, f3)
+                qFunc.copy(f2, f3)
 
                 fwav=f3.replace(qPath_a_wav, '')
                 fwav=qPath_a_jul + fwav
-                shutil.copy2(f2, fwav)
+                qFunc.copy(f2, fwav)
 
                 if (True):
                         julius_SEQ += 1
@@ -462,11 +460,11 @@ def v2w_wave_sub(micDev, seq4, fileId, file, f2, f2size, bytebase, minSize, maxS
                     tm='{:02}{:02}{:02}'.format(hh,mm,ss)
 
                     f5=qPath_a_wav + stamp + '.' + fileId + '(' + '{:03}'.format(nn) + ').' + tm + '.wav'
-                    shutil.copy2(f4, f5)
+                    qFunc.copy(f4, f5)
 
                     fwav=f5.replace(qPath_a_wav, '')
                     fwav=qPath_a_jul + fwav
-                    shutil.copy2(f4, fwav)
+                    qFunc.copy(f4, fwav)
 
                     if (True):
                         julius_SEQ += 1

@@ -3,8 +3,6 @@
 
 import sys
 import os
-import signal
-import shutil
 import queue
 import threading
 import subprocess
@@ -208,13 +206,16 @@ class proc_recorder:
                         rec_ffmpeg.send_signal(signal.SIGINT)
                     else:
                         rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
-                    time.sleep(5.00)
+                    time.sleep(2.00)
                     rec_ffmpeg.wait()
                     rec_ffmpeg.terminate()
                     rec_ffmpeg = None
 
                     # ログ
                     qFunc.logOutput(self.proc_id + ':' + u'screen → ' + rec_file + ' stop', display=self.logDisp,)
+
+                    # 保管
+                    qFunc.copy(rec_file1, rec_file2)
 
                 # ビジー解除
                 qFunc.remove(self.fileBsy)
@@ -243,7 +244,7 @@ class proc_recorder:
                         rec_ffmpeg.send_signal(signal.SIGINT)
                     else:
                         rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
-                    time.sleep(5.00)
+                    time.sleep(2.00)
                     rec_ffmpeg.wait()
                     rec_ffmpeg.terminate()
                     rec_ffmpeg = None
@@ -251,18 +252,24 @@ class proc_recorder:
                     # ログ
                     qFunc.logOutput(self.proc_id + ':' + u'screen → ' + rec_file + ' stop', display=self.logDisp,)
 
+                    # 保管
+                    qFunc.copy(rec_file1, rec_file2)
+
                 # 開始
                 nowTime    = datetime.datetime.now()
                 stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
-                rec_file   = qPath_v_screen + stamp + '.mp4'
+                rec_file   = stamp + '.mp4'
+                rec_file1  = qPath_v_screen + rec_file
+                rec_file2  = qPath_rec      + rec_file
                 if (os.name != 'nt'):
                     # ffmpeg -f avfoundation -list_devices true -i ""
                     rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
-                                '-i', '1:2', '-r', '5', rec_file, ], ) #\
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                                '-i', '1:2', '-r', '5', rec_file1, ], \
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 else:
+                    # ffmpeg -f gdigrab
                     rec_ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
-                                '-i', 'desktop', '-r', '5', rec_file, ], ) #\
+                                '-i', 'desktop', '-r', '5', rec_file1, ], ) #\
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                 # ログ
@@ -291,10 +298,16 @@ class proc_recorder:
                     rec_ffmpeg.send_signal(signal.SIGINT)
                 else:
                     rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
-                time.sleep(5.00)
+                time.sleep(2.00)
                 rec_ffmpeg.wait()
                 rec_ffmpeg.terminate()
                 rec_ffmpeg = None
+
+                # ログ
+                qFunc.logOutput(self.proc_id + ':' + u'screen → ' + rec_file + ' stop', display=self.logDisp,)
+
+                # 保管
+                qFunc.copy(rec_file1, rec_file2)
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -317,6 +330,7 @@ class proc_recorder:
 
 
 # シグナル処理
+import signal
 def signal_handler(signal_number, stack_frame):
     print(os.path.basename(__file__), 'accept signal =', signal_number)
 
@@ -347,16 +361,15 @@ if __name__ == '__main__':
 
     recorder_thread.put(['recorder', 'stop'])
 
-    recorder_thread.put(['recorder', 'start'])
-
-    time.sleep(2)
+    time.sleep(20)
 
     recorder_thread.put(['recorder', 'start'])
 
-    time.sleep(10)
+    time.sleep(20)
 
-    recorder_thread.put(['recorder', 'stop'])
+    recorder_thread.put(['recorder', 'start'])
 
+    time.sleep(20)
 
     recorder_thread.stop()
     del recorder_thread

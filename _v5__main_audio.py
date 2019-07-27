@@ -3,7 +3,6 @@
 
 import sys
 import os
-import shutil
 import queue
 import threading
 import subprocess
@@ -176,7 +175,7 @@ class main_audio:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def stop(self, waitMax=20, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -880,15 +879,12 @@ if __name__ == '__main__':
         # メインプロセス終了
         qFunc.txtsWrite(qCtrl_control_main      ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
-        time.sleep(10.00)
-
         # 外部ＰＧリセット
         qFunc.kill('adintool-gui')
         qFunc.kill('adintool')
         qFunc.kill('julius')
 
         main_audio.stop()
-        time.sleep(20.00)
         del main_audio
 
         qFunc.logOutput(main_id + ':bye!')

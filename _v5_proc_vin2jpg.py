@@ -3,8 +3,6 @@
 
 import sys
 import os
-import signal
-import shutil
 import queue
 import threading
 import subprocess
@@ -244,7 +242,7 @@ class proc_vin2jpg:
                             if (os.path.exists(work_file)):
                                 os.remove(work_file)
 
-                            shutil.copy2(proc_file, work_file, )
+                            qFunc.copy(proc_file, work_file, )
 
                             if (os.path.exists(work_file)):
 
@@ -328,7 +326,7 @@ class proc_vin2jpg:
         filename = filename.replace(qPath_v_jpg, '')
         filename = filename.replace(qPath_work,  '')
         filename = qPath_v_jpg + filename
-        shutil.copy2(work_file, filename, )
+        qFunc.copy(work_file, filename, )
 
 
 
@@ -347,8 +345,8 @@ if __name__ == '__main__':
     vin2jpg_thread = proc_vin2jpg('vin2jpg', '0', )
     vin2jpg_thread.start()
 
-    shutil.copy2('_photos/_photo_qrcode.jpg', qPath_v_inp + '_photo_qrcode.jpg')
-    shutil.copy2('_photos/_photo_ocr_meter.jpg', qPath_v_inp + '_photo_ocr_meter.jpg')
+    qFunc.copy('_photos/_photo_qrcode.jpg', qPath_v_inp + '_photo_qrcode.jpg')
+    qFunc.copy('_photos/_photo_ocr_meter.jpg', qPath_v_inp + '_photo_ocr_meter.jpg')
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):

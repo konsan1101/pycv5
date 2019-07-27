@@ -3,7 +3,6 @@
 
 import sys
 import os
-import shutil
 import queue
 import threading
 import subprocess
@@ -222,7 +221,7 @@ class main_video:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def stop(self, waitMax=20, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -1243,23 +1242,14 @@ class main_video:
         filename_m1 = qPath_rec      + stamp + photo_txt + '.jpg'
         filename_m2 = qPath_v_msg    + stamp + photo_txt + '.jpg'
         if (main_file != ''):
-            try:
-                shutil.copy2(main_file,   filename_p1)
-                shutil.copy2(main_file,   filename_p2)
-            except:
-                pass
+            qFunc.copy(main_file,   filename_p1)
+            qFunc.copy(main_file,   filename_p2)
         if (screen_file != ''):
-            try:
-                shutil.copy2(screen_file, filename_s1)
-                shutil.copy2(screen_file, filename_s2)
-            except:
-                pass
+            qFunc.copy(screen_file, filename_s1)
+            qFunc.copy(screen_file, filename_s2)
         if (photo_file != ''):
-            try:
-                shutil.copy2(photo_file,  filename_m1)
-                shutil.copy2(photo_file,  filename_m2)
-            except:
-                pass
+            qFunc.copy(photo_file,  filename_m1)
+            qFunc.copy(photo_file,  filename_m2)
 
 
 
@@ -1738,7 +1728,6 @@ if __name__ == '__main__':
             cv2.waitKey(1)
 
         main_video.stop()
-        time.sleep(20.00)
         del main_video
 
         qFunc.logOutput(main_id + ':bye!')

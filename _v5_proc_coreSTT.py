@@ -3,8 +3,6 @@
 
 import sys
 import os
-import signal
-import shutil
 import queue
 import threading
 import subprocess
@@ -471,7 +469,7 @@ if __name__ == '__main__':
     coreSTT_thread = proc_coreSTT('coreSTT', '0', )
     coreSTT_thread.start()
 
-    shutil.copy2('_sounds/_sound_hallo.wav', qPath_a_wav + '_sound_hallo.wav')
+    qFunc.copy('_sounds/_sound_hallo.wav', qPath_a_wav + '_sound_hallo.wav')
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):

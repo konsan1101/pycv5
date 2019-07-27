@@ -3,8 +3,6 @@
 
 import sys
 import os
-import signal
-import shutil
 import queue
 import threading
 import subprocess
@@ -133,7 +131,7 @@ if (__name__ == '__main__'):
             mp3 = u'_sounds/_sound_handsfree_ヘイSiri.mp3'
             print(mp3)
             wrkFile = qPath_a_play + stamp + '.' + id + '.mp3'
-            shutil.copy2(mp3, wrkFile)
+            qFunc.copy(mp3, wrkFile)
 
             time.sleep(2.00)
 
@@ -148,7 +146,7 @@ if (__name__ == '__main__'):
             mp3 = u'_sounds/_sound_handsfree_ねぇグーグル.mp3'
             print(mp3)
             wrkFile = qPath_a_play + stamp + '.' + id + '.mp3'
-            shutil.copy2(mp3, wrkFile)
+            qFunc.copy(mp3, wrkFile)
 
             id  = 'smartspeaker.02'
             qFunc.tts(id, outText, idolSec=1, maxWait=0, )
@@ -161,7 +159,7 @@ if (__name__ == '__main__'):
             mp3 = u'_sounds/_sound_handsfree_アレクサ.mp3'
             print(mp3)
             wrkFile = qPath_a_play + stamp + '.' + id + '.mp3'
-            shutil.copy2(mp3, wrkFile)
+            qFunc.copy(mp3, wrkFile)
 
             id  = 'smartspeaker.02'
             qFunc.tts(id, outText, idolSec=1, maxWait=0, )
@@ -174,7 +172,7 @@ if (__name__ == '__main__'):
             mp3 = u'_sounds/_sound_handsfree_ねぇクローバ.mp3'
             print(mp3)
             wrkFile = qPath_a_play + stamp + '.' + id + '.mp3'
-            shutil.copy2(mp3, wrkFile)
+            qFunc.copy(mp3, wrkFile)
 
             id  = 'smartspeaker.02'
             qFunc.tts(id, outText, idolSec=1, maxWait=0, )

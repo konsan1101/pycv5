@@ -250,6 +250,13 @@ class qFunc_class:
                 else:
                     return False
 
+    def copy(self, fromFile, toFile, ):
+        try:
+            shutil.copy2(fromFile, toFile)
+            return True
+        except:
+            return False
+
     def txtsWrite(self, filename, txts=[''], encoding='utf-8', exclusive=False, mode='w', ):
         if (exclusive == False):
             try:

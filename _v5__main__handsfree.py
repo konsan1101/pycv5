@@ -3,7 +3,6 @@
 
 import sys
 import os
-import shutil
 import queue
 import threading
 import subprocess
@@ -451,20 +450,20 @@ if __name__ == '__main__':
         qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_knowledge ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         
-        time.sleep(60.00)
+        #time.sleep(60.00)
 
         if (not main_audio_run is None):
-            #main_audio_run.wait()
+            main_audio_run.wait()
             main_audio_run.terminate()
             main_audio_run = None
 
         if (not main_video_run is None):
-            #main_video_run.wait()
+            main_video_run.wait()
             main_video_run.terminate()
             main_video_run = None
 
         if (not bgm_run is None):
-            #bgm_run.wait()
+            bgm_run.wait()
             bgm_run.terminate()
             bgm_run = None
 
@@ -494,7 +493,7 @@ if __name__ == '__main__':
         #    main_audio_run.terminate()
         #    main_audio_run = None
 
-        time.sleep(30.00)
+        #time.sleep(30.00)
 
         qFunc.logOutput(main_id + ':bye!')
 
