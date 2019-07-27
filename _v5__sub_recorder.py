@@ -269,8 +269,8 @@ class sub_main:
             if (os.name != 'nt'):
                 self.exec_id.send_signal(signal.SIGINT)
             else:
-                self.exec_id.send_signal(signal.CTRL_C_EVENT)
-                sendsignal=subprocess.Popen(['sendsignal', 'ffmpeg.exe', ], \
+                #self.exec_id.send_signal(signal.CTRL_C_EVENT)
+                sendsignal=subprocess.Popen(['sendsignal64', 'ffmpeg.exe', ], \
                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 sendsignal.wait()
                 sendsignal.terminate()
