@@ -224,16 +224,9 @@ class sub_main:
             # 処理
             if (control != ''):
 
-                # ビジー設定
-                if (not os.path.exists(self.fileBsy)):
-                    qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
-
                 # オープン
                 txt = control.lower()
                 self.sub_open(txt, )
-
-            # ビジー解除
-            qFunc.remove(self.fileBsy)
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
@@ -290,6 +283,11 @@ class sub_main:
 
         qFunc.kill('ffmpeg', )
 
+        # ビジー解除
+        qFunc.remove(self.fileBsy)
+        if (str(self.id) == '0'):
+            qFunc.busySet(qBusy_v_rec, False)
+
     # 開始
     def sub_open(self, proc_text, ):
 
@@ -299,6 +297,12 @@ class sub_main:
         if (proc_text.find(u'録画') >=0) and (proc_text.find(u'開始') >=0):
             if (not self.exec_id is None):
                 self.sub_close()
+
+            # ビジー設定
+            if (not os.path.exists(self.fileBsy)):
+                qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                if (str(self.id) == '0'):
+                    qFunc.busySet(qBusy_v_rec, True)
 
             # 開始
             nowTime    = datetime.datetime.now()
@@ -334,7 +338,7 @@ signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 if __name__ == '__main__':
-    sub_name = 'sub_bgm'
+    sub_name = 'sub_rec'
     sub_id   = '{0:10s}'.format(sub_name).replace(' ', '_')
 
     # 共通クラス

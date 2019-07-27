@@ -283,7 +283,7 @@ if __name__ == '__main__':
         elif (runMode == 'hud'):
             main_video_switch = 'on'
             recorder_switch   = 'on'
-            bgm_switch        = 'off'
+            bgm_switch        = 'on'
         elif (runMode == 'camera'):
             main_video_switch = 'on'
             recorder_switch   = 'on'
@@ -369,7 +369,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'カメラ機能を、終了しました。', 'wait':0, })
 
         if (recorder_run is None) and (recorder_switch == 'on'):
-            recorder_run = subprocess.Popen(['python', qPython_sub_recorder, 
+            recorder_run = subprocess.Popen(['python', qPython_recorder, 
                                 runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 

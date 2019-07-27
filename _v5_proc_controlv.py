@@ -380,16 +380,6 @@ class proc_controlv:
                 out_value = 'white'
                 cn_s.put([out_name, out_value])
             
-            elif (proc_text.find(u'録画') >=0) and (proc_text.find(u'開始') >=0):
-                out_name  = 'recorder'
-                out_value = 'start'
-                cn_s.put([out_name, out_value])
-
-            elif (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
-                out_name  = 'recorder'
-                out_value = 'stop'
-                cn_s.put([out_name, out_value])
-
             elif (proc_text.find(u'カメラ変更') >=0):
                 out_name  = 'control'
                 out_value = 'camchange_off'

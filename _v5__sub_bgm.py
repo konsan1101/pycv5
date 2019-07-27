@@ -224,15 +224,8 @@ class sub_main:
             # 処理
             if (control != ''):
 
-                # ビジー設定
-                if (not os.path.exists(self.fileBsy)):
-                    qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
-
                 # オープン
                 self.sub_open(control, )
-
-            # ビジー解除
-            qFunc.remove(self.fileBsy)
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
@@ -275,7 +268,11 @@ class sub_main:
             #self.exec_id.wait()
             self.exec_id.terminate()
             self.exec_id = None
+
         qFunc.kill('VLC', )
+
+        # ビジー解除
+        qFunc.remove(self.fileBsy)
 
     # 開始
     def sub_open(self, proc_text, ):
@@ -350,6 +347,10 @@ class sub_main:
                 if (procBgm == '_06_'):
                     plist = u'C:\\Users\\Public\\_VLC_セカオワ_プレイリスト.xspf'
                 if (plist != ''):
+                    # ビジー設定
+                    if (not os.path.exists(self.fileBsy)):
+                        qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+
                     try:
                         if (pparm != ''):
                             self.exec_id = subprocess.Popen(['VLC', pparm, plist, ], \
@@ -379,6 +380,10 @@ class sub_main:
                 if (procBgm == '_06_'):
                     plist = u'/users/kondou/Documents/_VLC_セカオワ_プレイリスト.xspf'
                 if (plist != ''):
+                    # ビジー設定
+                    if (not os.path.exists(self.fileBsy)):
+                        qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+
                     try:
                         if (pparm != ''):
                             self.exec_id = subprocess.Popen(['open', '-a', 'VLC', plist, ], \

@@ -89,7 +89,6 @@ qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
 # thread ルーチン群
 import _v5_proc_controlv
 import _v5_proc_overlay
-import _v5_proc_recorder
 import _v5_proc_camera
 import _v5_proc_txt2img
 import _v5_proc_cvreader
@@ -269,8 +268,6 @@ class main_video:
         controlv_switch   = 'on'
         overlay_thread    = None
         overlay_switch    = 'on'
-        recorder_thread   = None
-        recorder_switch   = 'on'
         camera_thread1    = None
         camera_switch1    = 'on'
         camera_thread2    = None
@@ -450,23 +447,6 @@ class main_video:
                 overlay_thread.stop()
                 del overlay_thread
                 overlay_thread = None
-
-            if (recorder_thread is None) and (recorder_switch == 'on'):
-                recorder_thread = _v5_proc_recorder.proc_recorder(
-                                    name='recorder', id='0',
-                                    runMode=self.runMode,
-                                    camDev=self.cam1Dev,
-                                    )
-                recorder_thread.start()
-
-                if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'「録画制御」の機能が有効になりました。', 'wait':0, })
-
-            if (not recorder_thread is None) and (recorder_switch != 'on'):
-                recorder_thread.stop()
-                del recorder_thread
-                recorder_thread = None
 
             if (camera_thread1 is None) and (camera_switch1 == 'on'):
                 camera_thread1 = _v5_proc_camera.proc_camera(
@@ -704,12 +684,6 @@ class main_video:
                                 # 結果出力
                                 if (txt2img_thread.proc_s.qsize() < 99):
                                     txt2img_thread.put(['[message_txts]', message_txts])
-
-                        if (res_name == 'recorder'):
-                            if (not recorder_thread is None):
-                                # 結果出力
-                                if (recorder_thread.proc_s.qsize() < 99):
-                                    recorder_thread.put([res_name, res_value])
 
             # カメラ変更１
             if (control == 'camchange_off'):
