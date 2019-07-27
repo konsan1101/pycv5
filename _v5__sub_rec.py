@@ -184,6 +184,7 @@ class sub_main:
             else:
                 qFunc.remove(qCtrl_sub_file)
                 control = txt
+                print('=============================================remove')
 
             # 停止要求確認
             if (self.breakFlag.is_set()):
@@ -268,125 +269,55 @@ class sub_main:
 
 
 
+    # 停止
     def sub_close(self, ):
         if (not self.exec_id is None):
-            #self.exec_id.wait()
+            if (os.name != 'nt'):
+                self.exec_id.send_signal(signal.SIGINT)
+            else:
+                self.exec_id.send_signal(signal.CTRL_C_EVENT)
+            time.sleep(2.00)
+            self.exec_id.wait()
             self.exec_id.terminate()
             self.exec_id = None
-        qFunc.kill('VLC', )
 
-    def sub_open(self, txt, ):
+            # ログ
+            qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' stop', display=self.logDisp,)
 
-        procBgm = ''
-        if (txt == 'playlist 00'  ) or (txt == 'playlist 0') \
-        or (txt == 'playlist zero') \
-        or (txt == 'bgm') or (txt == 'garageband'):
-            procBgm =  '_00_'
+            # 保管
+            qFunc.copy(self.rec_file1, self.rec_file2)
 
-        if (txt == 'playlist 01' ) or (txt == 'playlist 1') \
-        or (txt == 'playlist etc') or (txt == 'playlists etc'):
-            procBgm =  '_01_'
+        qFunc.kill('ffmpeg', )
 
-        if (txt == 'playlist 02') or (txt == 'playlist 2') \
-        or (txt == 'babymetal'):
-            procBgm =  '_02_'
+    # 開始
+    def sub_open(self, proc_text, ):
 
-        if (txt == 'playlist 03') or (txt == 'playlist 3') \
-        or (txt == 'perfume'):
-            procBgm =  '_03_'
-
-        if (txt == 'playlist 04') or (txt == 'playlist 4') \
-        or (txt == 'kyary pamyu pamyu'):
-            procBgm =  '_04_'
-
-        if (txt == 'playlist 05') or (txt == 'playlist 5') \
-        or (txt == 'one ok rock') or (txt == 'one ok'):
-            procBgm =  '_05_'
-
-        if (txt == 'playlist 06') or (txt == 'playlist 6') \
-        or (txt == 'the end of the world') or (txt == 'end of the world'):
-            procBgm =  '_06_'
-
-        if (txt == 'playlist') or (txt == 'playlist list') \
-        or (txt == 'list of playlists') or (txt == 'bgm list'):
-
-            speechs = []
-            speechs.append({ 'text':u'プレイリストゼロは、自作ＢＧＭです。', 'wait':0, })
-            speechs.append({ 'text':u'プレイリスト１は、お気に入り音楽です。', 'wait':0, })
-            speechs.append({ 'text':u'プレイリスト２は、「BABYMETAL」です。', 'wait':0, })
-            speechs.append({ 'text':u'プレイリスト３は、「perfume」です。', 'wait':0, })
-            speechs.append({ 'text':u'プレイリスト４は、「きゃりーぱみゅぱみゅ」です。', 'wait':0, })
-            speechs.append({ 'text':u'プレイリスト５は、「ONE OK ROCK」です。', 'wait':0, })
-            speechs.append({ 'text':u'プレイリスト６は、「SEKAI NO OWARI」です。', 'wait':0, })
-            speechs.append({ 'text':u'プレイリストを再生しますか？', 'wait':0, })
-
-            if (len(speechs) != 0):
-                qFunc.speech(id='speech', speechs=speechs, lang='', )
-
-        if (procBgm != ''):
+        if (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
             self.sub_close()
 
-        if (procBgm != '_close_'):
-            plist = ''
-            pparm = ''
-            if (os.name == 'nt'):
-                if (procBgm == '_00_'):
-                    plist = u'C:\\Users\\Public\\_VLC_GB_プレイリスト.xspf'
-                    pparm = '--qt-start-minimized'
-                if (procBgm == '_01_'):
-                    plist = u'C:\\Users\\Public\\_VLC_etc_プレイリスト.xspf'
-                if (procBgm == '_02_'):
-                    plist = u'C:\\Users\\Public\\_VLC_BABYMETAL_プレイリスト.xspf'
-                if (procBgm == '_03_'):
-                    plist = u'C:\\Users\\Public\\_VLC_Perfume_プレイリスト.xspf'
-                if (procBgm == '_04_'):
-                    plist = u'C:\\Users\\Public\\_VLC_きゃりーぱみゅぱみゅ_プレイリスト.xspf'
-                if (procBgm == '_05_'):
-                    plist = u'C:\\Users\\Public\\_VLC_ワンオク_プレイリスト.xspf'
-                if (procBgm == '_06_'):
-                    plist = u'C:\\Users\\Public\\_VLC_セカオワ_プレイリスト.xspf'
-                if (plist != ''):
-                    try:
-                        if (pparm != ''):
-                            self.exec_id = subprocess.Popen(['VLC', pparm, plist, ], \
-                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                        else:
-                            self.exec_id = subprocess.Popen(['VLC', plist, ], \
-                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                        #self.exec_id.wait()
-                        #self.exec_id.terminate()
-                        #self.exec_id = None
-                    except:
-                        pass
+        if (proc_text.find(u'録画') >=0) and (proc_text.find(u'開始') >=0):
+            if (not self.exec_id is None):
+                self.sub_close()
+
+            # 開始
+            nowTime    = datetime.datetime.now()
+            stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
+            self.rec_file   = stamp + '.flv'
+            self.rec_file1  = qPath_v_screen + self.rec_file
+            self.rec_file2  = qPath_rec      + self.rec_file
+            if (os.name != 'nt'):
+                # ffmpeg -f avfoundation -list_devices true -i ""
+                self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
+                            '-i', '1:2', '-r', '5', self.rec_file1, ], \
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
             else:
-                if (procBgm == '_00_'):
-                    plist = u'/users/kondou/Documents/_VLC_GB_プレイリスト.xspf'
-                    pparm = '--qt-start-minimized'
-                if (procBgm == '_01_'):
-                    plist = u'/users/kondou/Documents/_VLC_etc_プレイリスト.xspf'
-                if (procBgm == '_02_'):
-                    plist = u'/users/kondou/Documents/_VLC_BABYMETAL_プレイリスト.xspf'
-                if (procBgm == '_03_'):
-                    plist = u'/users/kondou/Documents/_VLC_Perfume_プレイリスト.xspf'
-                if (procBgm == '_04_'):
-                    plist = u'/users/kondou/Documents/_VLC_きゃりーぱみゅぱみゅ_プレイリスト.xspf'
-                if (procBgm == '_05_'):
-                    plist = u'/users/kondou/Documents/_VLC_ワンオク_プレイリスト.xspf'
-                if (procBgm == '_06_'):
-                    plist = u'/users/kondou/Documents/_VLC_セカオワ_プレイリスト.xspf'
-                if (plist != ''):
-                    try:
-                        if (pparm != ''):
-                            self.exec_id = subprocess.Popen(['open', '-a', 'VLC', plist, ], \
-                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                        else:
-                            self.exec_id = subprocess.Popen(['open', '-a', 'VLC', plist, ], \
-                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                        #self.exec_id.wait()
-                        #self.exec_id.terminate()
-                        #self.exec_id = None
-                    except:
-                        pass
+                # ffmpeg -f gdigrab
+                self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
+                            '-i', 'desktop', '-r', '5', self.rec_file1, ], ) #\
+                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+            # ログ
+            qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' start', display=self.logDisp,)
 
 
 
@@ -462,7 +393,7 @@ if __name__ == '__main__':
             if  ((time.time() - main_start) > 5):
                 if (onece == True):
                     onece = False
-                    qFunc.txtsWrite(qCtrl_sub_file ,txts=['bgm'], encoding='utf-8', exclusive=True, mode='w', )
+                    qFunc.txtsWrite(qCtrl_sub_file ,txts=[u'録画開始'], encoding='utf-8', exclusive=True, mode='w', )
 
             # テスト終了
             if  ((time.time() - main_start) > 30):

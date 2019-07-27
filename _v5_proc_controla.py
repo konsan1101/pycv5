@@ -367,11 +367,6 @@ class proc_controla:
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
-                out_name  = 'control'
-                out_value = 'reset_mic'
-                cn_s.put([out_name, out_value])
-
             elif ((proc_text.find(u'ＢＧＭ') >=0) or (proc_text.find('BGM') >=0)) \
             and (proc_text.find(u'開始') >=0):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['bgm_start'], encoding='utf-8', exclusive=True, mode='w', )

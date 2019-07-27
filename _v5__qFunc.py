@@ -225,7 +225,7 @@ class qFunc_class:
                 pass
         return False
 
-    def remove(self, filename, maxWait=0, ):
+    def remove(self, filename, maxWait=0.50, ):
         if (not os.path.exists(filename)):
             return True
         else:

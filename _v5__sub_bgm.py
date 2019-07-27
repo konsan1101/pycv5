@@ -227,8 +227,7 @@ class sub_main:
                     qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
 
                 # オープン
-                txt = control.lower()
-                self.sub_open(txt, )
+                self.sub_open(control, )
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -268,6 +267,7 @@ class sub_main:
 
 
 
+    # 停止
     def sub_close(self, ):
         if (not self.exec_id is None):
             #self.exec_id.wait()
@@ -275,7 +275,9 @@ class sub_main:
             self.exec_id = None
         qFunc.kill('VLC', )
 
-    def sub_open(self, txt, ):
+    # 開始
+    def sub_open(self, proc_text, ):
+        txt = proc_text.lower()
 
         procBgm = ''
         if (txt == 'playlist 00'  ) or (txt == 'playlist 0') \
