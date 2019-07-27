@@ -125,7 +125,7 @@ class sub_main:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def stop(self, waitMax=20, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -270,6 +270,12 @@ class sub_main:
                 self.exec_id.send_signal(signal.SIGINT)
             else:
                 self.exec_id.send_signal(signal.CTRL_C_EVENT)
+                sendsignal=subprocess.Popen(['sendsignal', 'ffmpeg.exe', ], \
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                sendsignal.wait()
+                sendsignal.terminate()
+                sendsignal = None
+
             time.sleep(2.00)
             self.exec_id.wait()
             self.exec_id.terminate()
@@ -316,7 +322,7 @@ class sub_main:
                             '-i', '1:2', '-r', '5', self.rec_file1, ], \
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
             else:
-                # ffmpeg -f gdigrab
+                # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
                 self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
                             '-i', 'desktop', '-r', '5', self.rec_file1, ], ) #\
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
