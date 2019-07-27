@@ -211,7 +211,7 @@ class proc_yolo_keras:
 
     def checkGet(self, waitMax=5, ):
         chktime = time.time()
-        while (self.proc_r.qsize() == 0) and (int(time.time() - chktime) < waitMax):
+        while (self.proc_r.qsize() == 0) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
         data = self.get()
         return data
@@ -414,7 +414,7 @@ class proc_yolo_keras:
 
                 # ＦＰＳ計測
                 fps = qFPS_class.get()
-                if (int(time.time() - qFPS_last) > 5):
+                if ((time.time() - qFPS_last) > 5):
                     qFPS_last  = time.time()
 
                     # 結果出力(fps)
@@ -493,7 +493,7 @@ if __name__ == '__main__':
     inp = cv2.resize(inp, (960, 540))
 
     chktime = time.time()
-    while (int(time.time() - chktime) < 120):
+    while ((time.time() - chktime) < 120):
 
         if (yolo_keras_thread.proc_s.qsize() == 0):
             yolo_keras_thread.put(['[img]', inp.copy()])

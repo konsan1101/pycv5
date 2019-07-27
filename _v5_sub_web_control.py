@@ -194,7 +194,7 @@ if (__name__ == '__main__'):
     main_start = time.time()
     while (True):
         if (main_last is None):
-            sec = int(time.time() - main_start)
+            sec = (time.time() - main_start)
             if (sec > 60):
                 wrkText = u'何かＷｅｂ検索しませんか？'
                 qFunc.tts('webcontrol.99', wrkText, )

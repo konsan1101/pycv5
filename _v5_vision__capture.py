@@ -1372,7 +1372,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # reader overlay
                     if  (not reader_img is None) \
-                    and (int(time.time() - reader_time) <= 5):
+                    and ((time.time() - reader_time) <= 5):
                         image_img   = reader_img.copy()
                         image_height, image_width = image_img.shape[:2]
                         wrkWidth  = int(dspWidth * 0.30)
@@ -1387,7 +1387,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # detect1 overlay
                     if  (not detect1_img is None) \
-                    and (int(time.time() - detect1_time) <= 5):
+                    and ((time.time() - detect1_time) <= 5):
                         image_img   = detect1_img.copy()
                         image_height, image_width = image_img.shape[:2]
                         wrkWidth  = int(dspWidth * 0.30)
@@ -1402,7 +1402,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # detect2 overlay
                     if  (not detect2_img is None) \
-                    and (int(time.time() - detect2_time) <= 5):
+                    and ((time.time() - detect2_time) <= 5):
                         image_img   = detect2_img.copy()
                         image_height, image_width = image_img.shape[:2]
                         wrkWidth  = int(dspWidth * 0.30)
@@ -1420,7 +1420,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # disptext6 alpha blending
                     if  (not disptext6_img is None) \
-                    and (int(time.time() - disptext6_time) <= 15):
+                    and ((time.time() - disptext6_time) <= 15):
                         wrkHeight, wrkWidth = disptext6_img.shape[:2]
                         while ((baseX + wrkWidth) >= dspWidth):
                             disptext1_img = cv2.resize(disptext1_img,(int(wrkWidth*0.7), wrkHeight))
@@ -1436,7 +1436,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # disptext5 alpha blending
                     if  (not disptext5_img is None) \
-                    and (int(time.time() - disptext5_time) <= 15):
+                    and ((time.time() - disptext5_time) <= 15):
                         wrkHeight, wrkWidth = disptext5_img.shape[:2]
                         while ((baseX + wrkWidth) >= dspWidth):
                             disptext1_img = cv2.resize(disptext1_img,(int(wrkWidth*0.7), wrkHeight))
@@ -1452,7 +1452,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # disptext4 alpha blending
                     if  (not disptext4_img is None) \
-                    and (int(time.time() - disptext4_time) <= 15):
+                    and ((time.time() - disptext4_time) <= 15):
                         wrkHeight, wrkWidth = disptext4_img.shape[:2]
                         while ((baseX + wrkWidth) >= dspWidth):
                             disptext1_img = cv2.resize(disptext1_img,(int(wrkWidth*0.7), wrkHeight))
@@ -1468,7 +1468,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # disptext3 alpha blending
                     if  (not disptext3_img is None) \
-                    and (int(time.time() - disptext3_time) <= 15):
+                    and ((time.time() - disptext3_time) <= 15):
                         wrkHeight, wrkWidth = disptext3_img.shape[:2]
                         while ((baseX + wrkWidth) >= dspWidth):
                             disptext1_img = cv2.resize(disptext1_img,(int(wrkWidth*0.7), wrkHeight))
@@ -1484,7 +1484,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # disptext2 alpha blending
                     if  (not disptext2_img is None) \
-                    and (int(time.time() - disptext2_time) <= 15):
+                    and ((time.time() - disptext2_time) <= 15):
                         wrkHeight, wrkWidth = disptext2_img.shape[:2]
                         while ((baseX + wrkWidth) >= dspWidth):
                             disptext1_img = cv2.resize(disptext1_img,(int(wrkWidth*0.7), wrkHeight))
@@ -1500,7 +1500,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # disptext1 alpha blending
                     if  (not disptext1_img is None) \
-                    and (int(time.time() - disptext1_time) <= 15):
+                    and ((time.time() - disptext1_time) <= 15):
                         wrkHeight, wrkWidth = disptext1_img.shape[:2]
                         while ((baseX + wrkWidth) >= dspWidth):
                             disptext1_img = cv2.resize(disptext1_img,(int(wrkWidth*0.7), wrkHeight))
@@ -1519,7 +1519,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # status alpha blending
                     if  (not status_img is None) \
-                    and (int(time.time() - status_time) <= 60):
+                    and ((time.time() - status_time) <= 60):
                         wrkHeight, wrkWidth = status_img.shape[:2]
                         baseY -= wrkHeight
                         baseX -= wrkWidth
@@ -1537,7 +1537,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # visionOCR alpha blending
                     if  (not visionOCR_img is None) \
-                    and (int(time.time() - visionOCR_time) <= 15):
+                    and ((time.time() - visionOCR_time) <= 15):
                         wrkHeight, wrkWidth = visionOCR_img.shape[:2]
                         if ((baseY+wrkHeight) < dspHeight):
                             try:
@@ -1550,7 +1550,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # visionTrn alpha blending
                     if  (not visionTrn_img is None) \
-                    and (int(time.time() - visionTrn_time) <= 30):
+                    and ((time.time() - visionTrn_time) <= 30):
                         wrkHeight, wrkWidth = visionTrn_img.shape[:2]
                         if ((baseY+wrkHeight) < dspHeight):
                             try:
@@ -1563,7 +1563,7 @@ def proc_output(cn_r, cn_s, ):
 
                     # visionCV alpha blending
                     if  (not visionCV_img is None) \
-                    and (int(time.time() - visionCV_time) <= 40):
+                    and ((time.time() - visionCV_time) <= 40):
                         wrkHeight, wrkWidth = visionCV_img.shape[:2]
                         if ((baseY+wrkHeight) < dspHeight):
                             try:
@@ -1894,7 +1894,7 @@ if (__name__ == '__main__'):
 
         if (inp1_beat != 0):
           if (cam1Dev.isdigit()):
-            sec = int(time.time() - inp1_beat)
+            sec = (time.time() - inp1_beat)
             if (sec > 60):
                 qFunc.logOutput('video_main:inp1_proc 60s')
                 qFunc.logOutput('video_main:inp1_proc break')
@@ -1906,7 +1906,7 @@ if (__name__ == '__main__'):
 
         if (inp2_beat != 0):
           if (cam2Dev.isdigit()):
-            sec = int(time.time() - inp2_beat)
+            sec = (time.time() - inp2_beat)
             if (sec > 60):
                 qFunc.logOutput('video_main:inp2_proc 60s')
                 qFunc.logOutput('video_main:inp2_proc break')
@@ -1917,7 +1917,7 @@ if (__name__ == '__main__'):
                 inp2_pass = 0
 
         if (reader_beat != 0):
-            sec = int(time.time() - reader_beat)
+            sec = (time.time() - reader_beat)
             if (sec > 60):
                 qFunc.logOutput('video_main:reader_proc 60s')
                 qFunc.logOutput('video_main:reader_proc break')
@@ -1928,7 +1928,7 @@ if (__name__ == '__main__'):
                 reader_pass = 0
 
         if (compute_beat != 0):
-            sec = int(time.time() - compute_beat)
+            sec = (time.time() - compute_beat)
             if (sec > 60):
                 qFunc.logOutput('video_main:compute_proc 60s')
                 qFunc.logOutput('video_main:compute_proc break')
@@ -1939,7 +1939,7 @@ if (__name__ == '__main__'):
                 compute_pass = 0
 
         if (speech_beat != 0):
-            sec = int(time.time() - speech_beat)
+            sec = (time.time() - speech_beat)
             if (sec > 60):
                 qFunc.logOutput('video_main:speech_proc 60s')
                 qFunc.logOutput('video_main:speech_proc break')
@@ -1951,7 +1951,7 @@ if (__name__ == '__main__'):
 
         if (output_beat != 0):
           if (cam1Dev.isdigit()):
-            sec = int(time.time() - output_beat)
+            sec = (time.time() - output_beat)
             if (sec > 60):
                 qFunc.logOutput('video_main:output_proc 60s')
                 qFunc.logOutput('video_main:output_proc break')
@@ -2062,11 +2062,11 @@ if (__name__ == '__main__'):
         # processing
 
         if (int(autoShot) > 0):
-            sec = int(time.time() - shutter_last)
+            sec = (time.time() - shutter_last)
             if (sec > int(autoShot)):
                 shutter_flag = True
 
-                sec = int(time.time() - main_start)
+                sec = (time.time() - main_start)
                 if (sec > 600):
                     autoShot = 3600
 

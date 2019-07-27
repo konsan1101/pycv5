@@ -147,7 +147,7 @@ class proc_cvdetect:
 
     def checkGet(self, waitMax=5, ):
         chktime = time.time()
-        while (self.proc_r.qsize() == 0) and (int(time.time() - chktime) < waitMax):
+        while (self.proc_r.qsize() == 0) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
         data = self.get()
         return data
@@ -385,7 +385,7 @@ if __name__ == '__main__':
     cvdetect_thread.put(['[img]', inp.copy()])
 
     chktime = time.time()
-    while (int(time.time() - chktime) < 15):
+    while ((time.time() - chktime) < 15):
         res_data  = cvdetect_thread.get()
         res_name  = res_data[0]
         res_value = res_data[1]

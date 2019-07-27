@@ -228,7 +228,7 @@ if (__name__ == '__main__'):
     main_start = time.time()
     while (True):
             if (main_last is None):
-                sec = int(time.time() - main_start)
+                sec = (time.time() - main_start)
                 if (sec > 60):
                     wrkText = u'ＢＧＭを開始しましょうか？'
                     qFunc.tts('bgmcontrol.99', wrkText, )

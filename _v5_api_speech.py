@@ -661,7 +661,7 @@ def speech_batch(runMode, micDev,
             print(waitfile)
 
             chktime = time.time()
-            while (int(time.time() - chktime) < 5):
+            while ((time.time() - chktime) < 5):
                 if (os.path.exists(waitfile)):
 
                     res_txts, res_text = qFunc.txtsRead(waitfile, encoding='utf-8', exclusive=False, )

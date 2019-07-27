@@ -229,7 +229,7 @@ class main_video:
 
     def checkGet(self, waitMax=5, ):
         chktime = time.time()
-        while (self.proc_r.qsize() == 0) and (int(time.time() - chktime) < waitMax):
+        while (self.proc_r.qsize() == 0) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
         data = self.get()
         return data
@@ -654,7 +654,7 @@ class main_video:
 
             # 動画ファイル処理（バッチ）時の自動終了
             if (not self.cam1Dev.isdigit()):
-                if  (int(time.time() - camera_thread1.proc_last) > 60):
+                if  ((time.time() - camera_thread1.proc_last) > 60):
                     break
 
             # 制御処理
@@ -875,35 +875,35 @@ class main_video:
                         if (qFunc.busyCheck(qBusy_dev_cam, 0) != 'busy'):
 
                             # 画像識別（ＱＲ）
-                            if (int(time.time() - cvreader_last_put) >= 1):
+                            if ((time.time() - cvreader_last_put) >= 1):
                                 if (not cvreader_thread is None):
                                     if (cvreader_thread.proc_s.qsize() == 0):
                                         cvreader_thread.put(['[img]', main_img ])
                                         cvreader_last_put = time.time()
 
                             # 画像識別（顔等）
-                            if  (int(time.time() - cvdetect1_last_put) >= 1):
+                            if  ((time.time() - cvdetect1_last_put) >= 1):
                                 if (not cvdetect_thread1 is None):
                                     if (cvdetect_thread1.proc_s.qsize() == 0):
                                         cvdetect_thread1.put(['[img]', main_img ])
                                         cvdetect1_last_put = time.time()
                             
                             # 画像識別（自動車等）
-                            if  (int(time.time() - cvdetect2_last_put) >= 1):
+                            if  ((time.time() - cvdetect2_last_put) >= 1):
                                 if (not cvdetect_thread2 is None):
                                     if (cvdetect_thread2.proc_s.qsize() == 0):
                                         cvdetect_thread2.put(['[img]', main_img ])
                                         cvdetect2_last_put = time.time()
 
                             # 画像識別（YOLO）keras
-                            if  (int(time.time() - yolo_last_put) >= 1):
+                            if  ((time.time() - yolo_last_put) >= 1):
                                 if (not yolo_keras_thread is None):
                                     if (yolo_keras_thread.proc_s.qsize() == 0):
                                         yolo_keras_thread.put(['[img]', main_img ])
                                         yolo_last_put = time.time()
 
                             # 画像識別（YOLO）torch
-                            if (int(time.time() - yolo_last_put) >= (1/yolo_torch_max)/2):
+                            if ((time.time() - yolo_last_put) >= (1/yolo_torch_max)/2):
                                 i = yolo_torch_seq
                                 if (not yolo_torch_thread[i] is None):
                                     if (yolo_torch_thread[i].proc_s.qsize() == 0):

@@ -845,7 +845,7 @@ if (__name__ == '__main__'):
         if (not micDev.isdigit()):
             if (v2w_wave_last == 0):
                 v2w_wave_last = time.time()
-            sec = int(time.time() - v2w_wave_last)
+            sec = (time.time() - v2w_wave_last)
             if (sec > 90):
                 break
 
@@ -857,7 +857,7 @@ if (__name__ == '__main__'):
                 v2w_wave_last = 0
             if (v2w_wave_last == 0):
                 v2w_wave_last = time.time()
-            sec = int(time.time() - v2w_wave_last)
+            sec = (time.time() - v2w_wave_last)
             if (sec > 99): #30->9999->99
                 qFunc.logOutput('v2w_main__:audio_proc 99s reboot !')
                 audio_beat   = main_start
@@ -867,7 +867,7 @@ if (__name__ == '__main__'):
 
         if (audio_beat != 0):
           if (micDev.isdigit()):
-            sec = int(time.time() - audio_beat)
+            sec = (time.time() - audio_beat)
             if (sec > 60):
                 qFunc.logOutput('v2w_main__:audio_proc 60s')
                 qFunc.logOutput('v2w_main__:audio_proc break')
@@ -901,7 +901,7 @@ if (__name__ == '__main__'):
 
         if (v2w_wave_beat != 0):
           if (micDev.isdigit()):
-            sec = int(time.time() - v2w_wave_beat)
+            sec = (time.time() - v2w_wave_beat)
             if (sec > 60):
                 qFunc.logOutput('v2w_main__:v2w_wave_proc 60s')
                 qFunc.logOutput('v2w_main__:v2w_wave_proc break')

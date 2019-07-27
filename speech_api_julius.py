@@ -118,7 +118,7 @@ class proc_julius:
 
     def checkGet(self, waitMax=5, ):
         chktime = time.time()
-        while (self.proc_r.qsize() == 0) and (int(time.time() - chktime) < waitMax):
+        while (self.proc_r.qsize() == 0) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
         data = self.get()
         return data
@@ -175,7 +175,7 @@ class proc_julius:
         # julius 待機
         chktime = time.time()
         chkhit  = ''
-        while (int(time.time() - chktime) < 5):
+        while ((time.time() - chktime) < 5):
             t = julius.stdout.readline()
             t = t.replace('\r', '')
             t = t.replace('\n', '')
@@ -249,7 +249,7 @@ class proc_julius:
 
                 chktime = time.time()
                 chkhit  = ''
-                while (int(time.time() - chktime) < 5):
+                while ((time.time() - chktime) < 5):
                     t = julius.stdout.readline()
                     t = t.replace('\r', '')
                     t = t.replace('\n', '')

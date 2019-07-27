@@ -354,7 +354,7 @@ if (__name__ == '__main__'):
         if (not micDev.isdigit()):
             if (playvoice_last == 0):
                 playvoice_last = time.time()
-            sec = int(time.time() - playvoice_last)
+            sec = (time.time() - playvoice_last)
             if (sec > 90):
                 break
 
@@ -362,7 +362,7 @@ if (__name__ == '__main__'):
 
         if (playvoice_beat != 0):
           if (micDev.isdigit()):
-            sec = int(time.time() - playvoice_beat)
+            sec = (time.time() - playvoice_beat)
             if (sec > 60):
                 qFunc.logOutput('play_main_:playvoice_proc 60s')
                 qFunc.logOutput('play_main_:playvoice_proc break')

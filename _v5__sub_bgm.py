@@ -131,7 +131,7 @@ class sub_main:
 
     def checkGet(self, waitMax=5, ):
         chktime = time.time()
-        while (self.proc_r.qsize() == 0) and (int(time.time() - chktime) < waitMax):
+        while (self.proc_r.qsize() == 0) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
         data = self.get()
         return data
@@ -275,6 +275,46 @@ class sub_main:
         or (txt == 'playlist zero') \
         or (txt == 'bgm') or (txt == 'garageband'):
             procBgm =  '_00_'
+
+        if (txt == 'playlist 01' ) or (txt == 'playlist 1') \
+        or (txt == 'playlist etc') or (txt == 'playlists etc'):
+            procBgm =  '_01_'
+
+        if (txt == 'playlist 02') or (txt == 'playlist 2') \
+        or (txt == 'babymetal'):
+            procBgm =  '_02_'
+
+        if (txt == 'playlist 03') or (txt == 'playlist 3') \
+        or (txt == 'perfume'):
+            procBgm =  '_03_'
+
+        if (txt == 'playlist 04') or (txt == 'playlist 4') \
+        or (txt == 'kyary pamyu pamyu'):
+            procBgm =  '_04_'
+
+        if (txt == 'playlist 05') or (txt == 'playlist 5') \
+        or (txt == 'one ok rock') or (txt == 'one ok'):
+            procBgm =  '_05_'
+
+        if (txt == 'playlist 06') or (txt == 'playlist 6') \
+        or (txt == 'the end of the world') or (txt == 'end of the world'):
+            procBgm =  '_06_'
+
+        if (txt == 'playlist') or (txt == 'playlist list') \
+        or (txt == 'list of playlists') or (txt == 'bgm list'):
+
+            speechs = []
+            speechs.append({ 'text':u'プレイリストゼロは、自作ＢＧＭです。', 'wait':0, })
+            speechs.append({ 'text':u'プレイリスト１は、お気に入り音楽です。', 'wait':0, })
+            speechs.append({ 'text':u'プレイリスト２は、「BABYMETAL」です。', 'wait':0, })
+            speechs.append({ 'text':u'プレイリスト３は、「perfume」です。', 'wait':0, })
+            speechs.append({ 'text':u'プレイリスト４は、「きゃりーぱみゅぱみゅ」です。', 'wait':0, })
+            speechs.append({ 'text':u'プレイリスト５は、「ONE OK ROCK」です。', 'wait':0, })
+            speechs.append({ 'text':u'プレイリスト６は、「SEKAI NO OWARI」です。', 'wait':0, })
+            speechs.append({ 'text':u'プレイリストを再生しますか？', 'wait':0, })
+
+            if (len(speechs) != 0):
+                qFunc.speech(id='speech', speechs=speechs, lang='', )
 
         if (procBgm != ''):
             self.sub_close()

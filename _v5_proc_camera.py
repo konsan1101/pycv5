@@ -143,7 +143,7 @@ class proc_camera:
 
     def checkGet(self, waitMax=5, ):
         chktime = time.time()
-        while (self.proc_r.qsize() == 0) and (int(time.time() - chktime) < waitMax):
+        while (self.proc_r.qsize() == 0) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
         data = self.get()
         return data
@@ -331,7 +331,7 @@ class proc_camera:
 
                     # ＦＰＳ計測
                     fps = qFPS_class.get()
-                    if (int(time.time() - qFPS_last) > 5):
+                    if ((time.time() - qFPS_last) > 5):
                         qFPS_last  = time.time()
 
                         # 結果出力(fps)
@@ -411,7 +411,7 @@ if __name__ == '__main__':
     camera_thread.start()
 
     chktime = time.time()
-    while (int(time.time() - chktime) < 15):
+    while ((time.time() - chktime) < 15):
 
         res_data  = camera_thread.get()
         res_name  = res_data[0]

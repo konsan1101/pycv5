@@ -149,7 +149,7 @@ if (__name__ == '__main__'):
         main_start = time.time()
         while (inpFile != ''):
             if (main_last is None):
-                sec = int(time.time() - main_start)
+                sec = (time.time() - main_start)
                 if (sec > 60):
                     wrkText = u'何かお調べしましょうか？'
                     qFunc.tts('knowledge.99', wrkText, )

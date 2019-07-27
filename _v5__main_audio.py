@@ -183,7 +183,7 @@ class main_audio:
 
     def checkGet(self, waitMax=5, ):
         chktime = time.time()
-        while (self.proc_r.qsize() == 0) and (int(time.time() - chktime) < waitMax):
+        while (self.proc_r.qsize() == 0) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
         data = self.get()
         return data
@@ -492,8 +492,8 @@ class main_audio:
 
                 # 音声ファイル処理（バッチ）時の自動終了
                 if (not self.micDev.isdigit()):
-                    if  (int(time.time() - coreSTT_thread.proc_last) > 120) \
-                    and (int(time.time() - coreTTS_thread.proc_last) > 120):
+                    if  ((time.time() - coreSTT_thread.proc_last) > 120) \
+                    and ((time.time() - coreTTS_thread.proc_last) > 120):
                         qFunc.txtsWrite(qCtrl_control_audio, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
                         break
 
@@ -515,7 +515,7 @@ class main_audio:
                 # マイク切り替え時、自動復旧処理
                 if (control == ''):
                     if (self.micDev.isdigit()):
-                        if  (int(time.time() - voice2wav_thread.proc_last) > 30):
+                        if  ((time.time() - voice2wav_thread.proc_last) > 30):
                             control = 'reset_mic'
 
                 if (control == 'reset_mic'):

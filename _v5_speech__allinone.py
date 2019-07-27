@@ -2208,8 +2208,8 @@ if (__name__ == '__main__'):
                 sttcore_last = time.time()
             if (ttscore_last == 0):
                 ttscore_last = time.time()
-            sec1 = int(time.time() - sttcore_last)
-            sec2 = int(time.time() - ttscore_last)
+            sec1 = (time.time() - sttcore_last)
+            sec2 = (time.time() - ttscore_last)
             if (sec1 > 240 and sec2 > 240):
                 break
 
@@ -2217,7 +2217,7 @@ if (__name__ == '__main__'):
 
         if (control_beat != 0):
           if (micDev.isdigit()):
-            sec = int(time.time() - control_beat)
+            sec = (time.time() - control_beat)
             if (sec > 60):
                 qFunc.logOutput('___main___:control_proc 60s')
                 qFunc.logOutput('___main___:control_proc break')
@@ -2229,7 +2229,7 @@ if (__name__ == '__main__'):
 
         if (sttcore_beat != 0):
           if (micDev.isdigit()):
-            sec = int(time.time() - sttcore_beat)
+            sec = (time.time() - sttcore_beat)
             if (sec > 60):
                 qFunc.logOutput('___main___:sttcore_proc 60s')
                 qFunc.logOutput('___main___:sttcore_proc break')
@@ -2241,7 +2241,7 @@ if (__name__ == '__main__'):
 
         if (ttscore_beat != 0):
           if (micDev.isdigit()):
-            sec = int(time.time() - ttscore_beat)
+            sec = (time.time() - ttscore_beat)
             if (sec > 60):
                 qFunc.logOutput('___main___:ttscore_proc 60s')
                 qFunc.logOutput('___main___:ttscore_proc break')

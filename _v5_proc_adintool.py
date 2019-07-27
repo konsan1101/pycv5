@@ -127,7 +127,7 @@ class proc_adintool:
 
     def checkGet(self, waitMax=5, ):
         chktime = time.time()
-        while (self.proc_r.qsize() == 0) and (int(time.time() - chktime) < waitMax):
+        while (self.proc_r.qsize() == 0) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
         data = self.get()
         return data
@@ -403,7 +403,7 @@ if __name__ == '__main__':
     adintool_thread.start()
 
     chktime = time.time()
-    while (int(time.time() - chktime) < 15):
+    while ((time.time() - chktime) < 15):
 
         res_data  = adintool_thread.get()
         res_name  = res_data[0]
