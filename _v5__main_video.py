@@ -1109,11 +1109,6 @@ class main_video:
                 del overlay_thread
                 overlay_thread = None
 
-            if (not recorder_thread is None):
-                recorder_thread.stop()
-                del recorder_thread
-                recorder_thread = None
-
             if (not camera_thread1 is None):
                 camera_thread1.stop()
                 del camera_thread1

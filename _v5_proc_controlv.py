@@ -330,12 +330,12 @@ class proc_controlv:
                 out_value = 'reset'
                 cn_s.put([out_name, out_value])
 
-            if (proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0):
+            elif (proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0):
                 out_name  = 'control'
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
-            if (proc_text == u'バルス'):
+            elif (proc_text == u'バルス'):
                 out_name  = 'control'
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
