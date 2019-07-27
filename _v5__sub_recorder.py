@@ -327,8 +327,8 @@ class sub_main:
                 # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
                 self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
                             '-i', 'desktop', '-r', '5', self.rec_file1, ], \
-                            stdin=subprocess.PIPE, ) #\
-                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                            stdin=subprocess.PIPE, \
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             # ログ
             qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' start', display=self.logDisp,)
