@@ -106,6 +106,13 @@ class sub_main:
     def start(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
+        self.fileRdy = qPath_work + self.proc_id + '.rdy'
+        self.fileBsy = qPath_work + self.proc_id + '.bsy'
+        self.fileEnd = qPath_work + self.proc_id + '.end'
+        qFunc.remove(self.fileRdy)
+        qFunc.remove(self.fileBsy)
+        qFunc.remove(self.fileEnd)
+
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
         self.proc_main = threading.Thread(target=self.main_proc, args=(self.proc_s, self.proc_r, ))
@@ -123,6 +130,10 @@ class sub_main:
         self.breakFlag.set()
         chktime = time.time()
         while (not self.proc_beat is None) and ((time.time() - chktime) < waitMax):
+            time.sleep(0.10)
+
+        chktime = time.time()
+        while (not os.path.exists(self.fileEnd)) and ((time.time() - chktime) < waitMax):
             time.sleep(0.10)
 
     def put(self, data, ):
@@ -151,10 +162,9 @@ class sub_main:
         # 初期設定
         self.proc_step = '1'
 
-        fileRdy = qPath_work + self.proc_id + '.rdy'
-        fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(fileRdy)
-        qFunc.remove(fileBsy)
+        txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+        if (txt == '_close_'):
+            qFunc.remove(qCtrl_sub_file)
 
         # 待機ループ
         self.proc_step = '5'
@@ -180,19 +190,10 @@ class sub_main:
                 self.proc_step = '9'
                 break
 
-            # テスト開始
-            #if (onece == True):
-            #    if  ((time.time() - last_alive) > 5):
-            #        qFunc.txtsWrite(qCtrl_sub_file ,txts=['bgm'], encoding='utf-8', exclusive=True, mode='w', )
-            #        onece = False
-
             # 活動メッセージ
             if  ((time.time() - last_alive) > 30):
                 qFunc.logOutput(self.proc_id + ':alive', display=True, )
                 last_alive = time.time()
-
-                # テスト終了
-                #qFunc.txtsWrite(qCtrl_sub_file ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
             # キュー取得
             if (cn_r.qsize() > 0):
@@ -208,8 +209,8 @@ class sub_main:
                 qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディー設定
-            if (not os.path.exists(fileRdy)):
-                qFunc.txtsWrite(fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+            if (not os.path.exists(self.fileRdy)):
+                qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
 
             # ステータス応答
             if (inp_name.lower() == 'status'):
@@ -221,15 +222,15 @@ class sub_main:
             if (control != ''):
 
                 # ビジー設定
-                if (not os.path.exists(fileBsy)):
-                    qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                if (not os.path.exists(self.fileBsy)):
+                    qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
 
                 # オープン
                 txt = control.lower()
                 self.sub_open(txt, )
 
             # ビジー解除
-            qFunc.remove(fileBsy)
+            qFunc.remove(self.fileBsy)
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
@@ -243,13 +244,13 @@ class sub_main:
         if (True):
 
             # レディー解除
-            qFunc.remove(fileRdy)
+            qFunc.remove(self.fileRdy)
 
             # クローズ
             self.sub_close()
 
             # ビジー解除
-            qFunc.remove(fileBsy)
+            qFunc.remove(self.fileBsy)
 
             # キュー削除
             while (cn_r.qsize() > 0):
@@ -262,6 +263,10 @@ class sub_main:
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
             self.proc_beat = None
+
+            # 終了設定
+            if (not os.path.exists(self.fileEnd)):
+                qFunc.txtsWrite(self.fileEnd, txts=['end'], encoding='utf-8', exclusive=False, mode='a', )
 
 
 
@@ -436,6 +441,9 @@ if __name__ == '__main__':
         sub_main = sub_main(sub_name, '0', runMode=runMode, )
         sub_main.start()
 
+        main_start = time.time()
+        onece      = True
+
     # 待機ループ
 
     while (True):
@@ -445,7 +453,15 @@ if __name__ == '__main__':
         if (txt == '_close_'):
             break
 
+        # テスト開始
+        if  ((time.time() - main_start) > 5):
+            if (onece == True):
+                onece = False
+                qFunc.txtsWrite(qCtrl_sub_file ,txts=['bgm'], encoding='utf-8', exclusive=True, mode='w', )
 
+        # テスト終了
+        if  ((time.time() - main_start) > 30):
+            qFunc.txtsWrite(qCtrl_sub_file ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
     # 終了
 
@@ -454,7 +470,6 @@ if __name__ == '__main__':
         qFunc.logOutput(sub_id + ':terminate')
 
         sub_main.stop()
-        time.sleep(5.00)
         del sub_main
 
         qFunc.logOutput(sub_id + ':bye!')
