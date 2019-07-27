@@ -258,7 +258,7 @@ class proc_recorder:
                 # 開始
                 nowTime    = datetime.datetime.now()
                 stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
-                rec_file   = stamp + '.mp4'
+                rec_file   = stamp + '.flv'
                 rec_file1  = qPath_v_screen + rec_file
                 rec_file2  = qPath_rec      + rec_file
                 if (os.name != 'nt'):
