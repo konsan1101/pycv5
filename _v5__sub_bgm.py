@@ -270,8 +270,9 @@ class sub_main:
 
     def sub_close(self, ):
         if (not self.exec_id is None):
+            #self.exec_id.wait()
             self.exec_id.terminate()
-             
+            self.exec_id = None
         qFunc.kill('VLC', )
 
     def sub_open(self, txt, ):
@@ -347,14 +348,14 @@ class sub_main:
                 if (plist != ''):
                     try:
                         if (pparm != ''):
-                            bgm = subprocess.Popen(['VLC', pparm, plist, ], \
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                            self.exec_id = subprocess.Popen(['VLC', pparm, plist, ], \
+                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                         else:
-                            bgm = subprocess.Popen(['VLC', plist, ], \
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                        #bgm.wait()
-                        #bgm.terminate()
-                        #bgm = None
+                            self.exec_id = subprocess.Popen(['VLC', plist, ], \
+                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        #self.exec_id.wait()
+                        #self.exec_id.terminate()
+                        #self.exec_id = None
                     except:
                         pass
             else:
@@ -376,14 +377,14 @@ class sub_main:
                 if (plist != ''):
                     try:
                         if (pparm != ''):
-                            bgm = subprocess.Popen(['open', '-a', 'VLC', plist, ], \
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                            self.exec_id = subprocess.Popen(['open', '-a', 'VLC', plist, ], \
+                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                         else:
-                            bgm = subprocess.Popen(['open', '-a', 'VLC', plist, ], \
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                        #bgm.wait()
-                        #bgm.terminate()
-                        #bgm = None
+                            self.exec_id = subprocess.Popen(['open', '-a', 'VLC', plist, ], \
+                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        #self.exec_id.wait()
+                        #self.exec_id.terminate()
+                        #self.exec_id = None
                     except:
                         pass
 
@@ -454,15 +455,18 @@ if __name__ == '__main__':
         if (txt == '_close_'):
             break
 
-        # テスト開始
-        #if  ((time.time() - main_start) > 5):
-        #    if (onece == True):
-        #        onece = False
-        #        qFunc.txtsWrite(qCtrl_sub_file ,txts=['bgm'], encoding='utf-8', exclusive=True, mode='w', )
+        # デバッグ
+        if (runMode == 'debug'):
 
-        # テスト終了
-        #if  ((time.time() - main_start) > 30):
-        #    qFunc.txtsWrite(qCtrl_sub_file ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            # テスト開始
+            if  ((time.time() - main_start) > 5):
+                if (onece == True):
+                    onece = False
+                    qFunc.txtsWrite(qCtrl_sub_file ,txts=['bgm'], encoding='utf-8', exclusive=True, mode='w', )
+
+            # テスト終了
+            if  ((time.time() - main_start) > 30):
+                qFunc.txtsWrite(qCtrl_sub_file ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
     # 終了
 
