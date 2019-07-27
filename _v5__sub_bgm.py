@@ -99,6 +99,8 @@ class sub_main:
         self.proc_step = '0'
         self.proc_seq  = 0
 
+        self.exec_id   = None 
+
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
@@ -267,6 +269,9 @@ class sub_main:
 
 
     def sub_close(self, ):
+        if (not self.exec_id is None):
+            self.exec_id.terminate()
+             
         qFunc.kill('VLC', )
 
     def sub_open(self, txt, ):
