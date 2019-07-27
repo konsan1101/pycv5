@@ -267,9 +267,12 @@ class sub_main:
     def sub_close(self, ):
         if (not self.exec_id is None):
             if (os.name != 'nt'):
+                self.exec_id.stdin.write(b'q\n')
+                self.exec_id.stdin.flush()
+                time.sleep(2.00)
                 self.exec_id.send_signal(signal.SIGINT)
             else:
-                self.exec_id.stdin.write('q')
+                self.exec_id.stdin.write(b'q\n')
                 self.exec_id.stdin.flush()
                 time.sleep(2.00)
                 self.exec_id.send_signal(signal.CTRL_C_EVENT)
@@ -318,11 +321,12 @@ class sub_main:
                 # ffmpeg -f avfoundation -list_devices true -i ""
                 self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
                             '-i', '1:2', '-r', '5', self.rec_file1, ], \
+                            stdin=subprocess.PIPE, \
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
             else:
                 # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
                 self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
-                            '-i', 'desktop', '-r', '5', self.rec_file1, ], ) \
+                            '-i', 'desktop', '-r', '5', self.rec_file1, ], \
                             stdin=subprocess.PIPE, ) #\
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
