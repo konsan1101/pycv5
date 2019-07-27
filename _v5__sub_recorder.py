@@ -269,12 +269,10 @@ class sub_main:
             if (os.name != 'nt'):
                 self.exec_id.send_signal(signal.SIGINT)
             else:
-                #self.exec_id.send_signal(signal.CTRL_C_EVENT)
-                sendsignal=subprocess.Popen(['sendsignal64', 'ffmpeg.exe', ], \
-                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                sendsignal.wait()
-                sendsignal.terminate()
-                sendsignal = None
+                self.exec_id.stdin.write('q')
+                self.exec_id.stdin.flush()
+                time.sleep(2.00)
+                self.exec_id.send_signal(signal.CTRL_C_EVENT)
 
             time.sleep(2.00)
             self.exec_id.wait()
@@ -324,7 +322,8 @@ class sub_main:
             else:
                 # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
                 self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
-                            '-i', 'desktop', '-r', '5', self.rec_file1, ], ) #\
+                            '-i', 'desktop', '-r', '5', self.rec_file1, ], ) \
+                            stdin=subprocess.PIPE, ) #\
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             # ログ
