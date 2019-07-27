@@ -103,6 +103,13 @@ class proc_recorder:
     def start(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
+        self.fileRun = qPath_work + self.proc_id + '.run'
+        self.fileRdy = qPath_work + self.proc_id + '.rdy'
+        self.fileBsy = qPath_work + self.proc_id + '.bsy'
+        qFunc.remove(self.fileRun)
+        qFunc.remove(self.fileRdy)
+        qFunc.remove(self.fileBsy)
+
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
         self.proc_main = threading.Thread(target=self.main_proc, args=(self.proc_s, self.proc_r, ))
@@ -120,7 +127,10 @@ class proc_recorder:
         self.breakFlag.set()
         chktime = time.time()
         while (not self.proc_beat is None) and ((time.time() - chktime) < waitMax):
-            time.sleep(0.10)
+            time.sleep(0.25)
+        chktime = time.time()
+        while (os.path.exists(self.fileRun)) and ((time.time() - chktime) < waitMax):
+            time.sleep(0.25)
 
     def put(self, data, ):
         self.proc_s.put(data)        
@@ -143,15 +153,11 @@ class proc_recorder:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
         self.proc_beat = time.time()
 
         # 初期設定
         self.proc_step = '1'
-
-        fileRdy = qPath_work + self.proc_id + '.rdy'
-        fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(fileRdy)
-        qFunc.remove(fileBsy)
 
         rec_ffmpeg = None
         rec_file   = ''
@@ -183,8 +189,8 @@ class proc_recorder:
                 qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
-            if (not os.path.exists(fileRdy)):
-                qFunc.txtsWrite(fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+            if (not os.path.exists(self.fileRdy)):
+                qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
 
             # ステータス応答
             if (inp_name.lower() == 'status'):
@@ -211,7 +217,7 @@ class proc_recorder:
                     qFunc.logOutput(self.proc_id + ':' + u'screen → ' + rec_file + ' stop', display=self.logDisp,)
 
                 # ビジー解除
-                qFunc.remove(fileBsy)
+                qFunc.remove(self.fileBsy)
                 if (str(self.id) == '0'):
                     qFunc.busySet(qBusy_v_rec, False)
 
@@ -226,8 +232,8 @@ class proc_recorder:
                     self.proc_seq = 1
 
                 # ビジー設定
-                if (not os.path.exists(fileBsy)):
-                    qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                if (not os.path.exists(self.fileBsy)):
+                    qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
                     if (str(self.id) == '0'):
                         qFunc.busySet(qBusy_v_rec, True)
 
@@ -277,7 +283,7 @@ class proc_recorder:
         if (True):
 
             # レディ解除
-            qFunc.remove(fileRdy)
+            qFunc.remove(self.fileRdy)
 
             # 停止
             if (rec_ffmpeg != None):
@@ -291,7 +297,7 @@ class proc_recorder:
                 rec_ffmpeg = None
 
             # ビジー解除
-            qFunc.remove(fileBsy)
+            qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
                 qFunc.busySet(qBusy_v_rec, False)
 
@@ -305,6 +311,7 @@ class proc_recorder:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qFunc.remove(self.fileRun)
             self.proc_beat = None
 
 

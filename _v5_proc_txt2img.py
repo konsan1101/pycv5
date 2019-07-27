@@ -110,6 +110,13 @@ class proc_txt2img:
     def start(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
+        self.fileRun = qPath_work + self.proc_id + '.run'
+        self.fileRdy = qPath_work + self.proc_id + '.rdy'
+        self.fileBsy = qPath_work + self.proc_id + '.bsy'
+        qFunc.remove(self.fileRun)
+        qFunc.remove(self.fileRdy)
+        qFunc.remove(self.fileBsy)
+
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
         self.proc_main = threading.Thread(target=self.main_proc, args=(self.proc_s, self.proc_r, ))
@@ -127,7 +134,10 @@ class proc_txt2img:
         self.breakFlag.set()
         chktime = time.time()
         while (not self.proc_beat is None) and ((time.time() - chktime) < waitMax):
-            time.sleep(0.10)
+            time.sleep(0.25)
+        chktime = time.time()
+        while (os.path.exists(self.fileRun)) and ((time.time() - chktime) < waitMax):
+            time.sleep(0.25)
 
     def put(self, data, ):
         self.proc_s.put(data)        
@@ -150,15 +160,11 @@ class proc_txt2img:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
         self.proc_beat = time.time()
 
         # 初期設定
         self.proc_step = '1'
-
-        fileRdy = qPath_work + self.proc_id + '.rdy'
-        fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(fileRdy)
-        qFunc.remove(fileBsy)
 
         # フォント
         font16_default  = ImageFont.truetype(qFONT_default['file'], 16, encoding='unic')
@@ -208,8 +214,8 @@ class proc_txt2img:
                 qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
-            if (not os.path.exists(fileRdy)):
-                qFunc.txtsWrite(fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+            if (not os.path.exists(self.fileRdy)):
+                qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
 
             # ステータス応答
             if (inp_name.lower() == 'status'):
@@ -235,8 +241,8 @@ class proc_txt2img:
                     self.proc_seq = 1
 
                 # ビジー設定
-                if (not os.path.exists(fileBsy)):
-                    qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                if (not os.path.exists(self.fileBsy)):
+                    qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
 
                 # 文字列確認
                 texts = inp_value
@@ -340,7 +346,7 @@ class proc_txt2img:
 
             # ビジー解除
             if (cn_r.qsize() == 0):
-                qFunc.remove(fileBsy)
+                qFunc.remove(self.fileBsy)
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
@@ -356,10 +362,10 @@ class proc_txt2img:
         if (True):
 
             # レディ解除
-            qFunc.remove(fileRdy)
+            qFunc.remove(self.fileRdy)
 
             # ビジー解除
-            qFunc.remove(fileBsy)
+            qFunc.remove(self.fileBsy)
 
             # キュー削除
             while (cn_r.qsize() > 0):
@@ -371,6 +377,7 @@ class proc_txt2img:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qFunc.remove(self.fileRun)
             self.proc_beat = None
 
 

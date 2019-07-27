@@ -102,6 +102,13 @@ class proc_playvoice:
     def start(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
+        self.fileRun = qPath_work + self.proc_id + '.run'
+        self.fileRdy = qPath_work + self.proc_id + '.rdy'
+        self.fileBsy = qPath_work + self.proc_id + '.bsy'
+        qFunc.remove(self.fileRun)
+        qFunc.remove(self.fileRdy)
+        qFunc.remove(self.fileBsy)
+
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
         self.proc_main = threading.Thread(target=self.main_proc, args=(self.proc_s, self.proc_r, ))
@@ -119,7 +126,10 @@ class proc_playvoice:
         self.breakFlag.set()
         chktime = time.time()
         while (not self.proc_beat is None) and ((time.time() - chktime) < waitMax):
-            time.sleep(0.10)
+            time.sleep(0.25)
+        chktime = time.time()
+        while (os.path.exists(self.fileRun)) and ((time.time() - chktime) < waitMax):
+            time.sleep(0.25)
 
     def put(self, data, ):
         self.proc_s.put(data)        
@@ -142,15 +152,11 @@ class proc_playvoice:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
         self.proc_beat = time.time()
 
         # 初期設定
         self.proc_step = '1'
-
-        fileRdy = qPath_work + self.proc_id + '.rdy'
-        fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(fileRdy)
-        qFunc.remove(fileBsy)
 
         # 待機ループ
         self.proc_step = '5'
@@ -178,8 +184,8 @@ class proc_playvoice:
                 qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
-            if (not os.path.exists(fileRdy)):
-                qFunc.txtsWrite(fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+            if (not os.path.exists(self.fileRdy)):
+                qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
 
             # ステータス応答
             if (inp_name.lower() == 'status'):
@@ -271,8 +277,8 @@ class proc_playvoice:
                                     cn_s.put([out_name, out_value])
 
                                 # ビジー設定
-                                if (not os.path.exists(fileBsy)):
-                                    qFunc.txtsWrite(fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                                if (not os.path.exists(self.fileBsy)):
+                                    qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
                                     if (str(self.id) == '0'):
                                         qFunc.busySet(qBusy_a_play, True)
 
@@ -302,7 +308,7 @@ class proc_playvoice:
 
 
             # ビジー解除
-            qFunc.remove(fileBsy)
+            qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
                 qFunc.busySet(qBusy_a_play, False)
 
@@ -325,10 +331,10 @@ class proc_playvoice:
         if (True):
 
             # レディ解除
-            qFunc.remove(fileRdy)
+            qFunc.remove(self.fileRdy)
 
             # ビジー解除
-            qFunc.remove(fileBsy)
+            qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
                 qFunc.busySet(qBusy_a_play, False)
 
@@ -342,6 +348,7 @@ class proc_playvoice:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qFunc.remove(self.fileRun)
             self.proc_beat = None
 
 

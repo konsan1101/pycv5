@@ -106,12 +106,12 @@ class sub_main:
     def start(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
+        self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
         self.fileBsy = qPath_work + self.proc_id + '.bsy'
-        self.fileEnd = qPath_work + self.proc_id + '.end'
+        qFunc.remove(self.fileRun)
         qFunc.remove(self.fileRdy)
         qFunc.remove(self.fileBsy)
-        qFunc.remove(self.fileEnd)
 
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
@@ -130,11 +130,10 @@ class sub_main:
         self.breakFlag.set()
         chktime = time.time()
         while (not self.proc_beat is None) and ((time.time() - chktime) < waitMax):
-            time.sleep(0.10)
-
+            time.sleep(0.25)
         chktime = time.time()
-        while (not os.path.exists(self.fileEnd)) and ((time.time() - chktime) < waitMax):
-            time.sleep(0.10)
+        while (os.path.exists(self.fileRun)) and ((time.time() - chktime) < waitMax):
+            time.sleep(0.25)
 
     def put(self, data, ):
         self.proc_s.put(data)        
@@ -157,6 +156,7 @@ class sub_main:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
         self.proc_beat = time.time()
 
         # 初期設定
@@ -262,11 +262,8 @@ class sub_main:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qFunc.remove(self.fileRun)
             self.proc_beat = None
-
-            # 終了設定
-            if (not os.path.exists(self.fileEnd)):
-                qFunc.txtsWrite(self.fileEnd, txts=['end'], encoding='utf-8', exclusive=False, mode='a', )
 
 
 
