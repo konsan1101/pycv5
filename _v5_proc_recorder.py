@@ -205,8 +205,7 @@ class proc_recorder:
                     if (os.name != 'nt'):
                         rec_ffmpeg.send_signal(signal.SIGINT)
                     else:
-                        #rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
-                        rec_ffmpeg.terminate()
+                        rec_ffmpeg.send_signal(signal.CTRL_C_EVENT)
                     time.sleep(2.00)
                     rec_ffmpeg.wait()
                     rec_ffmpeg.terminate()
