@@ -846,63 +846,64 @@ class main_video:
             and (overlay_thread.proc_s.qsize() == 0):
 
                 # 画像入力（メインカメラ）
-                while (camera_thread1.proc_r.qsize() != 0):
-                    res_data  = camera_thread1.get()
-                    res_name  = res_data[0]
-                    res_value = res_data[1]
-                    if (res_name == 'fps'):
-                        overlay_thread.put(['cam1_fps', res_value ])
-                    if (res_name == 'reso'):
-                        overlay_thread.put(['cam1_reso', res_value ])
-                    if (res_name == '[img]'):
-                        main_img = res_value.copy()
+                if (not camera_thread1 is None):
+                    while (camera_thread1.proc_r.qsize() != 0):
+                        res_data  = camera_thread1.get()
+                        res_name  = res_data[0]
+                        res_value = res_data[1]
+                        if (res_name == 'fps'):
+                            overlay_thread.put(['cam1_fps', res_value ])
+                        if (res_name == 'reso'):
+                            overlay_thread.put(['cam1_reso', res_value ])
+                        if (res_name == '[img]'):
+                            main_img = res_value.copy()
 
-                        if (qFunc.busyCheck(qBusy_dev_cam, 0) != 'busy'):
+                            if (qFunc.busyCheck(qBusy_dev_cam, 0) != 'busy'):
 
-                            # 画像識別（ＱＲ）
-                            if ((time.time() - cvreader_last_put) >= 1):
-                                if (not cvreader_thread is None):
-                                    if (cvreader_thread.proc_s.qsize() == 0):
-                                        cvreader_thread.put(['[img]', main_img ])
-                                        cvreader_last_put = time.time()
+                                # 画像識別（ＱＲ）
+                                if ((time.time() - cvreader_last_put) >= 1):
+                                    if (not cvreader_thread is None):
+                                        if (cvreader_thread.proc_s.qsize() == 0):
+                                            cvreader_thread.put(['[img]', main_img ])
+                                            cvreader_last_put = time.time()
 
-                            # 画像識別（顔等）
-                            if  ((time.time() - cvdetect1_last_put) >= 1):
-                                if (not cvdetect_thread1 is None):
-                                    if (cvdetect_thread1.proc_s.qsize() == 0):
-                                        cvdetect_thread1.put(['[img]', main_img ])
-                                        cvdetect1_last_put = time.time()
-                            
-                            # 画像識別（自動車等）
-                            if  ((time.time() - cvdetect2_last_put) >= 1):
-                                if (not cvdetect_thread2 is None):
-                                    if (cvdetect_thread2.proc_s.qsize() == 0):
-                                        cvdetect_thread2.put(['[img]', main_img ])
-                                        cvdetect2_last_put = time.time()
+                                # 画像識別（顔等）
+                                if  ((time.time() - cvdetect1_last_put) >= 1):
+                                    if (not cvdetect_thread1 is None):
+                                        if (cvdetect_thread1.proc_s.qsize() == 0):
+                                            cvdetect_thread1.put(['[img]', main_img ])
+                                            cvdetect1_last_put = time.time()
+                                
+                                # 画像識別（自動車等）
+                                if  ((time.time() - cvdetect2_last_put) >= 1):
+                                    if (not cvdetect_thread2 is None):
+                                        if (cvdetect_thread2.proc_s.qsize() == 0):
+                                            cvdetect_thread2.put(['[img]', main_img ])
+                                            cvdetect2_last_put = time.time()
 
-                            # 画像識別（YOLO）keras
-                            if  ((time.time() - yolo_last_put) >= 1):
-                                if (not yolo_keras_thread is None):
-                                    if (yolo_keras_thread.proc_s.qsize() == 0):
-                                        yolo_keras_thread.put(['[img]', main_img ])
-                                        yolo_last_put = time.time()
+                                # 画像識別（YOLO）keras
+                                if  ((time.time() - yolo_last_put) >= 1):
+                                    if (not yolo_keras_thread is None):
+                                        if (yolo_keras_thread.proc_s.qsize() == 0):
+                                            yolo_keras_thread.put(['[img]', main_img ])
+                                            yolo_last_put = time.time()
 
-                            # 画像識別（YOLO）torch
-                            if ((time.time() - yolo_last_put) >= (1/yolo_torch_max)/2):
-                                i = yolo_torch_seq
-                                if (not yolo_torch_thread[i] is None):
-                                    if (yolo_torch_thread[i].proc_s.qsize() == 0):
-                                        yolo_torch_thread[i].put(['[img]', main_img ])
-                                        yolo_last_put = time.time()
-                                        #print('yolo put ' + str(i))
-                                        yolo_torch_seq += 1
-                                        yolo_torch_seq = yolo_torch_seq % yolo_torch_max
-                                        break
+                                # 画像識別（YOLO）torch
+                                if ((time.time() - yolo_last_put) >= (1/yolo_torch_max)/2):
+                                    i = yolo_torch_seq
+                                    if (not yolo_torch_thread[i] is None):
+                                        if (yolo_torch_thread[i].proc_s.qsize() == 0):
+                                            yolo_torch_thread[i].put(['[img]', main_img ])
+                                            yolo_last_put = time.time()
+                                            #print('yolo put ' + str(i))
+                                            yolo_torch_seq += 1
+                                            yolo_torch_seq = yolo_torch_seq % yolo_torch_max
+                                            break
 
-                        # 画像合成（メイン画像）
-                        overlay_thread.put(['[cam1]', main_img ])
+                            # 画像合成（メイン画像）
+                            overlay_thread.put(['[cam1]', main_img ])
 
-                        break
+                            break
 
                 # 画像入力（ワイプカメラ）
                 if (not camera_thread2 is None):
