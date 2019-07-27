@@ -80,15 +80,19 @@ ping localhost -w 1000 -n 5 >nul
 
 ECHO;
 rem ------------------------------------------------------------------------------------------InpTrn
-ECHO start "" /b python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio% ja en
-     start "" /b python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio%
+rem  start "" /b python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio% ja en
+rem  start "" /b python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio%
+ECHO             python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio% ja en
+                 python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio%
 rem ------------------------------------------------------------------------------------------InpTrn
 
-rem ECHO;
-rem ECHO python _v5__destroy.py
-rem      python _v5__destroy.py
+ECHO;
+ECHO python _v5__destroy.py
+     python _v5__destroy.py
 
-rem ping localhost -w 1000 -n 5 >nul
+ECHO;
+ECHO bye!
+ping localhost -w 1000 -n 5 >nul
 
 EXIT
 
