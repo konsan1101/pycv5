@@ -44,7 +44,8 @@ qPath_v_jpg    = 'temp/v5_2jpg/'
 qPath_v_detect = 'temp/v5_3detect/'
 qPath_v_cv     = 'temp/v5_5cv_txt/'
 qPath_v_photo  = 'temp/v5_7photo/'
-qPath_v_msg    = 'temp/v5_8photo_msg/'
+qPath_v_msg    = 'temp/v5_7photo_msg/'
+qPath_v_movie  = 'temp/v5_8movie/'
 qPath_v_screen = 'temp/v5_9screen/'
 
 qBusy_dev_cpu  = qPath_work + 'busy_dev_cpu.txt'
@@ -104,6 +105,7 @@ class qFunc_class:
         self.makeDirs(qPath_v_cv,     False)
         self.makeDirs(qPath_v_photo,  False)
         self.makeDirs(qPath_v_msg,    False)
+        self.makeDirs(qPath_v_movie,  False)
         self.makeDirs(qPath_v_screen, False)
 
         return True
@@ -131,6 +133,7 @@ class qFunc_class:
         if (field == 'qPath_v_cv'    ): return qPath_v_cv
         if (field == 'qPath_v_photo' ): return qPath_v_photo
         if (field == 'qPath_v_msg'   ): return qPath_v_msg
+        if (field == 'qPath_v_movie' ): return qPath_v_movie
         if (field == 'qPath_v_screen'): return qPath_v_screen
 
         if (field == 'qBusy_dev_cpu' ): return qBusy_dev_cpu

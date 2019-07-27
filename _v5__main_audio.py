@@ -57,6 +57,7 @@ qPath_v_detect = qFunc.getValue('qPath_v_detect')
 qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
 qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
+qPath_v_movie  = qFunc.getValue('qPath_v_movie' )
 qPath_v_screen = qFunc.getValue('qPath_v_screen')
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
