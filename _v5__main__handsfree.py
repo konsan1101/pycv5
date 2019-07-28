@@ -22,6 +22,8 @@ qCtrl_control_main       = 'temp/control_main.txt'
 qCtrl_control_audio      = 'temp/control_audio.txt'
 qCtrl_control_video      = 'temp/control_video.txt'
 qCtrl_control_recorder   = 'temp/control_recorder.txt'
+qCtrl_control_self       = qCtrl_control_main
+
 qCtrl_control_bgm        = 'temp/control_bgm.txt'
 qCtrl_control_web        = 'temp/control_web.txt'
 qCtrl_control_chatting   = 'temp/control_chatting.txt'
@@ -310,12 +312,12 @@ if __name__ == '__main__':
         # 終了確認
 
         control = ''
-        txts, txt = qFunc.txtsRead(qCtrl_control_main)
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             if (txt == '_close_'):
                 break
             else:
-                qFunc.remove(qCtrl_control_main)
+                qFunc.remove(qCtrl_control_self)
                 control = txt
 
         # コントロール

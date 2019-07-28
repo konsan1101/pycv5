@@ -23,6 +23,9 @@ import cv2
 qCtrl_control_main       = 'temp/control_main.txt'
 qCtrl_control_audio      = 'temp/control_audio.txt'
 qCtrl_control_video      = 'temp/control_video.txt'
+qCtrl_control_recorder   = 'temp/control_recorder.txt'
+qCtrl_control_self       = qCtrl_control_video
+
 qCtrl_recognize          = 'temp/result_recognize.txt'
 qCtrl_translate          = 'temp/result_translate.txt'
 
