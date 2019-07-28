@@ -262,10 +262,10 @@ class main_video:
         # 初期設定
         self.proc_step = '1'
 
-        txts, txt = qFunc.txtsRead(qCtrl_control_video)
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             if (txt == '_close_'):
-                qFunc.remove(qCtrl_control_video)
+                qFunc.remove(qCtrl_control_self)
 
         # 変数
         controlv_thread   = None
@@ -378,7 +378,7 @@ class main_video:
             self.proc_beat = time.time()
 
             # 終了確認
-            txts, txt = qFunc.txtsRead(qCtrl_control_video)
+            txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
                 if (txt == '_close_'):
                     break
@@ -1534,7 +1534,7 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':start')
 
-        main_video = main_video('main_video', '0', 
+        main_video = main_video(main_id, '0', 
                                 runMode=runMode,
                                 cam1Dev=cam1Dev, cam1Mode=cam1Mode, cam1Stretch=cam1Stretch, cam1Rotate=cam1Rotate, cam1Zoom=cam1Zoom,
                                 cam2Dev=cam2Dev, cam2Mode=cam2Mode, cam2Stretch=cam2Stretch, cam2Rotate=cam2Rotate, cam2Zoom=cam2Zoom,
@@ -1553,7 +1553,7 @@ if __name__ == '__main__':
     while (True):
 
         # 終了確認
-        txts, txt = qFunc.txtsRead(qCtrl_control_video)
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             if (txt == '_close_'):
                 break
@@ -1677,18 +1677,13 @@ if __name__ == '__main__':
 
 
         # 終了操作
-        if (runMode == 'camera') \
-        or (runMode == 'hud'):
-            if (qFunc.busyCheck(qBusy_dev_dsp, 0) == 'busy'): 
-                qFunc.txtsWrite(qCtrl_control_main,  txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-                qFunc.txtsWrite(qCtrl_control_video, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-                break
-
+        if (runMode == 'camera'):
             if (control == 'enter') \
             or (control == 'cancel') \
             or (control == 'close'):
                 qFunc.txtsWrite(qCtrl_result_video, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
-                qFunc.busySet(qBusy_dev_dsp, True)
+                qFunc.txtsWrite(qCtrl_control_main, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_self, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # アイドリング
         if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \

@@ -216,10 +216,10 @@ class main_audio:
         # 初期設定
         self.proc_step = '1'
 
-        txts, txt = qFunc.txtsRead(qCtrl_control_audio)
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             if (txt == '_close_'):
-                qFunc.remove(qCtrl_control_audio)
+                qFunc.remove(qCtrl_control_self)
 
         # 外部ＰＧリセット
         qFunc.kill('adintool-gui')
@@ -286,7 +286,7 @@ class main_audio:
             self.proc_beat = time.time()
 
             # 終了確認
-            txts, txt = qFunc.txtsRead(qCtrl_control_audio)
+            txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
                 if (txt == '_close_'):
                     break
@@ -508,7 +508,7 @@ class main_audio:
                 if (not self.micDev.isdigit()):
                     if  ((time.time() - coreSTT_thread.proc_last) > 120) \
                     and ((time.time() - coreTTS_thread.proc_last) > 120):
-                        qFunc.txtsWrite(qCtrl_control_audio, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                        qFunc.txtsWrite(qCtrl_control_self, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
                         break
 
                 # 制御処理
@@ -581,9 +581,11 @@ class main_audio:
                     if (res_name == '[txts]'):
 
                         # 終了操作
-                        if (res_value[0] == u'システムの終了') or (res_value[0] == u'カメラの終了'):
-                            qFunc.txtsWrite(qCtrl_control_main,  txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-                            #qFunc.txtsWrite(qCtrl_control_audio, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                        proc_text = res_value[0]
+                        if ((proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0)) \
+                        or  (proc_text == u'バルス'):
+                            qFunc.txtsWrite(qCtrl_control_main, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                            qFunc.txtsWrite(qCtrl_control_self, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
                             break
 
                 # 音声認識 外部インターフェース用
@@ -847,7 +849,8 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':start')
 
-        main_audio = main_audio('main_audio', '0', runMode=runMode,
+        main_audio = main_audio(main_id, '0', 
+                                runMode=runMode,
                                 micDev=micDev, micType=micType, micGuide=micGuide, micLevel=micLevel,
                                 qApiInp=qApiInp, qApiTrn=qApiTrn, qApiOut=qApiOut,
                                 qLangInp=qLangInp, qLangTrn=qLangTrn, qLangTxt=qLangTxt, qLangOut=qLangOut, )
@@ -859,7 +862,7 @@ if __name__ == '__main__':
     while (True):
 
         # 終了確認
-        txts, txt = qFunc.txtsRead(qCtrl_control_audio)
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             if (txt == '_close_'):
                 break

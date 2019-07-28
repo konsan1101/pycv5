@@ -32,7 +32,7 @@ qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 # Python
 qPython_main_audio = '_v5__main_audio.py'
 qPython_main_video = '_v5__main_video.py'
-qPython_recorder   = '_v5__sub_recorder.py'
+qPython_recorder   = '_v5__main_recorder.py'
 qPython_bgm        = '_v5__sub_bgm.py'
 qPython_web        = '_v5_sub_web_control.py'
 qPython_chatting   = '_v5_sub_chatting_control.py'

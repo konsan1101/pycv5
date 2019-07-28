@@ -18,7 +18,8 @@ import glob
 
 
 # インターフェース
-qCtrl_sub_file           = 'temp/control_bgm.txt'
+qCtrl_control_bgm        = 'temp/control_bgm.txt'
+qCtrl_control_self       = qCtrl_control_bgm
 
 
 
@@ -164,10 +165,10 @@ class sub_main:
         # 初期設定
         self.proc_step = '1'
 
-        txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             if (txt == '_close_'):
-                qFunc.remove(qCtrl_sub_file)
+                qFunc.remove(qCtrl_control_self)
 
         # 待機ループ
         self.proc_step = '5'
@@ -180,12 +181,12 @@ class sub_main:
 
             # 終了確認
             control = ''
-            txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+            txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
                 if (txt == '_close_'):
                     break
                 else:
-                    qFunc.remove(qCtrl_sub_file)
+                    qFunc.remove(qCtrl_control_self)
                     control = txt
 
             # 停止要求確認
@@ -440,10 +441,10 @@ if __name__ == '__main__':
 
     # 初期設定
 
-    txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+    txts, txt = qFunc.txtsRead(qCtrl_control_self)
     if (txts != False):
         if (txt == '_close_'):
-            qFunc.remove(qCtrl_sub_file)
+            qFunc.remove(qCtrl_control_self)
 
     # 起動
 
@@ -462,7 +463,7 @@ if __name__ == '__main__':
     while (True):
 
         # 終了確認
-        txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             if (txt == '_close_'):
                 break
@@ -474,11 +475,11 @@ if __name__ == '__main__':
             if  ((time.time() - main_start) > 5):
                 if (onece == True):
                     onece = False
-                    qFunc.txtsWrite(qCtrl_sub_file ,txts=['bgm'], encoding='utf-8', exclusive=True, mode='w', )
+                    qFunc.txtsWrite(qCtrl_control_self ,txts=['bgm'], encoding='utf-8', exclusive=True, mode='w', )
 
             # テスト終了
             if  ((time.time() - main_start) > 30):
-                qFunc.txtsWrite(qCtrl_sub_file ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_self ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
     # 終了
 

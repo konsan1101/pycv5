@@ -79,7 +79,7 @@ runMode = 'debug'
 
 
 
-class sub_main:
+class main_recorder:
 
     def __init__(self, name='thread', id='0', runMode='debug', ):
         self.runMode   = runMode
@@ -172,10 +172,10 @@ class sub_main:
         # 初期設定
         self.proc_step = '1'
 
-        txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             if (txt == '_close_'):
-                qFunc.remove(qCtrl_sub_file)
+                qFunc.remove(qCtrl_control_self)
 
         # 待機ループ
         self.proc_step = '5'
@@ -188,12 +188,12 @@ class sub_main:
 
             # 終了確認
             control = ''
-            txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+            txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
                 if (txt == '_close_'):
                     break
                 else:
-                    qFunc.remove(qCtrl_sub_file)
+                    qFunc.remove(qCtrl_control_self)
                     control = txt
 
             # 停止要求確認
@@ -375,8 +375,8 @@ signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 if __name__ == '__main__':
-    sub_name = 'sub_rec'
-    sub_id   = '{0:10s}'.format(sub_name).replace(' ', '_')
+    main_name = 'main_rec'
+    main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
 
@@ -389,8 +389,8 @@ if __name__ == '__main__':
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
-    qFunc.logOutput(sub_id + ':init')
-    qFunc.logOutput(sub_id + ':exsample.py runMode, ')
+    qFunc.logOutput(main_id + ':init')
+    qFunc.logOutput(main_id + ':exsample.py runMode, ')
 
     # パラメータ
 
@@ -399,23 +399,23 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 2):
             runMode  = str(sys.argv[1]).lower()
 
-        qFunc.logOutput(sub_id + ':runMode  =' + str(runMode  ))
+        qFunc.logOutput(main_id + ':runMode  =' + str(runMode  ))
 
     # 初期設定
 
-    txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+    txts, txt = qFunc.txtsRead(qCtrl_control_self)
     if (txts != False):
         if (txt == '_close_'):
-            qFunc.remove(qCtrl_sub_file)
+            qFunc.remove(qCtrl_control_self)
 
     # 起動
 
     if (True):
 
-        qFunc.logOutput(sub_id + ':start')
+        qFunc.logOutput(main_id + ':start')
 
-        sub_main = sub_main(sub_name, '0', runMode=runMode, )
-        sub_main.start()
+        main_recorder = main_recorder(main_id, '0', runMode=runMode, )
+        main_recorder.start()
 
         main_start = time.time()
         onece      = True
@@ -425,7 +425,7 @@ if __name__ == '__main__':
     while (True):
 
         # 終了確認
-        txts, txt = qFunc.txtsRead(qCtrl_sub_file)
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             if (txt == '_close_'):
                 break
@@ -437,22 +437,22 @@ if __name__ == '__main__':
             if  ((time.time() - main_start) > 5):
                 if (onece == True):
                     onece = False
-                    qFunc.txtsWrite(qCtrl_sub_file ,txts=[u'録画開始'], encoding='utf-8', exclusive=True, mode='w', )
+                    qFunc.txtsWrite(qCtrl_control_self ,txts=[u'録画開始'], encoding='utf-8', exclusive=True, mode='w', )
 
             # テスト終了
             if  ((time.time() - main_start) > 30):
-                qFunc.txtsWrite(qCtrl_sub_file ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_self ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
     # 終了
 
     if (True):
 
-        qFunc.logOutput(sub_id + ':terminate')
+        qFunc.logOutput(main_id + ':terminate')
 
-        sub_main.stop()
-        del sub_main
+        main_recorder.stop()
+        del main_recorder
 
-        qFunc.logOutput(sub_id + ':bye!')
+        qFunc.logOutput(main_id + ':bye!')
 
         sys.exit(0)
 
