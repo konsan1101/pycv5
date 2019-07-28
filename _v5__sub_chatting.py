@@ -72,6 +72,12 @@ qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
 
 
 
+# docomo 雑談対話,知識検索
+import speech_api_docomo     as docomo_api
+import speech_api_docomo_key as docomo_key
+
+
+
 runMode = 'debug'
 
 
@@ -101,7 +107,7 @@ class sub_main:
         self.proc_step = '0'
         self.proc_seq  = 0
 
-        self.exec_id   = None 
+        self.docomoAPI = None
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -169,6 +175,11 @@ class sub_main:
         if (txts != False):
             if (txt == '_close_'):
                 qFunc.remove(qCtrl_control_self)
+
+        self.docomoAPI = docomo_api.SpeechAPI()
+        res = self.docomoAPI.authenticate('chatting', docomo_key.getkey('chatting'), )
+        if (res == False):
+            self.docomoAPI = None
 
         # 待機ループ
         self.proc_step = '5'
@@ -262,7 +273,19 @@ class sub_main:
 
     # 処理
     def sub_proc(self, proc_text, ):
-        print(proc_text)
+
+        qFunc.logOutput(u'★KONSAN : [' + str(proc_text) + ']', display=True, )
+
+        if (self.docomoAPI is None):
+                qFunc.logOutput(u'★DOCOMO : not ready !', display=True, )
+        else:
+            res, api = self.docomoAPI.chatting(inpText=proc_text, )
+            if (res != '') and (res != '!'):
+                qFunc.logOutput(u'★DOCOMO : [' + str(res) + ']', display=True, )
+
+                speechs = []
+                speechs.append({ 'text':str(res), 'wait':0, })
+                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
 
 
