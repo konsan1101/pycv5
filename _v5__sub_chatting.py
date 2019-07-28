@@ -287,6 +287,9 @@ class sub_main:
                 speechs.append({ 'text':str(res), 'wait':0, })
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
+            else:
+                qFunc.logOutput(u'★DOCOMO : ! ', display=True, )
+
 
 
 # シグナル処理

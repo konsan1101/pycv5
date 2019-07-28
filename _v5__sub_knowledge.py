@@ -18,8 +18,8 @@ import glob
 
 
 # インターフェース
-qCtrl_control_chatting   = 'temp/control_chatting.txt'
-qCtrl_control_self       = qCtrl_control_chatting
+qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
+qCtrl_control_self       = qCtrl_control_knowledge
 
 
 
@@ -177,7 +177,7 @@ class sub_main:
                 qFunc.remove(qCtrl_control_self)
 
         self.docomoAPI = docomo_api.SpeechAPI()
-        res = self.docomoAPI.authenticate('chatting', docomo_key.getkey('chatting'), )
+        res = self.docomoAPI.authenticate('knowledge', docomo_key.getkey('knowledge'), )
         if (res == False):
             self.docomoAPI = None
 
@@ -279,13 +279,16 @@ class sub_main:
         if (self.docomoAPI is None):
                 qFunc.logOutput(u'★DOCOMO : not ready !', display=True, )
         else:
-            res, api = self.docomoAPI.chatting(inpText=proc_text, )
+            res, api = self.docomoAPI.knowledge(inpText=proc_text, )
             if (res != '') and (res != '!'):
                 qFunc.logOutput(u'★DOCOMO : [' + str(res) + ']', display=True, )
 
                 speechs = []
                 speechs.append({ 'text':str(res), 'wait':0, })
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
+            else:
+                qFunc.logOutput(u'★DOCOMO : ! ', display=True, )
 
 
 
