@@ -238,6 +238,11 @@ class main_recorder:
                     # クローズ
                     self.sub_close()
 
+                    # メッセージ
+                    speechs = []
+                    speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
+                    qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
             # 処理
             if (control != ''):
 
@@ -259,8 +264,15 @@ class main_recorder:
             # レディー解除
             qFunc.remove(self.fileRdy)
 
-            # クローズ
-            self.sub_close()
+            if (not self.exec_id is None):
+
+                # クローズ
+                self.sub_close()
+
+                # メッセージ
+                speechs = []
+                speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
+                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -300,7 +312,7 @@ class main_recorder:
             self.exec_id = None
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' stop', display=self.logDisp,)
+            qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' stop', display=True,)
 
             # 保管
             qFunc.copy(self.rec_file1, self.rec_file2)
@@ -316,10 +328,20 @@ class main_recorder:
     def sub_open(self, proc_text, ):
 
         if (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
-            self.sub_close()
+
+            if (not self.exec_id is None):
+
+                # クローズ
+                self.sub_close()
+
+                # メッセージ
+                speechs = []
+                speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
+                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
         elif (proc_text.find(u'録画') >=0):
             if (not self.exec_id is None):
+                # クローズ
                 self.sub_close()
 
             # ビジー設定
@@ -327,6 +349,11 @@ class main_recorder:
                 qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
                 if (str(self.id) == '0'):
                     qFunc.busySet(qBusy_v_rec, True)
+
+            # メッセージ
+            speechs = []
+            speechs.append({ 'text':u'録画を開始します。', 'wait':0, })
+            qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # 開始
             nowTime    = datetime.datetime.now()
@@ -359,7 +386,7 @@ class main_recorder:
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' start', display=self.logDisp,)
+            qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' start', display=True,)
 
 
 
