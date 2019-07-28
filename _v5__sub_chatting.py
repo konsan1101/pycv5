@@ -18,8 +18,8 @@ import glob
 
 
 # インターフェース
-qCtrl_control_chat       = 'temp/control_chat.txt'
-qCtrl_control_self       = qCtrl_control_chat
+qCtrl_control_chatting   = 'temp/control_chatting.txt'
+qCtrl_control_self       = qCtrl_control_chatting
 
 
 
