@@ -423,9 +423,10 @@ class proc_coreSTT:
             else:
                 if ((self.micType == 'bluetooth') \
                 and ((self.runMode == 'debug') \
-                or (self.runMode == 'handsfree') \
-                or (self.runMode == 'translator'))):
-                    sync = True
+                  or (self.runMode == 'handsfree') \
+                  or (self.runMode == 'translator'))):
+                    #sync = True
+                    pass
 
             res = api_speech.execute(sync,
                     self.runMode, self.micDev, 
