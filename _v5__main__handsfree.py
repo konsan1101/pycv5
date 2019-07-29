@@ -321,9 +321,9 @@ if __name__ == '__main__':
                 control = txt
 
         # コントロール
-        if (control == '_vision_start_'):
+        if (control == '_screen_start_'):
             main_screen_switch   = 'on'
-        if (control == '_vision_end_'):
+        if (control == '_screen_end_'):
             main_screen_switch   = 'off'
         if (control == '_recorder_start_'):
             main_recorder_switch = 'on'
