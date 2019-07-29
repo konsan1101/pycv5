@@ -227,6 +227,19 @@ class sub_main:
                 out_value = 'ready'
                 cn_s.put([out_name, out_value])
 
+            # ＢＧＭアナウンス
+            if (not self.bgm_id is None):
+                if ((time.time() - self.bgm_start) > 60):
+                    if (onece == True):
+                        onece = False
+
+                        if (self.runMode == 'debug') \
+                        or (self.runMode == 'handsfree'):
+                            speechs = []
+                            speechs.append({ 'text':u'ＢＧＭ制御機能が有効です。', 'wait':0, })
+                            speechs.append({ 'text':u'プレイリストの再生はいかがですか？', 'wait':0, })
+                            qFunc.speech(id='speech', speechs=speechs, lang='', )
+
             # 処理
             if (control != ''):
                 self.sub_proc(control, )
@@ -346,9 +359,7 @@ class sub_main:
                 speechs.append({ 'text':u'プレイリスト５は、「ONE OK ROCK」です。', 'wait':0, })
                 speechs.append({ 'text':u'プレイリスト６は、「SEKAI NO OWARI」です。', 'wait':0, })
                 speechs.append({ 'text':u'プレイリストを再生しますか？', 'wait':0, })
-
-                if (len(speechs) != 0):
-                    qFunc.speech(id='speech', speechs=speechs, lang='', )
+                qFunc.speech(id='speech', speechs=speechs, lang='', )
 
             if (procBgm != ''):
 

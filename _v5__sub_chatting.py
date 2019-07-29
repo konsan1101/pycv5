@@ -236,7 +236,6 @@ class sub_main:
 
             # 処理
             if (control != ''):
-
                 self.sub_proc(control, )
 
             # アイドリング
