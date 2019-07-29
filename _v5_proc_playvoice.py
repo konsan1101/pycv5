@@ -203,10 +203,13 @@ class proc_playvoice:
                 if (True):
 
                     # 音声入力中
-                    check_time = time.time()
-                    while (len(glob.glob(qPath_a_inp + '*')) > 0) and ((time.time() - check_time) < 3):
-                        print('play voice wait !')
-                        time.sleep(0.50)
+                    if (self.micType == 'bluetooth'):
+                        qFunc.busyCheck(qBusy_a_inp, 3)
+
+                        chktime = time.time()
+                        while (len(glob.glob(qPath_a_inp + '*')) > 0) and ((time.time() - chktime) < 3):
+                            print('play voice wait !')
+                            time.sleep(0.50)
 
                     for f in path_files:
 
