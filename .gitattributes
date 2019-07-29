@@ -1,0 +1,16 @@
+* linguist-vendored
+*.py linguist-language=Python
+
+_fonts/* linguist-documentation=false
+_photos/* linguist-documentation=false
+_sounds/* linguist-documentation=false
+_xml/* linguist-documentation=false
+bat/* linguist-documentation=false
+ffmpeg/* linguist-documentation=false
+gijiroku/* linguist-documentation=false
+julius/* linguist-documentation=false
+narration/* linguist-documentation=false
+sox/* linguist-documentation=false
+temp/* linguist-documentation=false
+yolo3_*/* linguist-documentation=false
+
