@@ -30,18 +30,18 @@ qCtrl_control_chatting   = 'temp/control_chatting.txt'
 qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 
 # Python
-qPython_main_audio = '_v5__main_audio.py'
-qPython_main_video = '_v5__main_video.py'
-qPython_recorder   = '_v5__main_recorder.py'
-qPython_bgm        = '_v5__sub_bgm.py'
-qPython_web        = '_v5__sub_web.py'
-qPython_chatting   = '_v5__sub_chatting.py'
-qPython_knowledge  = '_v5__sub_knowledge.py'
+qPython_main_audio    = '_v5__main_audio.py'
+qPython_main_video    = '_v5__main_video.py'
+qPython_main_recorder = '_v5__main_recorder.py'
+qPython_bgm           = '_v5__sub_bgm.py'
+qPython_web           = '_v5__sub_web.py'
+qPython_chatting      = '_v5__sub_chatting.py'
+qPython_knowledge     = '_v5__sub_knowledge.py'
 
-qPython_selfcheck  = '_v5_sub_self_check.py'
-qPython_smartSpk   = '_v5_sub_smart_speaker.py'
-qPython_rssSearch  = '_v5_sub_rss_search.py'
-qPython_weather    = '_v5_sub_weather_search.py'
+qPython_selfcheck     = '_v5_sub_self_check.py'
+qPython_smartSpk      = '_v5_sub_smart_speaker.py'
+qPython_rssSearch     = '_v5_sub_rss_search.py'
+qPython_weather       = '_v5_sub_weather_search.py'
 
 
 
@@ -254,29 +254,29 @@ if __name__ == '__main__':
 
         # 起動条件
 
-        main_audio_run    = None
-        main_audio_switch = 'on'
-        main_video_run    = None
-        main_video_switch = 'off'
-        recorder_run      = None
-        recorder_switch   = 'off'
-        bgm_run           = None
-        bgm_switch        = 'off'
-        web_run           = None
-        web_switch        = 'off'
-        chatting_run      = None
-        chatting_switch   = 'off'
-        knowledge_run     = None
-        knowledge_switch  = 'off'
+        main_audio_run       = None
+        main_audio_switch    = 'on'
+        main_video_run       = None
+        main_video_switch    = 'off'
+        main_recorder_run    = None
+        main_recorder_switch = 'off'
+        bgm_run              = None
+        bgm_switch           = 'off'
+        web_run              = None
+        web_switch           = 'off'
+        chatting_run         = None
+        chatting_switch      = 'off'
+        knowledge_run        = None
+        knowledge_switch     = 'off'
 
         if   (runMode == 'debug'):
-            main_video_switch = 'on'
-            recorder_switch   = 'on'
-            bgm_switch        = 'on'
+            main_video_switch    = 'on'
+            main_recorder_switch = 'on'
+            bgm_switch           = 'on'
         elif (runMode == 'handsfree'):
-            main_video_switch = 'on'
-            recorder_switch   = 'on'
-            bgm_switch        = 'on'
+            main_video_switch    = 'on'
+            main_recorder_switch = 'on'
+            bgm_switch           = 'on'
         elif (runMode == 'translator'):
             pass
         elif (runMode == 'speech'):
@@ -284,17 +284,17 @@ if __name__ == '__main__':
         elif (runMode == 'number'):
             pass
         elif (runMode == 'hud'):
-            main_video_switch = 'on'
-            recorder_switch   = 'on'
-            bgm_switch        = 'on'
+            main_video_switch    = 'on'
+            main_recorder_switch = 'on'
+            bgm_switch           = 'on'
         elif (runMode == 'camera'):
-            main_video_switch = 'on'
-            recorder_switch   = 'on'
-            bgm_switch        = 'off'
+            main_video_switch    = 'on'
+            main_recorder_switch = 'on'
+            bgm_switch           = 'off'
         else:
-            main_video_switch = 'on'
-            recorder_switch   = 'on'
-            bgm_switch        = 'off'
+            main_video_switch    = 'on'
+            main_recorder_switch = 'on'
+            bgm_switch           = 'off'
 
     # 起動
 
@@ -321,10 +321,18 @@ if __name__ == '__main__':
                 control = txt
 
         # コントロール
-        if (control == 'bgm_start'):
-            bgm_switch = 'on'
-        if (control == 'bgm_stop'):
-            bgm_switch = 'off'
+        if (control == '_vision_start_'):
+            main_video_switch    = 'on'
+        if (control == '_vision_end_'):
+            main_video_switch    = 'off'
+        if (control == '_recorder_start_'):
+            main_recorder_switch = 'on'
+        if (control == '_recorder_end_'):
+            main_recorder_switch = 'off'
+        if (control == '_bgm_start_'):
+            bgm_switch           = 'on'
+        if (control == '_bgm_end_'):
+            bgm_switch           = 'off'
 
         # 活動メッセージ
 
@@ -371,17 +379,17 @@ if __name__ == '__main__':
 
             speechs.append({ 'text':u'カメラ機能を、終了しました。', 'wait':0, })
 
-        if (recorder_run is None) and (recorder_switch == 'on'):
-            recorder_run = subprocess.Popen(['python', qPython_recorder, 
+        if (main_recorder_run is None) and (main_recorder_switch == 'on'):
+            main_recorder_run = subprocess.Popen(['python', qPython_recorder, 
                                 runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'録画制御機能を、起動しました。', 'wait':0, })
 
-        if (not recorder_run is None) and (recorder_switch != 'on'):
-            #recorder_run.wait()
-            recorder_run.terminate()
-            recorder_run = None
+        if (not main_recorder_run is None) and (main_recorder_switch != 'on'):
+            #main_recorder_run.wait()
+            main_recorder_run.terminate()
+            main_recorder_run = None
 
             speechs.append({ 'text':u'録画制御機能を、終了しました。', 'wait':0, })
 
@@ -494,10 +502,10 @@ if __name__ == '__main__':
             main_video_run.terminate()
             main_video_run = None
 
-        if (not recorder_run is None):
-            recorder_run.wait()
-            recorder_run.terminate()
-            recorder_run = None
+        if (not main_recorder_run is None):
+            main_recorder_run.wait()
+            main_recorder_run.terminate()
+            main_recorder_run = None
 
         if (not bgm_run is None):
             bgm_run.wait()

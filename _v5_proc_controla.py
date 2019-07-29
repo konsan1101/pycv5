@@ -378,14 +378,30 @@ class proc_controla:
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
+            elif (proc_text.find(u'スクリーン') >=0) and (proc_text.find(u'開始') >=0):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_screen_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_bgm = True
+
+            elif (proc_text.find(u'スクリーン') >=0) and (proc_text.find(u'終了') >=0):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_screen_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_bgm = False
+
+            elif (proc_text.find(u'レコーダー') >=0) and (proc_text.find(u'開始') >=0):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_recorder_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_bgm = True
+
+            elif (proc_text.find(u'レコーダー') >=0) and (proc_text.find(u'終了') >=0):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_recorder_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_bgm = False
+
             elif ((proc_text.find(u'ＢＧＭ') >=0) or (proc_text.find('BGM') >=0)) \
             and (proc_text.find(u'開始') >=0):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['bgm_start'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_bgm_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = True
 
             elif ((proc_text.find(u'ＢＧＭ') >=0) or (proc_text.find('BGM') >=0)) \
             and (proc_text.find(u'終了') >=0):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['bgm_stop'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_bgm_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = False
 
 
