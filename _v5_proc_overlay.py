@@ -919,7 +919,7 @@ class proc_overlay:
                 if (display_mode == 'rec'):
                     nowTime = datetime.datetime.now()
                     stamp   = nowTime.strftime('%Y-%m-%d %H:%M:%S.%f')
-                    cv2.putText(display_img, stamp[:-3], ( 20, self.dspHeight-30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,0))
+                    cv2.putText(display_img, stamp[:-3], ( 20, self.dspHeight-20), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,0))
 
                 # シャッターイメージ
                 if ((time.time() - shutter_time) <= 5) and (not shutter_img is None):
