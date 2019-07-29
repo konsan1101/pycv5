@@ -204,7 +204,9 @@ class proc_playvoice:
 
                     # 音声入力中
                     if (self.micType == 'bluetooth'):
-                        qFunc.busyCheck(qBusy_a_inp, 3)
+
+                        if (len(glob.glob(qPath_a_inp + '*')) == 0):
+                            qFunc.busyCheck(qBusy_a_inp, 2)
 
                         chktime = time.time()
                         while (len(glob.glob(qPath_a_inp + '*')) > 0) and ((time.time() - chktime) < 3):
