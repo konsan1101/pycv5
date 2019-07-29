@@ -383,23 +383,23 @@ class proc_controla:
 
             elif ((proc_text.find(u'スクリーン') >=0)   and (proc_text.find(u'開始') >=0)) \
               or ((proc_text.find(u'Ｓｃｒｅｅｎ') >=0) and (proc_text.find(u'開始') >=0)) \
-              or ((proc_text.find('Screen')     >=0)   and (proc_text.find(u'開始') >=0)):
+              or ((proc_text.find(u'Screen')     >=0)  and (proc_text.find(u'開始') >=0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_screen_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_screen = True
 
             elif ((proc_text.find(u'スクリーン') >=0)   and (proc_text.find(u'終了') >=0)) \
               or ((proc_text.find(u'Ｓｃｒｅｅｎ') >=0) and (proc_text.find(u'終了') >=0)) \
-              or ((proc_text.find('Screen')     >=0)   and (proc_text.find(u'終了') >=0)):
+              or ((proc_text.find(u'Screen')     >=0)  and (proc_text.find(u'終了') >=0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_screen_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_screen = False
 
             elif ((proc_text.find(u'レコーダー') >=0) and (proc_text.find(u'開始') >=0)) \
-              or ((proc_text.find('Recorder')   >=0) and (proc_text.find(u'開始') >=0)):
+              or ((proc_text.find(u'Recorder')  >=0) and (proc_text.find(u'開始') >=0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_recorder_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_recorder = True
 
             elif ((proc_text.find(u'レコーダー') >=0) and (proc_text.find(u'終了') >=0)) \
-              or ((proc_text.find('Recorder')   >=0) and (proc_text.find(u'終了') >=0)):
+              or ((proc_text.find(u'Recorder')  >=0) and (proc_text.find(u'終了') >=0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_recorder_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_recorder = False
 
