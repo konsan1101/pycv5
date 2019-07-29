@@ -809,6 +809,9 @@ class proc_overlay:
                 else:
                     over_y = self.dspHeight - 140
                 over_x = self.dspWidth - 10
+                if (display_mode == 'rec'):
+                    over_y = self.dspHeight - 10
+                    over_x = self.dspWidth  - 10
 
                 # 台形補正
                 if (int(self.dspStretch) != 0):
@@ -911,6 +914,10 @@ class proc_overlay:
                     else:
                         puttext += ' (Zoom=' + self.dspZoom + ')'
                         cv2.putText(display_img, puttext, (self.dspWidth - 260,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
+
+                # タイムスタンプ
+                if (display_mode == 'rec'):
+                    cv2.putText(display_img, '2019-01-01 12:34:56 001', ( 20, self.dspHeight-30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,255,0))
 
                 # シャッターイメージ
                 if ((time.time() - shutter_time) <= 5) and (not shutter_img is None):
