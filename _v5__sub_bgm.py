@@ -228,15 +228,14 @@ class sub_main:
                 cn_s.put([out_name, out_value])
 
             # ＢＧＭアナウンス
-            if (not self.bgm_id is None):
-                if ((time.time() - self.bgm_start) > 60):
+            if (self.bgm_id is None):
+                if ((time.time() - self.bgm_start) > 120):
                     if (onece == True):
                         onece = False
 
                         if (self.runMode == 'debug') \
                         or (self.runMode == 'handsfree'):
                             speechs = []
-                            speechs.append({ 'text':u'ＢＧＭ制御機能が有効です。', 'wait':0, })
                             speechs.append({ 'text':u'プレイリストの再生はいかがですか？', 'wait':0, })
                             qFunc.speech(id='speech', speechs=speechs, lang='', )
 
@@ -302,8 +301,10 @@ class sub_main:
                 self.sub_stop('_stop_', )
 
         elif (proc_text.lower() == '_start_') \
-          or (proc_text.find(u'BGM') >=0) \
-          or (proc_text.find(u'ＢＧＭ') >=0):
+          or (proc_text.find(u'BGM') >=0)   and (proc_text.find(u'開始') >=0) \
+          or (proc_text.find(u'BGM') >=0)   and (proc_text.find(u'再生') >=0) \
+          or (proc_text.find(u'ＢＧＭ') >=0) and (proc_text.find(u'開始') >=0) \
+          or (proc_text.find(u'ＢＧＭ') >=0) and (proc_text.find(u'再生') >=0):
 
             # 停止
             if (not self.bgm_id is None):
