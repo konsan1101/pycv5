@@ -1301,7 +1301,7 @@ signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 if __name__ == '__main__':
-    main_name = 'main_screen'
+    main_name = 'main_scrn'
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
