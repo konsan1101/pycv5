@@ -274,23 +274,18 @@ class proc_adintool:
             if (qFunc.busyCheck(qBusy_dev_mic, 0) == 'busy'):
                     sw = 'off'
             if (self.micType == 'bluetooth'):
-                #if (qFunc.busyCheck(qBusy_a_ctrl,  0) == 'busy') \
-                #or (qFunc.busyCheck(qBusy_a_wav,   0) == 'busy') \
-                #or (qFunc.busyCheck(qBusy_a_STT,   0) == 'busy') \
-                #or (qFunc.busyCheck(qBusy_a_TTS,   0) == 'busy') \
-                #or (qFunc.busyCheck(qBusy_a_TRA,   0) == 'busy') \
-                #or (qFunc.busyCheck(qBusy_a_play,  0) == 'busy'):
-                if ((self.runMode == 'debug') \
-                 or (self.runMode == 'handsfree') \
-                 or (self.runMode == 'translator')) \
-                and \
-                   ((qFunc.busyCheck(qBusy_a_wav,   0) == 'busy') \
-                 or (qFunc.busyCheck(qBusy_a_STT,   0) == 'busy') \
-                 or (qFunc.busyCheck(qBusy_a_TTS,   0) == 'busy') \
-                 or (qFunc.busyCheck(qBusy_a_TRA,   0) == 'busy')):
-                    sw = 'off'
-                if  (qFunc.busyCheck(qBusy_a_wav,   0) == 'busy') \
-                 or (qFunc.busyCheck(qBusy_a_play,  0) == 'busy'):
+                #if ((self.runMode == 'debug') \
+                # or (self.runMode == 'handsfree') \
+                # or (self.runMode == 'translator')) \                
+                    # if ((qFunc.busyCheck(qBusy_a_wav,   0) == 'busy') \
+                    #  or (qFunc.busyCheck(qBusy_a_STT,   0) == 'busy') \
+                    #  or (qFunc.busyCheck(qBusy_a_TTS,   0) == 'busy') \
+                    #  or (qFunc.busyCheck(qBusy_a_TRA,   0) == 'busy')):
+                    #     sw = 'off'
+                #if  (qFunc.busyCheck(qBusy_a_wav,   0) == 'busy') \
+                # or (qFunc.busyCheck(qBusy_a_play,  0) == 'busy'):
+                #    sw = 'off'
+                if  (qFunc.busyCheck(qBusy_a_play,  0) == 'busy'):
                     sw = 'off'
             if (not adintool_exe is None):
                 files = glob.glob(self.path + '*')
