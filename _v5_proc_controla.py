@@ -381,13 +381,15 @@ class proc_controla:
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
-            elif ((proc_text.find(u'スクリーン') >=0) and (proc_text.find(u'開始') >=0)) \
-              or ((proc_text.find('Screen')     >=0) and (proc_text.find(u'開始') >=0)):
+            elif ((proc_text.find(u'スクリーン') >=0)   and (proc_text.find(u'開始') >=0)) \
+              or ((proc_text.find(u'Ｓｃｒｅｅｎ') >=0) and (proc_text.find(u'開始') >=0)) \
+              or ((proc_text.find('Screen')     >=0)   and (proc_text.find(u'開始') >=0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_screen_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_screen = True
 
-            elif ((proc_text.find(u'スクリーン') >=0) and (proc_text.find(u'終了') >=0)) \
-              or ((proc_text.find('Screen')     >=0) and (proc_text.find(u'終了') >=0)):
+            elif ((proc_text.find(u'スクリーン') >=0)   and (proc_text.find(u'終了') >=0)) \
+              or ((proc_text.find(u'Ｓｃｒｅｅｎ') >=0) and (proc_text.find(u'終了') >=0)) \
+              or ((proc_text.find('Screen')     >=0)   and (proc_text.find(u'終了') >=0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_screen_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_screen = False
 
