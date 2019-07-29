@@ -242,7 +242,7 @@ class main_recorder:
 
             # 5分経過
             if (not self.rec_id is None):
-                if ((time.time() - self.rec_start) > (60 * 5)):
+                if ((time.time() - self.rec_start) > (60 * 1)):
                     self.sub_proc('restart', )
 
             # 処理
@@ -413,11 +413,11 @@ class main_recorder:
             # ログ
             qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' stop', display=True,)
 
-            # 保管
-            qFunc.copy(self.rec_file1, self.rec_file2)
-
             # リセット
             qFunc.kill('ffmpeg', )
+
+            # 保管
+            qFunc.copy(self.rec_file1, self.rec_file2)
 
             # メッセージ
             if (proc_text.lower() == 'stop'):
@@ -426,9 +426,10 @@ class main_recorder:
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
         # ビジー解除
-        qFunc.remove(self.fileBsy)
-        if (str(self.id) == '0'):
-            qFunc.busySet(qBusy_v_rec, False)
+        if (proc_text.lower() != 'restart'):
+            qFunc.remove(self.fileBsy)
+            if (str(self.id) == '0'):
+                qFunc.busySet(qBusy_v_rec, False)
 
 
 
