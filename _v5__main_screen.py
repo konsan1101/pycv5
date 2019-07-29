@@ -1376,7 +1376,7 @@ if __name__ == '__main__':
             else:
                 cam2Dev = '0'
 
-        if (qHOSTNAME == 'kondow-s10'):
+        if (qHOSTNAME == 'kondou-s10'):
             if (cam1Dev == '1') and (cam2Dev == '0'):
                 cam1Dev  = '0'
                 cam2Dev  = '1'
