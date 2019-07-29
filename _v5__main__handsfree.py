@@ -380,7 +380,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'カメラ機能を、終了しました。', 'wait':0, })
 
         if (main_recorder_run is None) and (main_recorder_switch == 'on'):
-            main_recorder_run = subprocess.Popen(['python', qPython_recorder, 
+            main_recorder_run = subprocess.Popen(['python', qPython_main_recorder, 
                                 runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
