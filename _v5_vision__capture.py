@@ -2314,7 +2314,7 @@ if (__name__ == '__main__'):
                     stamp=now.strftime('%Y%m%d.%H%M%S')
                     fileId = stamp + '.' + seq2
 
-                    filename1=qPath_rec   + fileId + '.photo.jpg'
+                    filename1=qPath_rec     + fileId + '.photo.jpg'
                     filename2=qPath_v_photo + fileId + '.photo.jpg'
                     qFunc.logOutput(u'video_main: → ' + filename2)
                     try:
@@ -2323,7 +2323,7 @@ if (__name__ == '__main__'):
                     except:
                         pass
 
-                    filename3=qPath_rec   + fileId + '.screen.jpg'
+                    filename3=qPath_rec     + fileId + '.screen.jpg'
                     filename4=qPath_v_photo + fileId + '.screen.jpg'
                     try:
                         cv2.imwrite(filename3, display_img)

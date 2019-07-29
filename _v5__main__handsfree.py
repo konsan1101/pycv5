@@ -20,7 +20,7 @@ print(sys.version_info)
 # インターフェース
 qCtrl_control_main       = 'temp/control_main.txt'
 qCtrl_control_audio      = 'temp/control_audio.txt'
-qCtrl_control_video      = 'temp/control_video.txt'
+qCtrl_control_screen     = 'temp/control_screen.txt'
 qCtrl_control_recorder   = 'temp/control_recorder.txt'
 qCtrl_control_self       = qCtrl_control_main
 
@@ -31,7 +31,7 @@ qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 
 # Python
 qPython_main_audio    = '_v5__main_audio.py'
-qPython_main_video    = '_v5__main_video.py'
+qPython_main_screen   = '_v5__main_screen.py'
 qPython_main_recorder = '_v5__main_recorder.py'
 qPython_bgm           = '_v5__sub_bgm.py'
 qPython_web           = '_v5__sub_web.py'
@@ -238,7 +238,7 @@ if __name__ == '__main__':
 
         qFunc.remove(qCtrl_control_main      )
         qFunc.remove(qCtrl_control_audio     )
-        qFunc.remove(qCtrl_control_video     )
+        qFunc.remove(qCtrl_control_screen    )
         qFunc.remove(qCtrl_control_recorder  )
         qFunc.remove(qCtrl_control_bgm       )
         qFunc.remove(qCtrl_control_web       )
@@ -256,8 +256,8 @@ if __name__ == '__main__':
 
         main_audio_run       = None
         main_audio_switch    = 'on'
-        main_video_run       = None
-        main_video_switch    = 'off'
+        main_screen_run      = None
+        main_screen_switch   = 'off'
         main_recorder_run    = None
         main_recorder_switch = 'off'
         bgm_run              = None
@@ -270,11 +270,11 @@ if __name__ == '__main__':
         knowledge_switch     = 'off'
 
         if   (runMode == 'debug'):
-            main_video_switch    = 'on'
+            main_screen_switch   = 'on'
             main_recorder_switch = 'on'
             bgm_switch           = 'on'
         elif (runMode == 'handsfree'):
-            main_video_switch    = 'on'
+            main_screen_switch   = 'on'
             main_recorder_switch = 'on'
             bgm_switch           = 'on'
         elif (runMode == 'translator'):
@@ -284,15 +284,15 @@ if __name__ == '__main__':
         elif (runMode == 'number'):
             pass
         elif (runMode == 'hud'):
-            main_video_switch    = 'on'
+            main_screen_switch   = 'on'
             main_recorder_switch = 'on'
             bgm_switch           = 'on'
         elif (runMode == 'camera'):
-            main_video_switch    = 'on'
+            main_screen_switch   = 'on'
             main_recorder_switch = 'on'
             bgm_switch           = 'off'
         else:
-            main_video_switch    = 'on'
+            main_screen_switch   = 'on'
             main_recorder_switch = 'on'
             bgm_switch           = 'off'
 
@@ -322,9 +322,9 @@ if __name__ == '__main__':
 
         # コントロール
         if (control == '_vision_start_'):
-            main_video_switch    = 'on'
+            main_screen_switch   = 'on'
         if (control == '_vision_end_'):
-            main_video_switch    = 'off'
+            main_screen_switch   = 'off'
         if (control == '_recorder_start_'):
             main_recorder_switch = 'on'
         if (control == '_recorder_end_'):
@@ -365,17 +365,17 @@ if __name__ == '__main__':
             main_audio_run.terminate()
             main_audio_run = None
 
-        if (main_video_run is None) and (main_video_switch == 'on'):
-            main_video_run = subprocess.Popen(['python', qPython_main_video, 
+        if (main_screen_run is None) and (main_screen_switch == 'on'):
+            main_screen_run = subprocess.Popen(['python', qPython_main_screen, 
                                 runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'カメラ機能を、起動しました。', 'wait':0, })
 
-        if (not main_video_run is None) and (main_video_switch != 'on'):
-            #main_video_run.wait()
-            main_video_run.terminate()
-            main_video_run = None
+        if (not main_screen_run is None) and (main_screen_switch != 'on'):
+            #main_screen_run.wait()
+            main_screen_run.terminate()
+            main_screen_run = None
 
             speechs.append({ 'text':u'カメラ機能を、終了しました。', 'wait':0, })
 
@@ -483,7 +483,7 @@ if __name__ == '__main__':
 
         qFunc.txtsWrite(qCtrl_control_main      ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_audio     ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_video     ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_screen    ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_recorder  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_web       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
@@ -497,10 +497,10 @@ if __name__ == '__main__':
             main_audio_run.terminate()
             main_audio_run = None
 
-        if (not main_video_run is None):
-            main_video_run.wait()
-            main_video_run.terminate()
-            main_video_run = None
+        if (not main_screen_run is None):
+            main_screen_run.wait()
+            main_screen_run.terminate()
+            main_screen_run = None
 
         if (not main_recorder_run is None):
             main_recorder_run.wait()

@@ -20,7 +20,7 @@ import glob
 # インターフェース
 qCtrl_control_main       = 'temp/control_main.txt'
 qCtrl_control_audio      = 'temp/control_audio.txt'
-qCtrl_control_video      = 'temp/control_video.txt'
+qCtrl_control_screen     = 'temp/control_screen.txt'
 qCtrl_control_recorder   = 'temp/control_recorder.txt'
 qCtrl_control_self       = qCtrl_control_recorder
 
