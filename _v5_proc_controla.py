@@ -108,6 +108,7 @@ class proc_controla:
         self.proc_seq  = 0
 
         # 変数
+        self.run_screen    = True
         self.run_recorder  = True
         self.run_bgm       = True
         self.run_web       = True
@@ -354,6 +355,8 @@ class proc_controla:
     def sub_proc(self, seq4, proc_file, work_file, proc_name, proc_text, cn_s, ):
 
         # インターフェース
+        #if (self.run_screen    == True):
+        #    qFunc.txtsWrite(qCtrl_control_screen   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_recorder  == True):
             qFunc.txtsWrite(qCtrl_control_recorder  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_bgm       == True):
@@ -378,25 +381,25 @@ class proc_controla:
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
-            elif ((proc_text.find(u'スクリーン') >=0)     and (proc_text.find(u'開始') >=0)) \
-              or ((proc_text.lower().find('screen') >=0) and (proc_text.find(u'開始') >=0)):
+            elif ((proc_text.find(u'スクリーン') >=0) and (proc_text.find(u'開始') >=0)) \
+              or ((proc_text.find('Screen')     >=0) and (proc_text.find(u'開始') >=0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_screen_start_'], encoding='utf-8', exclusive=True, mode='w', )
-                self.run_bgm = True
+                self.run_screen = True
 
-            elif ((proc_text.find(u'スクリーン') >=0)     and (proc_text.find(u'終了') >=0)) \
-              or ((proc_text.lower().find('screen') >=0) and (proc_text.find(u'終了') >=0)):
+            elif ((proc_text.find(u'スクリーン') >=0) and (proc_text.find(u'終了') >=0)) \
+              or ((proc_text.find('Screen')     >=0) and (proc_text.find(u'終了') >=0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_screen_end_'], encoding='utf-8', exclusive=True, mode='w', )
-                self.run_bgm = False
+                self.run_screen = False
 
-            elif ((proc_text.find(u'レコーダー') >=0)       and (proc_text.find(u'開始') >=0)) \
-              or ((proc_text.lower().find('recorder') >=0) and (proc_text.find(u'開始') >=0)):
+            elif ((proc_text.find(u'レコーダー') >=0) and (proc_text.find(u'開始') >=0)) \
+              or ((proc_text.find('Recorder')   >=0) and (proc_text.find(u'開始') >=0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_recorder_start_'], encoding='utf-8', exclusive=True, mode='w', )
-                self.run_bgm = True
+                self.run_recorder = True
 
-            elif ((proc_text.find(u'レコーダー') >=0)       and (proc_text.find(u'終了') >=0)) \
-              or ((proc_text.lower().find('recorder') >=0) and (proc_text.find(u'終了') >=0)):
+            elif ((proc_text.find(u'レコーダー') >=0) and (proc_text.find(u'終了') >=0)) \
+              or ((proc_text.find('Recorder')   >=0) and (proc_text.find(u'終了') >=0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_recorder_end_'], encoding='utf-8', exclusive=True, mode='w', )
-                self.run_bgm = False
+                self.run_recorder = False
 
             elif ((proc_text.find(u'ＢＧＭ') >=0) or (proc_text.find('BGM') >=0)) \
             and (proc_text.find(u'開始') >=0):
