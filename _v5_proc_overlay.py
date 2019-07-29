@@ -917,7 +917,9 @@ class proc_overlay:
 
                 # タイムスタンプ
                 if (display_mode == 'rec'):
-                    cv2.putText(display_img, '2019-01-01 12:34:56 001', ( 20, self.dspHeight-30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,255,0))
+                    nowTime = datetime.datetime.now()
+                    stamp   = nowTime.strftime('%Y-%m-%d %H:%M:%S')
+                    cv2.putText(display_img, stamp, ( 20, self.dspHeight-30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,0))
 
                 # シャッターイメージ
                 if ((time.time() - shutter_time) <= 5) and (not shutter_img is None):
