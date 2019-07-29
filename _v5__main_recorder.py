@@ -104,11 +104,12 @@ class main_recorder:
         self.proc_step = '0'
         self.proc_seq  = 0
 
-        self.exec_id   = None
+        self.rec_id    = None
+        self.rec_start = time.time()
+        self.rec_limit = None
         self.rec_file  = ''
         self.rec_file1 = ''
         self.rec_file2 = ''
-        self.rec_limit = None
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -230,25 +231,23 @@ class main_recorder:
                 out_value = 'ready'
                 cn_s.put([out_name, out_value])
 
-            # 処理
+            # 録画時間制限
             if (not self.rec_limit is None):
                 if (time.time() > self.rec_limit):
                     self.rec_limit = None
                     
-                    # クローズ
-                    self.sub_close()
+                    # 録画停止
+                    if (not self.rec_id is None):
+                        self.sub_proc('stop', )
 
-                    # メッセージ
-                    speechs = []
-                    speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
-                    qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+            # 5分経過
+            if (not self.rec_id is None):
+                if ((time.time() - self.rec_start) > (60 * 5)):
+                    self.sub_proc('restart', )
 
             # 処理
             if (control != ''):
-
-                # オープン
-                txt = control.lower()
-                self.sub_open(txt, )
+                self.sub_proc(control, )
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
@@ -264,15 +263,9 @@ class main_recorder:
             # レディー解除
             qFunc.remove(self.fileRdy)
 
-            if (not self.exec_id is None):
-
-                # クローズ
-                self.sub_close()
-
-                # メッセージ
-                speechs = []
-                speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
-                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+            # 録画停止
+            if (not self.rec_id is None):
+                self.sub_proc('stop', )
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -292,68 +285,73 @@ class main_recorder:
 
 
 
-    # 停止
-    def sub_close(self, ):
-        if (not self.exec_id is None):
-            if (os.name != 'nt'):
-                self.exec_id.stdin.write(b'q\n')
-                self.exec_id.stdin.flush()
-                time.sleep(2.00)
-                self.exec_id.send_signal(signal.SIGINT)
-            else:
-                self.exec_id.stdin.write(b'q\n')
-                self.exec_id.stdin.flush()
-                time.sleep(2.00)
-                self.exec_id.send_signal(signal.CTRL_C_EVENT)
+    # 処理
+    def sub_proc(self, proc_text, ):
 
-            time.sleep(2.00)
-            self.exec_id.wait()
-            self.exec_id.terminate()
-            self.exec_id = None
+        if (proc_text.find(u'リセット') >=0):
 
-            # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' stop', display=True,)
+            # 停止
+            if (not self.rec_id is None):
+                #self.sub_stop(proc_text, )
+                self.sub_stop('stop', )
 
-            # 保管
-            qFunc.copy(self.rec_file1, self.rec_file2)
+        elif (proc_text.lower() == 'stop') \
+          or (proc_text.find(u'録画') >=0)and (proc_text.find(u'停止') >=0) \
+          or (proc_text.find(u'録画') >=0)and (proc_text.find(u'終了') >=0):
 
-        qFunc.kill('ffmpeg', )
+            # 停止
+            if (not self.rec_id is None):
+                #self.sub_stop(proc_text, )
+                self.sub_stop('stop', )
 
-        # ビジー解除
-        qFunc.remove(self.fileBsy)
-        if (str(self.id) == '0'):
-            qFunc.busySet(qBusy_v_rec, False)
 
-    # 開始
-    def sub_open(self, proc_text, ):
+        elif (proc_text.lower() == 'restart'):
+            print('restart')
 
-        if (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
+            # 停止
+            if (not self.rec_id is None):
+                self.sub_stop(proc_text, )
 
-            if (not self.exec_id is None):
-
-                # クローズ
-                self.sub_close()
-
-                # メッセージ
-                speechs = []
-                speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
-                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
-
-        elif (proc_text.find(u'録画') >=0):
-            if (not self.exec_id is None):
-                # クローズ
-                self.sub_close()
-
-            # ビジー設定
-            if (not os.path.exists(self.fileBsy)):
-                qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
-                if (str(self.id) == '0'):
-                    qFunc.busySet(qBusy_v_rec, True)
+            # 開始
+            self.sub_start(proc_text, )
 
             # メッセージ
             speechs = []
+            speechs.append({ 'text':u'録画中です。音声コマンド「録画停止」で録画を停止します。', 'wait':0, })
+            qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
+
+        elif (proc_text.lower() == 'start') \
+          or (proc_text.find(u'録画') >=0):
+
+            # 停止
+            if (not self.rec_id is None):
+                self.sub_stop(proc_text, )
+
+            # 開始
+            self.sub_start(proc_text, )
+
+
+
+    # 録画開始
+    def sub_start(self, proc_text, ):
+
+        # ビジー設定
+        if (not os.path.exists(self.fileBsy)):
+            qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+            if (str(self.id) == '0'):
+                qFunc.busySet(qBusy_v_rec, True)
+
+        # メッセージ
+        if (proc_text.lower() == 'start') \
+        or (proc_text.find(u'録画') >=0):
+            speechs = []
             speechs.append({ 'text':u'録画を開始します。', 'wait':0, })
             qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
+        if (proc_text.lower() == 'start') \
+        or (proc_text.lower() == 'restart') \
+        or (proc_text.find(u'録画') >=0):
 
             # 開始
             nowTime    = datetime.datetime.now()
@@ -364,7 +362,7 @@ class main_recorder:
                 self.rec_file1 = qPath_v_movie + stamp + '.flv'
                 self.rec_file2 = qPath_rec     + stamp + '.flv'
             else:
-                self.rec_limit = time.time() + 20
+                self.rec_limit = time.time() + 30
                 self.rec_file  = qPath_work    + stamp + '.flv'
                 rec_txt = '.' + qFunc.txt2filetxt(proc_text)
                 self.rec_file1 = qPath_v_movie + stamp + rec_txt + '.flv'
@@ -372,21 +370,65 @@ class main_recorder:
 
             if (os.name != 'nt'):
                 # ffmpeg -f avfoundation -list_devices true -i ""
-                self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
+                self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
                             '-i', '1:2', '-loglevel', 'warning', \
                             '-r', '5', self.rec_file1, ], \
                             stdin=subprocess.PIPE, )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                self.rec_start = time.time()
             else:
                 # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
-                self.exec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
+                self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
                             '-i', 'desktop', '-loglevel', 'warning', \
                             '-r', '5', self.rec_file1, ], \
                             stdin=subprocess.PIPE, )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                self.rec_start = time.time()
 
             # ログ
             qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' start', display=True,)
+
+    # 録画停止
+    def sub_stop(self, proc_text):
+
+        if (not self.rec_id is None):
+
+            # 録画停止
+            if (os.name != 'nt'):
+                self.rec_id.stdin.write(b'q\n')
+                self.rec_id.stdin.flush()
+                time.sleep(2.00)
+                self.rec_id.send_signal(signal.SIGINT)
+            else:
+                self.rec_id.stdin.write(b'q\n')
+                self.rec_id.stdin.flush()
+                time.sleep(2.00)
+                self.rec_id.send_signal(signal.CTRL_C_EVENT)
+
+            time.sleep(2.00)
+            self.rec_id.wait()
+            self.rec_id.terminate()
+            self.rec_id = None
+
+            # ログ
+            qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' stop', display=True,)
+
+            # 保管
+            qFunc.copy(self.rec_file1, self.rec_file2)
+
+            # リセット
+            qFunc.kill('ffmpeg', )
+
+            # メッセージ
+            if (proc_text.lower() == 'stop'):
+                speechs = []
+                speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
+                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
+        # ビジー解除
+        qFunc.remove(self.fileBsy)
+        if (str(self.id) == '0'):
+            qFunc.busySet(qBusy_v_rec, False)
 
 
 
@@ -461,14 +503,16 @@ if __name__ == '__main__':
         if (runMode == 'debug'):
 
             # テスト開始
-            if  ((time.time() - main_start) > 5):
+            if  ((time.time() - main_start) > 1):
                 if (onece == True):
                     onece = False
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=[u'録画開始'], encoding='utf-8', exclusive=True, mode='w', )
+                    qFunc.txtsWrite(qCtrl_control_self ,txts=['start'], encoding='utf-8', exclusive=True, mode='w', )
 
             # テスト終了
-            if  ((time.time() - main_start) > 30):
-                qFunc.txtsWrite(qCtrl_control_self ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            if  ((time.time() - main_start) > 60):
+                    qFunc.txtsWrite(qCtrl_control_self ,txts=['stop'], encoding='utf-8', exclusive=True, mode='w', )
+                    time.sleep(5.00)
+                    qFunc.txtsWrite(qCtrl_control_self ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
     # 終了
 
