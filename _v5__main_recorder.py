@@ -231,7 +231,7 @@ class main_recorder:
                 out_value = 'ready'
                 cn_s.put([out_name, out_value])
 
-            # 録画時間制限
+            # 制限時間、自動停止
             if (not self.rec_limit is None):
                 if (time.time() > self.rec_limit):
                     self.rec_limit = None
@@ -240,7 +240,7 @@ class main_recorder:
                     if (not self.rec_id is None):
                         self.sub_proc('_stop_', )
 
-            # 5分経過
+            # 5分毎、自動リスタート
             if (not self.rec_id is None):
                 if ((time.time() - self.rec_start) > (60 * 1)):
                     self.sub_proc('_restart_', )
@@ -296,8 +296,8 @@ class main_recorder:
                 self.sub_stop('_stop_', )
 
         elif (proc_text.lower() == '_stop_') \
-          or (proc_text.find(u'録画') >=0)and (proc_text.find(u'停止') >=0) \
-          or (proc_text.find(u'録画') >=0)and (proc_text.find(u'終了') >=0):
+          or (proc_text.find(u'録画') >=0) and (proc_text.find(u'停止') >=0) \
+          or (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
 
             # 停止
             if (not self.rec_id is None):
@@ -390,7 +390,7 @@ class main_recorder:
             qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' start', display=True,)
 
     # 録画停止
-    def sub_stop(self, proc_text):
+    def sub_stop(self, proc_text, ):
 
         if (not self.rec_id is None):
 
@@ -511,7 +511,7 @@ if __name__ == '__main__':
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_start_'], encoding='utf-8', exclusive=True, mode='w', )
 
             # テスト終了
-            if  ((time.time() - main_start) > 60):
+            if  ((time.time() - main_start) > 30):
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
                     time.sleep(5.00)
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
