@@ -242,7 +242,7 @@ class main_recorder:
 
             # 5分毎、自動リスタート
             if (not self.rec_id is None):
-                if ((time.time() - self.rec_start) > (60 * 1)):
+                if ((time.time() - self.rec_start) > (60 * 10)):
                     self.sub_proc('_restart_', )
 
             # 処理
