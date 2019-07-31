@@ -21,9 +21,9 @@ import cv2
 
 # インターフェース
 qCtrl_control_main       = 'temp/control_main.txt'
-qCtrl_control_speech      = 'temp/control_speech.txt'
+qCtrl_control_speech     = 'temp/control_speech.txt'
 qCtrl_control_vision     = 'temp/control_vision.txt'
-qCtrl_control_desktop   = 'temp/control_desktop.txt'
+qCtrl_control_desktop    = 'temp/control_desktop.txt'
 qCtrl_control_self       = qCtrl_control_vision
 
 qCtrl_recognize          = 'temp/result_recognize.txt'
@@ -1301,7 +1301,7 @@ signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 if __name__ == '__main__':
-    main_name = 'main_scrn'
+    main_name = 'vision'
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス

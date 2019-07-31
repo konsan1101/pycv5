@@ -19,9 +19,9 @@ import glob
 
 # インターフェース
 qCtrl_control_main       = 'temp/control_main.txt'
-qCtrl_control_speech      = 'temp/control_speech.txt'
+qCtrl_control_speech     = 'temp/control_speech.txt'
 qCtrl_control_vision     = 'temp/control_vision.txt'
-qCtrl_control_desktop   = 'temp/control_desktop.txt'
+qCtrl_control_desktop    = 'temp/control_desktop.txt'
 qCtrl_control_self       = qCtrl_control_desktop
 
 
@@ -238,12 +238,12 @@ class main_desktop:
                     
                     # 録画停止
                     if (not self.rec_id is None):
-                        self.sub_proc('_stop_', )
+                        self.sub_proc('_rec_stop_', )
 
             # 5分毎、自動リスタート
             if (not self.rec_id is None):
-                if ((time.time() - self.rec_start) > (60 * 10)):
-                    self.sub_proc('_restart_', )
+                if ((time.time() - self.rec_start) > (60 * 1)):
+                    self.sub_proc('_rec_restart_', )
 
             # 処理
             if (control != ''):
@@ -293,19 +293,19 @@ class main_desktop:
             # 停止
             if (not self.rec_id is None):
                 #self.sub_stop(proc_text, )
-                self.sub_stop('_stop_', )
+                self.sub_stop('_rec_stop_', )
 
-        elif (proc_text.lower() == '_stop_') \
+        elif (proc_text.lower() == '_rec_stop_') \
           or (proc_text.find(u'録画') >=0) and (proc_text.find(u'停止') >=0) \
           or (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
 
             # 停止
             if (not self.rec_id is None):
                 #self.sub_stop(proc_text, )
-                self.sub_stop('_stop_', )
+                self.sub_stop('_rec_stop_', )
 
 
-        elif (proc_text.lower() == '_restart_'):
+        elif (proc_text.lower() == '_rec_restart_'):
 
             # 停止
             if (not self.rec_id is None):
@@ -320,7 +320,7 @@ class main_desktop:
             qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
 
-        elif (proc_text.lower() == '_start_') \
+        elif (proc_text.lower() == '_rec_start_') \
           or (proc_text.find(u'録画') >=0):
 
             # 停止
@@ -342,21 +342,21 @@ class main_desktop:
                 qFunc.busySet(qBusy_v_rec, True)
 
         # メッセージ
-        if (proc_text.lower() == '_start_') \
+        if (proc_text.lower() == '_rec_start_') \
         or (proc_text.find(u'録画') >=0):
             speechs = []
             speechs.append({ 'text':u'録画を開始します。', 'wait':0, })
             qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
-        if (proc_text.lower() == '_start_') \
-        or (proc_text.lower() == '_restart_') \
+        if (proc_text.lower() == '_rec_start_') \
+        or (proc_text.lower() == '_rec_restart_') \
         or (proc_text.find(u'録画') >=0):
 
             # 開始
             nowTime    = datetime.datetime.now()
             stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
-            if (proc_text.lower() == '_start_') \
-            or (proc_text.lower() == '_restart_') \
+            if (proc_text.lower() == '_rec_start_') \
+            or (proc_text.lower() == '_rec_restart_') \
             or (proc_text.find(u'開始') >=0):
                 self.rec_limit = None
                 self.rec_file  = qPath_work    + stamp + '.flv'
@@ -421,13 +421,13 @@ class main_desktop:
             qFunc.copy(self.rec_file1, self.rec_file2)
 
             # メッセージ
-            if (proc_text.lower() == '_stop_'):
+            if (proc_text.lower() == '_rec_stop_'):
                 speechs = []
                 speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
         # ビジー解除
-        if (proc_text.lower() != '_restart_'):
+        if (proc_text.lower() != '_rec_restart_'):
             qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
                 qFunc.busySet(qBusy_v_rec, False)
@@ -446,7 +446,7 @@ signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 if __name__ == '__main__':
-    main_name = 'main_rec'
+    main_name = 'desktop'
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
@@ -508,11 +508,11 @@ if __name__ == '__main__':
             if  ((time.time() - main_start) > 1):
                 if (onece == True):
                     onece = False
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=['_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                    qFunc.txtsWrite(qCtrl_control_self ,txts=['_rec_start_'], encoding='utf-8', exclusive=True, mode='w', )
 
             # テスト終了
             if  ((time.time() - main_start) > 30):
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+                    qFunc.txtsWrite(qCtrl_control_self ,txts=['_rec_stop_'], encoding='utf-8', exclusive=True, mode='w', )
                     time.sleep(5.00)
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 

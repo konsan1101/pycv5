@@ -19,9 +19,9 @@ print(sys.version_info)
 
 # インターフェース
 qCtrl_control_main       = 'temp/control_main.txt'
-qCtrl_control_speech      = 'temp/control_speech.txt'
+qCtrl_control_speech     = 'temp/control_speech.txt'
 qCtrl_control_vision     = 'temp/control_vision.txt'
-qCtrl_control_desktop   = 'temp/control_desktop.txt'
+qCtrl_control_desktop    = 'temp/control_desktop.txt'
 qCtrl_control_self       = qCtrl_control_main
 
 qCtrl_control_bgm        = 'temp/control_bgm.txt'
@@ -30,9 +30,9 @@ qCtrl_control_chatting   = 'temp/control_chatting.txt'
 qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 
 # Python
-qPython_main_speech    = '_v5__main_speech.py'
+qPython_main_speech   = '_v5__main_speech.py'
 qPython_main_vision   = '_v5__main_vision.py'
-qPython_main_desktop = '_v5__main_desktop.py'
+qPython_main_desktop  = '_v5__main_desktop.py'
 qPython_bgm           = '_v5__sub_bgm.py'
 qPython_web           = '_v5__sub_web.py'
 qPython_chatting      = '_v5__sub_chatting.py'
@@ -95,7 +95,7 @@ qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
 
 
 # debug
-runMode      = 'hud'
+runMode     = 'hud'
 
 qApiInp     = 'free'
 qApiTrn     = 'free'
@@ -237,9 +237,9 @@ if __name__ == '__main__':
         # インターフェースリセット
 
         qFunc.remove(qCtrl_control_main      )
-        qFunc.remove(qCtrl_control_speech     )
+        qFunc.remove(qCtrl_control_speech    )
         qFunc.remove(qCtrl_control_vision    )
-        qFunc.remove(qCtrl_control_desktop  )
+        qFunc.remove(qCtrl_control_desktop   )
         qFunc.remove(qCtrl_control_bgm       )
         qFunc.remove(qCtrl_control_web       )
         qFunc.remove(qCtrl_control_chatting  )
@@ -254,12 +254,12 @@ if __name__ == '__main__':
 
         # 起動条件
 
-        main_speech_run       = None
-        main_speech_switch    = 'on'
+        main_speech_run      = None
+        main_speech_switch   = 'on'
         main_vision_run      = None
         main_vision_switch   = 'off'
-        main_desktop_run    = None
-        main_desktop_switch = 'off'
+        main_desktop_run     = None
+        main_desktop_switch  = 'off'
         bgm_run              = None
         bgm_switch           = 'off'
         web_run              = None
@@ -271,11 +271,11 @@ if __name__ == '__main__':
 
         if   (runMode == 'debug'):
             main_vision_switch   = 'on'
-            main_desktop_switch = 'on'
+            main_desktop_switch  = 'on'
             bgm_switch           = 'on'
         elif (runMode == 'handsfree'):
             main_vision_switch   = 'on'
-            main_desktop_switch = 'on'
+            main_desktop_switch  = 'on'
             bgm_switch           = 'on'
         elif (runMode == 'translator'):
             pass
@@ -285,15 +285,15 @@ if __name__ == '__main__':
             pass
         elif (runMode == 'hud'):
             main_vision_switch   = 'on'
-            main_desktop_switch = 'on'
+            main_desktop_switch  = 'on'
             bgm_switch           = 'on'
         elif (runMode == 'camera'):
             main_vision_switch   = 'on'
-            main_desktop_switch = 'on'
+            main_desktop_switch  = 'on'
             bgm_switch           = 'off'
         else:
             main_vision_switch   = 'on'
-            main_desktop_switch = 'on'
+            main_desktop_switch  = 'on'
             bgm_switch           = 'off'
 
     # 起動
@@ -321,14 +321,14 @@ if __name__ == '__main__':
                 control = txt
 
         # コントロール
-        if (control == '_screen_start_'):
+        if (control == '_vision_start_'):
             main_vision_switch   = 'on'
-        if (control == '_screen_end_'):
+        if (control == '_vision_end_'):
             main_vision_switch   = 'off'
-        if (control == '_recorder_start_'):
-            main_desktop_switch = 'on'
-        if (control == '_recorder_end_'):
-            main_desktop_switch = 'off'
+        if (control == '_desktop_start_'):
+            main_desktop_switch  = 'on'
+        if (control == '_desktop_end_'):
+            main_desktop_switch  = 'off'
         if (control == '_bgm_start_'):
             bgm_switch           = 'on'
         if (control == '_bgm_end_'):
@@ -384,14 +384,14 @@ if __name__ == '__main__':
                                 runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-            speechs.append({ 'text':u'録画制御機能を、起動しました。', 'wait':0, })
+            speechs.append({ 'text':u'デスクトップ制御機能を、起動しました。', 'wait':0, })
 
         if (not main_desktop_run is None) and (main_desktop_switch != 'on'):
             #main_desktop_run.wait()
             main_desktop_run.terminate()
             main_desktop_run = None
 
-            speechs.append({ 'text':u'録画制御機能を、終了しました。', 'wait':0, })
+            speechs.append({ 'text':u'デスクトップ制御機能を、終了しました。', 'wait':0, })
 
         if (bgm_run is None) and (bgm_switch == 'on'):
             bgm_run = subprocess.Popen(['python', qPython_bgm, runMode, ], )
@@ -482,9 +482,9 @@ if __name__ == '__main__':
         # プロセス終了
 
         qFunc.txtsWrite(qCtrl_control_main      ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_speech     ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_speech    ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_vision    ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_desktop  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_desktop   ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_web       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
