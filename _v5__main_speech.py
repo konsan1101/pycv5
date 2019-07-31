@@ -100,7 +100,7 @@ import speech_api_julius
 
 
 # debug
-runMode      = 'hud'
+runMode     = 'hud'
 
 qApiInp     = 'free'
 qApiTrn     = 'free'
@@ -840,12 +840,7 @@ if __name__ == '__main__':
         qFunc.makeDirs(qPath_s_TTS,  True )
         qFunc.makeDirs(qPath_s_play, True )
 
-    qFunc.busyReset_a(False)
-
-    qFunc.busySet(qBusy_dev_cpu, False)
-    qFunc.busySet(qBusy_dev_com, False)
-    qFunc.busySet(qBusy_dev_mic, False)
-    qFunc.busySet(qBusy_dev_spk, False)
+    qFunc.busyReset_speech(False)
 
     # 起動
 

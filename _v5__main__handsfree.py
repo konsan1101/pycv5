@@ -249,12 +249,9 @@ if __name__ == '__main__':
         qFunc.remove(qCtrl_control_chatting  )
         qFunc.remove(qCtrl_control_knowledge )
 
-        qFunc.busySet(qBusy_dev_cpu, False)
-        qFunc.busySet(qBusy_dev_com, False)
-        qFunc.busySet(qBusy_dev_mic, False)
-        qFunc.busySet(qBusy_dev_spk, False)
-        qFunc.busySet(qBusy_dev_cam, False)
-        qFunc.busySet(qBusy_dev_dsp, False)
+        qFunc.busyReset_speech(False)
+        qFunc.busyReset_vision(False)
+        qFunc.busyReset_desktop(False)
 
         # 起動条件
 

@@ -1521,15 +1521,9 @@ if __name__ == '__main__':
     qFunc.makeDirs(qPath_v_msg,    True )
     qFunc.makeDirs(qPath_d_prtscn, True )
 
-    qFunc.busyReset_v(False)
-
-    qFunc.busySet(qBusy_dev_cpu, False)
-    qFunc.busySet(qBusy_dev_com, False)
-    qFunc.busySet(qBusy_dev_cam, False)
-    qFunc.busySet(qBusy_dev_dsp, False)
+    qFunc.busyReset_vision(False)
 
     display_img = None
-
     display = None
 
     # 起動
