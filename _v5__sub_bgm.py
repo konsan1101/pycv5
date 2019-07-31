@@ -531,10 +531,15 @@ if __name__ == '__main__':
     while (True):
 
         # 終了確認
+        #control = ''
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
+            qFunc.logOutput(main_id + ':' + str(txt))
             if (txt == '_close_'):
                 break
+            #else:
+            #    qFunc.remove(qCtrl_control_self)
+            #    control = txt
 
         # デバッグ
         if (runMode == 'debug'):

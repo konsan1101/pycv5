@@ -123,7 +123,7 @@ class proc_recorder:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def stop(self, waitMax=20, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -160,6 +160,10 @@ class proc_recorder:
 
         # 初期設定
         self.proc_step = '1'
+
+        # 録画開始
+        if (self.runMode == 'recorder'):
+            self.sub_proc('_rec_start_', )
 
         # 待機ループ
         self.proc_step = '5'
@@ -400,12 +404,12 @@ class proc_recorder:
             # 録画停止
             if (os.name != 'nt'):
                 self.rec_id.stdin.write(b'q\n')
-                self.rec_id.stdin.flush()
+                #self.rec_id.stdin.flush()
                 time.sleep(2.00)
                 self.rec_id.send_signal(signal.SIGINT)
             else:
                 self.rec_id.stdin.write(b'q\n')
-                self.rec_id.stdin.flush()
+                #self.rec_id.stdin.flush()
                 time.sleep(2.00)
                 self.rec_id.send_signal(signal.CTRL_C_EVENT)
 
