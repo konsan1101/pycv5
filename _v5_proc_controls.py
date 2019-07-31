@@ -361,8 +361,8 @@ class proc_controls:
         # インターフェース
         #if (self.run_vision    == True):
         #    qFunc.txtsWrite(qCtrl_control_vision   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
-        if (self.run_desktop   == True):
-            qFunc.txtsWrite(qCtrl_control_desktop   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+        #if (self.run_desktop   == True):
+        #    qFunc.txtsWrite(qCtrl_control_desktop  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_bgm       == True):
             qFunc.txtsWrite(qCtrl_control_bgm       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_web       == True):
@@ -374,54 +374,54 @@ class proc_controls:
 
         if (cn_s.qsize() < 99):
 
-            if (proc_text.find(u'リセット') >=0):
+            if (proc_text.find(u'リセット') >= 0):
                 out_name  = 'control'
                 out_value = 'reset'
                 cn_s.put([out_name, out_value])
 
-            elif ((proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0)) \
+            elif ((proc_text.find(u'システム') >= 0) and (proc_text.find(u'終了') >= 0)) \
             or    (proc_text == u'バルス'):
                 out_name  = 'control'
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
-            elif ((proc_text.find(u'画面') >=0) and (proc_text.find(u'開始') >=0)):
+            elif ((proc_text.find(u'画面') >= 0) and (proc_text.find(u'開始') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = True
                 time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_vision  = True
 
-            elif ((proc_text.find(u'画面') >=0) and (proc_text.find(u'終了') >=0)):
+            elif ((proc_text.find(u'画面') >= 0) and (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = False
                 time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_vision  = False
 
-            elif ((proc_text.find(u'ビジョン') >=0) and (proc_text.find(u'開始') >=0)):
+            elif ((proc_text.find(u'ビジョン') >= 0) and (proc_text.find(u'開始') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_vision = True
 
-            elif ((proc_text.find(u'ビジョン') >=0) and (proc_text.find(u'終了') >=0)):
+            elif ((proc_text.find(u'ビジョン') >= 0) and (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_vision = False
 
-            elif ((proc_text.find(u'デスクトップ') >=0) and (proc_text.find(u'開始') >=0)):
+            elif ((proc_text.find(u'デスクトップ') >= 0) and (proc_text.find(u'開始') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = True
 
-            elif ((proc_text.find(u'デスクトップ') >=0) and (proc_text.find(u'終了') >=0)):
+            elif ((proc_text.find(u'デスクトップ') >= 0) and (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = False
 
-            elif ((proc_text.find(u'ＢＧＭ') >=0) or (proc_text.find('BGM') >=0)) \
-            and (proc_text.find(u'開始') >=0):
+            elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
+            and (proc_text.find(u'開始') >= 0):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_bgm_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = True
 
-            elif ((proc_text.find(u'ＢＧＭ') >=0) or (proc_text.find('BGM') >=0)) \
-            and (proc_text.find(u'終了') >=0):
+            elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
+            and (proc_text.find(u'終了') >= 0):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_bgm_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = False
 

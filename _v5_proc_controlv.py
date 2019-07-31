@@ -330,58 +330,58 @@ class proc_controlv:
 
         if (cn_s.qsize() < 99):
 
-            if (proc_text.find(u'リセット') >=0):
+            if (proc_text.find(u'リセット') >= 0):
                 out_name  = 'control'
                 out_value = 'reset'
                 cn_s.put([out_name, out_value])
 
-            elif ((proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0)) \
+            elif ((proc_text.find(u'システム') >= 0) and (proc_text.find(u'終了') >= 0)) \
             or    (proc_text == u'バルス'):
                 out_name  = 'control'
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text == u'シャッター') or (proc_text.find(u'撮影') >=0):
+            elif (proc_text == u'シャッター') or (proc_text.find(u'撮影') >= 0):
                 out_name  = 'control'
                 out_value = 'shutter'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text == u'ズーム') or (proc_text.find(u'ズームイン') >=0):
+            elif (proc_text == u'ズーム') or (proc_text.find(u'ズームイン') >= 0):
                 out_name  = 'control'
                 out_value = 'zoomin'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text.find(u'ズームアウト') >=0):
+            elif (proc_text.find(u'ズームアウト') >= 0):
                 out_name  = 'control'
                 out_value = 'zoomout'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text.find(u'回転') >=0):
+            elif (proc_text.find(u'回転') >= 0):
                 out_name  = 'control'
                 out_value = 'rotate'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text.find(u'台形') >=0) or (proc_text.find(u'補正') >=0):
+            elif (proc_text.find(u'台形') >= 0) or (proc_text.find(u'補正') >= 0):
                 out_name  = 'control'
                 out_value = 'stretch'
                 cn_s.put([out_name, out_value])
             
-            elif (proc_text.find(u'背景') >=0):
+            elif (proc_text.find(u'背景') >= 0):
                 out_name  = 'control'
                 out_value = 'background'
                 cn_s.put([out_name, out_value])
             
-            elif (proc_text.find(u'ブラック') >=0):
+            elif (proc_text.find(u'ブラック') >= 0):
                 out_name  = 'control'
                 out_value = 'black'
                 cn_s.put([out_name, out_value])
             
-            elif (proc_text.find(u'ホワイト') >=0):
+            elif (proc_text.find(u'ホワイト') >= 0):
                 out_name  = 'control'
                 out_value = 'white'
                 cn_s.put([out_name, out_value])
             
-            elif (proc_text.find(u'カメラ変更') >=0):
+            elif (proc_text.find(u'カメラ変更') >= 0):
                 out_name  = 'control'
                 out_value = 'camchange_off'
                 cn_s.put([out_name, out_value])
@@ -390,31 +390,31 @@ class proc_controlv:
                 out_value = 'camchange_on'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text.find(u'ここ')   >=0) \
-            or   (proc_text.find(u'これ')   >=0) \
-            or   (proc_text.find(u'こちら') >=0) \
-            or   (proc_text.find(u'こっち') >=0) \
-            or   (proc_text.find(u'そこ')   >=0) \
-            or   (proc_text.find(u'それ')   >=0) \
-            or   (proc_text.find(u'そちら') >=0) \
-            or   (proc_text.find(u'そっち') >=0) \
-            or   (proc_text.find(u'あそこ') >=0) \
-            or   (proc_text.find(u'あれ')   >=0) \
-            or   (proc_text.find(u'あちら') >=0) \
-            or   (proc_text.find(u'あっち') >=0) \
-            or   (proc_text.find(u'まえ')   >=0) \
-            or   (proc_text.find(u'前')     >=0) \
-            or   (proc_text.find(u'うしろ') >=0) \
-            or   (proc_text.find(u'後')     >=0) \
-            or   (proc_text.find(u'ひだり') >=0) \
-            or   (proc_text.find(u'左')     >=0) \
-            or   (proc_text.find(u'みぎ')   >=0) \
-            or   (proc_text.find(u'右')     >=0) \
-            or   (proc_text.find(u'注意')   >=0) \
-            or   (proc_text.find(u'写真')   >=0) \
-            or   (proc_text.find(u'伝票')   >=0) \
-            or   (proc_text.find(u'計測')   >=0) \
-            or   (proc_text.find(u'測定')   >=0):
+            elif (proc_text.find(u'ここ')   >= 0) \
+            or   (proc_text.find(u'これ')   >= 0) \
+            or   (proc_text.find(u'こちら') >= 0) \
+            or   (proc_text.find(u'こっち') >= 0) \
+            or   (proc_text.find(u'そこ')   >= 0) \
+            or   (proc_text.find(u'それ')   >= 0) \
+            or   (proc_text.find(u'そちら') >= 0) \
+            or   (proc_text.find(u'そっち') >= 0) \
+            or   (proc_text.find(u'あそこ') >= 0) \
+            or   (proc_text.find(u'あれ')   >= 0) \
+            or   (proc_text.find(u'あちら') >= 0) \
+            or   (proc_text.find(u'あっち') >= 0) \
+            or   (proc_text.find(u'まえ')   >= 0) \
+            or   (proc_text.find(u'前')     >= 0) \
+            or   (proc_text.find(u'うしろ') >= 0) \
+            or   (proc_text.find(u'後')     >= 0) \
+            or   (proc_text.find(u'ひだり') >= 0) \
+            or   (proc_text.find(u'左')     >= 0) \
+            or   (proc_text.find(u'みぎ')   >= 0) \
+            or   (proc_text.find(u'右')     >= 0) \
+            or   (proc_text.find(u'注意')   >= 0) \
+            or   (proc_text.find(u'写真')   >= 0) \
+            or   (proc_text.find(u'伝票')   >= 0) \
+            or   (proc_text.find(u'計測')   >= 0) \
+            or   (proc_text.find(u'測定')   >= 0):
                 if (self.runMode == 'handsfree') \
                 or (self.runMode == 'hud') \
                 or (self.runMode == 'camera'):

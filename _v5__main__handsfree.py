@@ -383,8 +383,8 @@ if __name__ == '__main__':
 
         if (main_desktop_run is None) and (main_desktop_switch == 'on'):
             main_desktop_run = subprocess.Popen(['python', qPython_main_desktop, 
-                                'debug', ], )
-                                #runMode, ], )
+                                #'debug', ], )
+                                runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'デスクトップ制御機能を、起動しました。', 'wait':0, })

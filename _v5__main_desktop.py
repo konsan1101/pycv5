@@ -462,7 +462,7 @@ if __name__ == '__main__':
         if (control.lower() == '_rec_start_') \
         or (control.lower() == '_rec_stop_') \
         or (control.lower() == '_rec_restart_') \
-        or (control.find(u'録画') > 0):
+        or (control.find(u'録画') >= 0):
             main_desktop.put(['recorder', control])
             control = ''
 
