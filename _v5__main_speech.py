@@ -44,14 +44,14 @@ qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
 
-qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
-qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
-qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
-qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
-qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
-qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
-qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
-qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
+qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
+qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
+qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
+qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
+qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
+qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
+qPath_s_play   = qFunc.getValue('qPath_s_play'  )
 qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
 qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
 qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
@@ -447,7 +447,7 @@ class main_speech:
                 sttreader_thread = _v5_proc_txtreader.proc_txtreader(
                                     name='sttreader', id='0', 
                                     runMode=self.runMode,
-                                    micDev=self.micDev, path='qPath_a_STT',
+                                    micDev=self.micDev, path='qPath_s_STT',
                                     )
                 sttreader_thread.start()
 
@@ -464,7 +464,7 @@ class main_speech:
                 trareader_thread = _v5_proc_txtreader.proc_txtreader(
                                     name='trareader', id='0', 
                                     runMode=runMode,
-                                    micDev=self.micDev, path='qPath_a_TRA',
+                                    micDev=self.micDev, path='qPath_s_TRA',
                                     )
                 trareader_thread.start()
 
@@ -825,16 +825,16 @@ if __name__ == '__main__':
     qFunc.remove(qCtrl_translate          )
     qFunc.remove(qCtrl_translate_sjis     )
 
-    qFunc.makeDirs(qPath_a_ctrl, True )
+    qFunc.makeDirs(qPath_s_ctrl, True )
     if (micDev.isdigit()):
-        qFunc.makeDirs(qPath_a_inp,  True )
-    qFunc.makeDirs(qPath_a_wav,  True )
-    qFunc.makeDirs(qPath_a_jul,  True )
-    qFunc.makeDirs(qPath_a_STT,  True )
-    qFunc.makeDirs(qPath_a_TRA,  True )
+        qFunc.makeDirs(qPath_s_inp,  True )
+    qFunc.makeDirs(qPath_s_wav,  True )
+    qFunc.makeDirs(qPath_s_jul,  True )
+    qFunc.makeDirs(qPath_s_STT,  True )
+    qFunc.makeDirs(qPath_s_TRA,  True )
     if (micDev.isdigit()):
-        qFunc.makeDirs(qPath_a_TTS,  True )
-        qFunc.makeDirs(qPath_a_play, True )
+        qFunc.makeDirs(qPath_s_TTS,  True )
+        qFunc.makeDirs(qPath_s_play, True )
 
     qFunc.busyReset_a(False)
 

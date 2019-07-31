@@ -12,6 +12,9 @@ rem SET PATH=%PATH%;C:\Program Files\sox-14-4-0;
 rem julius
     SET PATH=%PATH%;C:\julius\win;
 
+rem ffmpeg
+    SET PATH=%PATH%;C:\ffmpeg\win\bin;
+
 rem vlan
 rem SET PATH=%PATH%;C:\Program Files\VideoLAN\VLC;
     SET PATH=%PATH%;C:\Program Files (x86)\VideoLAN\VLC;

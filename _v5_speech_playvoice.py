@@ -27,14 +27,14 @@ qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
 
-qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
-qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
-qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
-qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
-qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
-qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
-qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
-qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
+qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
+qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
+qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
+qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
+qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
+qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
+qPath_s_play   = qFunc.getValue('qPath_s_play'  )
 qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
 qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
 qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
@@ -122,7 +122,7 @@ def proc_playvoice(cn_r, cn_s, ):
 
                 result = 'OK'
 
-                path=qPath_a_play
+                path=qPath_s_play
                 files = glob.glob(path + '*')
                 if (len(files) > 0):
 
@@ -252,25 +252,25 @@ def main_init(micDev, ):
     qFunc.makeDirs('temp/_cache/', False)
 
     if (micDev.isdigit()):
-        qFunc.makeDirs(qPath_a_ctrl, False)
-        qFunc.makeDirs(qPath_a_inp,  False)
-        qFunc.makeDirs(qPath_a_wav,  False)
-        qFunc.makeDirs(qPath_a_jul,  False)
-        qFunc.makeDirs(qPath_a_STT,  False)
-        qFunc.makeDirs(qPath_a_TTS,  False)
-        qFunc.makeDirs(qPath_a_TRA,  False)
-        qFunc.makeDirs(qPath_a_play, True )
+        qFunc.makeDirs(qPath_s_ctrl, False)
+        qFunc.makeDirs(qPath_s_inp,  False)
+        qFunc.makeDirs(qPath_s_wav,  False)
+        qFunc.makeDirs(qPath_s_jul,  False)
+        qFunc.makeDirs(qPath_s_STT,  False)
+        qFunc.makeDirs(qPath_s_TTS,  False)
+        qFunc.makeDirs(qPath_s_TRA,  False)
+        qFunc.makeDirs(qPath_s_play, True )
         qFunc.makeDirs(qPath_rec,  False)
         qFunc.makeDirs(qPath_work, False)
     else:
-        qFunc.makeDirs(qPath_a_ctrl, False)
-        qFunc.makeDirs(qPath_a_inp,  False)
-        qFunc.makeDirs(qPath_a_wav,  False)
-        qFunc.makeDirs(qPath_a_jul,  False)
-        qFunc.makeDirs(qPath_a_STT,  False)
-        qFunc.makeDirs(qPath_a_TTS,  False)
-        qFunc.makeDirs(qPath_a_TRA,  False)
-        qFunc.makeDirs(qPath_a_play, False)
+        qFunc.makeDirs(qPath_s_ctrl, False)
+        qFunc.makeDirs(qPath_s_inp,  False)
+        qFunc.makeDirs(qPath_s_wav,  False)
+        qFunc.makeDirs(qPath_s_jul,  False)
+        qFunc.makeDirs(qPath_s_STT,  False)
+        qFunc.makeDirs(qPath_s_TTS,  False)
+        qFunc.makeDirs(qPath_s_TRA,  False)
+        qFunc.makeDirs(qPath_s_play, False)
         qFunc.makeDirs(qPath_rec,  False)
         qFunc.makeDirs(qPath_work, False)
 

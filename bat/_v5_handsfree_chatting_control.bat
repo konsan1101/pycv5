@@ -3,7 +3,7 @@ CALL __setpath.bat
 
 IF NOT EXIST temp              MKDIR temp
 IF NOT EXIST temp\_log         MKDIR temp\_log
-IF NOT EXIST temp\a3_5tts_txt  MKDIR temp\a3_5tts_txt
+IF NOT EXIST temp\s3_5tts_txt  MKDIR temp\s3_5tts_txt
 
 start "" python _v5_handsfree_chatting_control.py debug temp/temp_chatting.txt
 

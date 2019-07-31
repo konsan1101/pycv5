@@ -50,14 +50,14 @@ qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
 
-qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
-qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
-qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
-qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
-qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
-qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
-qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
-qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
+qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
+qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
+qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
+qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
+qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
+qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
+qPath_s_play   = qFunc.getValue('qPath_s_play'  )
 qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
 qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
 qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
@@ -124,7 +124,7 @@ def control_speech(seq, fileId, runMode, micDev, useApiTrn, useApiOut, inpLang, 
         now=datetime.datetime.now()
         stamp=now.strftime('%Y%m%d.%H%M%S')
         wrkText = qPath_work + stamp + '.' + seq + '.control.txt'
-        wrkOut  = qPath_a_play + stamp + '.' + seq + '.control.mp3'
+        wrkOut  = qPath_s_play + stamp + '.' + seq + '.control.mp3'
 
         try:
             w = codecs.open(wrkText, 'w', 'utf-8')
@@ -1329,7 +1329,7 @@ def proc_control(cn_r, cn_s, ):
 
                 result = 'OK'
 
-                path = qPath_a_ctrl
+                path = qPath_s_ctrl
                 files = glob.glob(path + '*')
                 if (len(files) > 0):
 
@@ -1492,26 +1492,26 @@ def stt_sub(seq, fileId, runMode, micDev, file, ):
 
     if (runMode == 'handsfree') or (runMode == 'translator'):
         inpInput = file
-        inpOutput= qPath_a_STT  + fileId + '.' + qLangInp + '.txt'
+        inpOutput= qPath_s_STT  + fileId + '.' + qLangInp + '.txt'
         trnInput = inpOutput
-        trnOutput= qPath_a_TRA  + fileId + '.' + qLangInp + '.' + qLangTrn[:2] + '.stt.translate.txt'
+        trnOutput= qPath_s_TRA  + fileId + '.' + qLangInp + '.' + qLangTrn[:2] + '.stt.translate.txt'
         txtInput = ''
         txtOutput= ''
         outInput = trnOutput
-        outOutput= qPath_a_play + fileId + '.' + qLangOut + '.voice.mp3'
+        outOutput= qPath_s_play + fileId + '.' + qLangOut + '.voice.mp3'
         inpPlay  = 'off'
         txtPlay  = 'off'
         outPlay  = 'off'
 
     if (runMode == 'debug') or (runMode == 'learning'):
         inpInput = file
-        inpOutput= qPath_a_STT  + fileId + '.' + qLangInp + '.txt'
+        inpOutput= qPath_s_STT  + fileId + '.' + qLangInp + '.txt'
         trnInput = inpOutput
-        trnOutput= qPath_a_TRA  + fileId + '.' + qLangInp + '.' + qLangTrn[:2] + '.stt.translate.txt'
+        trnOutput= qPath_s_TRA  + fileId + '.' + qLangInp + '.' + qLangTrn[:2] + '.stt.translate.txt'
         txtInput = inpOutput
-        txtOutput= qPath_a_play + fileId + '.' + qLangOut + '.feedback.mp3'
+        txtOutput= qPath_s_play + fileId + '.' + qLangOut + '.feedback.mp3'
         outInput = trnOutput
-        outOutput= qPath_a_play + fileId + '.' + qLangOut + '.voice.mp3'
+        outOutput= qPath_s_play + fileId + '.' + qLangOut + '.voice.mp3'
         qLangTxt  = qLangInp
         inpPlay  = 'off'
         txtPlay  = 'off'
@@ -1519,12 +1519,12 @@ def stt_sub(seq, fileId, runMode, micDev, file, ):
 
     if (runMode == 'speech') or (runMode == 'number'):
         inpInput = file
-        inpOutput= qPath_a_STT  + fileId + '.' + qLangInp + '.txt'
+        inpOutput= qPath_s_STT  + fileId + '.' + qLangInp + '.txt'
         trnInput = ''
         trnOutput= ''
         if (not micDev.isdigit()):
             trnInput = inpOutput
-            trnOutput= qPath_a_TRA  + fileId + '.' + qLangInp + '.' + qLangTrn[:2] + '.stt.translate.txt'
+            trnOutput= qPath_s_TRA  + fileId + '.' + qLangInp + '.' + qLangTrn[:2] + '.stt.translate.txt'
         txtInput = ''
         txtOutput= ''
         outInput = ''
@@ -1627,7 +1627,7 @@ def proc_sttcore(cn_r, cn_s, ):
 
                 result = 'OK'
 
-                path = qPath_a_wav
+                path = qPath_s_wav
                 files = glob.glob(path + '*')
                 if (len(files) > 0):
 
@@ -1772,11 +1772,11 @@ def tts_sub(seq, fileId, runMode, micDev, file, txtText, ):
         inpInput = ''
         inpOutput= ''
         trnInput = file
-        trnOutput= qPath_a_TRA  + fileId + '.' + inpLang + '.' + trnLang[:2] + '.tts.translate.txt'
+        trnOutput= qPath_s_TRA  + fileId + '.' + inpLang + '.' + trnLang[:2] + '.tts.translate.txt'
         txtInput = ''
         txtOutput= ''
         outInput = trnOutput
-        outOutput= qPath_a_play + fileId + '.' + outLang + '.voice.mp3'
+        outOutput= qPath_s_play + fileId + '.' + outLang + '.voice.mp3'
         inpPlay  = 'off'
         txtPlay  = 'off'
         outPlay  = 'off'
@@ -1786,7 +1786,7 @@ def tts_sub(seq, fileId, runMode, micDev, file, txtText, ):
         trnInput = ''
         trnOutput= ''
         txtInput = file
-        txtOutput= qPath_a_play + fileId + '.' + inpLang + '.' + inpLang + '.mp3'
+        txtOutput= qPath_s_play + fileId + '.' + inpLang + '.' + inpLang + '.mp3'
         outInput = ''
         outOutput= ''
         inpPlay  = 'off'
@@ -1885,7 +1885,7 @@ def proc_ttscore(cn_r, cn_s, ):
 
                 result = 'OK'
 
-                path = qPath_a_TTS
+                path = qPath_s_TTS
                 files = glob.glob(path + '*')
                 if (len(files) > 0):
 
@@ -2020,25 +2020,25 @@ def main_init(runMode, micDev, ):
     qFunc.makeDirs('temp/_cache/', False)
 
     if (micDev.isdigit()):
-        qFunc.makeDirs(qPath_a_ctrl, True )
-        qFunc.makeDirs(qPath_a_inp,  True )
-        qFunc.makeDirs(qPath_a_wav,  True )
-        qFunc.makeDirs(qPath_a_jul,  True )
-        qFunc.makeDirs(qPath_a_STT,  True )
-        qFunc.makeDirs(qPath_a_TTS,  True )
-        qFunc.makeDirs(qPath_a_TRA,  True )
-        qFunc.makeDirs(qPath_a_play, True )
+        qFunc.makeDirs(qPath_s_ctrl, True )
+        qFunc.makeDirs(qPath_s_inp,  True )
+        qFunc.makeDirs(qPath_s_wav,  True )
+        qFunc.makeDirs(qPath_s_jul,  True )
+        qFunc.makeDirs(qPath_s_STT,  True )
+        qFunc.makeDirs(qPath_s_TTS,  True )
+        qFunc.makeDirs(qPath_s_TRA,  True )
+        qFunc.makeDirs(qPath_s_play, True )
         qFunc.makeDirs(qPath_rec,  False)
         qFunc.makeDirs(qPath_work, True )
     else:
-        qFunc.makeDirs(qPath_a_ctrl, True )
-        qFunc.makeDirs(qPath_a_inp,  False)
-        qFunc.makeDirs(qPath_a_wav,  True )
-        qFunc.makeDirs(qPath_a_jul,  True )
-        qFunc.makeDirs(qPath_a_STT,  True )
-        qFunc.makeDirs(qPath_a_TTS,  False)
-        qFunc.makeDirs(qPath_a_TRA,  True )
-        qFunc.makeDirs(qPath_a_play, True )
+        qFunc.makeDirs(qPath_s_ctrl, True )
+        qFunc.makeDirs(qPath_s_inp,  False)
+        qFunc.makeDirs(qPath_s_wav,  True )
+        qFunc.makeDirs(qPath_s_jul,  True )
+        qFunc.makeDirs(qPath_s_STT,  True )
+        qFunc.makeDirs(qPath_s_TTS,  False)
+        qFunc.makeDirs(qPath_s_TRA,  True )
+        qFunc.makeDirs(qPath_s_play, True )
         qFunc.makeDirs(qPath_rec,  False)
         qFunc.makeDirs(qPath_work, True )
 

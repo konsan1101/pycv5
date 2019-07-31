@@ -25,14 +25,14 @@ qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
 
-qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
-qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
-qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
-qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
-qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
-qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
-qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
-qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
+qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
+qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
+qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
+qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
+qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
+qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
+qPath_s_play   = qFunc.getValue('qPath_s_play'  )
 qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
 qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
 qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
@@ -131,7 +131,7 @@ if (__name__ == '__main__'):
             id  = 'smartspeaker.01'
             mp3 = u'_sounds/_sound_handsfree_ヘイSiri.mp3'
             print(mp3)
-            wrkFile = qPath_a_play + stamp + '.' + id + '.mp3'
+            wrkFile = qPath_s_play + stamp + '.' + id + '.mp3'
             qFunc.copy(mp3, wrkFile)
 
             time.sleep(2.00)
@@ -146,7 +146,7 @@ if (__name__ == '__main__'):
             id  = 'smartspeaker.01'
             mp3 = u'_sounds/_sound_handsfree_ねぇグーグル.mp3'
             print(mp3)
-            wrkFile = qPath_a_play + stamp + '.' + id + '.mp3'
+            wrkFile = qPath_s_play + stamp + '.' + id + '.mp3'
             qFunc.copy(mp3, wrkFile)
 
             id  = 'smartspeaker.02'
@@ -159,7 +159,7 @@ if (__name__ == '__main__'):
             id  = 'smartspeaker.01'
             mp3 = u'_sounds/_sound_handsfree_アレクサ.mp3'
             print(mp3)
-            wrkFile = qPath_a_play + stamp + '.' + id + '.mp3'
+            wrkFile = qPath_s_play + stamp + '.' + id + '.mp3'
             qFunc.copy(mp3, wrkFile)
 
             id  = 'smartspeaker.02'
@@ -172,7 +172,7 @@ if (__name__ == '__main__'):
             id  = 'smartspeaker.01'
             mp3 = u'_sounds/_sound_handsfree_ねぇクローバ.mp3'
             print(mp3)
-            wrkFile = qPath_a_play + stamp + '.' + id + '.mp3'
+            wrkFile = qPath_s_play + stamp + '.' + id + '.mp3'
             qFunc.copy(mp3, wrkFile)
 
             id  = 'smartspeaker.02'

@@ -23,14 +23,14 @@ qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
 
-qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
-qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
-qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
-qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
-qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
-qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
-qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
-qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
+qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
+qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
+qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
+qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
+qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
+qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
+qPath_s_play   = qFunc.getValue('qPath_s_play'  )
 qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
 qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
 qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
@@ -67,7 +67,7 @@ class proc_voice2wav:
     def __init__(self, name='thread', id='0', runMode='debug', 
         micDev='0', micType='bluetooth', micGuide='on', micLevel='777', ):
 
-        self.path      = qPath_a_inp
+        self.path      = qPath_s_inp
 
         self.runMode   = runMode
         self.micDev    = micDev
@@ -381,7 +381,7 @@ class proc_voice2wav:
 
     def sub_proc(self, seq4, proc_file, work_file, proc_name, work_size, base_byte, cn_s, ):
 
-        path = qPath_a_wav
+        path = qPath_s_wav
         nowTime = datetime.datetime.now()
         stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
 
@@ -398,7 +398,7 @@ class proc_voice2wav:
                     tm = '{:02}{:02}{:02}'.format(hh,mm,ss)
 
                     fwork = path        + stamp + '.' + proc_name + '(000).' + tm + '.wav'
-                    fjuli = qPath_a_jul + stamp + '.' + proc_name + '(000).' + tm + '.wav'
+                    fjuli = qPath_s_jul + stamp + '.' + proc_name + '(000).' + tm + '.wav'
                     frec  = qPath_rec   + stamp + '.' + proc_name + '(000).' + tm + '.mp3'
 
                     try:
@@ -459,7 +459,7 @@ class proc_voice2wav:
                     tm = '{:02}{:02}{:02}'.format(hh,mm,ss)
 
                     fwork = path        + stamp + '.' + proc_name + '(' + '{:03}'.format(nn) + ').' + tm + '.wav'
-                    fjuli = qPath_a_jul + stamp + '.' + proc_name + '(' + '{:03}'.format(nn) + ').' + tm + '.wav'
+                    fjuli = qPath_s_jul + stamp + '.' + proc_name + '(' + '{:03}'.format(nn) + ').' + tm + '.wav'
                     frec  = qPath_rec   + stamp + '.' + proc_name + '(' + '{:03}'.format(nn) + ').' + tm + '.mp3'
 
                     try:

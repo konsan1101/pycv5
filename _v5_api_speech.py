@@ -34,14 +34,14 @@ qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
 
-qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
-qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
-qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
-qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
-qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
-qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
-qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
-qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
+qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
+qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
+qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
+qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
+qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
+qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
+qPath_s_play   = qFunc.getValue('qPath_s_play'  )
 qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
 qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
 qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
@@ -656,7 +656,7 @@ def speech_batch(runMode, micDev,
         if (qFunc.busyCheck(qBusy_dev_com,  0) == 'busy') or (qApiInp == 'julius'):
 
             api = 'julius'
-            waitfile = qPath_a_jul + fileId + '.txt'
+            waitfile = qPath_s_jul + fileId + '.txt'
             print(waitfile)
 
             chktime = time.time()
@@ -1052,12 +1052,12 @@ def speech_batch(runMode, micDev,
                 qFunc.txtsWrite(qCtrl_recognize     , txts=[txt], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.txtsWrite(qCtrl_recognize_sjis, txts=[txt], encoding='shift_jis', exclusive=True, mode='w', )
 
-                filename = inpOutput.replace(qPath_a_STT, '')
-                filename = filename.replace(qPath_a_TRA, '')
-                filename = filename.replace(qPath_a_TTS, '')
+                filename = inpOutput.replace(qPath_s_STT, '')
+                filename = filename.replace(qPath_s_TRA, '')
+                filename = filename.replace(qPath_s_TTS, '')
                 filename = filename.replace(qPath_work, '')
 
-                filename1 = qPath_a_ctrl + filename
+                filename1 = qPath_s_ctrl + filename
                 qFunc.txtsWrite(filename1, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
                 filename2 = qPath_v_ctrl + filename
                 qFunc.txtsWrite(filename2, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
@@ -1180,12 +1180,12 @@ def speech_batch(runMode, micDev,
                         txt = trnRes['text']
                         qFunc.txtsWrite(filename, txts=[txt], encoding='utf-8', exclusive=False, mode='w', )
 
-                filename = trnOutput.replace(qPath_a_STT, '')
-                filename = filename.replace(qPath_a_TRA, '')
-                filename = filename.replace(qPath_a_TTS, '')
+                filename = trnOutput.replace(qPath_s_STT, '')
+                filename = filename.replace(qPath_s_TRA, '')
+                filename = filename.replace(qPath_s_TTS, '')
                 filename = filename.replace(qPath_work, '')
 
-                filename1 = qPath_a_ctrl + filename
+                filename1 = qPath_s_ctrl + filename
                 qFunc.txtsWrite(filename1, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
                 filename2 = qPath_v_ctrl + filename
                 qFunc.txtsWrite(filename2, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
@@ -1258,11 +1258,11 @@ def speech_batch(runMode, micDev,
                 if (txtInpLang != txtOutLang):
                     qFunc.logOutput(' ' + procId + ' Text Input   [' + txtText + '] ' + txtInpLang, True)
 
-                recfile = txtInput.replace(qPath_a_STT, '')
-                recfile = recfile.replace(qPath_a_TRA, '')
-                recfile = recfile.replace(qPath_a_TTS, '')
+                recfile = txtInput.replace(qPath_s_STT, '')
+                recfile = recfile.replace(qPath_s_TRA, '')
+                recfile = recfile.replace(qPath_s_TTS, '')
                 recfile = recfile.replace(qPath_work, '')
-                recfile = qPath_a_ctrl + recfile
+                recfile = qPath_s_ctrl + recfile
 
                 qFunc.txtsWrite(recfile, txts=[txtText], encoding='utf-8', exclusive=False, mode='w', )
 
@@ -1455,9 +1455,9 @@ def speech_batch(runMode, micDev,
                 )
 
             if (os.path.exists(wrkOut)):
-                wrkPlay = qPath_a_play + stamp + '.' + fileId + '.mp3'
+                wrkPlay = qPath_s_play + stamp + '.' + fileId + '.mp3'
                 qFunc.copy(wrkOut, wrkPlay)
-                wrkInput = qPath_a_inp + stamp + '.' + fileId + '.mp3'
+                wrkInput = qPath_s_inp + stamp + '.' + fileId + '.mp3'
                 qFunc.copy(wrkOut, wrkInput)
 
                 time.sleep(3.00)

@@ -23,14 +23,14 @@ qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
 
-qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
-qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
-qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
-qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
-qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
-qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
-qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
-qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
+qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
+qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
+qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
+qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
+qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
+qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
+qPath_s_play   = qFunc.getValue('qPath_s_play'  )
 qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
 qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
 qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
@@ -295,9 +295,9 @@ class proc_julius:
                 fileTxt = inp_value[:-4] + '.txt'
                 fileTxt = fileTxt.replace(qPath_work, '')
                 fileTxt = fileTxt.replace(qPath_rec,  '')
-                fileTxt = fileTxt.replace(qPath_a_wav,  '')
-                fileTxt = fileTxt.replace(qPath_a_jul,  '')
-                fileTxt = qPath_a_jul + fileTxt
+                fileTxt = fileTxt.replace(qPath_s_wav,  '')
+                fileTxt = fileTxt.replace(qPath_s_jul,  '')
+                fileTxt = qPath_s_jul + fileTxt
                 qFunc.txtsWrite(fileTxt, txts=[jultxt], encoding='utf-8', exclusive=True, mode='w', )
 
             # ビジー解除

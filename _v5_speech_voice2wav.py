@@ -27,14 +27,14 @@ qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
 
-qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
-qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
-qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
-qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
-qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
-qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
-qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
-qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
+qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
+qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
+qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
+qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
+qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
+qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
+qPath_s_play   = qFunc.getValue('qPath_s_play'  )
 qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
 qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
 qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
@@ -197,7 +197,7 @@ def proc_audio(cn_r, cn_s, ):
                 if (micDev.isdigit()) and (adinsvr_run == False):
                     adinsvr_run = True
                     #now=datetime.datetime.now()
-                    #filename=qPath_a_inp + now.strftime('%H%M%S') +'.julius'
+                    #filename=qPath_s_inp + now.strftime('%H%M%S') +'.julius'
                     #adinsvr_sbp = subprocess.Popen(['adintool', '-in', 'adinnet', '-out', 'file', '-filename', filename, '-startid', '5001',] , \
                     #              stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                     #              #stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, )
@@ -239,7 +239,7 @@ def proc_audio(cn_r, cn_s, ):
                         if (bakSox_run == False):
                             bakSox_run = True
                             now=datetime.datetime.now()
-                            audio_bakLast = qPath_a_inp + now.strftime('%H%M%S') +'.julius.5000.wav'
+                            audio_bakLast = qPath_s_inp + now.strftime('%H%M%S') +'.julius.5000.wav'
                             audio_bakWav = qPath_work + 'audio_backup.wav'
                             bakSox_sbp = subprocess.Popen(['sox', '-q', '-d', '-r', '16000', '-b', '16', '-c', '1', \
                                             audio_bakWav, 'trim', '0', '30', ], \
@@ -253,7 +253,7 @@ def proc_audio(cn_r, cn_s, ):
                         #    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                         #    #stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, )
                         now=datetime.datetime.now()
-                        filename=qPath_a_inp + now.strftime('%H%M%S') +'.julius'
+                        filename=qPath_s_inp + now.strftime('%H%M%S') +'.julius'
                         adinexe_sbp = subprocess.Popen(['adintool', '-in', 'mic', \
                             '-rewind', audio_rewind, '-headmargin', audio_headmg, '-tailmargin', audio_tailmg, \
                             '-fvad', vadLevel, '-lv', micLevel, \
@@ -278,12 +278,12 @@ def proc_audio(cn_r, cn_s, ):
                     or (qFunc.busyCheck(qBusy_a_play, 0) == 'busy'):
                         sw = 'off'
                 if (adinexe_run == True):
-                    files = glob.glob(qPath_a_inp + '*')
+                    files = glob.glob(qPath_s_inp + '*')
                     if (len(files) > 0):
                         chktime = time.time()
                         while (len(files) > 0) and ((time.time() - chktime) < 5):
                             time.sleep(0.20)
-                            files = glob.glob(qPath_a_inp + '*')
+                            files = glob.glob(qPath_s_inp + '*')
                         if (len(files) == 0):
                             sw = 'accept'
 
@@ -382,11 +382,11 @@ def v2w_wave_sub(micDev, seq4, fileId, file, f2, f2size, bytebase, minSize, maxS
                 ss=int(sec-hh*3600-mm*60)
                 tm='{:02}{:02}{:02}'.format(hh,mm,ss)
 
-                f3=qPath_a_wav + stamp + '.' + fileId + '(000).' + tm + '.wav'
+                f3=qPath_s_wav + stamp + '.' + fileId + '(000).' + tm + '.wav'
                 qFunc.copy(f2, f3)
 
-                fwav=f3.replace(qPath_a_wav, '')
-                fwav=qPath_a_jul + fwav
+                fwav=f3.replace(qPath_s_wav, '')
+                fwav=qPath_s_jul + fwav
                 qFunc.copy(f2, fwav)
 
                 if (True):
@@ -411,7 +411,7 @@ def v2w_wave_sub(micDev, seq4, fileId, file, f2, f2size, bytebase, minSize, maxS
 
                 if (micDev.isdigit()):
                         try:
-                            frec=f3.replace(qPath_a_wav, '')
+                            frec=f3.replace(qPath_s_wav, '')
                             frec=qPath_rec + frec[:-4] + '.mp3'
                             sox = subprocess.Popen(['sox', '-q', f2, '-r', '16000', '-b', '16', '-c', '1', frec, ], \
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -460,11 +460,11 @@ def v2w_wave_sub(micDev, seq4, fileId, file, f2, f2size, bytebase, minSize, maxS
                     ss=int(sec-hh*3600-mm*60)
                     tm='{:02}{:02}{:02}'.format(hh,mm,ss)
 
-                    f5=qPath_a_wav + stamp + '.' + fileId + '(' + '{:03}'.format(nn) + ').' + tm + '.wav'
+                    f5=qPath_s_wav + stamp + '.' + fileId + '(' + '{:03}'.format(nn) + ').' + tm + '.wav'
                     qFunc.copy(f4, f5)
 
-                    fwav=f5.replace(qPath_a_wav, '')
-                    fwav=qPath_a_jul + fwav
+                    fwav=f5.replace(qPath_s_wav, '')
+                    fwav=qPath_s_jul + fwav
                     qFunc.copy(f4, fwav)
 
                     if (True):
@@ -489,7 +489,7 @@ def v2w_wave_sub(micDev, seq4, fileId, file, f2, f2size, bytebase, minSize, maxS
 
                     if (micDev.isdigit()):
                         try:
-                            frec=f3.replace(qPath_a_wav, '')
+                            frec=f3.replace(qPath_s_wav, '')
                             frec=qPath_rec + frec[:-4] + '.mp3'
                             sox = subprocess.Popen(['sox', '-q', f4, '-r', '16000', '-b', '16', '-c', '1', frec, ], \
                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -588,7 +588,7 @@ def proc_v2w_wave(cn_r, cn_s, ):
 
                 result = 'OK'
 
-                path=qPath_a_inp
+                path=qPath_s_inp
                 files = glob.glob(path + '*')
                 if (len(files) > 0):
 
@@ -721,25 +721,25 @@ def main_init(micDev, ):
     qFunc.makeDirs('temp/_cache/', False)
 
     if (micDev.isdigit()):
-        qFunc.makeDirs(qPath_a_ctrl, False)
-        qFunc.makeDirs(qPath_a_inp,  True )
-        qFunc.makeDirs(qPath_a_wav,  True )
-        qFunc.makeDirs(qPath_a_jul,  True )
-        qFunc.makeDirs(qPath_a_STT,  False)
-        qFunc.makeDirs(qPath_a_TTS,  False)
-        qFunc.makeDirs(qPath_a_TRA,  False)
-        qFunc.makeDirs(qPath_a_play, False)
+        qFunc.makeDirs(qPath_s_ctrl, False)
+        qFunc.makeDirs(qPath_s_inp,  True )
+        qFunc.makeDirs(qPath_s_wav,  True )
+        qFunc.makeDirs(qPath_s_jul,  True )
+        qFunc.makeDirs(qPath_s_STT,  False)
+        qFunc.makeDirs(qPath_s_TTS,  False)
+        qFunc.makeDirs(qPath_s_TRA,  False)
+        qFunc.makeDirs(qPath_s_play, False)
         qFunc.makeDirs(qPath_rec,  False)
         qFunc.makeDirs(qPath_work, False)
     else:
-        qFunc.makeDirs(qPath_a_ctrl, False)
-        qFunc.makeDirs(qPath_a_inp,  False)
-        qFunc.makeDirs(qPath_a_wav,  True )
-        qFunc.makeDirs(qPath_a_jul,  True )
-        qFunc.makeDirs(qPath_a_STT,  False)
-        qFunc.makeDirs(qPath_a_TTS,  False)
-        qFunc.makeDirs(qPath_a_TRA,  False)
-        qFunc.makeDirs(qPath_a_play, False)
+        qFunc.makeDirs(qPath_s_ctrl, False)
+        qFunc.makeDirs(qPath_s_inp,  False)
+        qFunc.makeDirs(qPath_s_wav,  True )
+        qFunc.makeDirs(qPath_s_jul,  True )
+        qFunc.makeDirs(qPath_s_STT,  False)
+        qFunc.makeDirs(qPath_s_TTS,  False)
+        qFunc.makeDirs(qPath_s_TRA,  False)
+        qFunc.makeDirs(qPath_s_play, False)
         qFunc.makeDirs(qPath_rec,  False)
         qFunc.makeDirs(qPath_work, False)
 

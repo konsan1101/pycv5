@@ -30,14 +30,14 @@ qPath_log      = 'temp/_log/'
 qPath_work     = 'temp/_work/'
 qPath_rec      = 'temp/_recorder/'
 
-qPath_a_ctrl   = 'temp/a5_0control/'
-qPath_a_inp    = 'temp/a5_1voice/'
-qPath_a_wav    = 'temp/a5_2wav/'
-qPath_a_jul    = 'temp/a5_3stt_julius/'
-qPath_a_STT    = 'temp/a5_4stt_txt/'
-qPath_a_TTS    = 'temp/a5_5tts_txt/'
-qPath_a_TRA    = 'temp/a5_6tra_txt/'
-qPath_a_play   = 'temp/a5_7play/'
+qPath_s_ctrl   = 'temp/s5_0control/'
+qPath_s_inp    = 'temp/s5_1voice/'
+qPath_s_wav    = 'temp/s5_2wav/'
+qPath_s_jul    = 'temp/s5_3stt_julius/'
+qPath_s_STT    = 'temp/s5_4stt_txt/'
+qPath_s_TTS    = 'temp/s5_5tts_txt/'
+qPath_s_TRA    = 'temp/s5_6tra_txt/'
+qPath_s_play   = 'temp/s5_7play/'
 qPath_v_ctrl   = 'temp/v5_0control/'
 qPath_v_inp    = 'temp/v5_1vision/'
 qPath_v_jpg    = 'temp/v5_2jpg/'
@@ -90,14 +90,14 @@ class qFunc_class:
         self.makeDirs(qPath_work,     False)
         self.makeDirs(qPath_rec,      False)
 
-        self.makeDirs(qPath_a_ctrl,   False)
-        self.makeDirs(qPath_a_inp,    False)
-        self.makeDirs(qPath_a_wav,    False)
-        self.makeDirs(qPath_a_jul,    False)
-        self.makeDirs(qPath_a_STT,    False)
-        self.makeDirs(qPath_a_TTS,    False)
-        self.makeDirs(qPath_a_TRA,    False)
-        self.makeDirs(qPath_a_play,   False)
+        self.makeDirs(qPath_s_ctrl,   False)
+        self.makeDirs(qPath_s_inp,    False)
+        self.makeDirs(qPath_s_wav,    False)
+        self.makeDirs(qPath_s_jul,    False)
+        self.makeDirs(qPath_s_STT,    False)
+        self.makeDirs(qPath_s_TTS,    False)
+        self.makeDirs(qPath_s_TRA,    False)
+        self.makeDirs(qPath_s_play,   False)
         self.makeDirs(qPath_v_ctrl,   False)
         self.makeDirs(qPath_v_inp,    False)
         self.makeDirs(qPath_v_jpg,    False)
@@ -118,14 +118,14 @@ class qFunc_class:
         if (field == 'qPath_work'    ): return qPath_work
         if (field == 'qPath_rec'     ): return qPath_rec
 
-        if (field == 'qPath_a_ctrl'  ): return qPath_a_ctrl
-        if (field == 'qPath_a_inp'   ): return qPath_a_inp
-        if (field == 'qPath_a_wav'   ): return qPath_a_wav
-        if (field == 'qPath_a_jul'   ): return qPath_a_jul
-        if (field == 'qPath_a_STT'   ): return qPath_a_STT
-        if (field == 'qPath_a_TTS'   ): return qPath_a_TTS
-        if (field == 'qPath_a_TRA'   ): return qPath_a_TRA
-        if (field == 'qPath_a_play'  ): return qPath_a_play
+        if (field == 'qPath_s_ctrl'  ): return qPath_s_ctrl
+        if (field == 'qPath_s_inp'   ): return qPath_s_inp
+        if (field == 'qPath_s_wav'   ): return qPath_s_wav
+        if (field == 'qPath_s_jul'   ): return qPath_s_jul
+        if (field == 'qPath_s_STT'   ): return qPath_s_STT
+        if (field == 'qPath_s_TTS'   ): return qPath_s_TTS
+        if (field == 'qPath_s_TRA'   ): return qPath_s_TRA
+        if (field == 'qPath_s_play'  ): return qPath_s_play
         if (field == 'qPath_v_ctrl'  ): return qPath_v_ctrl
         if (field == 'qPath_v_inp'   ): return qPath_v_inp
         if (field == 'qPath_v_jpg'   ): return qPath_v_jpg
@@ -600,7 +600,7 @@ class qFunc_class:
         if (text != ''):
             nowTime = datetime.datetime.now()
             stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
-            filename = qPath_a_TTS + stamp + '.' + str(id) + '.txt'
+            filename = qPath_s_TTS + stamp + '.' + str(id) + '.txt'
 
             return self.txtsWrite(filename, txts=[text], encoding='utf-8', exclusive=False, mode='w', )
 

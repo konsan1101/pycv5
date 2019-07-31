@@ -23,14 +23,14 @@ qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
 
-qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
-qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
-qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
-qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
-qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
-qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
-qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
-qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
+qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
+qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
+qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
+qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
+qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
+qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
+qPath_s_play   = qFunc.getValue('qPath_s_play'  )
 qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
 qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
 qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
@@ -67,7 +67,7 @@ class proc_playvoice:
     def __init__(self, name='thread', id='0', runMode='debug', 
         micDev='0', micType='bluetooth', micGuide='on', micLevel='777', ):
 
-        self.path      = qPath_a_play
+        self.path      = qPath_s_play
 
         self.runMode   = runMode
         self.micDev    = micDev
@@ -205,11 +205,11 @@ class proc_playvoice:
                     # 音声入力中
                     if (self.micType == 'bluetooth'):
 
-                        if (len(glob.glob(qPath_a_inp + '*')) == 0):
+                        if (len(glob.glob(qPath_s_inp + '*')) == 0):
                             qFunc.busyCheck(qBusy_a_inp, 2)
 
                         chktime = time.time()
-                        while (len(glob.glob(qPath_a_inp + '*')) > 0) and ((time.time() - chktime) < 3):
+                        while (len(glob.glob(qPath_s_inp + '*')) > 0) and ((time.time() - chktime) < 3):
                             print('play voice wait !')
                             time.sleep(0.50)
 
@@ -378,7 +378,7 @@ if __name__ == '__main__':
     playvoice_thread = proc_playvoice('playvoice', '0', )
     playvoice_thread.start()
 
-    qFunc.copy('_sounds/_sound_hallo.wav', qPath_a_play + '_sound_hallo.wav')
+    qFunc.copy('_sounds/_sound_hallo.wav', qPath_s_play + '_sound_hallo.wav')
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):

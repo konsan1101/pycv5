@@ -218,8 +218,7 @@ rem -------------------------------
     python _v5_speech__gijiroku1.py
 rem -------------------------------
 rem ECHO Waiting...5s
-rem ping localhost -w 1000 -n 5 >>dummyPing.txt
-rem if exist dummyPing.txt    del dummyPing.txt
+rem ping localhost -w 1000 -n 5 >nul
 
 IF NOT EXIST "gijiroku\temp\temp__gijilist16.txt"  ECHO "Not Found Input File! gijiroku\temp\temp__gijilist16.txt"
 IF NOT EXIST "gijiroku\temp\temp__gijilist16.txt"  GOTO API
@@ -245,27 +244,26 @@ taskkill /im julius.exe       /f >dummyKill.txt
 if exist dummyKill.txt        del dummyKill.txt
 
 IF EXIST "temp\*.*"                DEL "temp\*.*"                /Q
-IF EXIST "temp\a5_0control\*.*"    DEL "temp\a5_0control\*.*"    /Q
-IF EXIST "temp\a5_1voice\*.*"      DEL "temp\a5_1voice\*.*"      /Q
-IF EXIST "temp\a5_2wav\*.*"        DEL "temp\a5_2wav\*.*"        /Q
-IF EXIST "temp\a5_3stt_julius\*.*" DEL "temp\a5_3stt_julius\*.*" /Q
-IF EXIST "temp\a5_4stt_txt\*.*"    DEL "temp\a5_4stt_txt\*.*"    /Q
-IF EXIST "temp\a5_5tts_txt\*.*"    DEL "temp\a5_5tts_txt\*.*"    /Q
-IF EXIST "temp\a5_6tra_txt\*.*"    DEL "temp\a5_6tra_txt\*.*"    /Q
-IF EXIST "temp\a5_7play\*.*"       DEL "temp\a5_7play\*.*"       /Q
+IF EXIST "temp\s5_0control\*.*"    DEL "temp\s5_0control\*.*"    /Q
+IF EXIST "temp\s5_1voice\*.*"      DEL "temp\s5_1voice\*.*"      /Q
+IF EXIST "temp\s5_2wav\*.*"        DEL "temp\s5_2wav\*.*"        /Q
+IF EXIST "temp\s5_3stt_julius\*.*" DEL "temp\s5_3stt_julius\*.*" /Q
+IF EXIST "temp\s5_4stt_txt\*.*"    DEL "temp\s5_4stt_txt\*.*"    /Q
+IF EXIST "temp\s5_5tts_txt\*.*"    DEL "temp\s5_5tts_txt\*.*"    /Q
+IF EXIST "temp\s5_6tra_txt\*.*"    DEL "temp\s5_6tra_txt\*.*"    /Q
+IF EXIST "temp\s5_7play\*.*"       DEL "temp\s5_7play\*.*"       /Q
 IF EXIST "temp\_recorder\*.*"      DEL "temp\_recorder\*.*"      /Q
 IF EXIST "temp\_work\*.*"          DEL "temp\_work\*.*"          /Q
 
-IF NOT EXIST "temp\a5_1voice"  MKDIR "temp\a5_1voice"
-ECHO XCOPY gijiroku\wav temp\a5_1voice /Q/R/Y
-     XCOPY gijiroku\wav temp\a5_1voice /Q/R/Y
+IF NOT EXIST "temp\s5_1voice"  MKDIR "temp\s5_1voice"
+ECHO XCOPY gijiroku\wav temp\s5_1voice /Q/R/Y
+     XCOPY gijiroku\wav temp\s5_1voice /Q/R/Y
 
-rem ---------------------------------------------------------------------InpTrn
-    python _v5__main_audio.py speech file usb off 0 %apii% %apit% %apio% ja ja
-rem ---------------------------------------------------------------------------
+rem ----------------------------------------------------------------------InpTrn
+    python _v5__main_speech.py speech file usb off 0 %apii% %apit% %apio% ja ja
+rem ----------------------------------------------------------------------InpTrn
 rem ECHO Waiting...5s
-rem ping localhost -w 1000 -n 5 >>dummyPing.txt
-rem if exist dummyPing.txt    del dummyPing.txt
+rem ping localhost -w 1000 -n 5 >nul
 
 IF EXIST "gijiroku\stt\*.*"           DEL "gijiroku\stt\*.*" /Q
 IF EXIST "gijiroku\mp3\*.*"           DEL "gijiroku\mp3\*.*" /Q
@@ -278,8 +276,7 @@ rem -------------------------------
     python _v5_speech__gijiroku2.py
 rem -------------------------------
 rem ECHO Waiting...5s
-rem ping localhost -w 1000 -n 5 >>dummyPing.txt
-rem if exist dummyPing.txt    del dummyPing.txt
+rem ping localhost -w 1000 -n 5 >nul
 
 ECHO sox "gijiroku/temp/temp__gijiroku16.wav" "gijiroku/temp/temp__gijiroku16.mp3"
      sox "gijiroku/temp/temp__gijiroku16.wav" "gijiroku/temp/temp__gijiroku16.mp3"
@@ -290,14 +287,14 @@ ECHO 作業ファイルクリアします。
 PAUSE
 
 IF EXIST "temp\*.*"                DEL "temp\*.*"                /Q
-IF EXIST "temp\a5_0control\*.*"    DEL "temp\a5_0control\*.*"    /Q
-IF EXIST "temp\a5_1voice\*.*"      DEL "temp\a5_1voice\*.*"      /Q
-IF EXIST "temp\a5_2wav\*.*"        DEL "temp\a5_2wav\*.*"        /Q
-IF EXIST "temp\a5_3stt_julius\*.*" DEL "temp\a5_3stt_julius\*.*" /Q
-IF EXIST "temp\a5_4stt_txt\*.*"    DEL "temp\a5_4stt_txt\*.*"    /Q
-IF EXIST "temp\a5_5tts_txt\*.*"    DEL "temp\a5_5tts_txt\*.*"    /Q
-IF EXIST "temp\a5_6tra_txt\*.*"    DEL "temp\a5_6tra_txt\*.*"    /Q
-IF EXIST "temp\a5_7play\*.*"       DEL "temp\a5_7play\*.*"       /Q
+IF EXIST "temp\s5_0control\*.*"    DEL "temp\s5_0control\*.*"    /Q
+IF EXIST "temp\s5_1voice\*.*"      DEL "temp\s5_1voice\*.*"      /Q
+IF EXIST "temp\s5_2wav\*.*"        DEL "temp\s5_2wav\*.*"        /Q
+IF EXIST "temp\s5_3stt_julius\*.*" DEL "temp\s5_3stt_julius\*.*" /Q
+IF EXIST "temp\s5_4stt_txt\*.*"    DEL "temp\s5_4stt_txt\*.*"    /Q
+IF EXIST "temp\s5_5tts_txt\*.*"    DEL "temp\s5_5tts_txt\*.*"    /Q
+IF EXIST "temp\s5_6tra_txt\*.*"    DEL "temp\s5_6tra_txt\*.*"    /Q
+IF EXIST "temp\s5_7play\*.*"       DEL "temp\s5_7play\*.*"       /Q
 IF EXIST "temp\_recorder\*.*"      DEL "temp\_recorder\*.*"      /Q
 IF EXIST "temp\_work\*.*"          DEL "temp\_work\*.*"          /Q
 

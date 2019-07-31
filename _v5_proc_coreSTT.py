@@ -23,14 +23,14 @@ qPath_log      = qFunc.getValue('qPath_log'     )
 qPath_work     = qFunc.getValue('qPath_work'    )
 qPath_rec      = qFunc.getValue('qPath_rec'     )
 
-qPath_a_ctrl   = qFunc.getValue('qPath_a_ctrl'  )
-qPath_a_inp    = qFunc.getValue('qPath_a_inp'   )
-qPath_a_wav    = qFunc.getValue('qPath_a_wav'   )
-qPath_a_jul    = qFunc.getValue('qPath_a_jul'   )
-qPath_a_STT    = qFunc.getValue('qPath_a_STT'   )
-qPath_a_TTS    = qFunc.getValue('qPath_a_TTS'   )
-qPath_a_TRA    = qFunc.getValue('qPath_a_TRA'   )
-qPath_a_play   = qFunc.getValue('qPath_a_play'  )
+qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
+qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
+qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
+qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
+qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
+qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
+qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
+qPath_s_play   = qFunc.getValue('qPath_s_play'  )
 qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
 qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
 qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
@@ -73,7 +73,7 @@ class proc_coreSTT:
         qApiInp='free', qApiTrn='free', qApiOut='free',
         qLangInp='ja', qLangTrn='en,fr,', qLangTxt='ja', qLangOut='en', ):
 
-        self.path      = qPath_a_wav
+        self.path      = qPath_s_wav
 
         self.runMode   = runMode
         self.micDev    = micDev
@@ -364,13 +364,13 @@ class proc_coreSTT:
         if (self.runMode == 'debug') \
         or (self.runMode == 'learning'):
             inpInput = work_file
-            inpOutput= qPath_a_STT  + proc_name + '.' + inpLang + '.txt'
+            inpOutput= qPath_s_STT  + proc_name + '.' + inpLang + '.txt'
             trnInput = inpOutput
-            trnOutput= qPath_a_TRA  + proc_name + '.' + inpLang + '.' + trnLang[:2] + '.stt.translate.txt'
+            trnOutput= qPath_s_TRA  + proc_name + '.' + inpLang + '.' + trnLang[:2] + '.stt.translate.txt'
             txtInput = inpOutput
-            txtOutput= qPath_a_play + proc_name + '.' + outLang + '.feedback.mp3'
+            txtOutput= qPath_s_play + proc_name + '.' + outLang + '.feedback.mp3'
             outInput = trnOutput
-            outOutput= qPath_a_play + proc_name + '.' + outLang + '.voice.mp3'
+            outOutput= qPath_s_play + proc_name + '.' + outLang + '.voice.mp3'
             inpPlay  = 'off'
             txtPlay  = 'off'
             outPlay  = 'off'
@@ -378,13 +378,13 @@ class proc_coreSTT:
         elif (self.runMode == 'handsfree') \
         or   (self.runMode == 'translator'):
             inpInput = work_file
-            inpOutput= qPath_a_STT  + proc_name + '.' + inpLang + '.txt'
+            inpOutput= qPath_s_STT  + proc_name + '.' + inpLang + '.txt'
             trnInput = inpOutput
-            trnOutput= qPath_a_TRA  + proc_name + '.' + inpLang + '.' + trnLang[:2] + '.stt.translate.txt'
+            trnOutput= qPath_s_TRA  + proc_name + '.' + inpLang + '.' + trnLang[:2] + '.stt.translate.txt'
             txtInput = ''
             txtOutput= ''
             outInput = trnOutput
-            outOutput= qPath_a_play + proc_name + '.' + outLang + '.voice.mp3'
+            outOutput= qPath_s_play + proc_name + '.' + outLang + '.voice.mp3'
             inpPlay  = 'off'
             txtPlay  = 'off'
             outPlay  = 'off'
@@ -395,12 +395,12 @@ class proc_coreSTT:
         # or   (self.runMode == 'camera'):
         else: 
             inpInput = work_file
-            inpOutput= qPath_a_STT  + proc_name + '.' + inpLang + '.txt'
+            inpOutput= qPath_s_STT  + proc_name + '.' + inpLang + '.txt'
             trnInput = ''
             trnOutput= ''
             if (not self.micDev.isdigit()):
                 trnInput = inpOutput
-                trnOutput= qPath_a_TRA  + proc_name + '.' + inpLang + '.' + trnLang[:2] + '.stt.translate.txt'
+                trnOutput= qPath_s_TRA  + proc_name + '.' + inpLang + '.' + trnLang[:2] + '.stt.translate.txt'
             txtInput = ''
             txtOutput= ''
             outInput = ''
@@ -471,7 +471,7 @@ if __name__ == '__main__':
     coreSTT_thread = proc_coreSTT('coreSTT', '0', )
     coreSTT_thread.start()
 
-    qFunc.copy('_sounds/_sound_hallo.wav', qPath_a_wav + '_sound_hallo.wav')
+    qFunc.copy('_sounds/_sound_hallo.wav', qPath_s_wav + '_sound_hallo.wav')
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):
