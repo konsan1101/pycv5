@@ -404,12 +404,18 @@ class proc_recorder:
             # 録画停止
             if (os.name != 'nt'):
                 self.rec_id.stdin.write(b'q\n')
-                self.rec_id.stdin.flush()
+                try:
+                    self.rec_id.stdin.flush()
+                except:
+                    pass
                 time.sleep(2.00)
                 #self.rec_id.send_signal(signal.SIGINT)
             else:
                 self.rec_id.stdin.write(b'q\n')
-                self.rec_id.stdin.flush()
+                try:
+                    self.rec_id.stdin.flush()
+                except:
+                    pass
                 time.sleep(2.00)
                 #self.rec_id.send_signal(signal.CTRL_C_EVENT)
 
