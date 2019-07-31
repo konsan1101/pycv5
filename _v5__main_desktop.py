@@ -265,7 +265,7 @@ class main_desktop:
 
             # 録画停止
             if (not self.rec_id is None):
-                self.sub_proc('_stop_', )
+                self.sub_proc('_rec_stop_', )
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -387,7 +387,7 @@ class main_desktop:
                 self.rec_start = time.time()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' start', display=True,)
+            qFunc.logOutput(self.proc_id + ':' + u'recorder → ' + self.rec_file + ' start', display=True,)
 
     # 録画停止
     def sub_stop(self, proc_text, ):
@@ -412,7 +412,7 @@ class main_desktop:
             self.rec_id = None
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'screen → ' + self.rec_file + ' stop', display=True,)
+            qFunc.logOutput(self.proc_id + ':' + u'recorder → ' + self.rec_file + ' stop', display=True,)
 
             # リセット
             qFunc.kill('ffmpeg', )
