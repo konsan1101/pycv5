@@ -115,7 +115,7 @@ qLangTrn   = 'en'
 
 
 
-class main_screen:
+class main_vision:
 
     def __init__(self, name='thread', id='0', 
                                 runMode='debug',
@@ -1534,7 +1534,7 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':start')
 
-        main_screen = main_screen(main_id, '0', 
+        main_vision = main_vision(main_id, '0', 
                                 runMode=runMode,
                                 cam1Dev=cam1Dev, cam1Mode=cam1Mode, cam1Stretch=cam1Stretch, cam1Rotate=cam1Rotate, cam1Zoom=cam1Zoom,
                                 cam2Dev=cam2Dev, cam2Mode=cam2Mode, cam2Stretch=cam2Stretch, cam2Rotate=cam2Rotate, cam2Zoom=cam2Zoom,
@@ -1544,7 +1544,7 @@ if __name__ == '__main__':
                                 qLangCV=qLangCV, qLangOCR=qLangOCR, qLangTrn=qLangTrn,
                                 )
 
-        main_screen.start()
+        main_vision.start()
 
     # 待機ループ
 
@@ -1576,8 +1576,8 @@ if __name__ == '__main__':
 
         control = ''
 
-        while (main_screen.proc_r.qsize() != 0) and (control == ''):
-            res_data  = main_screen.get()
+        while (main_vision.proc_r.qsize() != 0) and (control == ''):
+            res_data  = main_vision.get()
             res_name  = res_data[0]
             res_value = res_data[1]
             if (res_name == 'control'):
@@ -1617,7 +1617,7 @@ if __name__ == '__main__':
 
                     else:
                         # CLICK
-                        mouse1, mouse2 = main_screen.check_mouse_click(DisplayEvent, MousePointX, MousePointY, )
+                        mouse1, mouse2 = main_vision.check_mouse_click(DisplayEvent, MousePointX, MousePointY, )
                         DisplayEvent = None
                         MousePointX  = None
                         MousePointY  = None
@@ -1642,18 +1642,18 @@ if __name__ == '__main__':
                     # 左クリック　写真撮影と入力画像をＡＩ画像認識処理へ
                     if (mouse1 == 'l-click') and (mouse2 == 'l'):
                         control = 'shutter'
-                        main_screen.put(['control', 'shutter'])
+                        main_vision.put(['control', 'shutter'])
 
                     # ズーム操作
                     if (mouse2 == 'camzoom-reset'):
-                        main_screen.put(['control', 'camzoom-reset'])
-                        main_screen.put(['control', 'background'])
+                        main_vision.put(['control', 'camzoom-reset'])
+                        main_vision.put(['control', 'background'])
                     if (mouse2 == 'camzoom-zoom'):
-                        main_screen.put(['control', 'camzoom-zoom'])
+                        main_vision.put(['control', 'camzoom-zoom'])
                     if (mouse2 == 'dspzoom-reset'):
-                        main_screen.put(['control', 'dspzoom-reset'])
+                        main_vision.put(['control', 'dspzoom-reset'])
                     if (mouse2 == 'dspzoom-zoom'):
-                        main_screen.put(['control', 'dspzoom-zoom'])
+                        main_vision.put(['control', 'dspzoom-zoom'])
 
                 break
 
@@ -1703,8 +1703,8 @@ if __name__ == '__main__':
             cv2.destroyWindow('Display')
             cv2.waitKey(1)
 
-        main_screen.stop()
-        del main_screen
+        main_vision.stop()
+        del main_vision
 
         qFunc.logOutput(main_id + ':bye!')
 

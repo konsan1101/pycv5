@@ -30,9 +30,9 @@ qCtrl_control_chatting   = 'temp/control_chatting.txt'
 qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 
 # Python
-qPython_main_audio    = '_v5__main_audio.py'
-qPython_main_screen   = '_v5__main_screen.py'
-qPython_main_recorder = '_v5__main_recorder.py'
+qPython_main_speech    = '_v5__main_speech.py'
+qPython_main_vision   = '_v5__main_vision.py'
+qPython_main_desktop = '_v5__main_desktop.py'
 qPython_bgm           = '_v5__sub_bgm.py'
 qPython_web           = '_v5__sub_web.py'
 qPython_chatting      = '_v5__sub_chatting.py'
@@ -254,12 +254,12 @@ if __name__ == '__main__':
 
         # 起動条件
 
-        main_audio_run       = None
-        main_audio_switch    = 'on'
-        main_screen_run      = None
-        main_screen_switch   = 'off'
-        main_recorder_run    = None
-        main_recorder_switch = 'off'
+        main_speech_run       = None
+        main_speech_switch    = 'on'
+        main_vision_run      = None
+        main_vision_switch   = 'off'
+        main_desktop_run    = None
+        main_desktop_switch = 'off'
         bgm_run              = None
         bgm_switch           = 'off'
         web_run              = None
@@ -270,12 +270,12 @@ if __name__ == '__main__':
         knowledge_switch     = 'off'
 
         if   (runMode == 'debug'):
-            main_screen_switch   = 'on'
-            main_recorder_switch = 'on'
+            main_vision_switch   = 'on'
+            main_desktop_switch = 'on'
             bgm_switch           = 'on'
         elif (runMode == 'handsfree'):
-            main_screen_switch   = 'on'
-            main_recorder_switch = 'on'
+            main_vision_switch   = 'on'
+            main_desktop_switch = 'on'
             bgm_switch           = 'on'
         elif (runMode == 'translator'):
             pass
@@ -284,16 +284,16 @@ if __name__ == '__main__':
         elif (runMode == 'number'):
             pass
         elif (runMode == 'hud'):
-            main_screen_switch   = 'on'
-            main_recorder_switch = 'on'
+            main_vision_switch   = 'on'
+            main_desktop_switch = 'on'
             bgm_switch           = 'on'
         elif (runMode == 'camera'):
-            main_screen_switch   = 'on'
-            main_recorder_switch = 'on'
+            main_vision_switch   = 'on'
+            main_desktop_switch = 'on'
             bgm_switch           = 'off'
         else:
-            main_screen_switch   = 'on'
-            main_recorder_switch = 'on'
+            main_vision_switch   = 'on'
+            main_desktop_switch = 'on'
             bgm_switch           = 'off'
 
     # 起動
@@ -322,13 +322,13 @@ if __name__ == '__main__':
 
         # コントロール
         if (control == '_screen_start_'):
-            main_screen_switch   = 'on'
+            main_vision_switch   = 'on'
         if (control == '_screen_end_'):
-            main_screen_switch   = 'off'
+            main_vision_switch   = 'off'
         if (control == '_recorder_start_'):
-            main_recorder_switch = 'on'
+            main_desktop_switch = 'on'
         if (control == '_recorder_end_'):
-            main_recorder_switch = 'off'
+            main_desktop_switch = 'off'
         if (control == '_bgm_start_'):
             bgm_switch           = 'on'
         if (control == '_bgm_end_'):
@@ -344,8 +344,8 @@ if __name__ == '__main__':
 
         speechs = []
 
-        if (main_audio_run is None) and (main_audio_switch == 'on'):
-            main_audio_run = subprocess.Popen(['python', qPython_main_audio, 
+        if (main_speech_run is None) and (main_speech_switch == 'on'):
+            main_speech_run = subprocess.Popen(['python', qPython_main_speech, 
                                 runMode, micDev, micType, micGuide, micLevel,
                                 qApiInp, qApiTrn, qApiOut,
                                 qLangInp, qLangTrn, qLangTxt, qLangOut, ], )
@@ -360,36 +360,36 @@ if __name__ == '__main__':
             elif (runMode == 'camera'):
                 speechs.append({ 'text':u'ハンズフリーカメラ機能を、起動しました。', 'wait':0, })
 
-        if (not main_audio_run is None) and (main_audio_switch != 'on'):
-            #main_audio_run.wait()
-            main_audio_run.terminate()
-            main_audio_run = None
+        if (not main_speech_run is None) and (main_speech_switch != 'on'):
+            #main_speech_run.wait()
+            main_speech_run.terminate()
+            main_speech_run = None
 
-        if (main_screen_run is None) and (main_screen_switch == 'on'):
-            main_screen_run = subprocess.Popen(['python', qPython_main_screen, 
+        if (main_vision_run is None) and (main_vision_switch == 'on'):
+            main_vision_run = subprocess.Popen(['python', qPython_main_vision, 
                                 runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'カメラ機能を、起動しました。', 'wait':0, })
 
-        if (not main_screen_run is None) and (main_screen_switch != 'on'):
-            #main_screen_run.wait()
-            main_screen_run.terminate()
-            main_screen_run = None
+        if (not main_vision_run is None) and (main_vision_switch != 'on'):
+            #main_vision_run.wait()
+            main_vision_run.terminate()
+            main_vision_run = None
 
             speechs.append({ 'text':u'カメラ機能を、終了しました。', 'wait':0, })
 
-        if (main_recorder_run is None) and (main_recorder_switch == 'on'):
-            main_recorder_run = subprocess.Popen(['python', qPython_main_recorder, 
+        if (main_desktop_run is None) and (main_desktop_switch == 'on'):
+            main_desktop_run = subprocess.Popen(['python', qPython_main_desktop, 
                                 runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'録画制御機能を、起動しました。', 'wait':0, })
 
-        if (not main_recorder_run is None) and (main_recorder_switch != 'on'):
-            #main_recorder_run.wait()
-            main_recorder_run.terminate()
-            main_recorder_run = None
+        if (not main_desktop_run is None) and (main_desktop_switch != 'on'):
+            #main_desktop_run.wait()
+            main_desktop_run.terminate()
+            main_desktop_run = None
 
             speechs.append({ 'text':u'録画制御機能を、終了しました。', 'wait':0, })
 
@@ -492,20 +492,20 @@ if __name__ == '__main__':
         
         #time.sleep(60.00)
 
-        if (not main_audio_run is None):
-            main_audio_run.wait()
-            main_audio_run.terminate()
-            main_audio_run = None
+        if (not main_speech_run is None):
+            main_speech_run.wait()
+            main_speech_run.terminate()
+            main_speech_run = None
 
-        if (not main_screen_run is None):
-            main_screen_run.wait()
-            main_screen_run.terminate()
-            main_screen_run = None
+        if (not main_vision_run is None):
+            main_vision_run.wait()
+            main_vision_run.terminate()
+            main_vision_run = None
 
-        if (not main_recorder_run is None):
-            main_recorder_run.wait()
-            main_recorder_run.terminate()
-            main_recorder_run = None
+        if (not main_desktop_run is None):
+            main_desktop_run.wait()
+            main_desktop_run.terminate()
+            main_desktop_run = None
 
         if (not bgm_run is None):
             bgm_run.wait()

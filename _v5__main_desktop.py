@@ -79,7 +79,7 @@ runMode = 'debug'
 
 
 
-class main_recorder:
+class main_desktop:
 
     def __init__(self, name='thread', id='0', runMode='debug', ):
         self.runMode   = runMode
@@ -485,8 +485,8 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':start')
 
-        main_recorder = main_recorder(main_id, '0', runMode=runMode, )
-        main_recorder.start()
+        main_desktop = main_desktop(main_id, '0', runMode=runMode, )
+        main_desktop.start()
 
         main_start = time.time()
         onece      = True
@@ -522,8 +522,8 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':terminate')
 
-        main_recorder.stop()
-        del main_recorder
+        main_desktop.stop()
+        del main_desktop
 
         qFunc.logOutput(main_id + ':bye!')
 
