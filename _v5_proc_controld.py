@@ -68,13 +68,11 @@ qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
 
 class proc_controld:
 
-    def __init__(self, name='thread', id='0', runMode='debug', 
-        camDev='0', ):
+    def __init__(self, name='thread', id='0', runMode='debug', ):
 
         self.path      = qPath_d_ctrl
 
         self.runMode   = runMode
-        self.camDev    = camDev
 
         self.breakFlag = threading.Event()
         self.breakFlag.clear()
@@ -272,7 +270,7 @@ class proc_controld:
                                 if (not os.path.exists(self.fileBsy)):
                                     qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
                                     if (str(self.id) == '0'):
-                                        qFunc.busySet(qBusy_v_ctrl, True)
+                                        qFunc.busySet(qBusy_d_ctrl, True)
 
                                 # 処理
                                 self.proc_last = time.time()
@@ -288,7 +286,7 @@ class proc_controld:
             # ビジー解除
             qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_v_ctrl, False)
+                qFunc.busySet(qBusy_d_ctrl, False)
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
@@ -309,7 +307,7 @@ class proc_controld:
             # ビジー解除
             qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_v_ctrl, False)
+                qFunc.busySet(qBusy_d_ctrl, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):
@@ -330,16 +328,24 @@ class proc_controld:
 
         if (cn_s.qsize() < 99):
 
-            if (proc_text.find(u'リセット') >=0):
+            if (proc_text.find(u'リセット') >= 0):
                 out_name  = 'control'
                 out_value = 'reset'
                 cn_s.put([out_name, out_value])
 
-            elif ((proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0)) \
-            or    (proc_text == u'バルス'):
+            elif ((proc_text.find(u'システム') >= 0) and (proc_text.find(u'終了') >= 0)) \
+              or  (proc_text == u'バルス'):
                 out_name  = 'control'
                 out_value = 'shutdown'
                 cn_s.put([out_name, out_value])
+
+            # レコーダー制御
+            elif (proc_text.lower() == '_rec_start_') \
+              or (proc_text.lower() == '_rec_stop_') \
+              or (proc_text.lower() == '_rec_restart_') \
+              or (proc_text.find(u'録画') >= 0):
+                print('controld', proc_text)
+                cn_s.put(['recorder', proc_text])
 
 
 

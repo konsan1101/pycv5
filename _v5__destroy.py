@@ -11,7 +11,9 @@ qFunc.kill('julius')
 
 qFunc.kill('sox')
 qFunc.kill('VLC') # Danger!
+
 qFunc.kill('ffmpeg')
+qFunc.kill('ffplay')
 
 qFunc.kill('python')
 

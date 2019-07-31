@@ -24,6 +24,14 @@ qCtrl_control_vision     = 'temp/control_vision.txt'
 qCtrl_control_desktop    = 'temp/control_desktop.txt'
 qCtrl_control_self       = qCtrl_control_desktop
 
+# 出力インターフェース
+qCtrl_result_audio       = 'temp/result_audio.txt'
+qCtrl_result_speech      = 'temp/result_speech.txt'
+qCtrl_recognize          = 'temp/result_recognize.txt'
+qCtrl_recognize_sjis     = 'temp/result_recognize_sjis.txt'
+qCtrl_translate          = 'temp/result_translate.txt'
+qCtrl_translate_sjis     = 'temp/result_translate_sjis.txt'
+
 
 
 # qFunc 共通ルーチン
@@ -77,9 +85,14 @@ qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
 qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
 qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
 
+# thread ルーチン群
+import _v5_proc_controld
+import _v5_proc_recorder
 
 
-runMode = 'debug'
+
+# debug
+runMode     = 'debug'
 
 
 
@@ -107,13 +120,6 @@ class main_desktop:
         self.proc_last = None
         self.proc_step = '0'
         self.proc_seq  = 0
-
-        self.rec_id    = None
-        self.rec_start = time.time()
-        self.rec_limit = None
-        self.rec_file  = ''
-        self.rec_file1 = ''
-        self.rec_file2 = ''
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -182,6 +188,16 @@ class main_desktop:
             if (txt == '_close_'):
                 qFunc.remove(qCtrl_control_self)
 
+        # 外部ＰＧリセット
+        qFunc.kill('ffmpeg')
+        qFunc.kill('ffplay')
+
+        # 起動条件
+        controld_thread  = None
+        controld_switch  = 'on'
+        recorder_thread  = None
+        recorder_switch  = 'on'
+
         # 待機ループ
         self.proc_step = '5'
 
@@ -192,14 +208,10 @@ class main_desktop:
             self.proc_beat = time.time()
 
             # 終了確認
-            control = ''
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
                 if (txt == '_close_'):
                     break
-                else:
-                    qFunc.remove(qCtrl_control_self)
-                    control = txt
 
             # 停止要求確認
             if (self.breakFlag.is_set()):
@@ -225,6 +237,54 @@ class main_desktop:
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
                 qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
+            # スレッド設定
+
+            speechs = []
+
+            if (controld_thread is None) and (controld_switch == 'on'):
+                controld_thread = _v5_proc_controld.proc_controld(
+                                    name='controld', id='0',
+                                    runMode=self.runMode,
+                                    )
+                controld_thread.start()
+
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
+                    speechs.append({ 'text':u'「デスクトップ制御」の機能が有効になりました。', 'wait':0, })
+
+            if (not controld_thread is None) and (controld_switch != 'on'):
+                controld_thread.stop()
+                del controld_thread
+                controld_thread = None
+
+            if (recorder_thread is None) and (recorder_switch == 'on'):
+                recorder_thread  = _v5_proc_recorder.proc_recorder(
+                                    name='recorder', id='0', 
+                                    runMode=self.runMode,
+                                    )
+                recorder_thread.start()
+
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
+                    speechs.append({ 'text':u'「デスクトップ録画」の機能が有効になりました。', 'wait':0, })
+
+            if (not recorder_thread is None) and (recorder_switch != 'on'):
+                recorder_thread.stop()                
+                del recorder_thread
+                recorder_thread = None
+
+            if (len(speechs) != 0):
+                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
+            if (onece == True):
+                onece = False
+
+                if   (self.runMode == 'debug') \
+                or   (self.runMode == 'handsfree'):
+                    speechs = []
+                    speechs.append({ 'text':u'「デスクトップ制御」の準備が完了しました。', 'wait':0, })
+                    qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
             # レディー設定
             if (not os.path.exists(self.fileRdy)):
                 qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
@@ -235,23 +295,42 @@ class main_desktop:
                 out_value = 'ready'
                 cn_s.put([out_name, out_value])
 
-            # 制限時間、自動停止
-            if (not self.rec_limit is None):
-                if (time.time() > self.rec_limit):
-                    self.rec_limit = None
-                    
-                    # 録画停止
-                    if (not self.rec_id is None):
-                        self.sub_proc('_rec_stop_', )
-
-            # 5分毎、自動リスタート
-            if (not self.rec_id is None):
-                if ((time.time() - self.rec_start) > (60 * 1)):
-                    self.sub_proc('_rec_restart_', )
+            # レコーダー制御
+            if (inp_name.lower() == 'recorder'):
+                if (not recorder_thread is None):
+                    recorder_thread.put(['control', inp_value])
 
             # 処理
-            if (control != ''):
-                self.sub_proc(control, )
+            if (True):
+
+                # 制御処理
+                control = ''
+
+                if (not controld_thread is None):
+                    while (controld_thread.proc_r.qsize() != 0):
+                        res_data  = controld_thread.get()
+                        res_name  = res_data[0]
+                        res_value = res_data[1]
+
+                        # 制御
+                        if (res_name.lower() == 'control'):
+                            control = res_value
+                            # 結果出力
+                            if (cn_s.qsize() < 99):
+                                cn_s.put([res_name, res_value])
+                            break
+
+                        # レコーダー制御
+                        if (res_name.lower() == 'recorder'):
+                            if (not recorder_thread is None):
+                                recorder_thread.put(['control', res_value])
+
+                # 録画機能
+                if (not recorder_thread is None):
+                    res_data  = recorder_thread.get()
+
+            # ビジー解除
+            qFunc.remove(self.fileBsy)
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
@@ -267,9 +346,20 @@ class main_desktop:
             # レディー解除
             qFunc.remove(self.fileRdy)
 
-            # 録画停止
-            if (not self.rec_id is None):
-                self.sub_proc('_rec_stop_', )
+            # スレッド停止
+            if (not controld_thread is None):
+                controld_thread.stop()
+                del controld_thread
+                controld_thread = None
+
+            if (not recorder_thread is None):
+                recorder_thread.stop()
+                del recorder_thread
+                recorder_thread = None
+
+            # 外部ＰＧリセット
+            qFunc.kill('ffmpeg')
+            qFunc.kill('ffplay')
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -286,155 +376,6 @@ class main_desktop:
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
             qFunc.remove(self.fileRun)
             self.proc_beat = None
-
-
-
-    # 処理
-    def sub_proc(self, proc_text, ):
-
-        if (proc_text.find(u'リセット') >=0):
-
-            # 停止
-            if (not self.rec_id is None):
-                #self.sub_stop(proc_text, )
-                self.sub_stop('_rec_stop_', )
-
-        elif (proc_text.lower() == '_rec_stop_') \
-          or (proc_text.find(u'録画') >=0) and (proc_text.find(u'停止') >=0) \
-          or (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
-
-            # 停止
-            if (not self.rec_id is None):
-                #self.sub_stop(proc_text, )
-                self.sub_stop('_rec_stop_', )
-
-
-        elif (proc_text.lower() == '_rec_restart_'):
-
-            # 停止
-            if (not self.rec_id is None):
-                self.sub_stop(proc_text, )
-
-            # 開始
-            self.sub_start(proc_text, )
-
-            # メッセージ
-            speechs = []
-            speechs.append({ 'text':u'録画中です。音声コマンド「録画停止」で録画を停止します。', 'wait':0, })
-            qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
-
-
-        elif (proc_text.lower() == '_rec_start_') \
-          or (proc_text.find(u'録画') >=0):
-
-            # 停止
-            if (not self.rec_id is None):
-                self.sub_stop(proc_text, )
-
-            # 開始
-            self.sub_start(proc_text, )
-
-
-
-    # 録画開始
-    def sub_start(self, proc_text, ):
-
-        # ビジー設定
-        if (not os.path.exists(self.fileBsy)):
-            qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
-            if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_d_rec, True)
-
-        # メッセージ
-        if (proc_text.lower() == '_rec_start_') \
-        or (proc_text.find(u'録画') >=0):
-            speechs = []
-            speechs.append({ 'text':u'録画を開始します。', 'wait':0, })
-            qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
-
-        if (proc_text.lower() == '_rec_start_') \
-        or (proc_text.lower() == '_rec_restart_') \
-        or (proc_text.find(u'録画') >=0):
-
-            # 開始
-            nowTime    = datetime.datetime.now()
-            stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
-            if (proc_text.lower() == '_rec_start_') \
-            or (proc_text.lower() == '_rec_restart_') \
-            or (proc_text.find(u'開始') >=0):
-                self.rec_limit = None
-                self.rec_file  = qPath_work    + stamp + '.flv'
-                self.rec_file1 = qPath_d_movie + stamp + '.flv'
-                self.rec_file2 = qPath_rec     + stamp + '.flv'
-            else:
-                self.rec_limit = time.time() + 30
-                self.rec_file  = qPath_work    + stamp + '.flv'
-                rec_txt = '.' + qFunc.txt2filetxt(proc_text)
-                self.rec_file1 = qPath_d_movie + stamp + rec_txt + '.flv'
-                self.rec_file2 = qPath_rec     + stamp + rec_txt + '.flv'
-
-            if (os.name != 'nt'):
-                # ffmpeg -f avfoundation -list_devices true -i ""
-                self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
-                            '-i', '1:2', '-loglevel', 'warning', \
-                            '-r', '5', self.rec_file1, ], \
-                            stdin=subprocess.PIPE, )
-                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                self.rec_start = time.time()
-            else:
-                # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
-                self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
-                            '-i', 'desktop', '-loglevel', 'warning', \
-                            '-r', '5', self.rec_file1, ], \
-                            stdin=subprocess.PIPE, )
-                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                self.rec_start = time.time()
-
-            # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'recorder → ' + self.rec_file + ' start', display=True,)
-
-    # 録画停止
-    def sub_stop(self, proc_text, ):
-
-        if (not self.rec_id is None):
-
-            # 録画停止
-            if (os.name != 'nt'):
-                self.rec_id.stdin.write(b'q\n')
-                self.rec_id.stdin.flush()
-                time.sleep(2.00)
-                self.rec_id.send_signal(signal.SIGINT)
-            else:
-                self.rec_id.stdin.write(b'q\n')
-                self.rec_id.stdin.flush()
-                time.sleep(2.00)
-                self.rec_id.send_signal(signal.CTRL_C_EVENT)
-
-            time.sleep(2.00)
-            self.rec_id.wait()
-            self.rec_id.terminate()
-            self.rec_id = None
-
-            # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'recorder → ' + self.rec_file + ' stop', display=True,)
-
-            # リセット
-            qFunc.kill('ffmpeg', )
-
-            # 保管
-            qFunc.copy(self.rec_file1, self.rec_file2)
-
-            # メッセージ
-            if (proc_text.lower() == '_rec_stop_'):
-                speechs = []
-                speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
-                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
-
-        # ビジー解除
-        if (proc_text.lower() != '_rec_restart_'):
-            qFunc.remove(self.fileBsy)
-            if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_d_rec, False)
 
 
 
@@ -465,11 +406,15 @@ if __name__ == '__main__':
     qFunc.logOutput(qLogFile, )
 
     qFunc.logOutput(main_id + ':init')
-    qFunc.logOutput(main_id + ':exsample.py runMode, ')
+    qFunc.logOutput(main_id + ':exsample.py runMode, mic..., ')
+
+    #runMode  debug, handsfree, translator, speech, number, hud, camera,
 
     # パラメータ
 
     if (True):
+
+        #runMode     = 'debug'
 
         if (len(sys.argv) >= 2):
             runMode  = str(sys.argv[1]).lower()
@@ -478,10 +423,14 @@ if __name__ == '__main__':
 
     # 初期設定
 
-    txts, txt = qFunc.txtsRead(qCtrl_control_self)
-    if (txts != False):
-        if (txt == '_close_'):
-            qFunc.remove(qCtrl_control_self)
+    qFunc.remove(qCtrl_control_desktop  )
+
+    qFunc.makeDirs(qPath_d_ctrl,   True )
+    qFunc.makeDirs(qPath_d_prtscn, True )
+    qFunc.makeDirs(qPath_d_movie,  True )
+    qFunc.makeDirs(qPath_d_play,   True )
+
+    qFunc.busyReset_desktop(False)
 
     # 起動
 
@@ -490,41 +439,56 @@ if __name__ == '__main__':
         qFunc.logOutput(main_id + ':start')
 
         main_desktop = main_desktop(main_id, '0', runMode=runMode, )
-        main_desktop.start()
 
-        main_start = time.time()
-        onece      = True
+        main_desktop.start()
 
     # 待機ループ
 
     while (True):
 
         # 終了確認
+
+        control = ''
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
+            qFunc.logOutput(main_id + ':' + str(txt))
             if (txt == '_close_'):
                 break
+            else:
+                qFunc.remove(qCtrl_control_self)
+                control = txt
 
-        # デバッグ
-        if (runMode == 'debug'):
+        # レコーダー制御
+        if (control.lower() == '_rec_start_') \
+        or (control.lower() == '_rec_stop_') \
+        or (control.lower() == '_rec_restart_') \
+        or (control.find(u'録画') > 0):
+            main_desktop.put(['recorder', control])
+            control = ''
 
-            # テスト開始
-            if  ((time.time() - main_start) > 1):
-                if (onece == True):
-                    onece = False
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=['_rec_start_'], encoding='utf-8', exclusive=True, mode='w', )
+        while (main_desktop.proc_r.qsize() != 0) and (control == ''):
+            res_data  = main_desktop.get()
+            res_name  = res_data[0]
+            res_value = res_data[1]
+            if (res_name == 'control'):
+                control  = res_value
+                break
 
-            # テスト終了
-            if  ((time.time() - main_start) > 30):
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=['_rec_stop_'], encoding='utf-8', exclusive=True, mode='w', )
-                    time.sleep(5.00)
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        # 終了操作
+        if (control == 'shutdown'):
+            break
+
+
 
     # 終了
 
     if (True):
 
         qFunc.logOutput(main_id + ':terminate')
+
+        # 外部ＰＧリセット
+        qFunc.kill('ffmpeg')
+        qFunc.kill('ffplay')
 
         main_desktop.stop()
         del main_desktop

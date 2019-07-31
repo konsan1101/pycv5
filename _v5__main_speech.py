@@ -861,12 +861,16 @@ if __name__ == '__main__':
     while (True):
 
         # 終了確認
-        txts, txt = qFunc.txtsRead(qCtrl_control_self)
-        if (txts != False):
-            if (txt == '_close_'):
-                break
 
         control = ''
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
+        if (txts != False):
+            qFunc.logOutput(main_id + ':' + str(txt))
+            if (txt == '_close_'):
+                break
+            else:
+                qFunc.remove(qCtrl_control_self)
+                control = txt
 
         while (main_speech.proc_r.qsize() != 0) and (control == ''):
             res_data  = main_speech.get()

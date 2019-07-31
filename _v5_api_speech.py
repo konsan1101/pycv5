@@ -1065,6 +1065,8 @@ def speech_batch(runMode, micDev,
                 qFunc.txtsWrite(filename1, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
                 filename2 = qPath_v_ctrl + filename
                 qFunc.txtsWrite(filename2, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
+                filename3 = qPath_d_ctrl + filename
+                qFunc.txtsWrite(filename3, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
 
         nowTime = datetime.datetime.now()
         stamp   = nowTime.strftime('%Y%m%d')
@@ -1193,6 +1195,8 @@ def speech_batch(runMode, micDev,
                 qFunc.txtsWrite(filename1, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
                 filename2 = qPath_v_ctrl + filename
                 qFunc.txtsWrite(filename2, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
+                filename3 = qPath_d_ctrl + filename
+                qFunc.txtsWrite(filename3, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
 
         if (inpInput != ''):
             nowTime = datetime.datetime.now()

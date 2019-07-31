@@ -1551,10 +1551,16 @@ if __name__ == '__main__':
     while (True):
 
         # 終了確認
+
+        control = ''
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
+            qFunc.logOutput(main_id + ':' + str(txt))
             if (txt == '_close_'):
                 break
+            else:
+                qFunc.remove(qCtrl_control_self)
+                control = txt
 
         # ディスプレイ設定
         if (display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) != 'busy'): 
@@ -1571,8 +1577,6 @@ if __name__ == '__main__':
             cv2.destroyWindow('Display')
             cv2.waitKey(1)
             display = None
-
-        control = ''
 
         while (main_vision.proc_r.qsize() != 0) and (control == ''):
             res_data  = main_vision.get()
