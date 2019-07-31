@@ -19,9 +19,9 @@ print(sys.version_info)
 
 # インターフェース
 qCtrl_control_main       = 'temp/control_main.txt'
-qCtrl_control_audio      = 'temp/control_audio.txt'
-qCtrl_control_screen     = 'temp/control_screen.txt'
-qCtrl_control_recorder   = 'temp/control_recorder.txt'
+qCtrl_control_speech      = 'temp/control_speech.txt'
+qCtrl_control_vision     = 'temp/control_vision.txt'
+qCtrl_control_desktop   = 'temp/control_desktop.txt'
 qCtrl_control_self       = qCtrl_control_main
 
 qCtrl_control_bgm        = 'temp/control_bgm.txt'
@@ -237,9 +237,9 @@ if __name__ == '__main__':
         # インターフェースリセット
 
         qFunc.remove(qCtrl_control_main      )
-        qFunc.remove(qCtrl_control_audio     )
-        qFunc.remove(qCtrl_control_screen    )
-        qFunc.remove(qCtrl_control_recorder  )
+        qFunc.remove(qCtrl_control_speech     )
+        qFunc.remove(qCtrl_control_vision    )
+        qFunc.remove(qCtrl_control_desktop  )
         qFunc.remove(qCtrl_control_bgm       )
         qFunc.remove(qCtrl_control_web       )
         qFunc.remove(qCtrl_control_chatting  )
@@ -482,9 +482,9 @@ if __name__ == '__main__':
         # プロセス終了
 
         qFunc.txtsWrite(qCtrl_control_main      ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_audio     ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_screen    ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_recorder  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_speech     ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_vision    ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_desktop  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_web       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )

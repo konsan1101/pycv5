@@ -21,10 +21,10 @@ import cv2
 
 # インターフェース
 qCtrl_control_main       = 'temp/control_main.txt'
-qCtrl_control_audio      = 'temp/control_audio.txt'
-qCtrl_control_screen     = 'temp/control_screen.txt'
-qCtrl_control_recorder   = 'temp/control_recorder.txt'
-qCtrl_control_self       = qCtrl_control_screen
+qCtrl_control_speech      = 'temp/control_speech.txt'
+qCtrl_control_vision     = 'temp/control_vision.txt'
+qCtrl_control_desktop   = 'temp/control_desktop.txt'
+qCtrl_control_self       = qCtrl_control_vision
 
 qCtrl_recognize          = 'temp/result_recognize.txt'
 qCtrl_translate          = 'temp/result_translate.txt'
@@ -1495,7 +1495,7 @@ if __name__ == '__main__':
 
     # 初期設定
 
-    qFunc.remove(qCtrl_control_screen     )
+    qFunc.remove(qCtrl_control_vision     )
 
     qFunc.remove(qCtrl_result_screen      )
     qFunc.remove(qCtrl_result_photo       )

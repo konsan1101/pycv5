@@ -19,10 +19,10 @@ import glob
 
 # インターフェース
 qCtrl_control_main       = 'temp/control_main.txt'
-qCtrl_control_audio      = 'temp/control_audio.txt'
-qCtrl_control_screen     = 'temp/control_screen.txt'
-qCtrl_control_recorder   = 'temp/control_recorder.txt'
-qCtrl_control_self       = qCtrl_control_audio
+qCtrl_control_speech      = 'temp/control_speech.txt'
+qCtrl_control_vision     = 'temp/control_vision.txt'
+qCtrl_control_desktop   = 'temp/control_desktop.txt'
+qCtrl_control_self       = qCtrl_control_speech
 
 # 出力インターフェース
 qCtrl_result_audio       = 'temp/result_audio.txt'
@@ -816,7 +816,7 @@ if __name__ == '__main__':
 
     # 初期設定
 
-    qFunc.remove(qCtrl_control_audio     )
+    qFunc.remove(qCtrl_control_speech     )
 
     qFunc.remove(qCtrl_result_audio       )
     qFunc.remove(qCtrl_result_speech      )
