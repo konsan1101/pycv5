@@ -68,8 +68,10 @@ qPath_v_detect = qFunc.getValue('qPath_v_detect')
 qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
 qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
-qPath_v_movie  = qFunc.getValue('qPath_v_movie' )
-qPath_v_screen = qFunc.getValue('qPath_v_screen')
+qPath_d_ctrl   = qFunc.getValue('qPath_d_ctrl'  )
+qPath_d_prtscn = qFunc.getValue('qPath_d_prtscn')
+qPath_d_movie  = qFunc.getValue('qPath_d_movie' )
+qPath_d_play   = qFunc.getValue('qPath_d_play' )
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
 qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
@@ -77,18 +79,20 @@ qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
 qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
 qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
 qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
-qBusy_a_ctrl   = qFunc.getValue('qBusy_a_ctrl'  )
-qBusy_a_inp    = qFunc.getValue('qBusy_a_inp'   )
-qBusy_a_wav    = qFunc.getValue('qBusy_a_wav'   )
-qBusy_a_STT    = qFunc.getValue('qBusy_a_STT'   )
-qBusy_a_TTS    = qFunc.getValue('qBusy_a_TTS'   )
-qBusy_a_TRA    = qFunc.getValue('qBusy_a_TRA'   )
-qBusy_a_play   = qFunc.getValue('qBusy_a_play'  )
+qBusy_s_ctrl   = qFunc.getValue('qBusy_s_ctrl'  )
+qBusy_s_inp    = qFunc.getValue('qBusy_s_inp'   )
+qBusy_s_wav    = qFunc.getValue('qBusy_s_wav'   )
+qBusy_s_STT    = qFunc.getValue('qBusy_s_STT'   )
+qBusy_s_TTS    = qFunc.getValue('qBusy_s_TTS'   )
+qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
+qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
 qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
-qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
+qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
+qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
+qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
 
 # thread ルーチン群
 import _v5_proc_controlv
@@ -1017,7 +1021,7 @@ class main_vision:
                 if (not txt2img_thread is None):
 
                     # ステータス状況
-                    if  (qFunc.busyCheck(qBusy_v_rec , 0) != 'busy') \
+                    if  (qFunc.busyCheck(qBusy_d_rec , 0) != 'busy') \
                     and ((self.runMode == 'debug') \
                      or  (self.runMode == 'handsfree') \
                      or  (self.runMode == 'hud')):
@@ -1217,7 +1221,7 @@ class main_vision:
         # 写真コピー保存
         filename_p1 = qPath_v_photo  + 'photo.' + stamp + '.jpg'
         filename_p2 = qCtrl_result_photo
-        filename_s1 = qPath_v_screen + 'screen.' + stamp + '.jpg'
+        filename_s1 = qPath_d_prtscn + 'screen.' + stamp + '.jpg'
         filename_s2 = qCtrl_result_screen
         filename_m1 = qPath_rec      + stamp + photo_txt + '.jpg'
         filename_m2 = qPath_v_msg    + stamp + photo_txt + '.jpg'
@@ -1515,7 +1519,7 @@ if __name__ == '__main__':
     qFunc.makeDirs(qPath_v_cv,     True )
     qFunc.makeDirs(qPath_v_photo,  True )
     qFunc.makeDirs(qPath_v_msg,    True )
-    qFunc.makeDirs(qPath_v_screen, True )
+    qFunc.makeDirs(qPath_d_prtscn, True )
 
     qFunc.busyReset_v(False)
 

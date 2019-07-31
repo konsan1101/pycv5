@@ -51,8 +51,10 @@ qPath_v_detect = qFunc.getValue('qPath_v_detect')
 qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
 qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
-qPath_v_movie  = qFunc.getValue('qPath_v_movie' )
-qPath_v_screen = qFunc.getValue('qPath_v_screen')
+qPath_d_ctrl   = qFunc.getValue('qPath_d_ctrl'  )
+qPath_d_prtscn = qFunc.getValue('qPath_d_prtscn')
+qPath_d_movie  = qFunc.getValue('qPath_d_movie' )
+qPath_d_play   = qFunc.getValue('qPath_d_play' )
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
 qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
@@ -60,18 +62,20 @@ qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
 qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
 qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
 qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
-qBusy_a_ctrl   = qFunc.getValue('qBusy_a_ctrl'  )
-qBusy_a_inp    = qFunc.getValue('qBusy_a_inp'   )
-qBusy_a_wav    = qFunc.getValue('qBusy_a_wav'   )
-qBusy_a_STT    = qFunc.getValue('qBusy_a_STT'   )
-qBusy_a_TTS    = qFunc.getValue('qBusy_a_TTS'   )
-qBusy_a_TRA    = qFunc.getValue('qBusy_a_TRA'   )
-qBusy_a_play   = qFunc.getValue('qBusy_a_play'  )
+qBusy_s_ctrl   = qFunc.getValue('qBusy_s_ctrl'  )
+qBusy_s_inp    = qFunc.getValue('qBusy_s_inp'   )
+qBusy_s_wav    = qFunc.getValue('qBusy_s_wav'   )
+qBusy_s_STT    = qFunc.getValue('qBusy_s_STT'   )
+qBusy_s_TTS    = qFunc.getValue('qBusy_s_TTS'   )
+qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
+qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
 qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
-qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
+qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
+qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
+qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
 
 
 
@@ -339,7 +343,7 @@ class main_desktop:
         if (not os.path.exists(self.fileBsy)):
             qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
             if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_v_rec, True)
+                qFunc.busySet(qBusy_d_rec, True)
 
         # メッセージ
         if (proc_text.lower() == '_rec_start_') \
@@ -360,13 +364,13 @@ class main_desktop:
             or (proc_text.find(u'開始') >=0):
                 self.rec_limit = None
                 self.rec_file  = qPath_work    + stamp + '.flv'
-                self.rec_file1 = qPath_v_movie + stamp + '.flv'
+                self.rec_file1 = qPath_d_movie + stamp + '.flv'
                 self.rec_file2 = qPath_rec     + stamp + '.flv'
             else:
                 self.rec_limit = time.time() + 30
                 self.rec_file  = qPath_work    + stamp + '.flv'
                 rec_txt = '.' + qFunc.txt2filetxt(proc_text)
-                self.rec_file1 = qPath_v_movie + stamp + rec_txt + '.flv'
+                self.rec_file1 = qPath_d_movie + stamp + rec_txt + '.flv'
                 self.rec_file2 = qPath_rec     + stamp + rec_txt + '.flv'
 
             if (os.name != 'nt'):
@@ -430,7 +434,7 @@ class main_desktop:
         if (proc_text.lower() != '_rec_restart_'):
             qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_v_rec, False)
+                qFunc.busySet(qBusy_d_rec, False)
 
 
 

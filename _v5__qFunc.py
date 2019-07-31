@@ -45,8 +45,10 @@ qPath_v_detect = 'temp/v5_3detect/'
 qPath_v_cv     = 'temp/v5_5cv_txt/'
 qPath_v_photo  = 'temp/v5_7photo/'
 qPath_v_msg    = 'temp/v5_7photo_msg/'
-qPath_v_movie  = 'temp/v5_8movie/'
-qPath_v_screen = 'temp/v5_9screen/'
+qPath_d_ctrl   = 'temp/d5_0control/'
+qPath_d_prtscn = 'temp/d5_1screen/'
+qPath_d_movie  = 'temp/d5_5movie/'
+qPath_d_play   = 'temp/d5_7play/'
 
 qBusy_dev_cpu  = qPath_work + 'busy_dev_cpu.txt'
 qBusy_dev_com  = qPath_work + 'busy_dev_commnication.txt'
@@ -54,18 +56,20 @@ qBusy_dev_mic  = qPath_work + 'busy_dev_microphone.txt'
 qBusy_dev_spk  = qPath_work + 'busy_dev_speaker.txt'
 qBusy_dev_cam  = qPath_work + 'busy_dev_camera.txt'
 qBusy_dev_dsp  = qPath_work + 'busy_dev_display.txt'
-qBusy_a_ctrl   = qPath_work + 'busy_0control.txt'
-qBusy_a_inp    = qPath_work + 'busy_1audio.txt'
-qBusy_a_wav    = qPath_work + 'busy_2wav.txt'
-qBusy_a_STT    = qPath_work + 'busy_4stt_txt.txt'
-qBusy_a_TTS    = qPath_work + 'busy_5tts_txt.txt'
-qBusy_a_TRA    = qPath_work + 'busy_6tra_txt.txt'
-qBusy_a_play   = qPath_work + 'busy_7play.txt'
+qBusy_s_ctrl   = qPath_work + 'busy_s_0control.txt'
+qBusy_s_inp    = qPath_work + 'busy_s_1audio.txt'
+qBusy_s_wav    = qPath_work + 'busy_s_2wav.txt'
+qBusy_s_STT    = qPath_work + 'busy_s_4stt_txt.txt'
+qBusy_s_TTS    = qPath_work + 'busy_s_5tts_txt.txt'
+qBusy_s_TRA    = qPath_work + 'busy_s_6tra_txt.txt'
+qBusy_s_play   = qPath_work + 'busy_s_7play.txt'
 qBusy_v_ctrl   = qPath_work + 'busy_v_0control.txt'
 qBusy_v_inp    = qPath_work + 'busy_v_1video.txt'
 qBusy_v_jpg    = qPath_work + 'busy_v_2jpg.txt'
 qBusy_v_CV     = qPath_work + 'busy_v_5cv.txt'
-qBusy_v_rec    = qPath_work + 'busy_v_9rec.txt'
+qBusy_d_ctrl   = qPath_work + 'busy_d_0control.txt'
+qBusy_d_rec    = qPath_work + 'busy_d_1rec.txt'
+qBusy_d_play   = qPath_work + 'busy_d_2play.txt'
 
 
 
@@ -105,8 +109,10 @@ class qFunc_class:
         self.makeDirs(qPath_v_cv,     False)
         self.makeDirs(qPath_v_photo,  False)
         self.makeDirs(qPath_v_msg,    False)
-        self.makeDirs(qPath_v_movie,  False)
-        self.makeDirs(qPath_v_screen, False)
+        self.makeDirs(qPath_d_ctrl,   False)
+        self.makeDirs(qPath_d_prtscn, False)
+        self.makeDirs(qPath_d_movie,  False)
+        self.makeDirs(qPath_d_play,   False)
 
         return True
 
@@ -133,8 +139,10 @@ class qFunc_class:
         if (field == 'qPath_v_cv'    ): return qPath_v_cv
         if (field == 'qPath_v_photo' ): return qPath_v_photo
         if (field == 'qPath_v_msg'   ): return qPath_v_msg
-        if (field == 'qPath_v_movie' ): return qPath_v_movie
-        if (field == 'qPath_v_screen'): return qPath_v_screen
+        if (field == 'qPath_d_ctrl'  ): return qPath_d_ctrl
+        if (field == 'qPath_d_prtscn'): return qPath_d_prtscn
+        if (field == 'qPath_d_movie' ): return qPath_d_movie
+        if (field == 'qPath_d_play'  ): return qPath_d_play
 
         if (field == 'qBusy_dev_cpu' ): return qBusy_dev_cpu
         if (field == 'qBusy_dev_com' ): return qBusy_dev_com
@@ -142,18 +150,20 @@ class qFunc_class:
         if (field == 'qBusy_dev_spk' ): return qBusy_dev_spk
         if (field == 'qBusy_dev_cam' ): return qBusy_dev_cam
         if (field == 'qBusy_dev_dsp' ): return qBusy_dev_dsp
-        if (field == 'qBusy_a_ctrl'  ): return qBusy_a_ctrl
-        if (field == 'qBusy_a_inp'   ): return qBusy_a_inp
-        if (field == 'qBusy_a_wav'   ): return qBusy_a_wav
-        if (field == 'qBusy_a_STT'   ): return qBusy_a_STT
-        if (field == 'qBusy_a_TTS'   ): return qBusy_a_TTS
-        if (field == 'qBusy_a_TRA'   ): return qBusy_a_TRA
-        if (field == 'qBusy_a_play'  ): return qBusy_a_play
+        if (field == 'qBusy_s_ctrl'  ): return qBusy_s_ctrl
+        if (field == 'qBusy_s_inp'   ): return qBusy_s_inp
+        if (field == 'qBusy_s_wav'   ): return qBusy_s_wav
+        if (field == 'qBusy_s_STT'   ): return qBusy_s_STT
+        if (field == 'qBusy_s_TTS'   ): return qBusy_s_TTS
+        if (field == 'qBusy_s_TRA'   ): return qBusy_s_TRA
+        if (field == 'qBusy_s_play'  ): return qBusy_s_play
         if (field == 'qBusy_v_ctrl'  ): return qBusy_v_ctrl
         if (field == 'qBusy_v_inp'   ): return qBusy_v_inp
         if (field == 'qBusy_v_jpg'   ): return qBusy_v_jpg
         if (field == 'qBusy_v_CV'    ): return qBusy_v_CV
-        if (field == 'qBusy_v_rec'   ): return qBusy_v_rec
+        if (field == 'qBusy_d_ctrl'  ): return qBusy_d_ctrl
+        if (field == 'qBusy_d_rec'   ): return qBusy_d_rec
+        if (field == 'qBusy_d_play'  ): return qBusy_d_play
 
         print('check program !' + field)
         return None
@@ -542,21 +552,21 @@ class qFunc_class:
                 time.sleep(0.10)
         return False
 
-    def busyReset_a(self, Flag=False):
+    def busyReset_speech(self, Flag=False):
         self.busySet(qBusy_dev_cpu, Flag)
         self.busySet(qBusy_dev_com, Flag)
         self.busySet(qBusy_dev_mic, Flag)
         self.busySet(qBusy_dev_spk, Flag)
-        self.busySet(qBusy_a_ctrl,  Flag)
-        self.busySet(qBusy_a_inp,   Flag)
-        self.busySet(qBusy_a_wav,   Flag)
-        self.busySet(qBusy_a_STT,   Flag)
-        self.busySet(qBusy_a_TTS,   Flag)
-        self.busySet(qBusy_a_TRA,   Flag)
-        self.busySet(qBusy_a_play,  Flag)
+        self.busySet(qBusy_s_ctrl,  Flag)
+        self.busySet(qBusy_s_inp,   Flag)
+        self.busySet(qBusy_s_wav,   Flag)
+        self.busySet(qBusy_s_STT,   Flag)
+        self.busySet(qBusy_s_TTS,   Flag)
+        self.busySet(qBusy_s_TRA,   Flag)
+        self.busySet(qBusy_s_play,  Flag)
         return True
 
-    def busyReset_v(self, Flag=False):
+    def busyReset_vision(self, Flag=False):
         self.busySet(qBusy_dev_cpu, Flag)
         self.busySet(qBusy_dev_com, Flag)
         self.busySet(qBusy_dev_cam, Flag)
@@ -565,7 +575,15 @@ class qFunc_class:
         self.busySet(qBusy_v_inp,   Flag)
         self.busySet(qBusy_v_jpg,   Flag)
         self.busySet(qBusy_v_CV,    Flag)
-        self.busySet(qBusy_v_rec,   Flag)
+        return True
+
+    def busyReset_desktop(self, Flag=False):
+        self.busySet(qBusy_dev_cpu, Flag)
+        self.busySet(qBusy_dev_com, Flag)
+        self.busySet(qBusy_dev_dsp, Flag)
+        self.busySet(qBusy_d_ctrl,  Flag)
+        self.busySet(qBusy_d_rec,   Flag)
+        self.busySet(qBusy_d_play,  Flag)
         return True
 
     def busyCheck(self, file, maxWait=0, ):
@@ -585,11 +603,11 @@ class qFunc_class:
             busy_flag = False
             chktime2 = time.time()
             while ((time.time() - chktime2) < idolSec):
-                if (self.busyCheck(qBusy_a_wav , 0) == 'busy') \
-                or (self.busyCheck(qBusy_a_STT , 0) == 'busy') \
-                or (self.busyCheck(qBusy_a_TTS , 0) == 'busy') \
-                or (self.busyCheck(qBusy_a_TRA , 0) == 'busy') \
-                or (self.busyCheck(qBusy_a_play, 0) == 'busy'):
+                if (self.busyCheck(qBusy_s_wav , 0) == 'busy') \
+                or (self.busyCheck(qBusy_s_STT , 0) == 'busy') \
+                or (self.busyCheck(qBusy_s_TTS , 0) == 'busy') \
+                or (self.busyCheck(qBusy_s_TRA , 0) == 'busy') \
+                or (self.busyCheck(qBusy_s_play, 0) == 'busy'):
                     busy_flag = True
                     time.sleep(0.10)
                     break
@@ -653,7 +671,9 @@ class qBusy_status_txts_class(object):
         self.v_inp   = 'none'
         self.v_jpg   = 'none'
         self.v_CV    = 'none'
-        self.v_rec   = 'none'
+        self.d_ctrl  = 'none'
+        self.d_rec   = 'none'
+        self.d_play  = 'none'
 
     def busyCheck(self, file, maxWait=0, ):
         if (maxWait != 0):
@@ -698,31 +718,31 @@ class qBusy_status_txts_class(object):
             change = True
         self.dev_dsp = check
 
-        check = self.busyCheck(qBusy_a_ctrl, 0)
+        check = self.busyCheck(qBusy_s_ctrl, 0)
         if (check != self.a_ctrl):
             change = True
         self.a_ctrl = check
-        check = self.busyCheck(qBusy_a_inp, 0)
+        check = self.busyCheck(qBusy_s_inp, 0)
         if (check != self.a_inp):
             change = True
         self.a_inp = check
-        check = self.busyCheck(qBusy_a_wav, 0)
+        check = self.busyCheck(qBusy_s_wav, 0)
         if (check != self.a_wav):
             change = True
         self.a_wav = check
-        check = self.busyCheck(qBusy_a_STT, 0)
+        check = self.busyCheck(qBusy_s_STT, 0)
         if (check != self.a_STT):
             change = True
         self.a_STT = check
-        check = self.busyCheck(qBusy_a_TTS, 0)
+        check = self.busyCheck(qBusy_s_TTS, 0)
         if (check != self.a_TTS):
             change = True
         self.a_TTS = check
-        check = self.busyCheck(qBusy_a_TRA, 0)
+        check = self.busyCheck(qBusy_s_TRA, 0)
         if (check != self.a_TRA):
             change = True
         self.a_TRA = check
-        check = self.busyCheck(qBusy_a_play, 0)
+        check = self.busyCheck(qBusy_s_play, 0)
         if (check != self.a_play):
             change = True
         self.a_play = check
@@ -743,10 +763,19 @@ class qBusy_status_txts_class(object):
         if (check != self.v_CV):
             change = True
         self.v_CV = check
-        check = self.busyCheck(qBusy_v_rec, 0)
-        if (check != self.v_rec):
+
+        check = self.busyCheck(qBusy_d_ctrl, 0)
+        if (check != self.d_ctrl):
             change = True
-        self.v_rec = check
+        self.d_ctrl = check
+        check = self.busyCheck(qBusy_d_rec, 0)
+        if (check != self.d_rec):
+            change = True
+        self.d_rec = check
+        check = self.busyCheck(qBusy_d_play, 0)
+        if (check != self.d_play):
+            change = True
+        self.d_play = check
  
         if (change != True):
             return False
@@ -829,10 +858,21 @@ class qBusy_status_txts_class(object):
             txts.append(' CV     : busy!___')
         else:
             txts.append(' CV     : ________')
-        if (self.v_rec == 'busy'):
-            txts.append(' Rec    : busy!___')
+
+        txts.append('')
+        txts.append('[Desktop status]')
+        if (self.d_ctrl == 'busy'):
+            txts.append(' Ctrl   : active__')
+        else:
+            txts.append(' Ctrl   : ________')
+        if (self.d_rec == 'busy'):
+            txts.append(' Rec    : rec!____')
         else:
             txts.append(' Rec    : ________')
+        if (self.d_play == 'busy'):
+            txts.append(' Play   : play!___')
+        else:
+            txts.append(' Play   : ________')
 
         txts.append('')
         return txts
@@ -845,14 +885,14 @@ class qBusy_status_txts_class(object):
         self.check = 'speech'
 
         # ステータス取得
-        check = self.busyCheck(qBusy_a_inp, 0)
+        check = self.busyCheck(qBusy_s_inp, 0)
         if (check != self.a_inp):
             change = True
         self.a_inp = check
-        check = self.busyCheck(qBusy_v_rec, 0)
-        if (check != self.v_rec):
+        check = self.busyCheck(qBusy_d_rec, 0)
+        if (check != self.d_rec):
             change = True
-        self.v_rec = check
+        self.d_rec = check
  
         if (change != True):
             return False
@@ -863,7 +903,7 @@ class qBusy_status_txts_class(object):
             txts.append(' Speech   : ready__')
         else:
             txts.append(' Speech   : _______')
-        if (self.v_rec == 'busy'):
+        if (self.d_rec == 'busy'):
             txts.append(' Recorder : rec!___')
         else:
             txts.append(' Recorder : _______')
@@ -907,11 +947,13 @@ if (__name__ == '__main__'):
 
     qFunc.notePad(txt=u'開始')
 
-    qFunc.busyReset_a(True)
-    qFunc.busyReset_v(True)
+    qFunc.busyReset_speech(True)
+    qFunc.busyReset_vision(True)
+    qFunc.busyReset_desktop(True)
 
-    qFunc.busyReset_a(False)
-    qFunc.busyReset_v(False)
+    qFunc.busyReset_speech(False)
+    qFunc.busyReset_vision(False)
+    qFunc.busyReset_desktop(False)
 
     qFunc.logOutput('')
     qFunc.logOutput( qBusy_dev_cpu + ':' + qFunc.busyCheck(qBusy_dev_cpu, 1), )
@@ -920,18 +962,20 @@ if (__name__ == '__main__'):
     qFunc.logOutput( qBusy_dev_spk + ':' + qFunc.busyCheck(qBusy_dev_spk, 1), )
     qFunc.logOutput( qBusy_dev_cam + ':' + qFunc.busyCheck(qBusy_dev_cam, 1), )
     qFunc.logOutput( qBusy_dev_dsp + ':' + qFunc.busyCheck(qBusy_dev_dsp, 1), )
-    qFunc.logOutput( qBusy_a_ctrl + ' :' + qFunc.busyCheck(qBusy_a_ctrl,  1), )
-    qFunc.logOutput( qBusy_a_inp + '  :' + qFunc.busyCheck(qBusy_a_inp,   1), )
-    qFunc.logOutput( qBusy_a_wav + '  :' + qFunc.busyCheck(qBusy_a_wav,   1), )
-    qFunc.logOutput( qBusy_a_STT + '  :' + qFunc.busyCheck(qBusy_a_STT,   1), )
-    qFunc.logOutput( qBusy_a_TTS + '  :' + qFunc.busyCheck(qBusy_a_TTS,   1), )
-    qFunc.logOutput( qBusy_a_TRA + '  :' + qFunc.busyCheck(qBusy_a_TRA,   1), )
-    qFunc.logOutput( qBusy_a_play + ' :' + qFunc.busyCheck(qBusy_a_play,  1), )
+    qFunc.logOutput( qBusy_s_ctrl + ' :' + qFunc.busyCheck(qBusy_s_ctrl,  1), )
+    qFunc.logOutput( qBusy_s_inp + '  :' + qFunc.busyCheck(qBusy_s_inp,   1), )
+    qFunc.logOutput( qBusy_s_wav + '  :' + qFunc.busyCheck(qBusy_s_wav,   1), )
+    qFunc.logOutput( qBusy_s_STT + '  :' + qFunc.busyCheck(qBusy_s_STT,   1), )
+    qFunc.logOutput( qBusy_s_TTS + '  :' + qFunc.busyCheck(qBusy_s_TTS,   1), )
+    qFunc.logOutput( qBusy_s_TRA + '  :' + qFunc.busyCheck(qBusy_s_TRA,   1), )
+    qFunc.logOutput( qBusy_s_play + ' :' + qFunc.busyCheck(qBusy_s_play,  1), )
     qFunc.logOutput( qBusy_v_ctrl + ' :' + qFunc.busyCheck(qBusy_v_ctrl,  1), )
     qFunc.logOutput( qBusy_v_inp + '  :' + qFunc.busyCheck(qBusy_v_inp,   1), )
     qFunc.logOutput( qBusy_v_jpg + '  :' + qFunc.busyCheck(qBusy_v_jpg,   1), )
     qFunc.logOutput( qBusy_v_CV + '   :' + qFunc.busyCheck(qBusy_v_CV,    1), )
-    qFunc.logOutput( qBusy_v_rec + '  :' + qFunc.busyCheck(qBusy_v_rec,   1), )
+    qFunc.logOutput( qBusy_d_ctrl + ' :' + qFunc.busyCheck(qBusy_d_ctrl,  1), )
+    qFunc.logOutput( qBusy_d_rec + '  :' + qFunc.busyCheck(qBusy_d_rec,   1), )
+    qFunc.logOutput( qBusy_d_play + ' :' + qFunc.busyCheck(qBusy_d_play,  1), )
 
     qFunc.notePad(txt=u'終了')
 

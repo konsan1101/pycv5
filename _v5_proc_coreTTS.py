@@ -38,8 +38,10 @@ qPath_v_detect = qFunc.getValue('qPath_v_detect')
 qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
 qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
-qPath_v_movie  = qFunc.getValue('qPath_v_movie' )
-qPath_v_screen = qFunc.getValue('qPath_v_screen')
+qPath_d_ctrl   = qFunc.getValue('qPath_d_ctrl'  )
+qPath_d_prtscn = qFunc.getValue('qPath_d_prtscn')
+qPath_d_movie  = qFunc.getValue('qPath_d_movie' )
+qPath_d_play   = qFunc.getValue('qPath_d_play' )
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
 qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
@@ -47,18 +49,20 @@ qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
 qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
 qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
 qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
-qBusy_a_ctrl   = qFunc.getValue('qBusy_a_ctrl'  )
-qBusy_a_inp    = qFunc.getValue('qBusy_a_inp'   )
-qBusy_a_wav    = qFunc.getValue('qBusy_a_wav'   )
-qBusy_a_STT    = qFunc.getValue('qBusy_a_STT'   )
-qBusy_a_TTS    = qFunc.getValue('qBusy_a_TTS'   )
-qBusy_a_TRA    = qFunc.getValue('qBusy_a_TRA'   )
-qBusy_a_play   = qFunc.getValue('qBusy_a_play'  )
+qBusy_s_ctrl   = qFunc.getValue('qBusy_s_ctrl'  )
+qBusy_s_inp    = qFunc.getValue('qBusy_s_inp'   )
+qBusy_s_wav    = qFunc.getValue('qBusy_s_wav'   )
+qBusy_s_STT    = qFunc.getValue('qBusy_s_STT'   )
+qBusy_s_TTS    = qFunc.getValue('qBusy_s_TTS'   )
+qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
+qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
 qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
-qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
+qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
+qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
+qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
 
 # 音声処理 api
 import       _v5_api_speech
@@ -286,14 +290,14 @@ class proc_coreTTS:
                                 if (not os.path.exists(self.fileBsy)):
                                     qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
                                     if (str(self.id) == '0'):
-                                        qFunc.busySet(qBusy_a_TTS, True)
+                                        qFunc.busySet(qBusy_s_TTS, True)
 
-                                    #qFunc.busyCheck(qBusy_a_ctrl , 3)
-                                    #qFunc.busyCheck(qBusy_a_STT  , 3)
-                                    #qFunc.busyCheck(qBusy_a_TTS  , 3)
-                                    #qFunc.busyCheck(qBusy_a_play , 3)
+                                    #qFunc.busyCheck(qBusy_s_ctrl , 3)
+                                    #qFunc.busyCheck(qBusy_s_STT  , 3)
+                                    #qFunc.busyCheck(qBusy_s_TTS  , 3)
+                                    #qFunc.busyCheck(qBusy_s_play , 3)
                                     if (self.micType == 'bluetooth') or (self.micGuide == 'on' or self.micGuide == 'sound'):
-                                        qFunc.busyCheck(qBusy_a_inp , 3)
+                                        qFunc.busyCheck(qBusy_s_inp , 3)
 
                                 # 処理
                                 self.proc_last = time.time()
@@ -309,7 +313,7 @@ class proc_coreTTS:
             # ビジー解除
             qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_a_TTS, False)
+                qFunc.busySet(qBusy_s_TTS, False)
 
             # バッチ実行時は終了
             if (not self.micDev.isdigit()):
@@ -335,7 +339,7 @@ class proc_coreTTS:
             # ビジー解除
             qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_a_TTS, False)
+                qFunc.busySet(qBusy_s_TTS, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):

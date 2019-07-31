@@ -42,8 +42,10 @@ qPath_v_detect = qFunc.getValue('qPath_v_detect')
 qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
 qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
-qPath_v_movie  = qFunc.getValue('qPath_v_movie' )
-qPath_v_screen = qFunc.getValue('qPath_v_screen')
+qPath_d_ctrl   = qFunc.getValue('qPath_d_ctrl'  )
+qPath_d_prtscn = qFunc.getValue('qPath_d_prtscn')
+qPath_d_movie  = qFunc.getValue('qPath_d_movie' )
+qPath_d_play   = qFunc.getValue('qPath_d_play' )
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
 qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
@@ -51,18 +53,20 @@ qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
 qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
 qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
 qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
-qBusy_a_ctrl   = qFunc.getValue('qBusy_a_ctrl'  )
-qBusy_a_inp    = qFunc.getValue('qBusy_a_inp'   )
-qBusy_a_wav    = qFunc.getValue('qBusy_a_wav'   )
-qBusy_a_STT    = qFunc.getValue('qBusy_a_STT'   )
-qBusy_a_TTS    = qFunc.getValue('qBusy_a_TTS'   )
-qBusy_a_TRA    = qFunc.getValue('qBusy_a_TRA'   )
-qBusy_a_play   = qFunc.getValue('qBusy_a_play'  )
+qBusy_s_ctrl   = qFunc.getValue('qBusy_s_ctrl'  )
+qBusy_s_inp    = qFunc.getValue('qBusy_s_inp'   )
+qBusy_s_wav    = qFunc.getValue('qBusy_s_wav'   )
+qBusy_s_STT    = qFunc.getValue('qBusy_s_STT'   )
+qBusy_s_TTS    = qFunc.getValue('qBusy_s_TTS'   )
+qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
+qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
 qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
-qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
+qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
+qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
+qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
 
 # julius 音声認識
 import speech_api_julius
@@ -210,14 +214,14 @@ def proc_audio(cn_r, cn_s, ):
                     if (micType == 'usb'):
                         sw = 'on'
                     else:
-                        if  (qFunc.busyCheck(qBusy_a_ctrl, 1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_a_STT,  1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_a_TTS,  1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_a_play, 1) != 'busy'):
+                        if  (qFunc.busyCheck(qBusy_s_ctrl, 1) != 'busy') \
+                        and (qFunc.busyCheck(qBusy_s_STT,  1) != 'busy') \
+                        and (qFunc.busyCheck(qBusy_s_TTS,  1) != 'busy') \
+                        and (qFunc.busyCheck(qBusy_s_play, 1) != 'busy'):
                             sw = 'on'
 
                 if (sw == 'on'):
-                    qFunc.busySet(qBusy_a_inp, True)
+                    qFunc.busySet(qBusy_s_inp, True)
 
                     if (v2w_wave_seq != audio_bakSEQ):
                         audio_bakSEQ = v2w_wave_seq
@@ -272,10 +276,10 @@ def proc_audio(cn_r, cn_s, ):
 
                 sw = 'on'
                 if (micType == 'bluetooth'):
-                    if (qFunc.busyCheck(qBusy_a_ctrl, 0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_a_STT,  0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_a_TTS,  0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_a_play, 0) == 'busy'):
+                    if (qFunc.busyCheck(qBusy_s_ctrl, 0) == 'busy') \
+                    or (qFunc.busyCheck(qBusy_s_STT,  0) == 'busy') \
+                    or (qFunc.busyCheck(qBusy_s_TTS,  0) == 'busy') \
+                    or (qFunc.busyCheck(qBusy_s_play, 0) == 'busy'):
                         sw = 'off'
                 if (adinexe_run == True):
                     files = glob.glob(qPath_s_inp + '*')
@@ -308,7 +312,7 @@ def proc_audio(cn_r, cn_s, ):
                             adinexe_sbp.terminate()
                             adinexe_sbp = None
 
-                    qFunc.busySet(qBusy_a_inp, False)
+                    qFunc.busySet(qBusy_s_inp, False)
 
                     if (sw == 'accept'):
                         if (micGuide == 'on' or micGuide == 'sound'):
@@ -326,7 +330,7 @@ def proc_audio(cn_r, cn_s, ):
 
     qFunc.logOutput('audio_inp_:terminate')
 
-    qFunc.busySet(qBusy_a_inp, False)
+    qFunc.busySet(qBusy_s_inp, False)
 
     if (adingui_run == True):
         adingui_run = False
@@ -743,13 +747,13 @@ def main_init(micDev, ):
         qFunc.makeDirs(qPath_rec,  False)
         qFunc.makeDirs(qPath_work, False)
 
-    qFunc.busySet(qBusy_a_ctrl,  False )
-    qFunc.busySet(qBusy_a_inp,   False )
-    qFunc.busySet(qBusy_a_wav,   False )
-    qFunc.busySet(qBusy_a_STT,   False )
-    qFunc.busySet(qBusy_a_TTS,   False )
-    qFunc.busySet(qBusy_a_TRA,   False )
-    qFunc.busySet(qBusy_a_play,  False )
+    qFunc.busySet(qBusy_s_ctrl,  False )
+    qFunc.busySet(qBusy_s_inp,   False )
+    qFunc.busySet(qBusy_s_wav,   False )
+    qFunc.busySet(qBusy_s_STT,   False )
+    qFunc.busySet(qBusy_s_TTS,   False )
+    qFunc.busySet(qBusy_s_TRA,   False )
+    qFunc.busySet(qBusy_s_play,  False )
 
 
 
@@ -849,10 +853,10 @@ if (__name__ == '__main__'):
                 break
 
         if (micDev.isdigit()):
-            if (qFunc.busyCheck(qBusy_a_ctrl, 0) == 'busy' or \
-                qFunc.busyCheck(qBusy_a_STT,  0) == 'busy' or \
-                qFunc.busyCheck(qBusy_a_TTS,  0) == 'busy' or \
-                qFunc.busyCheck(qBusy_a_play, 0) == 'busy'):
+            if (qFunc.busyCheck(qBusy_s_ctrl, 0) == 'busy' or \
+                qFunc.busyCheck(qBusy_s_STT,  0) == 'busy' or \
+                qFunc.busyCheck(qBusy_s_TTS,  0) == 'busy' or \
+                qFunc.busyCheck(qBusy_s_play, 0) == 'busy'):
                 v2w_wave_last = 0
             if (v2w_wave_last == 0):
                 v2w_wave_last = time.time()
@@ -1033,7 +1037,7 @@ if (__name__ == '__main__'):
     except:
         pass
 
-    qFunc.busySet(qBusy_a_inp, False)
+    qFunc.busySet(qBusy_s_inp, False)
 
     qFunc.logOutput('v2w_main__:bye!')
 

@@ -59,8 +59,10 @@ qPath_v_detect = qFunc.getValue('qPath_v_detect')
 qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
 qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
 qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
-qPath_v_movie  = qFunc.getValue('qPath_v_movie' )
-qPath_v_screen = qFunc.getValue('qPath_v_screen')
+qPath_d_ctrl   = qFunc.getValue('qPath_d_ctrl'  )
+qPath_d_prtscn = qFunc.getValue('qPath_d_prtscn')
+qPath_d_movie  = qFunc.getValue('qPath_d_movie' )
+qPath_d_play   = qFunc.getValue('qPath_d_play' )
 
 qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
 qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
@@ -68,21 +70,23 @@ qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
 qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
 qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
 qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
-qBusy_a_ctrl   = qFunc.getValue('qBusy_a_ctrl'  )
-qBusy_a_inp    = qFunc.getValue('qBusy_a_inp'   )
-qBusy_a_wav    = qFunc.getValue('qBusy_a_wav'   )
-qBusy_a_STT    = qFunc.getValue('qBusy_a_STT'   )
-qBusy_a_TTS    = qFunc.getValue('qBusy_a_TTS'   )
-qBusy_a_TRA    = qFunc.getValue('qBusy_a_TRA'   )
-qBusy_a_play   = qFunc.getValue('qBusy_a_play'  )
+qBusy_s_ctrl   = qFunc.getValue('qBusy_s_ctrl'  )
+qBusy_s_inp    = qFunc.getValue('qBusy_s_inp'   )
+qBusy_s_wav    = qFunc.getValue('qBusy_s_wav'   )
+qBusy_s_STT    = qFunc.getValue('qBusy_s_STT'   )
+qBusy_s_TTS    = qFunc.getValue('qBusy_s_TTS'   )
+qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
+qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
 qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
-qBusy_v_rec    = qFunc.getValue('qBusy_v_rec'   )
+qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
+qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
+qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
 
 # thread ルーチン群
-import _v5_proc_controla
+import _v5_proc_controls
 import _v5_proc_adintool
 import _v5_proc_voice2wav
 import _v5_proc_coreSTT
@@ -227,8 +231,8 @@ class main_speech:
         qFunc.kill('julius')
 
         # 起動条件
-        controla_thread  = None
-        controla_switch  = 'on'
+        controls_thread  = None
+        controls_switch  = 'on'
         adintool_thread  = None
         adintool_switch  = 'on'
         voice2wav_thread = None
@@ -319,22 +323,22 @@ class main_speech:
 
             speechs = []
 
-            if (controla_thread is None) and (controla_switch == 'on'):
-                controla_thread = _v5_proc_controla.proc_controla(
-                                    name='controla', id='0',
+            if (controls_thread is None) and (controls_switch == 'on'):
+                controls_thread = _v5_proc_controls.proc_controls(
+                                    name='controls', id='0',
                                     runMode=self.runMode,
                                     micDev=self.micDev, micType=self.micType, micGuide=self.micGuide, micLevel=self.micLevel,
                                     )
-                controla_thread.start()
+                controls_thread.start()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「音声制御」の機能が有効になりました。', 'wait':0, })
 
-            if (not controla_thread is None) and (controla_switch != 'on'):
-                controla_thread.stop()
-                del controla_thread
-                controla_thread = None
+            if (not controls_thread is None) and (controls_switch != 'on'):
+                controls_thread.stop()
+                del controls_thread
+                controls_thread = None
 
             if (adintool_thread is None) and (adintool_switch == 'on'):
                 adintool_thread  = _v5_proc_adintool.proc_adintool(
@@ -514,9 +518,9 @@ class main_speech:
                 # 制御処理
                 control = ''
 
-                if (not controla_thread is None):
-                    while (controla_thread.proc_r.qsize() != 0):
-                        res_data  = controla_thread.get()
+                if (not controls_thread is None):
+                    while (controls_thread.proc_r.qsize() != 0):
+                        res_data  = controls_thread.get()
                         res_name  = res_data[0]
                         res_value = res_data[1]
                         if (res_name == 'control'):
@@ -623,10 +627,10 @@ class main_speech:
             qFunc.remove(self.fileRdy)
 
             # スレッド停止
-            if (not controla_thread is None):
-                controla_thread.stop()
-                del controla_thread
-                controla_thread = None
+            if (not controls_thread is None):
+                controls_thread.stop()
+                del controls_thread
+                controls_thread = None
 
             if (not adintool_thread is None):
                 adintool_thread.stop()                
