@@ -13,7 +13,9 @@ import glob
 
 from selenium.webdriver import Firefox, FirefoxOptions
 
-
+import requests as web
+import bs4
+import urllib.parse
 
 #print(os.path.dirname(__file__))
 #print(os.path.basename(__file__))
@@ -153,7 +155,7 @@ class main_class:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -321,7 +323,7 @@ class main_class:
     def sub_start(self, proc_text, ):
 
         # ログ
-        qFunc.logOutput(self.proc_id + ':' + u'open ' + proc_text, display=True,)
+        qFunc.logOutput(self.proc_id + ':open ' + proc_text, display=True,)
 
         # オープン
         if (self.web_id is None):
@@ -338,17 +340,61 @@ class main_class:
             #driver.execute_script("document.body.style.zoom='100%'")
 
         # URLを開く
+        url   = ''
+        title = ''
+        text  = ''
         if (proc_text == '_start_'):
-            self.web_id.get('https://google.co.jp')
-
+            url = 'https://google.co.jp'
         elif (proc_text[:4] == 'http'):
-            self.web_id.get(proc_text)
+            url = proc_text
 
-        else:
-            pass
+        if (url == ''):
+            try:
+                # キーワードを使って検索する
+                list_keywd = [proc_text]
+                resp = web.get('https://www.google.co.jp/search?num=10&q=' + '　'.join(list_keywd))
+                resp.raise_for_status()
 
-        # 画像保管
-        #self.web_id.save_screenshot(file_name)
+                # 取得したHTMLをパースする
+                soup = bs4.BeautifulSoup(resp.text, "html.parser")
+                link_elem01 = soup.select('.r > a')
+                link_elem02 = soup.select('.s > .st')
+
+                title = link_elem01[0].get_text()
+                title = urllib.parse.unquote(title)
+
+                text  = link_elem01[0].get_text()
+                text  = urllib.parse.unquote(text)
+                text  = text.replace('\n', '')
+
+                url   = link_elem01[0].get('href')
+                url   = url.replace('/url?q=', '')
+                if (url.find('&sa=') >= 0):
+                    url = url[:url.find('&sa=')]
+                url   = urllib.parse.unquote(url)
+                url   = urllib.parse.unquote(url)
+
+            except:
+                pass
+
+        if (url != ''):
+            if (title != ''):
+                qFunc.logOutput(' Web Title [' + str(title) + ']')
+            if (text != ''):
+                qFunc.logOutput(' Web Text  [' + str(text)  + ']')
+
+                speechs = []
+                speechs.append({ 'text':text + u'のホームページを表示します。', 'wait':0, })
+                qFunc.speech(id='speech', speechs=speechs, lang='', )
+
+                # ログ
+                qFunc.logOutput(self.proc_id + ':' + str(url), display=True,)
+
+            # 開く
+            self.web_id.get(url)
+
+            # 画像保管
+            #self.web_id.save_screenshot(file_name)
 
 
 
@@ -361,6 +407,9 @@ class main_class:
             self.web_id.quit()
             self.web_id = None
 
+        qFunc.kill('firefox', )
+
+        # リセット
         qFunc.kill('firefox', )
 
         # ビジー解除
@@ -445,6 +494,8 @@ if __name__ == '__main__':
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_start_'], encoding='utf-8', exclusive=True, mode='w', )
                     time.sleep(5.00)
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['http://yahoo.co.jp'], encoding='utf-8', exclusive=True, mode='w', )
+                    time.sleep(5.00)
+                    qFunc.txtsWrite(qCtrl_control_self ,txts=[u'姫路城'], encoding='utf-8', exclusive=True, mode='w', )
 
             # テスト終了
             if  ((time.time() - main_start) > 30):
