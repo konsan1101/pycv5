@@ -278,10 +278,12 @@ if __name__ == '__main__':
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'on'
+            web_switch           = 'on'
         elif (runMode == 'handsfree'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'on'
+            web_switch           = 'on'
         elif (runMode == 'translator'):
             pass
         elif (runMode == 'speech'):
@@ -292,14 +294,17 @@ if __name__ == '__main__':
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'on'
+            web_switch           = 'on'
         elif (runMode == 'camera'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'off'
+            web_switch           = 'off'
         else:
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'off'
+            web_switch           = 'off'
 
     # 起動
 
@@ -339,6 +344,10 @@ if __name__ == '__main__':
             bgm_switch           = 'on'
         if (control == '_bgm_end_'):
             bgm_switch           = 'off'
+        if (control == '_web_start_'):
+            web_switch           = 'on'
+        if (control == '_web_end_'):
+            web_switch           = 'off'
 
         # 活動メッセージ
 

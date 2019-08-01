@@ -341,61 +341,22 @@ class main_class:
 
         # URLを開く
         url   = ''
-        title = ''
-        text  = ''
         if (proc_text == '_start_'):
             url = 'https://google.co.jp'
+            self.web_id.get(url)
         elif (proc_text[:4] == 'http'):
             url = proc_text
-
-        if (url == ''):
-            #try:
-                # キーワードを使って検索する
-                list_keywd = [proc_text]
-                resp = web.get('https://www.google.co.jp/search?num=10&q=' + proc_text)
-                resp.raise_for_status()
-
-                # 取得したHTMLをパースする
-                soup = bs4.BeautifulSoup(resp.text, "html.parser")
-                print(soup)
-                link_elem01 = soup.select('.r > a')
-                link_elem02 = soup.select('.s > .st')
-
-                title = link_elem01[0].get_text()
-                title = urllib.parse.unquote(title)
-
-                text  = link_elem01[0].get_text()
-                text  = urllib.parse.unquote(text)
-                text  = text.replace('\n', '')
-
-                url   = link_elem01[0].get('href')
-                url   = url.replace('/url?q=', '')
-                if (url.find('&sa=') >= 0):
-                    url = url[:url.find('&sa=')]
-                url   = urllib.parse.unquote(url)
-                url   = urllib.parse.unquote(url)
-
-            #except:
-            #    pass
-
-        if (url != ''):
-            if (title != ''):
-                qFunc.logOutput(' Web Title [' + str(title) + ']')
-            if (text != ''):
-                qFunc.logOutput(' Web Text  [' + str(text)  + ']')
-
-                speechs = []
-                speechs.append({ 'text':text + u'のホームページを表示します。', 'wait':0, })
-                qFunc.speech(id='speech', speechs=speechs, lang='', )
-
-                # ログ
-                qFunc.logOutput(self.proc_id + ':' + str(url), display=True,)
-
-            # 開く
             self.web_id.get(url)
 
-            # 画像保管
-            #self.web_id.save_screenshot(file_name)
+        if (url == ''):
+            url = 'https://www.google.com/search?q=' + proc_text
+            self.web_id.get(url)
+
+        # 開く
+        #self.web_id.get(url)
+
+        # 画像保管
+        #self.web_id.save_screenshot(file_name)
 
 
 
@@ -407,8 +368,6 @@ class main_class:
             # 停止
             self.web_id.quit()
             self.web_id = None
-
-        qFunc.kill('firefox', )
 
         # リセット
         qFunc.kill('firefox', )
