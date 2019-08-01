@@ -466,6 +466,13 @@ if __name__ == '__main__':
                     time.sleep(5.00)
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
 
+        # アイドリング
+        if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
+            time.sleep(1.00)
+        time.sleep(0.50)
+
+
+
     # 終了
 
     if (True):
