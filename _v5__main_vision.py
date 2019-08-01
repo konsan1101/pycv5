@@ -1029,11 +1029,11 @@ class main_vision:
                     and ((self.runMode == 'debug') \
                      or  (self.runMode == 'handsfree') \
                      or  (self.runMode == 'hud')):
-                        res_txts = busy_status_txts.get()
+                        res_txts = busy_status_txts.getAll()
                         if (res_txts != False):
                             txt2img_thread.put(['[status]', res_txts ])
                     else:
-                        res_txts = busy_status_txts.speech()
+                        res_txts = busy_status_txts.getRecorder()
                         if (res_txts != False):
                             txt2img_thread.put(['[status]', res_txts ])
 

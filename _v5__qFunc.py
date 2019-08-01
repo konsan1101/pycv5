@@ -494,10 +494,7 @@ class qFunc_class:
         or (reso == 'full-'):
             if (self.qScreenWidth == 0):
                 try:
-                    s = pyautogui.screenshot()
-                    s.save('temp/screenshot.jpg')
-                    img = cv2.imread('temp/screenshot.jpg')
-                    self.qScreenHeight, self.qScreenWidth = img.shape[:2]
+                    self.qScreenWidth, self.qScreenHeight = pyautogui.size()
                 except:
                     self.qScreenHeight =  720
                     self.qScreenWidth  = 1280
@@ -701,12 +698,12 @@ class qBusy_status_txts_class(object):
         else:
             return 'none'
 
-    def get(self):
+    def getAll(self):
         change = False
 
-        if (self.check !='get'):
+        if (self.check !='all'):
             change = True
-        self.check = 'get'
+        self.check = 'all'
 
         # ステータス取得
         check = self.busyCheck(qBusy_dev_cpu, 0)
@@ -925,12 +922,12 @@ class qBusy_status_txts_class(object):
         txts.append('')
         return txts
 
-    def speech(self):
+    def getRecorder(self):
         change = False
 
-        if (self.check !='speech'):
+        if (self.check !='recorder'):
             change = True
-        self.check = 'speech'
+        self.check = 'recorder'
 
         # ステータス取得
         check = self.busyCheck(qBusy_s_inp, 0)
@@ -986,6 +983,8 @@ if (__name__ == '__main__'):
     qFunc = qFunc_class()
     qFunc.init()
 
+    qBusy_status_txts = qBusy_status_txts_class()
+
     nowTime = datetime.datetime.now()
     logfile = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
     qFunc.logFileSet(file=logfile, display=True, outfile=True, )
@@ -995,6 +994,9 @@ if (__name__ == '__main__'):
 
     qFunc.notePad(txt=u'開始')
 
+    x,y = qFunc.getResolution('full')
+    print('getResolution x,y = ', x, y, )
+
     qFunc.busyReset_speech(True)
     qFunc.busyReset_vision(True)
     qFunc.busyReset_desktop(True)
@@ -1003,31 +1005,13 @@ if (__name__ == '__main__'):
     qFunc.busyReset_vision(False)
     qFunc.busyReset_desktop(False)
 
-    qFunc.logOutput('')
-    qFunc.logOutput( qBusy_dev_cpu + ':' + qFunc.busyCheck(qBusy_dev_cpu, 1), )
-    qFunc.logOutput( qBusy_dev_com + ':' + qFunc.busyCheck(qBusy_dev_com, 1), )
-    qFunc.logOutput( qBusy_dev_mic + ':' + qFunc.busyCheck(qBusy_dev_mic, 1), )
-    qFunc.logOutput( qBusy_dev_spk + ':' + qFunc.busyCheck(qBusy_dev_spk, 1), )
-    qFunc.logOutput( qBusy_dev_cam + ':' + qFunc.busyCheck(qBusy_dev_cam, 1), )
-    qFunc.logOutput( qBusy_dev_dsp + ':' + qFunc.busyCheck(qBusy_dev_dsp, 1), )
-    qFunc.logOutput( qBusy_s_ctrl + ' :' + qFunc.busyCheck(qBusy_s_ctrl,  1), )
-    qFunc.logOutput( qBusy_s_inp + '  :' + qFunc.busyCheck(qBusy_s_inp,   1), )
-    qFunc.logOutput( qBusy_s_wav + '  :' + qFunc.busyCheck(qBusy_s_wav,   1), )
-    qFunc.logOutput( qBusy_s_STT + '  :' + qFunc.busyCheck(qBusy_s_STT,   1), )
-    qFunc.logOutput( qBusy_s_TTS + '  :' + qFunc.busyCheck(qBusy_s_TTS,   1), )
-    qFunc.logOutput( qBusy_s_TRA + '  :' + qFunc.busyCheck(qBusy_s_TRA,   1), )
-    qFunc.logOutput( qBusy_s_play + ' :' + qFunc.busyCheck(qBusy_s_play,  1), )
-    qFunc.logOutput( qBusy_v_ctrl + ' :' + qFunc.busyCheck(qBusy_v_ctrl,  1), )
-    qFunc.logOutput( qBusy_v_inp + '  :' + qFunc.busyCheck(qBusy_v_inp,   1), )
-    qFunc.logOutput( qBusy_v_QR + '   :' + qFunc.busyCheck(qBusy_v_QR,    1), )
-    qFunc.logOutput( qBusy_v_jpg + '  :' + qFunc.busyCheck(qBusy_v_jpg,   1), )
-    qFunc.logOutput( qBusy_v_CV + '   :' + qFunc.busyCheck(qBusy_v_CV,    1), )
-    qFunc.logOutput( qBusy_d_ctrl + ' :' + qFunc.busyCheck(qBusy_d_ctrl,  1), )
-    qFunc.logOutput( qBusy_d_inp + '  :' + qFunc.busyCheck(qBusy_d_inp,   1), )
-    qFunc.logOutput( qBusy_d_QR + '   :' + qFunc.busyCheck(qBusy_d_QR,    1), )
-    qFunc.logOutput( qBusy_d_rec + '  :' + qFunc.busyCheck(qBusy_d_rec,   1), )
-    qFunc.logOutput( qBusy_d_play + ' :' + qFunc.busyCheck(qBusy_d_play,  1), )
-    qFunc.logOutput( qBusy_d_web + '  :' + qFunc.busyCheck(qBusy_d_web,   1), )
+    txts = qBusy_status_txts.getAll()
+    for txt in txts:
+        qFunc.logOutput( txt, )
+
+    txts = qBusy_status_txts.getRecorder()
+    for txt in txts:
+        qFunc.logOutput( txt, )
 
     qFunc.notePad(txt=u'終了')
 
