@@ -68,11 +68,15 @@ qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
 qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
 qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
+qBusy_v_QR     = qFunc.getValue('qBusy_v_QR'    )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
 qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
+qBusy_d_inp    = qFunc.getValue('qBusy_d_inp'   )
+qBusy_d_QR     = qFunc.getValue('qBusy_d_QR'    )
 qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
 qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
+qBusy_d_web    = qFunc.getValue('qBusy_d_web'   )
 
 
 
@@ -86,7 +90,7 @@ runMode = 'debug'
 
 
 
-class sub_main:
+class main_class:
 
     def __init__(self, name='thread', id='0', runMode='debug', ):
         self.runMode   = runMode
@@ -307,8 +311,8 @@ signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 if __name__ == '__main__':
-    sub_name = 'knowledge'
-    sub_id   = '{0:10s}'.format(sub_name).replace(' ', '_')
+    main_name = 'knowledge'
+    main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
 
@@ -321,8 +325,8 @@ if __name__ == '__main__':
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
-    qFunc.logOutput(sub_id + ':init')
-    qFunc.logOutput(sub_id + ':exsample.py runMode, ')
+    qFunc.logOutput(main_id + ':init')
+    qFunc.logOutput(main_id + ':exsample.py runMode, ')
 
     # パラメータ
 
@@ -331,7 +335,7 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 2):
             runMode  = str(sys.argv[1]).lower()
 
-        qFunc.logOutput(sub_id + ':runMode  =' + str(runMode  ))
+        qFunc.logOutput(main_id + ':runMode  =' + str(runMode  ))
 
     # 初期設定
 
@@ -344,10 +348,10 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(sub_id + ':start')
+        qFunc.logOutput(main_id + ':start')
 
-        sub_main = sub_main(sub_name, '0', runMode=runMode, )
-        sub_main.start()
+        main_class = main_class(main_name, '0', runMode=runMode, )
+        main_class.start()
 
         main_start = time.time()
         onece      = True
@@ -384,12 +388,12 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(sub_id + ':terminate')
+        qFunc.logOutput(main_id + ':terminate')
 
-        sub_main.stop()
-        del sub_main
+        main_class.stop()
+        del main_class
 
-        qFunc.logOutput(sub_id + ':bye!')
+        qFunc.logOutput(main_id + ':bye!')
 
         sys.exit(0)
 

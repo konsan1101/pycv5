@@ -65,11 +65,15 @@ qBusy_s_TRA    = qPath_work + 'busy_s_6tra_txt.txt'
 qBusy_s_play   = qPath_work + 'busy_s_7play.txt'
 qBusy_v_ctrl   = qPath_work + 'busy_v_0control.txt'
 qBusy_v_inp    = qPath_work + 'busy_v_1video.txt'
-qBusy_v_jpg    = qPath_work + 'busy_v_2jpg.txt'
+qBusy_v_QR     = qPath_work + 'busy_v_2QR.txt'
+qBusy_v_jpg    = qPath_work + 'busy_v_3jpg.txt'
 qBusy_v_CV     = qPath_work + 'busy_v_5cv.txt'
 qBusy_d_ctrl   = qPath_work + 'busy_d_0control.txt'
-qBusy_d_rec    = qPath_work + 'busy_d_1rec.txt'
-qBusy_d_play   = qPath_work + 'busy_d_2play.txt'
+qBusy_d_inp    = qPath_work + 'busy_d_1screen.txt'
+qBusy_d_QR     = qPath_work + 'busy_d_2QR.txt'
+qBusy_d_rec    = qPath_work + 'busy_d_5rec.txt'
+qBusy_d_play   = qPath_work + 'busy_d_7play.txt'
+qBusy_d_web    = qPath_work + 'busy_d_8web.txt'
 
 
 
@@ -159,11 +163,15 @@ class qFunc_class:
         if (field == 'qBusy_s_play'  ): return qBusy_s_play
         if (field == 'qBusy_v_ctrl'  ): return qBusy_v_ctrl
         if (field == 'qBusy_v_inp'   ): return qBusy_v_inp
+        if (field == 'qBusy_v_QR'    ): return qBusy_v_QR
         if (field == 'qBusy_v_jpg'   ): return qBusy_v_jpg
         if (field == 'qBusy_v_CV'    ): return qBusy_v_CV
         if (field == 'qBusy_d_ctrl'  ): return qBusy_d_ctrl
+        if (field == 'qBusy_d_inp'   ): return qBusy_d_inp
+        if (field == 'qBusy_d_QR'    ): return qBusy_d_QR
         if (field == 'qBusy_d_rec'   ): return qBusy_d_rec
         if (field == 'qBusy_d_play'  ): return qBusy_d_play
+        if (field == 'qBusy_d_web'   ): return qBusy_d_web
 
         print('check program !' + field)
         return None
@@ -573,6 +581,7 @@ class qFunc_class:
         self.busySet(qBusy_dev_dsp, Flag)
         self.busySet(qBusy_v_ctrl,  Flag)
         self.busySet(qBusy_v_inp,   Flag)
+        self.busySet(qBusy_v_QR,    Flag)
         self.busySet(qBusy_v_jpg,   Flag)
         self.busySet(qBusy_v_CV,    Flag)
         return True
@@ -582,8 +591,11 @@ class qFunc_class:
         self.busySet(qBusy_dev_com, Flag)
         self.busySet(qBusy_dev_dsp, Flag)
         self.busySet(qBusy_d_ctrl,  Flag)
+        self.busySet(qBusy_d_inp,   Flag)
+        self.busySet(qBusy_d_QR,    Flag)
         self.busySet(qBusy_d_rec,   Flag)
         self.busySet(qBusy_d_play,  Flag)
+        self.busySet(qBusy_d_web,   Flag)
         return True
 
     def busyCheck(self, file, maxWait=0, ):
@@ -755,6 +767,10 @@ class qBusy_status_txts_class(object):
         if (check != self.v_inp):
             change = True
         self.v_inp = check
+        check = self.busyCheck(qBusy_v_QR, 0)
+        if (check != self.v_QR):
+            change = True
+        self.v_QR = check
         check = self.busyCheck(qBusy_v_jpg, 0)
         if (check != self.v_jpg):
             change = True
@@ -768,6 +784,14 @@ class qBusy_status_txts_class(object):
         if (check != self.d_ctrl):
             change = True
         self.d_ctrl = check
+        check = self.busyCheck(qBusy_d_inp, 0)
+        if (check != self.d_inp):
+            change = True
+        self.d_inp = check
+        check = self.busyCheck(qBusy_d_QR, 0)
+        if (check != self.d_QR):
+            change = True
+        self.d_QR = check
         check = self.busyCheck(qBusy_d_rec, 0)
         if (check != self.d_rec):
             change = True
@@ -776,6 +800,10 @@ class qBusy_status_txts_class(object):
         if (check != self.d_play):
             change = True
         self.d_play = check
+        check = self.busyCheck(qBusy_d_web, 0)
+        if (check != self.d_web):
+            change = True
+        self.d_web = check
  
         if (change != True):
             return False
@@ -850,6 +878,10 @@ class qBusy_status_txts_class(object):
             txts.append(' Input  : active__')
         else:
             txts.append(' Input  : ________')
+        if (self.v_QR == 'busy'):
+            txts.append(' QR scan: active__')
+        else:
+            txts.append(' QR scan: ________')
         if (self.v_jpg == 'busy'):
             txts.append(' jpeg   : busy!___')
         else:
@@ -865,6 +897,14 @@ class qBusy_status_txts_class(object):
             txts.append(' Ctrl   : active__')
         else:
             txts.append(' Ctrl   : ________')
+        if (self.d_inp == 'busy'):
+            txts.append(' Capture: active__')
+        else:
+            txts.append(' Capture: ________')
+        if (self.d_QR == 'busy'):
+            txts.append(' QR scan: active__')
+        else:
+            txts.append(' QR scan: ________')
         if (self.d_rec == 'busy'):
             txts.append(' Rec    : rec!____')
         else:
@@ -873,6 +913,10 @@ class qBusy_status_txts_class(object):
             txts.append(' Play   : play!___')
         else:
             txts.append(' Play   : ________')
+        if (self.d_web == 'busy'):
+            txts.append(' Web    : play!___')
+        else:
+            txts.append(' Web    : ________')
 
         txts.append('')
         return txts
@@ -971,11 +1015,15 @@ if (__name__ == '__main__'):
     qFunc.logOutput( qBusy_s_play + ' :' + qFunc.busyCheck(qBusy_s_play,  1), )
     qFunc.logOutput( qBusy_v_ctrl + ' :' + qFunc.busyCheck(qBusy_v_ctrl,  1), )
     qFunc.logOutput( qBusy_v_inp + '  :' + qFunc.busyCheck(qBusy_v_inp,   1), )
+    qFunc.logOutput( qBusy_v_QR + '   :' + qFunc.busyCheck(qBusy_v_QR,    1), )
     qFunc.logOutput( qBusy_v_jpg + '  :' + qFunc.busyCheck(qBusy_v_jpg,   1), )
     qFunc.logOutput( qBusy_v_CV + '   :' + qFunc.busyCheck(qBusy_v_CV,    1), )
     qFunc.logOutput( qBusy_d_ctrl + ' :' + qFunc.busyCheck(qBusy_d_ctrl,  1), )
+    qFunc.logOutput( qBusy_d_inp + '  :' + qFunc.busyCheck(qBusy_d_inp,   1), )
+    qFunc.logOutput( qBusy_d_QR + '   :' + qFunc.busyCheck(qBusy_d_QR,    1), )
     qFunc.logOutput( qBusy_d_rec + '  :' + qFunc.busyCheck(qBusy_d_rec,   1), )
     qFunc.logOutput( qBusy_d_play + ' :' + qFunc.busyCheck(qBusy_d_play,  1), )
+    qFunc.logOutput( qBusy_d_web + '  :' + qFunc.busyCheck(qBusy_d_web,   1), )
 
     qFunc.notePad(txt=u'終了')
 

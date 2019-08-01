@@ -70,11 +70,15 @@ qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
 qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
 qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
 qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
+qBusy_v_QR     = qFunc.getValue('qBusy_v_QR'    )
 qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
 qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
 qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
+qBusy_d_inp    = qFunc.getValue('qBusy_d_inp'   )
+qBusy_d_QR     = qFunc.getValue('qBusy_d_QR'    )
 qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
 qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
+qBusy_d_web    = qFunc.getValue('qBusy_d_web'   )
 
 
 
