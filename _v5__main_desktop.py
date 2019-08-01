@@ -24,6 +24,8 @@ qCtrl_control_vision     = 'temp/control_vision.txt'
 qCtrl_control_desktop    = 'temp/control_desktop.txt'
 qCtrl_control_self       = qCtrl_control_desktop
 
+qCtrl_control_web        = 'temp/control_web.txt'
+
 # 出力インターフェース
 qCtrl_result_audio       = 'temp/result_audio.txt'
 qCtrl_result_speech      = 'temp/result_speech.txt'
