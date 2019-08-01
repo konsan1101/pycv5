@@ -349,14 +349,15 @@ class main_class:
             url = proc_text
 
         if (url == ''):
-            try:
+            #try:
                 # キーワードを使って検索する
                 list_keywd = [proc_text]
-                resp = web.get('https://www.google.co.jp/search?num=10&q=' + '　'.join(list_keywd))
+                resp = web.get('https://www.google.co.jp/search?num=10&q=' + proc_text)
                 resp.raise_for_status()
 
                 # 取得したHTMLをパースする
                 soup = bs4.BeautifulSoup(resp.text, "html.parser")
+                print(soup)
                 link_elem01 = soup.select('.r > a')
                 link_elem02 = soup.select('.s > .st')
 
@@ -374,8 +375,8 @@ class main_class:
                 url   = urllib.parse.unquote(url)
                 url   = urllib.parse.unquote(url)
 
-            except:
-                pass
+            #except:
+            #    pass
 
         if (url != ''):
             if (title != ''):
