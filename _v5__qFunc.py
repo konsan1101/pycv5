@@ -681,11 +681,15 @@ class qBusy_status_txts_class(object):
         self.a_play  = 'none'
         self.v_ctrl  = 'none'
         self.v_inp   = 'none'
+        self.v_QR    = 'none'
         self.v_jpg   = 'none'
         self.v_CV    = 'none'
         self.d_ctrl  = 'none'
+        self.d_inp   = 'none'
+        self.d_QR    = 'none'
         self.d_rec   = 'none'
         self.d_play  = 'none'
+        self.d_web   = 'none'
 
     def busyCheck(self, file, maxWait=0, ):
         if (maxWait != 0):
