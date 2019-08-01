@@ -343,17 +343,20 @@ class main_class:
         url   = ''
         if (proc_text == '_start_'):
             url = 'https://google.co.jp'
-            self.web_id.get(url)
+            #self.web_id.get(url)
         elif (proc_text[:4] == 'http'):
             url = proc_text
-            self.web_id.get(url)
+            #self.web_id.get(url)
 
         if (url == ''):
             url = 'https://www.google.com/search?q=' + proc_text
-            self.web_id.get(url)
+            #self.web_id.get(url)
 
         # 開く
-        #self.web_id.get(url)
+        try:
+            self.web_id.get(url)
+        except:
+            self.sub_stop('_stop_', )
 
         # 画像保管
         #self.web_id.save_screenshot(file_name)
