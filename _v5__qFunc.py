@@ -21,7 +21,6 @@ qHOSTNAME = socket.gethostname().lower()
 import ctypes
 import array
 
-import cv2
 import pyautogui         
 
 

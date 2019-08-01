@@ -84,7 +84,7 @@ class proc_camera:
         self.camRotate  = camRotate
         self.camZoom    = camZoom
         self.camFps     = '5'
-        if (self.camFps.isdigit()):
+        if (camFps.isdigit()):
             self.camFps = str(camFps)
 
         self.camWidth   = 0
@@ -236,8 +236,8 @@ class proc_camera:
                     # ビジー設定 (ready)
                     if (not os.path.exists(self.fileBsy)):
                         qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
-                    if (str(self.id) == '0'):
-                        qFunc.busySet(qBusy_v_inp, True)
+                        if (str(self.id) == '0'):
+                            qFunc.busySet(qBusy_v_inp, True)
 
                 if (not capture is None) and (qFunc.busyCheck(qBusy_dev_cam, 0) == 'busy'): 
                     capture.release()
