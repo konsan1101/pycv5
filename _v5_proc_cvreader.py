@@ -219,6 +219,10 @@ class proc_cvreader:
                 # ビジー設定
                 if (not os.path.exists(self.fileBsy)):
                     qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                    if (str(self.id) == '0') or (str(self.id) == 'v'):
+                        qFunc.busySet(qBusy_v_QR, True)
+                    if (str(self.id) == 'd'):
+                        qFunc.busySet(qBusy_d_QR, True)
 
                 # 処理
 
@@ -326,6 +330,10 @@ class proc_cvreader:
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
+            if (str(self.id) == '0') or (str(self.id) == 'v'):
+                qFunc.busySet(qBusy_v_QR, False)
+            if (str(self.id) == 'd'):
+                qFunc.busySet(qBusy_d_QR, False)
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
@@ -346,6 +354,10 @@ class proc_cvreader:
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
+            if (str(self.id) == '0') or (str(self.id) == 'v'):
+                qFunc.busySet(qBusy_v_QR, False)
+            if (str(self.id) == 'd'):
+                qFunc.busySet(qBusy_d_QR, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):

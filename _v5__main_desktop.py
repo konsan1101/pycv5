@@ -91,6 +91,8 @@ qBusy_d_web    = qFunc.getValue('qBusy_d_web'   )
 
 # thread ルーチン群
 import _v5_proc_controld
+import _v5_proc_capture
+import _v5_proc_cvreader
 import _v5_proc_recorder
 
 
@@ -104,6 +106,11 @@ class main_desktop:
 
     def __init__(self, name='thread', id='0', runMode='debug', ):
         self.runMode   = runMode
+
+        self.capStretch = '0'
+        self.capRotate  = '0'
+        self.capZoom    = '1'
+        self.codeRead   = 'qr'
 
         self.breakFlag = threading.Event()
         self.breakFlag.clear()
@@ -199,6 +206,10 @@ class main_desktop:
         # 起動条件
         controld_thread  = None
         controld_switch  = 'on'
+        capture_thread   = None
+        capture_switch   = 'on'
+        cvreader_thread  = None
+        cvreader_switch  = 'on'
         recorder_thread  = None
         recorder_switch  = 'on'
 
@@ -261,9 +272,43 @@ class main_desktop:
                 del controld_thread
                 controld_thread = None
 
+            if (capture_thread is None) and (capture_switch == 'on'):
+                capture_thread1 = _v5_proc_capture.proc_capture(
+                                    name='capture', id='0',
+                                    runMode=self.runMode,
+                                    capStretch=self.capStretch, capRotate=self.capRotate, capZoom=self.capZoom, capFps='5',
+                                    )
+                capture_thread.start()
+
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
+                    speechs.append({ 'text':u'「デスクトップ入力」の機能が有効になりました。', 'wait':0, })
+
+            if (not capture_thread is None) and (capture_switch != 'on'):
+                capture_thread.stop()
+                del capture_thread
+                capture_thread = None
+
+            if (cvreader_thread is None) and (cvreader_switch == 'on'):
+                cvreader_thread = _v5_proc_cvreader.proc_cvreader(
+                                    name='reader', id='d',
+                                    runMode=self.runMode, 
+                                    reader=self.codeRead,
+                                    )
+                cvreader_thread.start()
+
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
+                    speechs.append({ 'text':u'「画面ＱＲコード認識」の機能が有効になりました。', 'wait':0, })
+
+            if (not cvreader_thread is None) and (cvreader_switch != 'on'):
+                cvreader_thread.stop()
+                del cvreader_thread
+                cvreader_thread = None
+
             if (recorder_thread is None) and (recorder_switch == 'on'):
                 recorder_thread  = _v5_proc_recorder.proc_recorder(
-                                    name='recorder', id='0', 
+                                    name='recorder', id='0',
                                     runMode=self.runMode,
                                     )
                 recorder_thread.start()
@@ -304,30 +349,60 @@ class main_desktop:
                 if (not recorder_thread is None):
                     recorder_thread.put(['control', inp_value])
 
-            # 処理
-            if (True):
+            # 制御処理
+            control = ''
 
-                # 制御処理
-                control = ''
+            if (not controld_thread is None):
+                while (controld_thread.proc_r.qsize() != 0):
+                    res_data  = controld_thread.get()
+                    res_name  = res_data[0]
+                    res_value = res_data[1]
 
-                if (not controld_thread is None):
-                    while (controld_thread.proc_r.qsize() != 0):
-                        res_data  = controld_thread.get()
+                    # 制御
+                    if (res_name.lower() == 'control'):
+                        control = res_value
+                        # 結果出力
+                        if (cn_s.qsize() < 99):
+                            cn_s.put([res_name, res_value])
+                        break
+
+                    # レコーダー制御
+                    if (res_name.lower() == 'recorder'):
+                        if (not recorder_thread is None):
+                            recorder_thread.put(['control', res_value])
+
+            # 画像入力（デスクトップ）
+            if (not capture_thread is None):
+                while (capture_thread.proc_r.qsize() != 0):
+                    res_data  = capture_thread.get()
+                    res_name  = res_data[0]
+                    res_value = res_data[1]
+                    if (res_name == 'fps'):
+                        pass
+                    if (res_name == 'reso'):
+                        pass
+                    if (res_name == '[img]'):
+                        main_img = res_value.copy()
+
+                        # 画像識別（ＱＲ）
+                        if ((time.time() - cvreader_last_put) >= 1):
+                            if (not cvreader_thread is None):
+                                if (cvreader_thread.proc_s.qsize() == 0):
+                                    cvreader_thread.put(['[img]', main_img ])
+                                    cvreader_last_put = time.time()
+
+                        break
+
+                # 画像合成（ＱＲ　識別結果）
+                if (not cvreader_thread is None):
+                    while (cvreader_thread.proc_r.qsize() != 0):
+                        res_data  = cvreader_thread.get()
                         res_name  = res_data[0]
                         res_value = res_data[1]
-
-                        # 制御
-                        if (res_name.lower() == 'control'):
-                            control = res_value
-                            # 結果出力
-                            if (cn_s.qsize() < 99):
-                                cn_s.put([res_name, res_value])
-                            break
-
-                        # レコーダー制御
-                        if (res_name.lower() == 'recorder'):
-                            if (not recorder_thread is None):
-                                recorder_thread.put(['control', res_value])
+                        if (res_name == '[img]'):
+                            pass
+                        if (res_name == 'qrcode'):
+                            print(res_value)
 
                 # 録画機能
                 if (not recorder_thread is None):
@@ -355,6 +430,16 @@ class main_desktop:
                 controld_thread.stop()
                 del controld_thread
                 controld_thread = None
+
+            if (not capture_thread is None):
+                capture_thread.stop()
+                del capture_thread
+                capture_thread = None
+
+            if (not cvreader_thread is None):
+                cvreader_thread.stop()
+                del cvreader_thread
+                cvreader_thread = None
 
             if (not recorder_thread is None):
                 recorder_thread.stop()

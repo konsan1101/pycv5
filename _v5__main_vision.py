@@ -515,7 +515,7 @@ class main_vision:
 
             if (cvreader_thread is None) and (cvreader_switch == 'on'):
                 cvreader_thread = _v5_proc_cvreader.proc_cvreader(
-                                    name='reader', id='0',
+                                    name='reader', id='v',
                                     runMode=self.runMode, 
                                     reader=self.codeRead,
                                     )
