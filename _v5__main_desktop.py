@@ -216,6 +216,9 @@ class main_desktop:
         # 待機ループ
         self.proc_step = '5'
 
+        cvreader_last_put  = time.time()
+        cvreader_last_code = ''
+
         onece = True
         last_alive = time.time()
 
@@ -273,7 +276,7 @@ class main_desktop:
                 controld_thread = None
 
             if (capture_thread is None) and (capture_switch == 'on'):
-                capture_thread1 = _v5_proc_capture.proc_capture(
+                capture_thread = _v5_proc_capture.proc_capture(
                                     name='capture', id='0',
                                     runMode=self.runMode,
                                     capStretch=self.capStretch, capRotate=self.capRotate, capZoom=self.capZoom, capFps='5',
@@ -402,7 +405,9 @@ class main_desktop:
                         if (res_name == '[img]'):
                             pass
                         if (res_name == 'qrcode'):
-                            print(res_value)
+                            if (res_value != cvreader_last_code):
+                                cvreader_last_code = res_value
+                                print(cvreader_last_code)
 
                 # 録画機能
                 if (not recorder_thread is None):
