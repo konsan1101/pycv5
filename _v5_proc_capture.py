@@ -11,7 +11,7 @@ import time
 import codecs
 import glob
 
-import pyautogui         
+import pyautogui
 
 import numpy as np
 import cv2
@@ -310,8 +310,8 @@ class proc_capture:
                         # 結果出力(reso)
                         out_name  = 'reso'
                         out_value = str(input_width) + 'x' + str(input_height)
-                        if (float(self.camZoom) != 1):
-                            out_value += ' (Zoom=' + self.camZoom + ')'
+                        if (float(self.capZoom) != 1):
+                            out_value += ' (Zoom=' + self.capZoom + ')'
                         cn_s.put([out_name, out_value])
 
                     # 結果出力
@@ -323,8 +323,7 @@ class proc_capture:
 
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
-            or (qFunc.busyCheck(qBusy_dev_cam, 0) == 'busy'):
+            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
                 time.sleep(1.00)
             time.sleep((1/int(self.capFps))/2)
 
@@ -387,8 +386,8 @@ if __name__ == '__main__':
             else:
                 print(res_name, res_value, )
 
-        #if (camera_thread.proc_s.qsize() == 0):
-        #    camera_thread.put(['status', ''])
+        #if (capture_thread.proc_s.qsize() == 0):
+        #    capture_thread.put(['status', ''])
 
         time.sleep(0.02)
 
