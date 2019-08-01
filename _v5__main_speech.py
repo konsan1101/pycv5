@@ -888,6 +888,12 @@ if __name__ == '__main__':
         if (control == 'shutdown'):
             break
 
+        # アイドリング
+        if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
+        or (qFunc.busyCheck(qBusy_dev_mic, 0) == 'busy'):
+            time.sleep(1.00)
+        time.sleep(0.25)
+
 
 
     # 終了

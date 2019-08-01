@@ -407,7 +407,9 @@ class main_desktop:
                         if (res_name == 'qrcode'):
                             if (res_value != cvreader_last_code):
                                 cvreader_last_code = res_value
-                                print(cvreader_last_code)
+
+                                # 画面表示
+                                qFunc.txtsWrite(qCtrl_control_web, txts=[res_value], encoding='utf-8', exclusive=True, mode='w', )
 
                 # 録画機能
                 if (not recorder_thread is None):
@@ -571,6 +573,11 @@ if __name__ == '__main__':
         # 終了操作
         if (control == 'shutdown'):
             break
+
+        # アイドリング
+        if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
+            time.sleep(1.00)
+        time.sleep(0.25)
 
 
 
