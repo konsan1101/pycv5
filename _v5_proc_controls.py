@@ -429,6 +429,16 @@ class proc_controls:
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_bgm_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = False
 
+            elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
+            and (proc_text.find(u'開始') >= 0):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_web_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_bgm = True
+
+            elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
+            and (proc_text.find(u'終了') >= 0):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_web_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_bgm = False
+
 
 
 if __name__ == '__main__':
