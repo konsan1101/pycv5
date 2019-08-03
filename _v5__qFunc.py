@@ -182,7 +182,7 @@ class qFunc_class:
         self.qLogOutf = outfile
         return True
 
-    def logOutput(self, text='', display='auto', outfile='auto', ):
+    def logOutput(self, text='', display='auto', outfile='auto', fgColor='', fgLine='', bgColor='', ):
         if (display != 'auto'):
             disp = display
         else:
@@ -193,7 +193,7 @@ class qFunc_class:
             outf = self.qLogOutf
         try:
             if (disp == True) or (disp == 'yes'):
-                print(str(text))
+                print(self.colorText(text=text, fgColor=fgColor, fgLine=fgLine, bgColor=bgColor, ))
             if (outf == True) or (outf == 'yes'):
                 w = codecs.open(qLogFlie, 'a', 'utf-8')
                 w.write(str(text) + '\n')
@@ -202,6 +202,47 @@ class qFunc_class:
         except:
             pass
         return True
+
+    def colorText(self, text='', fgColor='', fgLine='', bgColor='', ):
+        txtColor = ''
+        if   (fgLine != ''):
+            txtColor += '\033[4m'
+        if   (fgColor == 'black'):
+            txtColor += '\033[30m'
+        elif (fgColor == 'red'):
+            txtColor += '\033[31m'
+        elif (fgColor == 'green'):
+            txtColor += '\033[32m'
+        elif (fgColor == 'yellow'):
+            txtColor += '\033[33m'
+        elif (fgColor == 'blue'):
+            txtColor += '\033[34m'
+        elif (fgColor == 'magenta'):
+            txtColor += '\033[35m'
+        elif (fgColor == 'cyan'):
+            txtColor += '\033[36m'
+        elif (fgColor == 'white'):
+            txtColor += '\033[37m'
+        if   (bgColor == 'black'):
+            txtColor += '\033[40m'
+        elif (bgColor == 'red'):
+            txtColor += '\033[41m'
+        elif (bgColor == 'green'):
+            txtColor += '\033[42m'
+        elif (bgColor == 'yellow'):
+            txtColor += '\033[43m'
+        elif (bgColor == 'blue'):
+            txtColor += '\033[44m'
+        elif (bgColor == 'magenta'):
+            txtColor += '\033[45m'
+        elif (bgColor == 'cyan'):
+            txtColor += '\033[46m'
+        elif (bgColor == 'white'):
+            txtColor += '\033[47m'
+        resetColor = ''
+        if (txtColor != ''):
+            resetColor = '\033[0m'
+        return txtColor + str(text) + resetColor
 
     def makeDirs(self, ppath, remove=False, ):
         try:
@@ -1007,11 +1048,11 @@ if (__name__ == '__main__'):
 
     txts = qBusy_status_txts.getAll()
     for txt in txts:
-        qFunc.logOutput( txt, )
+        qFunc.logOutput( txt, fgColor='blue',)
 
     txts = qBusy_status_txts.getRecorder()
     for txt in txts:
-        qFunc.logOutput( txt, )
+        qFunc.logOutput( txt, fgColor='black', bgColor='white', )
 
     qFunc.notePad(txt=u'終了')
 
