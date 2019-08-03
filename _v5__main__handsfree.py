@@ -26,6 +26,7 @@ qCtrl_control_self       = qCtrl_control_main
 
 qCtrl_control_bgm        = 'temp/control_bgm.txt'
 qCtrl_control_web        = 'temp/control_web.txt'
+qCtrl_control_player     = 'temp/control_player.txt'
 qCtrl_control_chatting   = 'temp/control_chatting.txt'
 qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 
@@ -35,6 +36,7 @@ qPython_main_vision   = '_v5__main_vision.py'
 qPython_main_desktop  = '_v5__main_desktop.py'
 qPython_bgm           = '_v5__sub_bgm.py'
 qPython_web           = '_v5__sub_web.py'
+qPython_player        = '_v5__sub_player.py'
 qPython_chatting      = '_v5__sub_chatting.py'
 qPython_knowledge     = '_v5__sub_knowledge.py'
 

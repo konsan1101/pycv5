@@ -11,11 +11,11 @@ import time
 import codecs
 import glob
 
-from selenium.webdriver import Firefox, FirefoxOptions
+import multiprocessing
 
-import requests as web
-import bs4
-import urllib.parse
+import pyautogui
+if (os.name == 'nt'):
+    import ctypes
 
 #print(os.path.dirname(__file__))
 #print(os.path.basename(__file__))
@@ -24,8 +24,8 @@ import urllib.parse
 
 
 # インターフェース
-qCtrl_control_web        = 'temp/control_web.txt'
-qCtrl_control_self       = qCtrl_control_web
+qCtrl_control_player     = 'temp/control_player.txt'
+qCtrl_control_self       = qCtrl_control_player
 
 
 
@@ -90,6 +90,58 @@ runMode = 'debug'
 
 
 
+def qPlayer(id='qPlayer', file='', vol=100, order='normal', left=0, top=0, width=640, height=480,):
+
+    #ffplay -i test_input.flv -volume 100 -window_title "test_input.flv" -noborder -autoexit -x 320 -y 240
+    #ffplay -i test_input.flv -volume 100 -window_title "test_input.flv" -noborder -autoexit -fs
+
+    if (width != 0) or (height != 0):
+        ffplay = subprocess.Popen(['ffplay', '-i', file, \
+                                    '-volume', str(vol), \
+                                    '-window_title', str(id), \
+                                    '-noborder', '-autoexit', \
+                                    '-x', str(width), '-y', str(height), \
+                                    '-loglevel', 'warning', \
+                    ], )
+                    #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+    else:
+        w, h = pyautogui.size()
+        ffplay = subprocess.Popen(['ffplay', '-i', file, \
+                                    '-volume', str(vol), \
+                                    '-window_title', str(id), \
+                                    '-noborder', '-autoexit', \
+                                    #'-fs', \
+                                    '-x', str(w), '-y', str(h), \
+                                    '-loglevel', 'warning', \
+                    ], )
+                    #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+    z_order = 0
+    if (order == 'top'):
+        z_order = -1
+
+    if (os.name == 'nt'):
+        hwnd = 0
+        chktime = time.time()
+        while (hwnd == 0) and ((time.time() - chktime) < 3):
+            hwnd = ctypes.windll.user32.FindWindowW(None, str(id))
+            time.sleep(0.10)
+
+    if (width != 0) or (height != 0):
+        if (os.name == 'nt'):
+            if (hwnd != 0):
+                ctypes.windll.user32.SetWindowPos(hwnd,z_order,int(left),int(top),0,0,1)
+    else:
+        if (os.name == 'nt'):
+            if (hwnd != 0):
+                ctypes.windll.user32.SetWindowPos(hwnd,z_order,0,0,0,0,1)
+
+    ffplay.wait()
+    ffplay.terminate()
+    ffplay = None
+
+
+
 class main_class:
 
     def __init__(self, name='thread', id='0', runMode='debug', ):
@@ -115,9 +167,14 @@ class main_class:
         self.proc_step = '0'
         self.proc_seq  = 0
 
-        self.web_id    = None 
-        self.web_start = time.time() 
-        self.web_url   = ''
+        self.play_max  = 9
+        self.play_proc = {}
+        self.play_id   = {}
+        self.play_path = {}
+        for i in range(1, self.play_max+1):
+            self.play_proc[i] = None
+            self.play_id[i]   = None
+            self.play_path[i] = None
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -259,8 +316,7 @@ class main_class:
             qFunc.remove(self.fileRdy)
 
             # 停止
-            if (not self.web_id is None):
-                self.sub_proc('_stop_', )
+            self.sub_proc('_stop_', )
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -286,38 +342,52 @@ class main_class:
         if (proc_text.find(u'リセット') >=0):
 
             # 停止
-            if (not self.web_id is None):
-                #self.sub_stop(proc_text, )
-                self.sub_stop('_stop_', )
+            #self.sub_stop(proc_text, )
+            self.sub_stop('_stop_', )
 
-        elif (proc_text.lower() == '_stop_') \
-          or (proc_text.find(u'WEB') >=0)      and (proc_text.find(u'停止') >=0) \
-          or (proc_text.find(u'WEB') >=0)      and (proc_text.find(u'終了') >=0) \
-          or (proc_text.find(u'ウェブ') >=0)   and (proc_text.find(u'停止') >=0) \
-          or (proc_text.find(u'ウェブ') >=0)   and (proc_text.find(u'終了') >=0) \
-          or (proc_text.find(u'ブラウザ') >=0) and (proc_text.find(u'停止') >=0) \
-          or (proc_text.find(u'ブラウザ') >=0) and (proc_text.find(u'終了') >=0):
+        elif (proc_text.lower() == '_stop_'):
 
             # 停止
-            if (not self.web_id is None):
-                #self.sub_stop(proc_text, )
-                self.sub_stop('_stop_', )
+            #self.sub_stop(proc_text, )
+            self.sub_stop('_stop_', )
 
-        elif (proc_text.lower() == '_start_') \
-          or (proc_text.find(u'WEB') >=0)     and (proc_text.find(u'開始') >=0) \
-          or (proc_text.find(u'ウェブ') >=0)   and (proc_text.find(u'開始') >=0) \
-          or (proc_text.find(u'ブラウザ') >=0) and (proc_text.find(u'開始') >=0):
+        elif (proc_text.lower() == '_start_'):
 
-            # 開始
-            self.sub_start('_start_', )
+            pass
 
         else:
 
             # 開始
-            if (not self.web_id is None):
-                self.sub_start(proc_text, )
+            self.sub_start(proc_text, )
 
 
+
+    # 活動Ｑ検査
+    def sub_alive(self, ):
+        hit = -1
+        for i in range(1, self.play_max+1):
+            if (not self.play_proc[i] is None):
+                #try:
+                    if (not self.play_proc[i].is_alive()):
+                        self.play_proc[i].terminate()
+                        del self.play_proc[i]
+                        self.play_proc[i] = None
+                        self.play_id[i]   = ''
+                        self.play_path[i] = ''
+                #except:
+                #        self.play_proc[i] = None
+                #        self.play_id[i]   = ''
+                #        self.play_path[i] = ''
+            if (not self.play_proc[i] is None):
+                hit = i
+                break
+        if (hit == -1):
+            # ビジー解除
+            qFunc.remove(self.fileBsy)
+        else:
+            # ビジー設定
+            if (not os.path.exists(self.fileBsy)):
+                qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
 
     # 開始
     def sub_start(self, proc_text, ):
@@ -325,62 +395,76 @@ class main_class:
         # ログ
         qFunc.logOutput(self.proc_id + ':open ' + proc_text, display=True,)
 
+        # 空きＱ検索
+        hit = -1
+        for i in range(1, self.play_max+1):
+            if (not self.play_proc[i] is None):
+                #try:
+                    if (not self.play_proc[i].is_alive()):
+                        self.play_proc[i].terminate()
+                        del self.play_proc[i]
+                        self.play_proc[i] = None
+                        self.play_id[i]   = ''
+                        self.play_path[i] = ''
+                #except:
+                #        self.play_proc[i] = None
+                #        self.play_id[i]   = ''
+                #        self.play_path[i] = ''
+            if (self.play_proc[i] is None):
+                hit = i
+                break
+
         # オープン
-        if (self.web_id is None):
+        if (hit >= 0):
 
             # ビジー設定
             if (not os.path.exists(self.fileBsy)):
                 qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
 
-            # ヘッドレスモードオプション
-            options = FirefoxOptions()
-            #options.add_argument('-headless')
+            if (hit == 1):
+                i = hit
+                self.play_id[i]   = 'Player ' + str(i)
+                self.play_path[i] = u'C:\\Users\\Public\\_m4v__Clip\\Perfume\\Perfume_FLASH.m4v'
+                #self.play_proc[i] = threading.Thread(target=qPlayer, \
+                self.play_proc[i] = multiprocessing.Process(target=qPlayer, \
+                    args=(self.play_id[i], self.play_path[i], 100, 'normal', 100, 100, 320, 240, ), )
+                #self.play_proc[i].setDaemon(True)
+                self.play_proc[i].daemon = True
+                self.play_proc[i].start()
 
-            # FirefoxのWebDriver作成
-            self.web_id = Firefox(options=options)
-
-            # ウィンドウサイズとズームを設定
-            #driver.set_window_size(1920, 9999)
-            #driver.execute_script("document.body.style.zoom='100%'")
-
-        # URLを開く
-        url   = ''
-        if (proc_text == '_start_'):
-            url = 'https://google.co.jp'
-            #self.web_id.get(url)
-        elif (proc_text[:4] == 'http'):
-            url = proc_text
-            #self.web_id.get(url)
-
-        if (url == ''):
-            url = 'https://www.google.com/search?q=' + proc_text
-            #self.web_id.get(url)
-
-        # 開く
-        try:
-            self.web_id.get(url)
-        except:
-            self.sub_stop('_stop_', )
-
-        # 画像保管
-        #self.web_id.save_screenshot(file_name)
-
-
+            if (hit == 2):
+                i = hit
+                self.play_id[i]   = 'Player ' + str(i)
+                self.play_path[i] = u'C:\\Users\\Public\\_m4v__Clip\\Perfume\\Perfume_HoldYourHand.m4v'
+                #self.play_proc[i] = threading.Thread(target=qPlayer, \
+                self.play_proc[i] = multiprocessing.Process(target=qPlayer, \
+                    args=(self.play_id[i], self.play_path[i], 100, 'normal', 200, 200, 320, 240, ), )
+                #self.play_proc[i].setDaemon(True)
+                self.play_proc[i].daemon = True
+                self.play_proc[i].start()
 
     # 停止
     def sub_stop(self, proc_text, ):
 
-        if (not self.web_id is None):
-
-            # 停止
-            self.web_id.quit()
-            self.web_id = None
-
         # リセット
-        qFunc.kill('firefox', )
+        qFunc.kill('ffplay', )
+
+        # 全Ｑリセット
+        for i in range(1, self.play_max+1):
+            if (not self.play_proc[i] is None):
+                #try:
+                    self.play_proc[i].terminate()
+                    del self.play_proc[i]
+                    self.play_proc[i] = None
+                    self.play_id[i]   = ''
+                    self.play_path[i] = ''
+                #except:
+                #    self.play_proc[i] = None
+                #    self.play_id[i]   = ''
+                #    self.play_path[i] = ''
 
         # ビジー解除
-        qFunc.remove(self.fileBsy)
+        self.sub_alive()
 
 
 
@@ -396,7 +480,7 @@ signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 if __name__ == '__main__':
-    main_name = 'web'
+    main_name = 'player'
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
@@ -460,9 +544,9 @@ if __name__ == '__main__':
                     onece = False
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_start_'], encoding='utf-8', exclusive=True, mode='w', )
                     time.sleep(5.00)
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=['http://yahoo.co.jp'], encoding='utf-8', exclusive=True, mode='w', )
+                    qFunc.txtsWrite(qCtrl_control_self ,txts=['1'], encoding='utf-8', exclusive=True, mode='w', )
                     time.sleep(5.00)
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=[u'姫路城'], encoding='utf-8', exclusive=True, mode='w', )
+                    qFunc.txtsWrite(qCtrl_control_self ,txts=['2'], encoding='utf-8', exclusive=True, mode='w', )
 
             # テスト終了
             if  ((time.time() - main_start) > 30):
