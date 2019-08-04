@@ -147,17 +147,37 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
 
 
 def panelPlay(panel, path, vol, order, loop,):
-    left, top, width, height = getPanelPos(panel,)
+    #left, top, width, height = getPanelPos(panel,)
+
+    count = 0
     while (loop > 0):
 
         if (os.path.isfile(path)):
-            res = qFFplay(panel, path, vol, order, left, top, width, height, )
+            p = panel
+
+            left, top, width, height = getPanelPos(p,)
+            res = qFFplay(p, path, vol, order, left, top, width, height, )
+            count += 1
 
         if (os.path.isdir(path)):
             files = glob.glob(path + '/*.*')
             random.shuffle(files)
             for fn in files:
-                res = qFFplay(panel, fn, vol, order, left, top, width, height, )
+                p = panel
+                if (panel == '1397'):
+                    p = panel[(count % 4):(count % 4)+1] + '-'
+                if (panel == '19'):
+                    p = panel[(count % 2):(count % 2)+1] + '-'
+                if (panel == '28'):
+                    p = '82'[(count % 2):(count % 2)+1] + '-'
+                if (panel == '37'):
+                    p = panel[(count % 2):(count % 2)+1] + '-'
+                if (panel == '46'):
+                    p = '64'[(count % 2):(count % 2)+1] + '-'
+
+                left, top, width, height = getPanelPos(p,)
+                res = qFFplay(p, fn, vol, order, left, top, width, height, )
+                count += 1
 
         if (loop < 9):
             loop -= 1
@@ -240,7 +260,7 @@ class main_class:
         self.proc_step = '0'
         self.proc_seq  = 0
 
-        self.play_max  = 9
+        self.play_max  = 10
         self.play_proc = {}
         self.play_id   = {}
         self.play_path = {}
@@ -370,6 +390,10 @@ class main_class:
                 out_value = 'ready'
                 cn_s.put([out_name, out_value])
 
+            # 活動Ｑ検査
+            if (os.path.exists(self.fileBsy)):
+                self.sub_alive()
+
             # 処理
             if (control != ''):
                 self.sub_proc(control, )
@@ -428,10 +452,55 @@ class main_class:
 
             pass
 
+        elif (proc_text.lower() == 'demo0-'):
+            path0 = u'C:/Users/Public/_m4v__Clip/Perfume'
+            self.sub_start(path1, panel='0' , vol=0  , order='normal', loop=1, )
+            self.sub_start(path1, panel='0-', vol=100, order='top'   , loop=1, )
+
+        elif (proc_text.lower() == 'demo1397'):
+            path0 = u'C:/Users/Public/_動画_AppleTV'
+            path1 = u'C:/Users/Public/_m4v__Clip/Perfume'
+            self.sub_start(path0, panel='0'   , vol=0  , order='normal', loop=99, )
+            self.sub_start(path1, panel='1397', vol=100, order='top'   , loop=99, )
+
+        elif (proc_text.lower() == 'demo1234'):
+            path0 = u'C:/Users/Public/_m4v__Clip/etc'
+            path1 = u'C:/Users/Public/_m4v__Clip/Perfume'
+            path2 = u'C:/Users/Public/_m4v__Clip/BABYMETAL'
+            path3 = u'C:/Users/Public/_m4v__Clip/OneOkRock'
+            path4 = u'C:/Users/Public/_m4v__Clip/きゃりーぱみゅぱみゅ'
+            self.sub_start(path0, panel='0' , vol=100, order='normal', loop=99, )
+            self.sub_start(path1, panel='19', vol=0  , order='normal', loop=99, )
+            self.sub_start(path2, panel='28', vol=0  , order='normal', loop=99, )
+            self.sub_start(path3, panel='37', vol=0  , order='normal', loop=99, )
+            self.sub_start(path4, panel='46', vol=0  , order='normal', loop=99, )
+
+        elif (proc_text.lower() == 'test'):
+            path0 = u'C:/Users/Public/_動画_AppleTV'
+            path1 = u'C:/Users/Public/_m4v__Clip/Perfume'
+            path2 = u'C:/Users/Public/_m4v__Clip/BABYMETAL'
+            path3 = u'C:/Users/Public/_m4v__Clip/OneOkRock'
+            path4 = u'C:/Users/Public/_m4v__Clip/きゃりーぱみゅぱみゅ'
+            path5 = u'C:/Users/Public/_m4v__Clip/etc'
+            path6 = u'C:/Users/Public/_m4v__Clip/SekaiNoOwari'
+            path7 = u'C:/Users/Public/_m4v__Clip/GB'
+            path8 = path1
+            path9 = path2
+            self.sub_start(path0, panel='0' , vol=0  , order='normal', loop=99, )
+            self.sub_start(path1, panel='1-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path2, panel='2-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path3, panel='3-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path4, panel='4-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path5, panel='5-', vol=100, order='top'   , loop=99, )
+            self.sub_start(path6, panel='6-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path7, panel='7-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path8, panel='8-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path9, panel='9-', vol=0  , order='normal', loop=99, )
+
         else:
 
             # 開始
-            self.sub_start(proc_text, )
+            self.sub_start(proc_text, panel='0-', vol=100, order='normal', loop=1, )
 
 
 
@@ -457,13 +526,15 @@ class main_class:
         if (hit == -1):
             # ビジー解除
             qFunc.remove(self.fileBsy)
+            return False
         else:
             # ビジー設定
             if (not os.path.exists(self.fileBsy)):
                 qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+            return True
 
     # 開始
-    def sub_start(self, proc_text, ):
+    def sub_start(self, proc_text, panel='0-', vol=100, order='normal', loop=1, ):
 
         # ログ
         qFunc.logOutput(self.proc_id + ':open ' + proc_text, display=True,)
@@ -494,26 +565,16 @@ class main_class:
             if (not os.path.exists(self.fileBsy)):
                 qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
 
-            if (hit == 1):
-                i = hit
-                self.play_id[i]   = '8-'
-                self.play_path[i] = u'C:/Users/Public/_m4v__Clip/Perfume/Perfume_FLASH.m4v'
-                #self.play_path[i] = u'C:/Users/Public/_m4v__Clip/Perfume'
-                self.play_proc[i] = multiprocessing.Process(target=panelPlay, \
-                    args=(self.play_id[i], self.play_path[i], 100, 'normal', 1, ), )
-                self.play_proc[i].daemon = True
-                self.play_proc[i].start()
+            i = hit
+            self.play_id[i]   = panel
+            self.play_path[i] = proc_text
+            self.play_proc[i] = multiprocessing.Process(target=panelPlay, \
+                args=(self.play_id[i], self.play_path[i], vol, order, loop, ), )
+            self.play_proc[i].daemon = True
+            self.play_proc[i].start()
 
-            if (hit == 2):
-                i = hit
-                self.play_id[i]   = '9-'
-                #self.play_path[i] = u'C:/Users/Public/_m4v__Clip/Perfume/Perfume_HoldYourHand.m4v'
-                #self.play_path[i] = u'C:/Users/Public/_m4v__Clip/GB'
-                self.play_path[i] = u'_sounds/GB'
-                self.play_proc[i] = multiprocessing.Process(target=panelPlay, \
-                    args=(self.play_id[i], self.play_path[i], 100, 'normal', 1, ), )
-                self.play_proc[i].daemon = True
-                self.play_proc[i].start()
+            if (os.name == 'nt'):
+                time.sleep(1.00)
 
     # 停止
     def sub_stop(self, proc_text, ):
@@ -608,20 +669,22 @@ if __name__ == '__main__':
                 break
 
         # デバッグ
+        if (onece == True):
+            onece = False
+            if (runMode == 'debug'):
+                #t = u'C:/Users/Public/_m4v__Clip/Perfume/Perfume_FLASH.m4v'
+                #t = u'C:/Users/Public/_m4v__Clip/Perfume'
+                #t = u'demo0-'   # base + center
+                #t = u'demo1397' # base + 1,3,9,7
+                #t = u'demo1234' # base + 1234,6789
+                t = u'test'      # base + 1-9
+                qFunc.txtsWrite(qCtrl_control_self ,txts=[t], encoding='utf-8', exclusive=True, mode='w', )
+
+        # デバッグ
         if (runMode == 'debug'):
 
-            # テスト開始
-            if  ((time.time() - main_start) > 1):
-                if (onece == True):
-                    onece = False
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=['_start_'], encoding='utf-8', exclusive=True, mode='w', )
-                    time.sleep(5.00)
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=['1'], encoding='utf-8', exclusive=True, mode='w', )
-                    time.sleep(5.00)
-                    qFunc.txtsWrite(qCtrl_control_self ,txts=['2'], encoding='utf-8', exclusive=True, mode='w', )
-
             # テスト終了
-            if  ((time.time() - main_start) > 30):
+            if  ((time.time() - main_start) > 120):
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
                     time.sleep(5.00)
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
