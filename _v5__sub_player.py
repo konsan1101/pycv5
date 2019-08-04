@@ -17,6 +17,8 @@ import pyautogui
 if (os.name == 'nt'):
     import ctypes
 
+import random
+
 #print(os.path.dirname(__file__))
 #print(os.path.basename(__file__))
 #print(sys.version_info)
@@ -90,7 +92,7 @@ runMode = 'debug'
 
 
 
-def qPlayer(id='qPlayer', file='', vol=100, order='normal', left=0, top=0, width=640, height=480,):
+def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, width=320, height=240,):
 
     #ffplay -i test_input.flv -volume 100 -window_title "test_input.flv" -noborder -autoexit -x 320 -y 240
     #ffplay -i test_input.flv -volume 100 -window_title "test_input.flv" -noborder -autoexit -fs
@@ -139,6 +141,77 @@ def qPlayer(id='qPlayer', file='', vol=100, order='normal', left=0, top=0, width
     ffplay.wait()
     ffplay.terminate()
     ffplay = None
+
+    return True
+
+
+
+def panelPlay(panel, path, vol, order, loop,):
+    left, top, width, height = getPanelPos(panel,)
+    while (loop > 0):
+
+        if (os.path.isfile(path)):
+            res = qFFplay(panel, path, vol, order, left, top, width, height, )
+
+        if (os.path.isdir(path)):
+            files = glob.glob(path + '/*.*')
+            random.shuffle(files)
+            for fn in files:
+                res = qFFplay(panel, fn, vol, order, left, top, width, height, )
+
+        if (loop < 9):
+            loop -= 1
+
+
+
+def getPanelPos(id='0-', ):
+    w, h = pyautogui.size()
+    wa = int(w/100) 
+    ha = int(h/100) 
+    wb = int(w/20) 
+    hb = int(h/20) 
+    if   (id == '0'):
+        return 0, 0, w, h
+    elif (id == '0-'):
+        return wb, hb, int(w-wb*2), int(h-hb*2)
+    elif (id == '1'):
+        return 0, 0, int(w/3), int(h/3)
+    elif (id == '1-'):
+        return 0+wa, 0+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+    elif (id == '2'):
+        return int(w/3), 0, int(w/3), int(h/3)
+    elif (id == '2-'):
+        return int(w/3)+wa, 0+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+    elif (id == '3'):
+        return w-int(w/3), 0, int(w/3), int(h/3)
+    elif (id == '3-'):
+        return w-int(w/3)+wa, 0+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+    elif (id == '4'):
+        return 0, int(h/3), int(w/3), int(h/3)
+    elif (id == '4-'):
+        return 0+wa, int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+    elif (id == '5'):
+        return int(w/3), int(h/3), int(w/3), int(h/3)
+    elif (id == '5-'):
+        return int(w/3)+wa, int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+    elif (id == '6'):
+        return w-int(w/3), int(h/3), int(w/3), int(h/3)
+    elif (id == '6-'):
+        return w-int(w/3)+wa, int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+    elif (id == '7'):
+        return 0, h-int(h/3), int(w/3), int(h/3)
+    elif (id == '7-'):
+        return 0+wa, h-int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+    elif (id == '8'):
+        return int(w/3), h-int(h/3), int(w/3), int(h/3)
+    elif (id == '8-'):
+        return int(w/3)+wa, h-int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+    elif (id == '9'):
+        return w-int(w/3), h-int(h/3), int(w/3), int(h/3)
+    elif (id == '9-'):
+        return w-int(w/3)+wa, h-int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+    else:
+        return int(w/4), int(h/4), int(w/2), int(h/2)
 
 
 
@@ -423,23 +496,21 @@ class main_class:
 
             if (hit == 1):
                 i = hit
-                self.play_id[i]   = 'Player ' + str(i)
-                self.play_path[i] = u'C:\\Users\\Public\\_m4v__Clip\\Perfume\\Perfume_FLASH.m4v'
-                #self.play_proc[i] = threading.Thread(target=qPlayer, \
-                self.play_proc[i] = multiprocessing.Process(target=qPlayer, \
-                    args=(self.play_id[i], self.play_path[i], 100, 'normal', 100, 100, 320, 240, ), )
-                #self.play_proc[i].setDaemon(True)
+                self.play_id[i]   = '8-'
+                self.play_path[i] = u'C:/Users/Public/_m4v__Clip/Perfume/Perfume_FLASH.m4v'
+                #self.play_path[i] = u'C:/Users/Public/_m4v__Clip/Perfume'
+                self.play_proc[i] = multiprocessing.Process(target=panelPlay, \
+                    args=(self.play_id[i], self.play_path[i], 100, 'normal', 1, ), )
                 self.play_proc[i].daemon = True
                 self.play_proc[i].start()
 
             if (hit == 2):
                 i = hit
-                self.play_id[i]   = 'Player ' + str(i)
-                self.play_path[i] = u'C:\\Users\\Public\\_m4v__Clip\\Perfume\\Perfume_HoldYourHand.m4v'
-                #self.play_proc[i] = threading.Thread(target=qPlayer, \
-                self.play_proc[i] = multiprocessing.Process(target=qPlayer, \
-                    args=(self.play_id[i], self.play_path[i], 100, 'normal', 200, 200, 320, 240, ), )
-                #self.play_proc[i].setDaemon(True)
+                self.play_id[i]   = '9-'
+                #self.play_path[i] = u'C:/Users/Public/_m4v__Clip/Perfume/Perfume_HoldYourHand.m4v'
+                self.play_path[i] = u'C:/Users/Public/_m4v__Clip/Perfume'
+                self.play_proc[i] = multiprocessing.Process(target=panelPlay, \
+                    args=(self.play_id[i], self.play_path[i], 100, 'normal', 1, ), )
                 self.play_proc[i].daemon = True
                 self.play_proc[i].start()
 
