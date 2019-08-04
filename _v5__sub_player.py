@@ -508,7 +508,7 @@ class main_class:
                 i = hit
                 self.play_id[i]   = '9-'
                 #self.play_path[i] = u'C:/Users/Public/_m4v__Clip/Perfume/Perfume_HoldYourHand.m4v'
-                self.play_path[i] = u'C:/Users/Public/_m4v__Clip/Perfume'
+                self.play_path[i] = u'C:/Users/Public/_m4v__Clip/GB'
                 self.play_proc[i] = multiprocessing.Process(target=panelPlay, \
                     args=(self.play_id[i], self.play_path[i], 100, 'normal', 1, ), )
                 self.play_proc[i].daemon = True
