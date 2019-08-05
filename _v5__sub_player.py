@@ -454,8 +454,8 @@ class main_class:
 
         elif (proc_text.lower() == 'demo0-'):
             path0 = u'C:/Users/Public/_m4v__Clip/Perfume'
-            self.sub_start(path1, panel='0' , vol=0  , order='normal', loop=1, )
-            self.sub_start(path1, panel='0-', vol=100, order='top'   , loop=1, )
+            self.sub_start(path0, panel='0' , vol=0  , order='normal', loop=1, )
+            self.sub_start(path0, panel='0-', vol=100, order='top'   , loop=1, )
 
         elif (proc_text.lower() == 'demo1397'):
             path0 = u'C:/Users/Public/_動画_AppleTV'
