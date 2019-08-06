@@ -27,6 +27,7 @@ qCtrl_control_vision     = 'temp/control_vision.txt'
 qCtrl_control_desktop    = 'temp/control_desktop.txt'
 qCtrl_control_bgm        = 'temp/control_bgm.txt'
 qCtrl_control_web        = 'temp/control_web.txt'
+qCtrl_control_player     = 'temp/control_player.txt'
 qCtrl_control_chatting   = 'temp/control_chatting.txt'
 qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 
@@ -378,6 +379,8 @@ class proc_controls:
             qFunc.txtsWrite(qCtrl_control_bgm       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_web       == True):
             qFunc.txtsWrite(qCtrl_control_web       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+        if (self.run_player    == True):
+            qFunc.txtsWrite(qCtrl_control_player    ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_chatting  == True):
             qFunc.txtsWrite(qCtrl_control_chatting  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_knowledge == True):
@@ -399,14 +402,18 @@ class proc_controls:
             elif ((proc_text.find(u'画面') >= 0) and (proc_text.find(u'開始') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = True
-                time.sleep(5.00)
+                chktime = time.time()
+                while (os.path.exists(qCtrl_control_main)) and ((time.time() - chktime) < 5):
+                    time.sleep(0.50)
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_vision  = True
 
             elif ((proc_text.find(u'画面') >= 0) and (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = False
-                time.sleep(5.00)
+                chktime = time.time()
+                while (os.path.exists(qCtrl_control_main)) and ((time.time() - chktime) < 5):
+                    time.sleep(0.50)
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_vision  = False
 
@@ -445,6 +452,17 @@ class proc_controls:
             and (proc_text.find(u'終了') >= 0):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_web_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = False
+
+            elif ((proc_text.find(u'動画') >= 0) and (proc_text.find(u'開始') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_player = True
+                time.sleep(5)
+                qFunc.txtsWrite(qCtrl_control_player ,txts=['test'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_player  = False
+
+            elif ((proc_text.find(u'動画') >= 0) and (proc_text.find(u'終了') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_player = False
 
 
 

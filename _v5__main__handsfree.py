@@ -278,6 +278,8 @@ if __name__ == '__main__':
         bgm_switch           = 'off'
         web_run              = None
         web_switch           = 'off'
+        player_run           = None
+        player_switch        = 'off'
         chatting_run         = None
         chatting_switch      = 'off'
         knowledge_run        = None
@@ -288,11 +290,13 @@ if __name__ == '__main__':
             main_desktop_switch  = 'on'
             bgm_switch           = 'on'
             web_switch           = 'on'
+            player_switch        = 'on'
         elif (runMode == 'handsfree'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'on'
             web_switch           = 'on'
+            player_switch        = 'on'
         elif (runMode == 'translator'):
             pass
         elif (runMode == 'speech'):
@@ -304,16 +308,19 @@ if __name__ == '__main__':
             main_desktop_switch  = 'on'
             bgm_switch           = 'on'
             web_switch           = 'on'
+            player_switch        = 'on'
         elif (runMode == 'camera'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'off'
             web_switch           = 'off'
+            player_switch        = 'off'
         else:
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'off'
             web_switch           = 'off'
+            player_switch        = 'off'
 
     # 起動
 
@@ -357,6 +364,18 @@ if __name__ == '__main__':
             web_switch           = 'on'
         if (control == '_web_end_'):
             web_switch           = 'off'
+        if (control == '_player_start_'):
+            player_switch        = 'on'
+        if (control == '_player_end_'):
+            player_switch        = 'off'
+        if (control == '_chatting_start_'):
+            chatting_switch      = 'on'
+        if (control == '_chatting_end_'):
+            chatting_switch      = 'off'
+        if (control == '_knowledge_start_'):
+            knowledge_switch     = 'on'
+        if (control == '_knowledge_end_'):
+            knowledge_switch     = 'off'
 
         # 活動メッセージ
 
@@ -425,7 +444,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ＢＧＭ再生機能を、起動しました。', 'wait':0, })
 
         if (not bgm_run is None) and (bgm_switch != 'on'):
-            qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_control_bgm, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
             #bgm_run.wait()
             bgm_run.terminate()
@@ -440,13 +459,28 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ブラウザー連携機能を、起動しました。', 'wait':0, })
 
         if (not web_run is None) and (web_switch != 'on'):
-            qFunc.txtsWrite(qCtrl_control_web       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_control_web, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
             #web_run.wait()
             web_run.terminate()
             web_run = None
 
             speechs.append({ 'text':u'ブラウザー連携機能を、終了しました。', 'wait':0, })
+
+        if (pleyer_run is None) and (player_switch == 'on'):
+            pleyer_run = subprocess.Popen(['python', qPython_player, runMode, ], )
+                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+            speechs.append({ 'text':u'動画連携機能を、起動しました。', 'wait':0, })
+
+        if (not pleyer_run is None) and (player_switch != 'on'):
+            qFunc.txtsWrite(qCtrl_control_player, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            time.sleep(10.00)
+            #pleyer_run.wait()
+            pleyer_run.terminate()
+            pleyer_run = None
+
+            speechs.append({ 'text':u'動画連携機能を、終了しました。', 'wait':0, })
 
         if (chatting_run is None) and (chatting_switch == 'on'):
             chatting_run = subprocess.Popen(['python', qPython_chatting, runMode, ], )
@@ -455,7 +489,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ドコモ雑談連携機能を、起動しました。', 'wait':0, })
 
         if (not chatting_run is None) and (chatting_switch != 'on'):
-            qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_control_chatting, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
             #chatting_run.wait()
             chatting_run.terminate()
@@ -470,7 +504,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ドコモ知識データベースを、起動しました。', 'wait':0, })
 
         if (not knowledge_run is None) and (knowledge_switch != 'on'):
-            qFunc.txtsWrite(qCtrl_control_knowledge ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_control_knowledge, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
             #knowledge_run.wait()
             knowledge_run.terminate()
