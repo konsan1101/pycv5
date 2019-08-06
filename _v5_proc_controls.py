@@ -128,6 +128,7 @@ class proc_controls:
         self.run_desktop   = True
         self.run_bgm       = True
         self.run_web       = True
+        self.run_player    = True
         self.run_chatting  = True
         self.run_knowledge = True
 

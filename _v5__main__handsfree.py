@@ -467,18 +467,18 @@ if __name__ == '__main__':
 
             speechs.append({ 'text':u'ブラウザー連携機能を、終了しました。', 'wait':0, })
 
-        if (pleyer_run is None) and (player_switch == 'on'):
-            pleyer_run = subprocess.Popen(['python', qPython_player, runMode, ], )
+        if (player_run is None) and (player_switch == 'on'):
+            player_run = subprocess.Popen(['python', qPython_player, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'動画連携機能を、起動しました。', 'wait':0, })
 
-        if (not pleyer_run is None) and (player_switch != 'on'):
+        if (not player_run is None) and (player_switch != 'on'):
             qFunc.txtsWrite(qCtrl_control_player, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
-            #pleyer_run.wait()
-            pleyer_run.terminate()
-            pleyer_run = None
+            #player_run.wait()
+            player_run.terminate()
+            player_run = None
 
             speechs.append({ 'text':u'動画連携機能を、終了しました。', 'wait':0, })
 
