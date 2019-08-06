@@ -32,6 +32,7 @@ qCtrl_control_desktop    = 'temp/control_desktop.txt'
 qCtrl_control_self       = qCtrl_control_desktop
 
 qCtrl_control_web        = 'temp/control_web.txt'
+qCtrl_control_player     = 'temp/control_player.txt'
 
 # 出力インターフェース
 qCtrl_result_audio       = 'temp/result_audio.txt'
@@ -418,7 +419,8 @@ class main_desktop:
                                 cvreader_last_code = res_value
 
                                 # 画面表示
-                                qFunc.txtsWrite(qCtrl_control_web, txts=[res_value], encoding='utf-8', exclusive=True, mode='w', )
+                                qFunc.txtsWrite(qCtrl_control_web,    txts=[res_value], encoding='utf-8', exclusive=True, mode='w', )
+                                qFunc.txtsWrite(qCtrl_control_player, txts=[res_value], encoding='utf-8', exclusive=True, mode='w', )
 
                 # 録画機能
                 if (not recorder_thread is None):
