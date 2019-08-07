@@ -20,9 +20,7 @@ qFunc.kill('sox')
 qFunc.kill('VLC') # Danger!
 
 qFunc.kill('ffmpeg')
-qFunc.kill('ffmpeg') #念のため
 qFunc.kill('ffplay')
-qFunc.kill('ffplay') #念のため
 
 qFunc.kill('python')
 
