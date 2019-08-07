@@ -33,54 +33,54 @@ import cv2
 
 
 
-qPath_log      = 'temp/_log/'
-qPath_work     = 'temp/_work/'
-qPath_rec      = 'temp/_recorder/'
+qPath_log       = 'temp/_log/'
+qPath_work      = 'temp/_work/'
+qPath_rec       = 'temp/_recorder/'
 
-qPath_s_ctrl   = 'temp/s5_0control/'
-qPath_s_inp    = 'temp/s5_1voice/'
-qPath_s_wav    = 'temp/s5_2wav/'
-qPath_s_jul    = 'temp/s5_3stt_julius/'
-qPath_s_STT    = 'temp/s5_4stt_txt/'
-qPath_s_TTS    = 'temp/s5_5tts_txt/'
-qPath_s_TRA    = 'temp/s5_6tra_txt/'
-qPath_s_play   = 'temp/s5_7play/'
-qPath_v_ctrl   = 'temp/v5_0control/'
-qPath_v_inp    = 'temp/v5_1vision/'
-qPath_v_jpg    = 'temp/v5_2jpg/'
-qPath_v_detect = 'temp/v5_3detect/'
-qPath_v_cv     = 'temp/v5_5cv_txt/'
-qPath_v_photo  = 'temp/v5_7photo/'
-qPath_v_msg    = 'temp/v5_7photo_msg/'
-qPath_d_ctrl   = 'temp/d5_0control/'
-qPath_d_prtscn = 'temp/d5_1screen/'
-qPath_d_movie  = 'temp/d5_5movie/'
-qPath_d_play   = 'temp/d5_7play/'
+qPath_s_ctrl    = 'temp/s5_0control/'
+qPath_s_inp     = 'temp/s5_1voice/'
+qPath_s_wav     = 'temp/s5_2wav/'
+qPath_s_jul     = 'temp/s5_3stt_julius/'
+qPath_s_STT     = 'temp/s5_4stt_txt/'
+qPath_s_TTS     = 'temp/s5_5tts_txt/'
+qPath_s_TRA     = 'temp/s5_6tra_txt/'
+qPath_s_play    = 'temp/s5_7play/'
+qPath_v_ctrl    = 'temp/v5_0control/'
+qPath_v_inp     = 'temp/v5_1vision/'
+qPath_v_jpg     = 'temp/v5_2jpg/'
+qPath_v_detect  = 'temp/v5_3detect/'
+qPath_v_cv      = 'temp/v5_5cv_txt/'
+qPath_v_photo   = 'temp/v5_7photo/'
+qPath_v_msg     = 'temp/v5_7photo_msg/'
+qPath_d_ctrl    = 'temp/d5_0control/'
+qPath_d_prtscn  = 'temp/d5_1screen/'
+qPath_d_movie   = 'temp/d5_5movie/'
+qPath_d_play    = 'temp/d5_7play/'
 
-qBusy_dev_cpu  = qPath_work + 'busy_dev_cpu.txt'
-qBusy_dev_com  = qPath_work + 'busy_dev_commnication.txt'
-qBusy_dev_mic  = qPath_work + 'busy_dev_microphone.txt'
-qBusy_dev_spk  = qPath_work + 'busy_dev_speaker.txt'
-qBusy_dev_cam  = qPath_work + 'busy_dev_camera.txt'
-qBusy_dev_dsp  = qPath_work + 'busy_dev_display.txt'
-qBusy_s_ctrl   = qPath_work + 'busy_s_0control.txt'
-qBusy_s_inp    = qPath_work + 'busy_s_1audio.txt'
-qBusy_s_wav    = qPath_work + 'busy_s_2wav.txt'
-qBusy_s_STT    = qPath_work + 'busy_s_4stt_txt.txt'
-qBusy_s_TTS    = qPath_work + 'busy_s_5tts_txt.txt'
-qBusy_s_TRA    = qPath_work + 'busy_s_6tra_txt.txt'
-qBusy_s_play   = qPath_work + 'busy_s_7play.txt'
-qBusy_v_ctrl   = qPath_work + 'busy_v_0control.txt'
-qBusy_v_inp    = qPath_work + 'busy_v_1video.txt'
-qBusy_v_QR     = qPath_work + 'busy_v_2QR.txt'
-qBusy_v_jpg    = qPath_work + 'busy_v_3jpg.txt'
-qBusy_v_CV     = qPath_work + 'busy_v_5cv.txt'
-qBusy_d_ctrl   = qPath_work + 'busy_d_0control.txt'
-qBusy_d_inp    = qPath_work + 'busy_d_1screen.txt'
-qBusy_d_QR     = qPath_work + 'busy_d_2QR.txt'
-qBusy_d_rec    = qPath_work + 'busy_d_5rec.txt'
-qBusy_d_play   = qPath_work + 'busy_d_7play.txt'
-qBusy_d_web    = qPath_work + 'busy_d_8web.txt'
+qBusy_dev_cpu   = qPath_work + 'busy_dev_cpu.txt'
+qBusy_dev_com   = qPath_work + 'busy_dev_commnication.txt'
+qBusy_dev_mic   = qPath_work + 'busy_dev_microphone.txt'
+qBusy_dev_spk   = qPath_work + 'busy_dev_speaker.txt'
+qBusy_dev_cam   = qPath_work + 'busy_dev_camera.txt'
+qBusy_dev_dsp   = qPath_work + 'busy_dev_display.txt'
+qBusy_s_ctrl    = qPath_work + 'busy_s_0control.txt'
+qBusy_s_inp     = qPath_work + 'busy_s_1audio.txt'
+qBusy_s_wav     = qPath_work + 'busy_s_2wav.txt'
+qBusy_s_STT     = qPath_work + 'busy_s_4stt_txt.txt'
+qBusy_s_TTS     = qPath_work + 'busy_s_5tts_txt.txt'
+qBusy_s_TRA     = qPath_work + 'busy_s_6tra_txt.txt'
+qBusy_s_play    = qPath_work + 'busy_s_7play.txt'
+qBusy_v_ctrl    = qPath_work + 'busy_v_0control.txt'
+qBusy_v_inp     = qPath_work + 'busy_v_1video.txt'
+qBusy_v_QR      = qPath_work + 'busy_v_2QR.txt'
+qBusy_v_jpg     = qPath_work + 'busy_v_3jpg.txt'
+qBusy_v_CV      = qPath_work + 'busy_v_5cv.txt'
+qBusy_d_ctrl    = qPath_work + 'busy_d_0control.txt'
+qBusy_d_inp     = qPath_work + 'busy_d_1screen.txt'
+qBusy_d_QR      = qPath_work + 'busy_d_2QR.txt'
+qBusy_d_rec     = qPath_work + 'busy_d_5rec.txt'
+qBusy_d_play    = qPath_work + 'busy_d_7play.txt'
+qBusy_d_browser = qPath_work + 'busy_d_8web.txt'
 
 
 
@@ -128,57 +128,57 @@ class qFunc_class:
         return True
 
     def getValue(self, field):
-        if (field == 'qOS'           ): return qOS
-        if (field == 'qHOSTNAME'     ): return qHOSTNAME
+        if (field == 'qOS'             ): return qOS
+        if (field == 'qHOSTNAME'       ): return qHOSTNAME
 
-        if (field == 'qPath_log'     ): return qPath_log
-        if (field == 'qPath_work'    ): return qPath_work
-        if (field == 'qPath_rec'     ): return qPath_rec
+        if (field == 'qPath_log'       ): return qPath_log
+        if (field == 'qPath_work'      ): return qPath_work
+        if (field == 'qPath_rec'       ): return qPath_rec
 
-        if (field == 'qPath_s_ctrl'  ): return qPath_s_ctrl
-        if (field == 'qPath_s_inp'   ): return qPath_s_inp
-        if (field == 'qPath_s_wav'   ): return qPath_s_wav
-        if (field == 'qPath_s_jul'   ): return qPath_s_jul
-        if (field == 'qPath_s_STT'   ): return qPath_s_STT
-        if (field == 'qPath_s_TTS'   ): return qPath_s_TTS
-        if (field == 'qPath_s_TRA'   ): return qPath_s_TRA
-        if (field == 'qPath_s_play'  ): return qPath_s_play
-        if (field == 'qPath_v_ctrl'  ): return qPath_v_ctrl
-        if (field == 'qPath_v_inp'   ): return qPath_v_inp
-        if (field == 'qPath_v_jpg'   ): return qPath_v_jpg
-        if (field == 'qPath_v_detect'): return qPath_v_detect
-        if (field == 'qPath_v_cv'    ): return qPath_v_cv
-        if (field == 'qPath_v_photo' ): return qPath_v_photo
-        if (field == 'qPath_v_msg'   ): return qPath_v_msg
-        if (field == 'qPath_d_ctrl'  ): return qPath_d_ctrl
-        if (field == 'qPath_d_prtscn'): return qPath_d_prtscn
-        if (field == 'qPath_d_movie' ): return qPath_d_movie
-        if (field == 'qPath_d_play'  ): return qPath_d_play
+        if (field == 'qPath_s_ctrl'    ): return qPath_s_ctrl
+        if (field == 'qPath_s_inp'     ): return qPath_s_inp
+        if (field == 'qPath_s_wav'     ): return qPath_s_wav
+        if (field == 'qPath_s_jul'     ): return qPath_s_jul
+        if (field == 'qPath_s_STT'     ): return qPath_s_STT
+        if (field == 'qPath_s_TTS'     ): return qPath_s_TTS
+        if (field == 'qPath_s_TRA'     ): return qPath_s_TRA
+        if (field == 'qPath_s_play'    ): return qPath_s_play
+        if (field == 'qPath_v_ctrl'    ): return qPath_v_ctrl
+        if (field == 'qPath_v_inp'     ): return qPath_v_inp
+        if (field == 'qPath_v_jpg'     ): return qPath_v_jpg
+        if (field == 'qPath_v_detect'  ): return qPath_v_detect
+        if (field == 'qPath_v_cv'      ): return qPath_v_cv
+        if (field == 'qPath_v_photo'   ): return qPath_v_photo
+        if (field == 'qPath_v_msg'     ): return qPath_v_msg
+        if (field == 'qPath_d_ctrl'    ): return qPath_d_ctrl
+        if (field == 'qPath_d_prtscn'  ): return qPath_d_prtscn
+        if (field == 'qPath_d_movie'   ): return qPath_d_movie
+        if (field == 'qPath_d_play'    ): return qPath_d_play
 
-        if (field == 'qBusy_dev_cpu' ): return qBusy_dev_cpu
-        if (field == 'qBusy_dev_com' ): return qBusy_dev_com
-        if (field == 'qBusy_dev_mic' ): return qBusy_dev_mic
-        if (field == 'qBusy_dev_spk' ): return qBusy_dev_spk
-        if (field == 'qBusy_dev_cam' ): return qBusy_dev_cam
-        if (field == 'qBusy_dev_dsp' ): return qBusy_dev_dsp
-        if (field == 'qBusy_s_ctrl'  ): return qBusy_s_ctrl
-        if (field == 'qBusy_s_inp'   ): return qBusy_s_inp
-        if (field == 'qBusy_s_wav'   ): return qBusy_s_wav
-        if (field == 'qBusy_s_STT'   ): return qBusy_s_STT
-        if (field == 'qBusy_s_TTS'   ): return qBusy_s_TTS
-        if (field == 'qBusy_s_TRA'   ): return qBusy_s_TRA
-        if (field == 'qBusy_s_play'  ): return qBusy_s_play
-        if (field == 'qBusy_v_ctrl'  ): return qBusy_v_ctrl
-        if (field == 'qBusy_v_inp'   ): return qBusy_v_inp
-        if (field == 'qBusy_v_QR'    ): return qBusy_v_QR
-        if (field == 'qBusy_v_jpg'   ): return qBusy_v_jpg
-        if (field == 'qBusy_v_CV'    ): return qBusy_v_CV
-        if (field == 'qBusy_d_ctrl'  ): return qBusy_d_ctrl
-        if (field == 'qBusy_d_inp'   ): return qBusy_d_inp
-        if (field == 'qBusy_d_QR'    ): return qBusy_d_QR
-        if (field == 'qBusy_d_rec'   ): return qBusy_d_rec
-        if (field == 'qBusy_d_play'  ): return qBusy_d_play
-        if (field == 'qBusy_d_web'   ): return qBusy_d_web
+        if (field == 'qBusy_dev_cpu'   ): return qBusy_dev_cpu
+        if (field == 'qBusy_dev_com'   ): return qBusy_dev_com
+        if (field == 'qBusy_dev_mic'   ): return qBusy_dev_mic
+        if (field == 'qBusy_dev_spk'   ): return qBusy_dev_spk
+        if (field == 'qBusy_dev_cam'   ): return qBusy_dev_cam
+        if (field == 'qBusy_dev_dsp'   ): return qBusy_dev_dsp
+        if (field == 'qBusy_s_ctrl'    ): return qBusy_s_ctrl
+        if (field == 'qBusy_s_inp'     ): return qBusy_s_inp
+        if (field == 'qBusy_s_wav'     ): return qBusy_s_wav
+        if (field == 'qBusy_s_STT'     ): return qBusy_s_STT
+        if (field == 'qBusy_s_TTS'     ): return qBusy_s_TTS
+        if (field == 'qBusy_s_TRA'     ): return qBusy_s_TRA
+        if (field == 'qBusy_s_play'    ): return qBusy_s_play
+        if (field == 'qBusy_v_ctrl'    ): return qBusy_v_ctrl
+        if (field == 'qBusy_v_inp'     ): return qBusy_v_inp
+        if (field == 'qBusy_v_QR'      ): return qBusy_v_QR
+        if (field == 'qBusy_v_jpg'     ): return qBusy_v_jpg
+        if (field == 'qBusy_v_CV'      ): return qBusy_v_CV
+        if (field == 'qBusy_d_ctrl'    ): return qBusy_d_ctrl
+        if (field == 'qBusy_d_inp'     ): return qBusy_d_inp
+        if (field == 'qBusy_d_QR'      ): return qBusy_d_QR
+        if (field == 'qBusy_d_rec'     ): return qBusy_d_rec
+        if (field == 'qBusy_d_play'    ): return qBusy_d_play
+        if (field == 'qBusy_d_browser' ): return qBusy_d_browser
 
         print('check program !' + field)
         return None
@@ -606,41 +606,41 @@ class qFunc_class:
         return False
 
     def busyReset_speech(self, Flag=False):
-        self.busySet(qBusy_dev_cpu, Flag)
-        self.busySet(qBusy_dev_com, Flag)
-        self.busySet(qBusy_dev_mic, Flag)
-        self.busySet(qBusy_dev_spk, Flag)
-        self.busySet(qBusy_s_ctrl,  Flag)
-        self.busySet(qBusy_s_inp,   Flag)
-        self.busySet(qBusy_s_wav,   Flag)
-        self.busySet(qBusy_s_STT,   Flag)
-        self.busySet(qBusy_s_TTS,   Flag)
-        self.busySet(qBusy_s_TRA,   Flag)
-        self.busySet(qBusy_s_play,  Flag)
+        self.busySet(qBusy_dev_cpu,   Flag)
+        self.busySet(qBusy_dev_com,   Flag)
+        self.busySet(qBusy_dev_mic,   Flag)
+        self.busySet(qBusy_dev_spk,   Flag)
+        self.busySet(qBusy_s_ctrl,    Flag)
+        self.busySet(qBusy_s_inp,     Flag)
+        self.busySet(qBusy_s_wav,     Flag)
+        self.busySet(qBusy_s_STT,     Flag)
+        self.busySet(qBusy_s_TTS,     Flag)
+        self.busySet(qBusy_s_TRA,     Flag)
+        self.busySet(qBusy_s_play,    Flag)
         return True
 
     def busyReset_vision(self, Flag=False):
-        self.busySet(qBusy_dev_cpu, Flag)
-        self.busySet(qBusy_dev_com, Flag)
-        self.busySet(qBusy_dev_cam, Flag)
-        self.busySet(qBusy_dev_dsp, Flag)
-        self.busySet(qBusy_v_ctrl,  Flag)
-        self.busySet(qBusy_v_inp,   Flag)
-        self.busySet(qBusy_v_QR,    Flag)
-        self.busySet(qBusy_v_jpg,   Flag)
-        self.busySet(qBusy_v_CV,    Flag)
+        self.busySet(qBusy_dev_cpu,   Flag)
+        self.busySet(qBusy_dev_com,   Flag)
+        self.busySet(qBusy_dev_cam,   Flag)
+        self.busySet(qBusy_dev_dsp,   Flag)
+        self.busySet(qBusy_v_ctrl,    Flag)
+        self.busySet(qBusy_v_inp,     Flag)
+        self.busySet(qBusy_v_QR,      Flag)
+        self.busySet(qBusy_v_jpg,     Flag)
+        self.busySet(qBusy_v_CV,      Flag)
         return True
 
     def busyReset_desktop(self, Flag=False):
-        self.busySet(qBusy_dev_cpu, Flag)
-        self.busySet(qBusy_dev_com, Flag)
-        self.busySet(qBusy_dev_dsp, Flag)
-        self.busySet(qBusy_d_ctrl,  Flag)
-        self.busySet(qBusy_d_inp,   Flag)
-        self.busySet(qBusy_d_QR,    Flag)
-        self.busySet(qBusy_d_rec,   Flag)
-        self.busySet(qBusy_d_play,  Flag)
-        self.busySet(qBusy_d_web,   Flag)
+        self.busySet(qBusy_dev_cpu,   Flag)
+        self.busySet(qBusy_dev_com,   Flag)
+        self.busySet(qBusy_dev_dsp,   Flag)
+        self.busySet(qBusy_d_ctrl,    Flag)
+        self.busySet(qBusy_d_inp,     Flag)
+        self.busySet(qBusy_d_QR,      Flag)
+        self.busySet(qBusy_d_rec,     Flag)
+        self.busySet(qBusy_d_play,    Flag)
+        self.busySet(qBusy_d_browser, Flag)
         return True
 
     def busyCheck(self, file, maxWait=0, ):
@@ -711,30 +711,30 @@ class qBusy_status_txts_class(object):
     def __init__(self):
         self.check   = ''
 
-        self.dev_cpu = 'none'
-        self.dev_com = 'none'
-        self.dev_mic = 'none'
-        self.dev_spk = 'none'
-        self.dev_cam = 'none'
-        self.dev_dsp = 'none'
-        self.a_ctrl  = 'none'
-        self.a_inp   = 'none'
-        self.a_wav   = 'none'
-        self.a_STT   = 'none'
-        self.a_TTS   = 'none'
-        self.a_TRA   = 'none'
-        self.a_play  = 'none'
-        self.v_ctrl  = 'none'
-        self.v_inp   = 'none'
-        self.v_QR    = 'none'
-        self.v_jpg   = 'none'
-        self.v_CV    = 'none'
-        self.d_ctrl  = 'none'
-        self.d_inp   = 'none'
-        self.d_QR    = 'none'
-        self.d_rec   = 'none'
-        self.d_play  = 'none'
-        self.d_web   = 'none'
+        self.dev_cpu   = 'none'
+        self.dev_com   = 'none'
+        self.dev_mic   = 'none'
+        self.dev_spk   = 'none'
+        self.dev_cam   = 'none'
+        self.dev_dsp   = 'none'
+        self.a_ctrl    = 'none'
+        self.a_inp     = 'none'
+        self.a_wav     = 'none'
+        self.a_STT     = 'none'
+        self.a_TTS     = 'none'
+        self.a_TRA     = 'none'
+        self.a_play    = 'none'
+        self.v_ctrl    = 'none'
+        self.v_inp     = 'none'
+        self.v_QR      = 'none'
+        self.v_jpg     = 'none'
+        self.v_CV      = 'none'
+        self.d_ctrl    = 'none'
+        self.d_inp     = 'none'
+        self.d_QR      = 'none'
+        self.d_rec     = 'none'
+        self.d_play    = 'none'
+        self.d_browser = 'none'
 
     def busyCheck(self, file, maxWait=0, ):
         if (maxWait != 0):
@@ -849,10 +849,10 @@ class qBusy_status_txts_class(object):
         if (check != self.d_play):
             change = True
         self.d_play = check
-        check = self.busyCheck(qBusy_d_web, 0)
-        if (check != self.d_web):
+        check = self.busyCheck(qBusy_d_browser, 0)
+        if (check != self.d_browser):
             change = True
-        self.d_web = check
+        self.d_browser = check
  
         if (change != True):
             return False
@@ -962,10 +962,10 @@ class qBusy_status_txts_class(object):
             txts.append(' Play   : play!___')
         else:
             txts.append(' Play   : ________')
-        if (self.d_web == 'busy'):
-            txts.append(' Web    : play!___')
+        if (self.d_browser == 'busy'):
+            txts.append(' Browser: play!___')
         else:
-            txts.append(' Web    : ________')
+            txts.append(' Browser: ________')
 
         txts.append('')
         return txts

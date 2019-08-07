@@ -31,8 +31,8 @@ import urllib.parse
 
 
 # インターフェース
-qCtrl_control_web        = 'temp/control_web.txt'
-qCtrl_control_self       = qCtrl_control_web
+qCtrl_control_browser    = 'temp/control_browser.txt'
+qCtrl_control_self       = qCtrl_control_browser
 
 
 
@@ -40,56 +40,56 @@ qCtrl_control_self       = qCtrl_control_web
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
-qOS            = qFunc.getValue('qOS'           )
-qHOSTNAME      = qFunc.getValue('qHOSTNAME'     )
-qPath_log      = qFunc.getValue('qPath_log'     )
-qPath_work     = qFunc.getValue('qPath_work'    )
-qPath_rec      = qFunc.getValue('qPath_rec'     )
+qOS             = qFunc.getValue('qOS'            )
+qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_log       = qFunc.getValue('qPath_log'      )
+qPath_work      = qFunc.getValue('qPath_work'     )
+qPath_rec       = qFunc.getValue('qPath_rec'      )
 
-qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
-qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
-qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
-qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
-qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
-qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
-qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
-qPath_s_play   = qFunc.getValue('qPath_s_play'  )
-qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
-qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
-qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
-qPath_v_detect = qFunc.getValue('qPath_v_detect')
-qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
-qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
-qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
-qPath_d_ctrl   = qFunc.getValue('qPath_d_ctrl'  )
-qPath_d_prtscn = qFunc.getValue('qPath_d_prtscn')
-qPath_d_movie  = qFunc.getValue('qPath_d_movie' )
-qPath_d_play   = qFunc.getValue('qPath_d_play' )
+qPath_s_ctrl    = qFunc.getValue('qPath_s_ctrl'   )
+qPath_s_inp     = qFunc.getValue('qPath_s_inp'    )
+qPath_s_wav     = qFunc.getValue('qPath_s_wav'    )
+qPath_s_jul     = qFunc.getValue('qPath_s_jul'    )
+qPath_s_STT     = qFunc.getValue('qPath_s_STT'    )
+qPath_s_TTS     = qFunc.getValue('qPath_s_TTS'    )
+qPath_s_TRA     = qFunc.getValue('qPath_s_TRA'    )
+qPath_s_play    = qFunc.getValue('qPath_s_play'   )
+qPath_v_ctrl    = qFunc.getValue('qPath_v_ctrl'   )
+qPath_v_inp     = qFunc.getValue('qPath_v_inp'    )
+qPath_v_jpg     = qFunc.getValue('qPath_v_jpg'    )
+qPath_v_detect  = qFunc.getValue('qPath_v_detect' )
+qPath_v_cv      = qFunc.getValue('qPath_v_cv'     )
+qPath_v_photo   = qFunc.getValue('qPath_v_photo'  )
+qPath_v_msg     = qFunc.getValue('qPath_v_msg'    )
+qPath_d_ctrl    = qFunc.getValue('qPath_d_ctrl'   )
+qPath_d_prtscn  = qFunc.getValue('qPath_d_prtscn' )
+qPath_d_movie   = qFunc.getValue('qPath_d_movie'  )
+qPath_d_play    = qFunc.getValue('qPath_d_play'   )
 
-qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
-qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
-qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
-qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
-qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
-qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
-qBusy_s_ctrl   = qFunc.getValue('qBusy_s_ctrl'  )
-qBusy_s_inp    = qFunc.getValue('qBusy_s_inp'   )
-qBusy_s_wav    = qFunc.getValue('qBusy_s_wav'   )
-qBusy_s_STT    = qFunc.getValue('qBusy_s_STT'   )
-qBusy_s_TTS    = qFunc.getValue('qBusy_s_TTS'   )
-qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
-qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
-qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
-qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
-qBusy_v_QR     = qFunc.getValue('qBusy_v_QR'    )
-qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
-qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
-qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
-qBusy_d_inp    = qFunc.getValue('qBusy_d_inp'   )
-qBusy_d_QR     = qFunc.getValue('qBusy_d_QR'    )
-qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
-qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
-qBusy_d_web    = qFunc.getValue('qBusy_d_web'   )
+qBusy_dev_cpu   = qFunc.getValue('qBusy_dev_cpu'  )
+qBusy_dev_com   = qFunc.getValue('qBusy_dev_com'  )
+qBusy_dev_mic   = qFunc.getValue('qBusy_dev_mic'  )
+qBusy_dev_spk   = qFunc.getValue('qBusy_dev_spk'  )
+qBusy_dev_cam   = qFunc.getValue('qBusy_dev_cam'  )
+qBusy_dev_dsp   = qFunc.getValue('qBusy_dev_dsp'  )
+qBusy_s_ctrl    = qFunc.getValue('qBusy_s_ctrl'   )
+qBusy_s_inp     = qFunc.getValue('qBusy_s_inp'    )
+qBusy_s_wav     = qFunc.getValue('qBusy_s_wav'    )
+qBusy_s_STT     = qFunc.getValue('qBusy_s_STT'    )
+qBusy_s_TTS     = qFunc.getValue('qBusy_s_TTS'    )
+qBusy_s_TRA     = qFunc.getValue('qBusy_s_TRA'    )
+qBusy_s_play    = qFunc.getValue('qBusy_s_play'   )
+qBusy_v_ctrl    = qFunc.getValue('qBusy_v_ctrl'   )
+qBusy_v_inp     = qFunc.getValue('qBusy_v_inp'    )
+qBusy_v_QR      = qFunc.getValue('qBusy_v_QR'     )
+qBusy_v_jpg     = qFunc.getValue('qBusy_v_jpg'    )
+qBusy_v_CV      = qFunc.getValue('qBusy_v_CV'     )
+qBusy_d_ctrl    = qFunc.getValue('qBusy_d_ctrl'   )
+qBusy_d_inp     = qFunc.getValue('qBusy_d_inp'    )
+qBusy_d_QR      = qFunc.getValue('qBusy_d_QR'     )
+qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
+qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
+qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
 
 
@@ -122,9 +122,9 @@ class main_class:
         self.proc_step = '0'
         self.proc_seq  = 0
 
-        self.web_id    = None 
-        self.web_start = time.time() 
-        self.web_url   = ''
+        self.browser_id    = None 
+        self.browser_start = time.time() 
+        self.browser_url   = ''
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -266,7 +266,7 @@ class main_class:
             qFunc.remove(self.fileRdy)
 
             # 停止
-            if (not self.web_id is None):
+            if (not self.browser_id is None):
                 self.sub_proc('_stop_', )
 
             # ビジー解除
@@ -293,7 +293,7 @@ class main_class:
         if (proc_text.find(u'リセット') >=0):
 
             # 停止
-            if (not self.web_id is None):
+            if (not self.browser_id is None):
                 #self.sub_stop(proc_text, )
                 self.sub_stop('_stop_', )
 
@@ -306,7 +306,7 @@ class main_class:
           or (proc_text.find(u'ブラウザ') >=0) and (proc_text.find(u'終了') >=0):
 
             # 停止
-            if (not self.web_id is None):
+            if (not self.browser_id is None):
                 #self.sub_stop(proc_text, )
                 self.sub_stop('_stop_', )
 
@@ -321,7 +321,7 @@ class main_class:
         else:
 
             # 開始
-            if (not self.web_id is None):
+            if (not self.browser_id is None):
                 self.sub_start(proc_text, )
 
 
@@ -333,7 +333,7 @@ class main_class:
         qFunc.logOutput(self.proc_id + ':open ' + proc_text, display=True,)
 
         # オープン
-        if (self.web_id is None):
+        if (self.browser_id is None):
 
             # ビジー設定
             if (not os.path.exists(self.fileBsy)):
@@ -344,7 +344,7 @@ class main_class:
             #options.add_argument('-headless')
 
             # FirefoxのWebDriver作成
-            self.web_id = Firefox(options=options)
+            self.browser_id = Firefox(options=options)
 
             # ウィンドウサイズとズームを設定
             #driver.set_window_size(1920, 9999)
@@ -354,34 +354,34 @@ class main_class:
         url   = ''
         if (proc_text == '_start_'):
             url = 'https://google.co.jp'
-            #self.web_id.get(url)
+            #self.browser_id.get(url)
         elif (proc_text[:4] == 'http'):
             url = proc_text
-            #self.web_id.get(url)
+            #self.browser_id.get(url)
 
         if (url == ''):
             url = 'https://www.google.com/search?q=' + proc_text
-            #self.web_id.get(url)
+            #self.browser_id.get(url)
 
         # 開く
         try:
-            self.web_id.get(url)
+            self.browser_id.get(url)
         except:
             self.sub_stop('_stop_', )
 
         # 画像保管
-        #self.web_id.save_screenshot(file_name)
+        #self.browser_id.save_screenshot(file_name)
 
 
 
     # 停止
     def sub_stop(self, proc_text, ):
 
-        if (not self.web_id is None):
+        if (not self.browser_id is None):
 
             # 停止
-            self.web_id.quit()
-            self.web_id = None
+            self.browser_id.quit()
+            self.browser_id = None
 
         # リセット
         qFunc.kill('firefox', )
@@ -403,7 +403,7 @@ signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 if __name__ == '__main__':
-    main_name = 'web'
+    main_name = 'browser'
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス

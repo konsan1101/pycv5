@@ -26,7 +26,7 @@ qCtrl_control_speech     = 'temp/control_speech.txt'
 qCtrl_control_vision     = 'temp/control_vision.txt'
 qCtrl_control_desktop    = 'temp/control_desktop.txt'
 qCtrl_control_bgm        = 'temp/control_bgm.txt'
-qCtrl_control_web        = 'temp/control_web.txt'
+qCtrl_control_browser    = 'temp/control_browser.txt'
 qCtrl_control_player     = 'temp/control_player.txt'
 qCtrl_control_chatting   = 'temp/control_chatting.txt'
 qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
@@ -37,56 +37,56 @@ qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
-qOS            = qFunc.getValue('qOS'           )
-qHOSTNAME      = qFunc.getValue('qHOSTNAME'     )
-qPath_log      = qFunc.getValue('qPath_log'     )
-qPath_work     = qFunc.getValue('qPath_work'    )
-qPath_rec      = qFunc.getValue('qPath_rec'     )
+qOS             = qFunc.getValue('qOS'            )
+qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_log       = qFunc.getValue('qPath_log'      )
+qPath_work      = qFunc.getValue('qPath_work'     )
+qPath_rec       = qFunc.getValue('qPath_rec'      )
 
-qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
-qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
-qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
-qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
-qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
-qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
-qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
-qPath_s_play   = qFunc.getValue('qPath_s_play'  )
-qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
-qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
-qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
-qPath_v_detect = qFunc.getValue('qPath_v_detect')
-qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
-qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
-qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
-qPath_d_ctrl   = qFunc.getValue('qPath_d_ctrl'  )
-qPath_d_prtscn = qFunc.getValue('qPath_d_prtscn')
-qPath_d_movie  = qFunc.getValue('qPath_d_movie' )
-qPath_d_play   = qFunc.getValue('qPath_d_play' )
+qPath_s_ctrl    = qFunc.getValue('qPath_s_ctrl'   )
+qPath_s_inp     = qFunc.getValue('qPath_s_inp'    )
+qPath_s_wav     = qFunc.getValue('qPath_s_wav'    )
+qPath_s_jul     = qFunc.getValue('qPath_s_jul'    )
+qPath_s_STT     = qFunc.getValue('qPath_s_STT'    )
+qPath_s_TTS     = qFunc.getValue('qPath_s_TTS'    )
+qPath_s_TRA     = qFunc.getValue('qPath_s_TRA'    )
+qPath_s_play    = qFunc.getValue('qPath_s_play'   )
+qPath_v_ctrl    = qFunc.getValue('qPath_v_ctrl'   )
+qPath_v_inp     = qFunc.getValue('qPath_v_inp'    )
+qPath_v_jpg     = qFunc.getValue('qPath_v_jpg'    )
+qPath_v_detect  = qFunc.getValue('qPath_v_detect' )
+qPath_v_cv      = qFunc.getValue('qPath_v_cv'     )
+qPath_v_photo   = qFunc.getValue('qPath_v_photo'  )
+qPath_v_msg     = qFunc.getValue('qPath_v_msg'    )
+qPath_d_ctrl    = qFunc.getValue('qPath_d_ctrl'   )
+qPath_d_prtscn  = qFunc.getValue('qPath_d_prtscn' )
+qPath_d_movie   = qFunc.getValue('qPath_d_movie'  )
+qPath_d_play    = qFunc.getValue('qPath_d_play'   )
 
-qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
-qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
-qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
-qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
-qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
-qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
-qBusy_s_ctrl   = qFunc.getValue('qBusy_s_ctrl'  )
-qBusy_s_inp    = qFunc.getValue('qBusy_s_inp'   )
-qBusy_s_wav    = qFunc.getValue('qBusy_s_wav'   )
-qBusy_s_STT    = qFunc.getValue('qBusy_s_STT'   )
-qBusy_s_TTS    = qFunc.getValue('qBusy_s_TTS'   )
-qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
-qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
-qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
-qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
-qBusy_v_QR     = qFunc.getValue('qBusy_v_QR'    )
-qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
-qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
-qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
-qBusy_d_inp    = qFunc.getValue('qBusy_d_inp'   )
-qBusy_d_QR     = qFunc.getValue('qBusy_d_QR'    )
-qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
-qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
-qBusy_d_web    = qFunc.getValue('qBusy_d_web'   )
+qBusy_dev_cpu   = qFunc.getValue('qBusy_dev_cpu'  )
+qBusy_dev_com   = qFunc.getValue('qBusy_dev_com'  )
+qBusy_dev_mic   = qFunc.getValue('qBusy_dev_mic'  )
+qBusy_dev_spk   = qFunc.getValue('qBusy_dev_spk'  )
+qBusy_dev_cam   = qFunc.getValue('qBusy_dev_cam'  )
+qBusy_dev_dsp   = qFunc.getValue('qBusy_dev_dsp'  )
+qBusy_s_ctrl    = qFunc.getValue('qBusy_s_ctrl'   )
+qBusy_s_inp     = qFunc.getValue('qBusy_s_inp'    )
+qBusy_s_wav     = qFunc.getValue('qBusy_s_wav'    )
+qBusy_s_STT     = qFunc.getValue('qBusy_s_STT'    )
+qBusy_s_TTS     = qFunc.getValue('qBusy_s_TTS'    )
+qBusy_s_TRA     = qFunc.getValue('qBusy_s_TRA'    )
+qBusy_s_play    = qFunc.getValue('qBusy_s_play'   )
+qBusy_v_ctrl    = qFunc.getValue('qBusy_v_ctrl'   )
+qBusy_v_inp     = qFunc.getValue('qBusy_v_inp'    )
+qBusy_v_QR      = qFunc.getValue('qBusy_v_QR'     )
+qBusy_v_jpg     = qFunc.getValue('qBusy_v_jpg'    )
+qBusy_v_CV      = qFunc.getValue('qBusy_v_CV'     )
+qBusy_d_ctrl    = qFunc.getValue('qBusy_d_ctrl'   )
+qBusy_d_inp     = qFunc.getValue('qBusy_d_inp'    )
+qBusy_d_QR      = qFunc.getValue('qBusy_d_QR'     )
+qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
+qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
+qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
 
 
@@ -127,7 +127,7 @@ class proc_controls:
         self.run_vision    = True
         self.run_desktop   = True
         self.run_bgm       = True
-        self.run_web       = True
+        self.run_browser   = True
         self.run_player    = True
         self.run_chatting  = True
         self.run_knowledge = True
@@ -378,8 +378,8 @@ class proc_controls:
         #    qFunc.txtsWrite(qCtrl_control_desktop  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_bgm       == True):
             qFunc.txtsWrite(qCtrl_control_bgm       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
-        if (self.run_web       == True):
-            qFunc.txtsWrite(qCtrl_control_web       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+        if (self.run_browser   == True):
+            qFunc.txtsWrite(qCtrl_control_browser   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_player    == True):
             qFunc.txtsWrite(qCtrl_control_player    ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_chatting  == True):
@@ -446,12 +446,12 @@ class proc_controls:
 
             elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
             and (proc_text.find(u'開始') >= 0):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_web_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_browser_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = True
 
             elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
             and (proc_text.find(u'終了') >= 0):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_web_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_browser_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = False
 
             elif ((proc_text.find(u'動画') >= 0) and (proc_text.find(u'開始') >= 0)):

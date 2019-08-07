@@ -24,7 +24,7 @@ import urllib.parse
 
 
 
-qCtrl_web   = 'temp/control_web_control.txt'
+qCtrl_browser   = 'temp/control_browser_control.txt'
 
 
 
@@ -32,60 +32,60 @@ qCtrl_web   = 'temp/control_web_control.txt'
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
-qOS            = qFunc.getValue('qOS'           )
-qHOSTNAME      = qFunc.getValue('qHOSTNAME'     )
-qPath_log      = qFunc.getValue('qPath_log'     )
-qPath_work     = qFunc.getValue('qPath_work'    )
-qPath_rec      = qFunc.getValue('qPath_rec'     )
+qOS             = qFunc.getValue('qOS'            )
+qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_log       = qFunc.getValue('qPath_log'      )
+qPath_work      = qFunc.getValue('qPath_work'     )
+qPath_rec       = qFunc.getValue('qPath_rec'      )
 
-qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
-qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
-qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
-qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
-qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
-qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
-qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
-qPath_s_play   = qFunc.getValue('qPath_s_play'  )
-qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
-qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
-qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
-qPath_v_detect = qFunc.getValue('qPath_v_detect')
-qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
-qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
-qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
-qPath_d_ctrl   = qFunc.getValue('qPath_d_ctrl'  )
-qPath_d_prtscn = qFunc.getValue('qPath_d_prtscn')
-qPath_d_movie  = qFunc.getValue('qPath_d_movie' )
-qPath_d_play   = qFunc.getValue('qPath_d_play' )
+qPath_s_ctrl    = qFunc.getValue('qPath_s_ctrl'   )
+qPath_s_inp     = qFunc.getValue('qPath_s_inp'    )
+qPath_s_wav     = qFunc.getValue('qPath_s_wav'    )
+qPath_s_jul     = qFunc.getValue('qPath_s_jul'    )
+qPath_s_STT     = qFunc.getValue('qPath_s_STT'    )
+qPath_s_TTS     = qFunc.getValue('qPath_s_TTS'    )
+qPath_s_TRA     = qFunc.getValue('qPath_s_TRA'    )
+qPath_s_play    = qFunc.getValue('qPath_s_play'   )
+qPath_v_ctrl    = qFunc.getValue('qPath_v_ctrl'   )
+qPath_v_inp     = qFunc.getValue('qPath_v_inp'    )
+qPath_v_jpg     = qFunc.getValue('qPath_v_jpg'    )
+qPath_v_detect  = qFunc.getValue('qPath_v_detect' )
+qPath_v_cv      = qFunc.getValue('qPath_v_cv'     )
+qPath_v_photo   = qFunc.getValue('qPath_v_photo'  )
+qPath_v_msg     = qFunc.getValue('qPath_v_msg'    )
+qPath_d_ctrl    = qFunc.getValue('qPath_d_ctrl'   )
+qPath_d_prtscn  = qFunc.getValue('qPath_d_prtscn' )
+qPath_d_movie   = qFunc.getValue('qPath_d_movie'  )
+qPath_d_play    = qFunc.getValue('qPath_d_play'   )
 
-qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
-qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
-qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
-qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
-qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
-qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
-qBusy_s_ctrl   = qFunc.getValue('qBusy_s_ctrl'  )
-qBusy_s_inp    = qFunc.getValue('qBusy_s_inp'   )
-qBusy_s_wav    = qFunc.getValue('qBusy_s_wav'   )
-qBusy_s_STT    = qFunc.getValue('qBusy_s_STT'   )
-qBusy_s_TTS    = qFunc.getValue('qBusy_s_TTS'   )
-qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
-qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
-qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
-qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
-qBusy_v_QR     = qFunc.getValue('qBusy_v_QR'    )
-qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
-qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
-qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
-qBusy_d_inp    = qFunc.getValue('qBusy_d_inp'   )
-qBusy_d_QR     = qFunc.getValue('qBusy_d_QR'    )
-qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
-qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
-qBusy_d_web    = qFunc.getValue('qBusy_d_web'   )
+qBusy_dev_cpu   = qFunc.getValue('qBusy_dev_cpu'  )
+qBusy_dev_com   = qFunc.getValue('qBusy_dev_com'  )
+qBusy_dev_mic   = qFunc.getValue('qBusy_dev_mic'  )
+qBusy_dev_spk   = qFunc.getValue('qBusy_dev_spk'  )
+qBusy_dev_cam   = qFunc.getValue('qBusy_dev_cam'  )
+qBusy_dev_dsp   = qFunc.getValue('qBusy_dev_dsp'  )
+qBusy_s_ctrl    = qFunc.getValue('qBusy_s_ctrl'   )
+qBusy_s_inp     = qFunc.getValue('qBusy_s_inp'    )
+qBusy_s_wav     = qFunc.getValue('qBusy_s_wav'    )
+qBusy_s_STT     = qFunc.getValue('qBusy_s_STT'    )
+qBusy_s_TTS     = qFunc.getValue('qBusy_s_TTS'    )
+qBusy_s_TRA     = qFunc.getValue('qBusy_s_TRA'    )
+qBusy_s_play    = qFunc.getValue('qBusy_s_play'   )
+qBusy_v_ctrl    = qFunc.getValue('qBusy_v_ctrl'   )
+qBusy_v_inp     = qFunc.getValue('qBusy_v_inp'    )
+qBusy_v_QR      = qFunc.getValue('qBusy_v_QR'     )
+qBusy_v_jpg     = qFunc.getValue('qBusy_v_jpg'    )
+qBusy_v_CV      = qFunc.getValue('qBusy_v_CV'     )
+qBusy_d_ctrl    = qFunc.getValue('qBusy_d_ctrl'   )
+qBusy_d_inp     = qFunc.getValue('qBusy_d_inp'    )
+qBusy_d_QR      = qFunc.getValue('qBusy_d_QR'     )
+qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
+qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
+qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
 
 
-def web_open(runMode, inpText, url='', ):
+def browser_open(runMode, inpText, url='', ):
     #url   = ''
     title = ''
     text  = ''
@@ -177,23 +177,23 @@ if (__name__ == '__main__'):
     qFunc.logOutput(qLogFile, )
 
     qFunc.logOutput('')
-    qFunc.logOutput('web_main__:init')
-    qFunc.logOutput('web_main__:exsample.py runMode, inpFile, ')
+    qFunc.logOutput('browser_main__:init')
+    qFunc.logOutput('browser_main__:exsample.py runMode, inpFile, ')
 
     runMode = 'debug'
-    inpFile = qCtrl_web
+    inpFile = qCtrl_browser
 
     if (len(sys.argv) >= 2):
         runMode  = sys.argv[1]
     if (len(sys.argv) >= 3):
         inpFile  = sys.argv[2]
 
-    qFunc.logOutput('web_main__:runMode  =' + str(runMode  ))
-    qFunc.logOutput('web_main__:inpFile  =' + str(inpFile  ))
+    qFunc.logOutput('browser_main__:runMode  =' + str(runMode  ))
+    qFunc.logOutput('browser_main__:inpFile  =' + str(inpFile  ))
 
     tmpFile = inpFile[:-4] + '.tmp'
 
-    qFunc.logOutput('web_main__:start')
+    qFunc.logOutput('browser_main__:start')
 
 
 
@@ -202,7 +202,7 @@ if (__name__ == '__main__'):
 
     #url='https://google.co.jp'
     url='https://www.pscp.tv/search?q=konsan1101'
-    web_open(runMode=runMode, inpText='', url=url, )
+    browser_open(runMode=runMode, inpText='', url=url, )
     time.sleep(3.00)
 
     main_start = time.time()
@@ -236,7 +236,7 @@ if (__name__ == '__main__'):
                     if (inpText != '') and (inpText != '!'):
                         main_last = time.time()
                         #qFunc.logOutput(u'★KONSAN : [' + str(inpText) + ']')
-                        web_open(runMode=runMode, inpText=inpText, url='', )
+                        browser_open(runMode=runMode, inpText=inpText, url='', )
 
         except:
             pass
@@ -245,7 +245,7 @@ if (__name__ == '__main__'):
 
 
 
-    qFunc.logOutput('web_main__:terminate')
+    qFunc.logOutput('browser_main__:terminate')
 
     if (os.name == 'nt'):
         #qFunc.kill('iexplore', )
@@ -259,7 +259,7 @@ if (__name__ == '__main__'):
     wrkText = u'ブラウザー制御機能を終了しました。'
     qFunc.tts('webcontrol.99', wrkText, )
 
-    qFunc.logOutput('web_main__:bye!')
+    qFunc.logOutput('browser_main__:bye!')
 
 
 

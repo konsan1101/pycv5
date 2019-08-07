@@ -29,7 +29,7 @@ qPython_playVoice  = '_v5_speech_playvoice.py'
 qPython_vision     = '_v5_vision__capture.py'
 
 qPython_bgm        = '_v5_sub_bgm_control.py'
-qPython_web        = '_v5_sub_web_control.py'
+qPython_browser    = '_v5_sub_browser_control.py'
 qPython_chatting   = '_v5_sub_chatting_control.py'
 qPython_knowledge  = '_v5_sub_knowledge_control.py'
 qPython_selfcheck  = '_v5_sub_self_check.py'
@@ -39,7 +39,7 @@ qPython_weather    = '_v5_sub_weather_search.py'
 
 qCtrl_vision       = 'temp/control_vision.txt'
 qCtrl_bgm          = 'temp/control_bgm_control.txt'
-qCtrl_web          = 'temp/control_web_control.txt'
+qCtrl_browser      = 'temp/control_browser_control.txt'
 qCtrl_chatting     = 'temp/control_chatting.txt'
 qCtrl_knowledge    = 'temp/control_knowledge.txt'
 qCtrl_recognize    = 'temp/control_recognize.txt'
@@ -51,56 +51,56 @@ qCtrl_translate    = 'temp/control_translate.txt'
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
-qOS            = qFunc.getValue('qOS'           )
-qHOSTNAME      = qFunc.getValue('qHOSTNAME'     )
-qPath_log      = qFunc.getValue('qPath_log'     )
-qPath_work     = qFunc.getValue('qPath_work'    )
-qPath_rec      = qFunc.getValue('qPath_rec'     )
+qOS             = qFunc.getValue('qOS'            )
+qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_log       = qFunc.getValue('qPath_log'      )
+qPath_work      = qFunc.getValue('qPath_work'     )
+qPath_rec       = qFunc.getValue('qPath_rec'      )
 
-qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
-qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
-qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
-qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
-qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
-qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
-qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
-qPath_s_play   = qFunc.getValue('qPath_s_play'  )
-qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
-qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
-qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
-qPath_v_detect = qFunc.getValue('qPath_v_detect')
-qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
-qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
-qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
-qPath_d_ctrl   = qFunc.getValue('qPath_d_ctrl'  )
-qPath_d_prtscn = qFunc.getValue('qPath_d_prtscn')
-qPath_d_movie  = qFunc.getValue('qPath_d_movie' )
-qPath_d_play   = qFunc.getValue('qPath_d_play' )
+qPath_s_ctrl    = qFunc.getValue('qPath_s_ctrl'   )
+qPath_s_inp     = qFunc.getValue('qPath_s_inp'    )
+qPath_s_wav     = qFunc.getValue('qPath_s_wav'    )
+qPath_s_jul     = qFunc.getValue('qPath_s_jul'    )
+qPath_s_STT     = qFunc.getValue('qPath_s_STT'    )
+qPath_s_TTS     = qFunc.getValue('qPath_s_TTS'    )
+qPath_s_TRA     = qFunc.getValue('qPath_s_TRA'    )
+qPath_s_play    = qFunc.getValue('qPath_s_play'   )
+qPath_v_ctrl    = qFunc.getValue('qPath_v_ctrl'   )
+qPath_v_inp     = qFunc.getValue('qPath_v_inp'    )
+qPath_v_jpg     = qFunc.getValue('qPath_v_jpg'    )
+qPath_v_detect  = qFunc.getValue('qPath_v_detect' )
+qPath_v_cv      = qFunc.getValue('qPath_v_cv'     )
+qPath_v_photo   = qFunc.getValue('qPath_v_photo'  )
+qPath_v_msg     = qFunc.getValue('qPath_v_msg'    )
+qPath_d_ctrl    = qFunc.getValue('qPath_d_ctrl'   )
+qPath_d_prtscn  = qFunc.getValue('qPath_d_prtscn' )
+qPath_d_movie   = qFunc.getValue('qPath_d_movie'  )
+qPath_d_play    = qFunc.getValue('qPath_d_play'   )
 
-qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
-qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
-qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
-qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
-qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
-qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
-qBusy_s_ctrl   = qFunc.getValue('qBusy_s_ctrl'  )
-qBusy_s_inp    = qFunc.getValue('qBusy_s_inp'   )
-qBusy_s_wav    = qFunc.getValue('qBusy_s_wav'   )
-qBusy_s_STT    = qFunc.getValue('qBusy_s_STT'   )
-qBusy_s_TTS    = qFunc.getValue('qBusy_s_TTS'   )
-qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
-qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
-qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
-qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
-qBusy_v_QR     = qFunc.getValue('qBusy_v_QR'    )
-qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
-qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
-qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
-qBusy_d_inp    = qFunc.getValue('qBusy_d_inp'   )
-qBusy_d_QR     = qFunc.getValue('qBusy_d_QR'    )
-qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
-qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
-qBusy_d_web    = qFunc.getValue('qBusy_d_web'   )
+qBusy_dev_cpu   = qFunc.getValue('qBusy_dev_cpu'  )
+qBusy_dev_com   = qFunc.getValue('qBusy_dev_com'  )
+qBusy_dev_mic   = qFunc.getValue('qBusy_dev_mic'  )
+qBusy_dev_spk   = qFunc.getValue('qBusy_dev_spk'  )
+qBusy_dev_cam   = qFunc.getValue('qBusy_dev_cam'  )
+qBusy_dev_dsp   = qFunc.getValue('qBusy_dev_dsp'  )
+qBusy_s_ctrl    = qFunc.getValue('qBusy_s_ctrl'   )
+qBusy_s_inp     = qFunc.getValue('qBusy_s_inp'    )
+qBusy_s_wav     = qFunc.getValue('qBusy_s_wav'    )
+qBusy_s_STT     = qFunc.getValue('qBusy_s_STT'    )
+qBusy_s_TTS     = qFunc.getValue('qBusy_s_TTS'    )
+qBusy_s_TRA     = qFunc.getValue('qBusy_s_TRA'    )
+qBusy_s_play    = qFunc.getValue('qBusy_s_play'   )
+qBusy_v_ctrl    = qFunc.getValue('qBusy_v_ctrl'   )
+qBusy_v_inp     = qFunc.getValue('qBusy_v_inp'    )
+qBusy_v_QR      = qFunc.getValue('qBusy_v_QR'     )
+qBusy_v_jpg     = qFunc.getValue('qBusy_v_jpg'    )
+qBusy_v_CV      = qFunc.getValue('qBusy_v_CV'     )
+qBusy_d_ctrl    = qFunc.getValue('qBusy_d_ctrl'   )
+qBusy_d_inp     = qFunc.getValue('qBusy_d_inp'    )
+qBusy_d_QR      = qFunc.getValue('qBusy_d_QR'     )
+qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
+qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
+qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
 qApiInp    = 'free'
 qApiTrn    = 'free'
@@ -187,7 +187,7 @@ def control_speech(seq, fileId, runMode, micDev, useApiTrn, useApiOut, inpLang, 
 
 locked_ai         = False
 bgm_control       = None
-web_control       = None
+browser_control   = None
 chatting_control  = None
 knowledge_control = None
 vision_control    = None
@@ -202,7 +202,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
     global locked_ai
     global bgm_control
-    global web_control
+    global browser_control
     global chatting_control
     global knowledge_control
     global vision_control
@@ -211,7 +211,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
     procText      = cmdtxt
     cmdBgm        = ''
-    cmdWeb        = ''
+    cmdBrowser    = ''
     cmdChatting   = ''
     cmdKnowledge  = ''
     cmdVision     = ''
@@ -250,7 +250,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
             if (procText == u'システム終了' or procText == u'バルス'):
                 cmdBgm       = '_close_'
-                cmdWeb       = '_close_'
+                cmdBrowser   = '_close_'
                 cmdChatting  = '_close_'
                 cmdKnowledge = '_close_'
                 cmdVision    = '_close_'
@@ -288,13 +288,13 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             or (procText == 'browser') \
             or (procText == 'web browser') \
             or (procText == 'periscope'):
-                cmdWeb = '_open_'
+                cmdBowser = '_open_'
 
             if ((procText.find('browser')>=0) and (procText.find('end'  )>=0)) \
             or ((procText.find('browser')>=0) and (procText.find('stop' )>=0)) \
             or ((procText.find('browser')>=0) and (procText.find('close')>=0)) \
             or ((procText.find('browser')>=0) and (procText.find('exit' )>=0)):
-                cmdWeb = '_close_'
+                cmdBrowser = '_close_'
 
             if ((procText.find('chat')>=0) and (procText.find('start')>=0)) \
             or (procText == 'chat'):
@@ -346,7 +346,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
             if (procText == 'reset'):
                 cmdBgm       = '_close_'
-                cmdWeb       = '_close_'
+                cmdBrowser   = '_close_'
                 cmdChatting  = '_close_'
                 cmdKnowledge = '_close_'
                 cmdVision    = '_close_'
@@ -354,7 +354,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
 
         if (cmdBgm       != '') \
-        or (cmdWeb       != '') \
+        or (cmdBrowser   != '') \
         or (cmdChatting  != '') \
         or (cmdKnowledge != '') \
         or (cmdVision    != '') \
@@ -424,12 +424,12 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
                     except:
                         w = None
 
-            if (not web_control is None):
-                if (cmdWeb != ''):
+            if (not browser_control is None):
+                if (cmdBrowser != ''):
                     try:
-                        print ('web control' + cmdWeb)
-                        w = codecs.open(qCtrl_web, 'w', 'shift_jis')
-                        w.write(cmdWeb)
+                        print ('browser control' + cmdBrowser)
+                        w = codecs.open(qCtrl_browser, 'w', 'shift_jis')
+                        w.write(cmdBrowser)
                         w.close()
                         w = None
                     except:
@@ -467,11 +467,11 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
         else:
 
-            if (not web_control is None):
+            if (not browser_control is None):
                 if (cmdLang == 'ja'):
                     try:
-                        print ('web control' + procText)
-                        w = codecs.open(qCtrl_web, 'w', 'shift_jis')
+                        print ('browser control' + procText)
+                        w = codecs.open(qCtrl_browser, 'w', 'shift_jis')
                         w.write(procText)
                         w.close()
                         w = None
@@ -533,19 +533,19 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
 
 
-    if (cmdWeb == '_open_'):
-        if (web_control is None):
-            web_control = subprocess.Popen(['python', qPython_web, runMode, qCtrl_web, ], )
+    if (cmdBrowser == '_open_'):
+        if (browser_control is None):
+            browser_control = subprocess.Popen(['python', qPython_browser, runMode, qCtrl_browser, ], )
                           #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-            #web_control.wait()
-            #web_control.terminate()
-            #web_control = None
+            #browser_control.wait()
+            #browser_control.terminate()
+            #browser_control = None
 
-    if (cmdWeb == '_close_'):
-        if (not web_control is None):
-            web_control.wait()
-            web_control.terminate()
-            web_control = None
+    if (cmdBrowser == '_close_'):
+        if (not browser_control is None):
+            browser_control.wait()
+            browser_control.terminate()
+            browser_control = None
 
 
 
@@ -1249,7 +1249,7 @@ control_beat =0
 control_busy =False
 control_last =0
 control_seq  =0
-#control_web =False
+#control_browser =False
 def proc_control(cn_r, cn_s, ):
     global control_start
     global control_beat
@@ -1257,7 +1257,7 @@ def proc_control(cn_r, cn_s, ):
     global control_last
 
     global control_seq
-    global control_web
+    global control_browser
 
     qFunc.logOutput('speechCtrl:init')
 
@@ -2066,7 +2066,7 @@ def main_init(runMode, micDev, ):
     qFunc.busySet(qBusy_s_play,  False )
 
     qFunc.busySet(qCtrl_bgm,       False )
-    qFunc.busySet(qCtrl_web,       False )
+    qFunc.busySet(qCtrl_browser,   False )
     qFunc.busySet(qCtrl_chatting,  False )
     qFunc.busySet(qCtrl_knowledge, False )
     qFunc.busySet(qCtrl_vision,    False )

@@ -32,25 +32,25 @@ qCtrl_control_desktop    = 'temp/control_desktop.txt'
 qCtrl_control_self       = qCtrl_control_main
 
 qCtrl_control_bgm        = 'temp/control_bgm.txt'
-qCtrl_control_web        = 'temp/control_web.txt'
+qCtrl_control_browser    = 'temp/control_browser.txt'
 qCtrl_control_player     = 'temp/control_player.txt'
 qCtrl_control_chatting   = 'temp/control_chatting.txt'
 qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 
 # Python
-qPython_main_speech   = '_v5__main_speech.py'
-qPython_main_vision   = '_v5__main_vision.py'
-qPython_main_desktop  = '_v5__main_desktop.py'
-qPython_bgm           = '_v5__sub_bgm.py'
-qPython_web           = '_v5__sub_web.py'
-qPython_player        = '_v5__sub_player.py'
-qPython_chatting      = '_v5__sub_chatting.py'
-qPython_knowledge     = '_v5__sub_knowledge.py'
+qPython_main_speech      = '_v5__main_speech.py'
+qPython_main_vision      = '_v5__main_vision.py'
+qPython_main_desktop     = '_v5__main_desktop.py'
+qPython_bgm              = '_v5__sub_bgm.py'
+qPython_browser          = '_v5__sub_browser.py'
+qPython_player           = '_v5__sub_player.py'
+qPython_chatting         = '_v5__sub_chatting.py'
+qPython_knowledge        = '_v5__sub_knowledge.py'
 
-qPython_selfcheck     = '_v5_sub_self_check.py'
-qPython_smartSpk      = '_v5_sub_smart_speaker.py'
-qPython_rssSearch     = '_v5_sub_rss_search.py'
-qPython_weather       = '_v5_sub_weather_search.py'
+qPython_selfcheck        = '_v5_sub_self_check.py'
+qPython_smartSpk         = '_v5_sub_smart_speaker.py'
+qPython_rssSearch        = '_v5_sub_rss_search.py'
+qPython_weather          = '_v5_sub_weather_search.py'
 
 
 
@@ -58,56 +58,56 @@ qPython_weather       = '_v5_sub_weather_search.py'
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
-qOS            = qFunc.getValue('qOS'           )
-qHOSTNAME      = qFunc.getValue('qHOSTNAME'     )
-qPath_log      = qFunc.getValue('qPath_log'     )
-qPath_work     = qFunc.getValue('qPath_work'    )
-qPath_rec      = qFunc.getValue('qPath_rec'     )
+qOS             = qFunc.getValue('qOS'            )
+qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_log       = qFunc.getValue('qPath_log'      )
+qPath_work      = qFunc.getValue('qPath_work'     )
+qPath_rec       = qFunc.getValue('qPath_rec'      )
 
-qPath_s_ctrl   = qFunc.getValue('qPath_s_ctrl'  )
-qPath_s_inp    = qFunc.getValue('qPath_s_inp'   )
-qPath_s_wav    = qFunc.getValue('qPath_s_wav'   )
-qPath_s_jul    = qFunc.getValue('qPath_s_jul'   )
-qPath_s_STT    = qFunc.getValue('qPath_s_STT'   )
-qPath_s_TTS    = qFunc.getValue('qPath_s_TTS'   )
-qPath_s_TRA    = qFunc.getValue('qPath_s_TRA'   )
-qPath_s_play   = qFunc.getValue('qPath_s_play'  )
-qPath_v_ctrl   = qFunc.getValue('qPath_v_ctrl'  )
-qPath_v_inp    = qFunc.getValue('qPath_v_inp'   )
-qPath_v_jpg    = qFunc.getValue('qPath_v_jpg'   )
-qPath_v_detect = qFunc.getValue('qPath_v_detect')
-qPath_v_cv     = qFunc.getValue('qPath_v_cv'    )
-qPath_v_photo  = qFunc.getValue('qPath_v_photo' )
-qPath_v_msg    = qFunc.getValue('qPath_v_msg'   )
-qPath_d_ctrl   = qFunc.getValue('qPath_d_ctrl'  )
-qPath_d_prtscn = qFunc.getValue('qPath_d_prtscn')
-qPath_d_movie  = qFunc.getValue('qPath_d_movie' )
-qPath_d_play   = qFunc.getValue('qPath_d_play' )
+qPath_s_ctrl    = qFunc.getValue('qPath_s_ctrl'   )
+qPath_s_inp     = qFunc.getValue('qPath_s_inp'    )
+qPath_s_wav     = qFunc.getValue('qPath_s_wav'    )
+qPath_s_jul     = qFunc.getValue('qPath_s_jul'    )
+qPath_s_STT     = qFunc.getValue('qPath_s_STT'    )
+qPath_s_TTS     = qFunc.getValue('qPath_s_TTS'    )
+qPath_s_TRA     = qFunc.getValue('qPath_s_TRA'    )
+qPath_s_play    = qFunc.getValue('qPath_s_play'   )
+qPath_v_ctrl    = qFunc.getValue('qPath_v_ctrl'   )
+qPath_v_inp     = qFunc.getValue('qPath_v_inp'    )
+qPath_v_jpg     = qFunc.getValue('qPath_v_jpg'    )
+qPath_v_detect  = qFunc.getValue('qPath_v_detect' )
+qPath_v_cv      = qFunc.getValue('qPath_v_cv'     )
+qPath_v_photo   = qFunc.getValue('qPath_v_photo'  )
+qPath_v_msg     = qFunc.getValue('qPath_v_msg'    )
+qPath_d_ctrl    = qFunc.getValue('qPath_d_ctrl'   )
+qPath_d_prtscn  = qFunc.getValue('qPath_d_prtscn' )
+qPath_d_movie   = qFunc.getValue('qPath_d_movie'  )
+qPath_d_play    = qFunc.getValue('qPath_d_play'   )
 
-qBusy_dev_cpu  = qFunc.getValue('qBusy_dev_cpu' )
-qBusy_dev_com  = qFunc.getValue('qBusy_dev_com' )
-qBusy_dev_mic  = qFunc.getValue('qBusy_dev_mic' )
-qBusy_dev_spk  = qFunc.getValue('qBusy_dev_spk' )
-qBusy_dev_cam  = qFunc.getValue('qBusy_dev_cam' )
-qBusy_dev_dsp  = qFunc.getValue('qBusy_dev_dsp' )
-qBusy_s_ctrl   = qFunc.getValue('qBusy_s_ctrl'  )
-qBusy_s_inp    = qFunc.getValue('qBusy_s_inp'   )
-qBusy_s_wav    = qFunc.getValue('qBusy_s_wav'   )
-qBusy_s_STT    = qFunc.getValue('qBusy_s_STT'   )
-qBusy_s_TTS    = qFunc.getValue('qBusy_s_TTS'   )
-qBusy_s_TRA    = qFunc.getValue('qBusy_s_TRA'   )
-qBusy_s_play   = qFunc.getValue('qBusy_s_play'  )
-qBusy_v_ctrl   = qFunc.getValue('qBusy_v_ctrl'  )
-qBusy_v_inp    = qFunc.getValue('qBusy_v_inp'   )
-qBusy_v_QR     = qFunc.getValue('qBusy_v_QR'    )
-qBusy_v_jpg    = qFunc.getValue('qBusy_v_jpg'   )
-qBusy_v_CV     = qFunc.getValue('qBusy_v_CV'    )
-qBusy_d_ctrl   = qFunc.getValue('qBusy_d_ctrl'  )
-qBusy_d_inp    = qFunc.getValue('qBusy_d_inp'   )
-qBusy_d_QR     = qFunc.getValue('qBusy_d_QR'    )
-qBusy_d_rec    = qFunc.getValue('qBusy_d_rec'   )
-qBusy_d_play   = qFunc.getValue('qBusy_d_play'  )
-qBusy_d_web    = qFunc.getValue('qBusy_d_web'   )
+qBusy_dev_cpu   = qFunc.getValue('qBusy_dev_cpu'  )
+qBusy_dev_com   = qFunc.getValue('qBusy_dev_com'  )
+qBusy_dev_mic   = qFunc.getValue('qBusy_dev_mic'  )
+qBusy_dev_spk   = qFunc.getValue('qBusy_dev_spk'  )
+qBusy_dev_cam   = qFunc.getValue('qBusy_dev_cam'  )
+qBusy_dev_dsp   = qFunc.getValue('qBusy_dev_dsp'  )
+qBusy_s_ctrl    = qFunc.getValue('qBusy_s_ctrl'   )
+qBusy_s_inp     = qFunc.getValue('qBusy_s_inp'    )
+qBusy_s_wav     = qFunc.getValue('qBusy_s_wav'    )
+qBusy_s_STT     = qFunc.getValue('qBusy_s_STT'    )
+qBusy_s_TTS     = qFunc.getValue('qBusy_s_TTS'    )
+qBusy_s_TRA     = qFunc.getValue('qBusy_s_TRA'    )
+qBusy_s_play    = qFunc.getValue('qBusy_s_play'   )
+qBusy_v_ctrl    = qFunc.getValue('qBusy_v_ctrl'   )
+qBusy_v_inp     = qFunc.getValue('qBusy_v_inp'    )
+qBusy_v_QR      = qFunc.getValue('qBusy_v_QR'     )
+qBusy_v_jpg     = qFunc.getValue('qBusy_v_jpg'    )
+qBusy_v_CV      = qFunc.getValue('qBusy_v_CV'     )
+qBusy_d_ctrl    = qFunc.getValue('qBusy_d_ctrl'   )
+qBusy_d_inp     = qFunc.getValue('qBusy_d_inp'    )
+qBusy_d_QR      = qFunc.getValue('qBusy_d_QR'     )
+qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
+qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
+qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
 
 
@@ -258,7 +258,7 @@ if __name__ == '__main__':
         qFunc.remove(qCtrl_control_vision    )
         qFunc.remove(qCtrl_control_desktop   )
         qFunc.remove(qCtrl_control_bgm       )
-        qFunc.remove(qCtrl_control_web       )
+        qFunc.remove(qCtrl_control_browser   )
         qFunc.remove(qCtrl_control_chatting  )
         qFunc.remove(qCtrl_control_knowledge )
 
@@ -276,8 +276,8 @@ if __name__ == '__main__':
         main_desktop_switch  = 'off'
         bgm_run              = None
         bgm_switch           = 'off'
-        web_run              = None
-        web_switch           = 'off'
+        browser_run          = None
+        browser_switch       = 'off'
         player_run           = None
         player_switch        = 'off'
         chatting_run         = None
@@ -289,13 +289,13 @@ if __name__ == '__main__':
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'on'
-            web_switch           = 'on'
+            browser_switch       = 'on'
             player_switch        = 'on'
         elif (runMode == 'handsfree'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'on'
-            web_switch           = 'on'
+            browser_switch       = 'on'
             player_switch        = 'on'
         elif (runMode == 'translator'):
             pass
@@ -307,19 +307,19 @@ if __name__ == '__main__':
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'on'
-            web_switch           = 'on'
+            browser_switch       = 'on'
             player_switch        = 'on'
         elif (runMode == 'camera'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'off'
-            web_switch           = 'off'
+            browser_switch       = 'off'
             player_switch        = 'off'
         else:
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'off'
-            web_switch           = 'off'
+            browser_switch       = 'off'
             player_switch        = 'off'
 
     # 起動
@@ -360,10 +360,10 @@ if __name__ == '__main__':
             bgm_switch           = 'on'
         if (control == '_bgm_end_'):
             bgm_switch           = 'off'
-        if (control == '_web_start_'):
-            web_switch           = 'on'
-        if (control == '_web_end_'):
-            web_switch           = 'off'
+        if (control == '_browser_start_'):
+            browser_switch       = 'on'
+        if (control == '_browser_end_'):
+            browser_switch       = 'off'
         if (control == '_player_start_'):
             player_switch        = 'on'
         if (control == '_player_end_'):
@@ -452,18 +452,18 @@ if __name__ == '__main__':
 
             speechs.append({ 'text':u'ＢＧＭ再生機能を、終了しました。', 'wait':0, })
 
-        if (web_run is None) and (web_switch == 'on'):
-            web_run = subprocess.Popen(['python', qPython_web, runMode, ], )
+        if (browser_run is None) and (browser_switch == 'on'):
+            browser_run = subprocess.Popen(['python', qPython_browser, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'ブラウザー連携機能を、起動しました。', 'wait':0, })
 
-        if (not web_run is None) and (web_switch != 'on'):
-            qFunc.txtsWrite(qCtrl_control_web, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        if (not browser_run is None) and (browser_switch != 'on'):
+            qFunc.txtsWrite(qCtrl_control_browser, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
-            #web_run.wait()
-            web_run.terminate()
-            web_run = None
+            #browser_run.wait()
+            browser_run.terminate()
+            browser_run = None
 
             speechs.append({ 'text':u'ブラウザー連携機能を、終了しました。', 'wait':0, })
 
@@ -545,7 +545,7 @@ if __name__ == '__main__':
         qFunc.txtsWrite(qCtrl_control_vision    ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_desktop   ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_web       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_browser   ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_knowledge ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         
@@ -571,10 +571,10 @@ if __name__ == '__main__':
             bgm_run.terminate()
             bgm_run = None
 
-        if (not web_run is None):
-            #web_run.wait()
-            web_run.terminate()
-            web_run = None
+        if (not browser_run is None):
+            #browser_run.wait()
+            browser_run.terminate()
+            browser_run = None
 
         if (not chatting_run is None):
             #chatting_run.wait()
