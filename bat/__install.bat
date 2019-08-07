@@ -39,6 +39,7 @@ ECHO -------------
     python -m pip  install --upgrade grpcio
     python -m pip  install --upgrade grpcio-tools
     python -m pip  install --upgrade feedparser
+    python -m pip  install --upgrade selenium
 
 ECHO;
 ECHO -----
