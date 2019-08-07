@@ -169,6 +169,10 @@ class proc_cvreader:
         # 初期設定
         self.proc_step = '1'
 
+        # ２重読取防止
+        read_last = ''
+        read_time = time.time()
+
         # リーダー
         qrdetector = cv2.QRCodeDetector()
 
@@ -257,8 +261,21 @@ class proc_cvreader:
                         dt, p, qrx = qrdetector.detectAndDecode(gray1)
                         #dt, p, qrx = qrdetector.detectAndDecode(gray2)
 
+                        qr = ''
                         if (dt):
+                            qr = dt
 
+                        read = ''
+                        if (qr != '') and (qr != read_last):
+                            read = qr
+                            read_last = qr
+                            read_time = time.time()
+                        elif (qr != '') and (qr == read_last):
+                            read_time = time.time()
+                        elif (qr == '') and ((time.time() - read_time) > 3):
+                            read_last = ''
+
+                        if (read != ''):
                             qFunc.logOutput(self.proc_id + ':qrcode [' + dt + ']')
                             qFunc.logOutput(self.proc_id + ':version ' + str(((qrx.shape[0] - 21) / 4) + 1))
 
