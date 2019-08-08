@@ -259,6 +259,7 @@ if __name__ == '__main__':
         qFunc.remove(qCtrl_control_desktop   )
         qFunc.remove(qCtrl_control_bgm       )
         qFunc.remove(qCtrl_control_browser   )
+        qFunc.remove(qCtrl_control_player    )
         qFunc.remove(qCtrl_control_chatting  )
         qFunc.remove(qCtrl_control_knowledge )
 
@@ -546,6 +547,7 @@ if __name__ == '__main__':
         qFunc.txtsWrite(qCtrl_control_desktop   ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_browser   ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_player    ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         qFunc.txtsWrite(qCtrl_control_knowledge ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
         
@@ -576,6 +578,11 @@ if __name__ == '__main__':
             browser_run.terminate()
             browser_run = None
 
+        if (not player_run is None):
+            #player_run.wait()
+            player_run.terminate()
+            player_run = None
+
         if (not chatting_run is None):
             #chatting_run.wait()
             chatting_run.terminate()
@@ -589,5 +596,6 @@ if __name__ == '__main__':
         qFunc.logOutput(main_id + ':bye!')
 
         sys.exit(0)
+
 
 

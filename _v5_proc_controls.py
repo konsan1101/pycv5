@@ -465,6 +465,24 @@ class proc_controls:
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_player = False
 
+            elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
+            and (proc_text.find(u'開始') >= 0):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_chatting_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_chatting = True
+
+            elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
+            and (proc_text.find(u'終了') >= 0):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_chatting_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_chatting = False
+
+            elif ((proc_text.find(u'知識') >= 0) and (proc_text.find(u'開始') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_knowledge_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_knowledge = True
+
+            elif ((proc_text.find(u'知識') >= 0) and (proc_text.find(u'終了') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_knowledge_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_knowledge = False
+
 
 
 if __name__ == '__main__':
