@@ -158,7 +158,7 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, ..., ')
 
-    #runMode  debug, handsfree, translator, speech, number, hud, camera,
+    #runMode  debug, handsfree, translator, speech, number, hud, camera, background,
 
     # パラメータ
 
@@ -176,21 +176,24 @@ if __name__ == '__main__':
         if (runMode == 'debug'):
             micType   = 'bluetooth'
             micGuide  = 'on'
+        if (runMode == 'hud'):
+            micType   = 'bluetooth'
+            micGuide  = 'off'
         if (runMode == 'handsfree'):
             micType   = 'bluetooth'
             micGuide  = 'off'
         if (runMode == 'translator'):
             micType   = 'bluetooth'
-            micGuide  = 'display'
+            micGuide  = 'on'
         if (runMode == 'speech') or (runMode == 'number'):
             micType   = 'usb'
-            micGuide  = 'display'
-        if (runMode == 'hud'):
-            micType   = 'bluetooth'
-            micGuide  = 'off'
+            micGuide  = 'on'
         if (runMode == 'camera'):
-            micType   = 'bluetooth'
+            micType   = 'usb'
             micGuide  = 'off'
+        if (runMode == 'background'):
+            micType   = 'usb'
+            micGuide  = 'display'
 
         if (len(sys.argv) >= 3):
             micDev   = str(sys.argv[2]).lower()
@@ -292,6 +295,12 @@ if __name__ == '__main__':
             bgm_switch           = 'on'
             browser_switch       = 'on'
             player_switch        = 'on'
+        elif (runMode == 'hud'):
+            main_vision_switch   = 'on'
+            main_desktop_switch  = 'on'
+            bgm_switch           = 'on'
+            browser_switch       = 'on'
+            player_switch        = 'on'
         elif (runMode == 'handsfree'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
@@ -304,13 +313,13 @@ if __name__ == '__main__':
             pass
         elif (runMode == 'number'):
             pass
-        elif (runMode == 'hud'):
+        elif (runMode == 'camera'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
-            bgm_switch           = 'on'
-            browser_switch       = 'on'
-            player_switch        = 'on'
-        elif (runMode == 'camera'):
+            bgm_switch           = 'off'
+            browser_switch       = 'off'
+            player_switch        = 'off'
+        elif (runMode == 'background'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'off'

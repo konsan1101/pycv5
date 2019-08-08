@@ -44,14 +44,16 @@ ECHO MODE選択（入力無しはhud）
 SET mode=
 SET dev=bluetooth
 SET guide=on
-SET /P mode="1=hud,2=handsfree,3=translator,4=speech,5=camera,："
+SET /P mode="1=hud,2=handsfree,3=translator,4=speech,5=number,6=camera,9=background："
 IF %mode%@==@            SET  mode=hud
 IF %mode%@==1@           SET  mode=hud
 IF %mode%@==2@           SET  mode=handsfree
 IF %mode%@==3@           SET  mode=translator
 IF %mode%@==4@           SET  mode=speech
-IF %mode%@==5@           SET  mode=camera
-IF %mode%@==hud@         SET  dev=usb
+IF %mode%@==5@           SET  mode=number
+IF %mode%@==6@           SET  mode=camera
+IF %mode%@==9@           SET  mode=background
+IF %mode%@==hud@         SET  dev=bluetooth
 IF %mode%@==hud@         SET  guide=off
 IF %mode%@==hud@         GOTO MODEGO
 IF %mode%@==handsfree@   SET  dev=bluetooth
@@ -63,9 +65,15 @@ IF %mode%@==translator@  GOTO MODEGO
 IF %mode%@==speech@      SET  dev=usb
 IF %mode%@==speech@      SET  guide=on
 IF %mode%@==speech@      GOTO MODEGO
+IF %mode%@==number@      SET  dev=usb
+IF %mode%@==number@      SET  guide=on
+IF %mode%@==number@      GOTO MODEGO
 IF %mode%@==camera@      SET  dev=usb
 IF %mode%@==camera@      SET  guide=off
 IF %mode%@==camera@      GOTO MODEGO
+IF %mode%@==background@  SET  dev=usb
+IF %mode%@==background@  SET  guide=display
+IF %mode%@==background@  GOTO MODEGO
 GOTO MODE
 :MODEGO
 ECHO %mode%
@@ -95,5 +103,6 @@ ECHO bye!
 ping localhost -w 1000 -n 5 >nul
 
 EXIT
+
 
 

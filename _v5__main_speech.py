@@ -265,6 +265,10 @@ class main_speech:
             julius_switch    = 'on'
             sttreader_switch = 'on'
             trareader_switch = 'on'
+        if (self.runMode == 'hud'):
+            julius_switch    = 'on'
+            sttreader_switch = 'off'
+            trareader_switch = 'off'
         if (self.runMode == 'handsfree'):
             julius_switch    = 'on'
             sttreader_switch = 'off'
@@ -276,10 +280,6 @@ class main_speech:
         if (self.runMode == 'speech') or (self.runMode == 'number'):
             julius_switch    = 'on'
             sttreader_switch = 'on'
-            trareader_switch = 'off'
-        if (self.runMode == 'hud'):
-            julius_switch    = 'on'
-            sttreader_switch = 'off'
             trareader_switch = 'off'
         if (self.runMode == 'camera'):
             julius_switch    = 'on'
@@ -758,6 +758,9 @@ if __name__ == '__main__':
         if (runMode == 'debug'):
             micType   = 'bluetooth'
             micGuide  = 'on'
+        if (runMode == 'hud'):
+            micType   = 'bluetooth'
+            micGuide  = 'off'
         if (runMode == 'handsfree'):
             micType   = 'bluetooth'
             micGuide  = 'off'
@@ -767,9 +770,6 @@ if __name__ == '__main__':
         if (runMode == 'speech') or (runMode == 'number'):
             micType   = 'usb'
             micGuide  = 'display'
-        if (runMode == 'hud'):
-            micType   = 'bluetooth'
-            micGuide  = 'off'
         if (runMode == 'camera'):
             micType   = 'bluetooth'
             micGuide  = 'off'
