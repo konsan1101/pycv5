@@ -200,17 +200,18 @@ class main_vision:
         self.flag_cancel     = 'off'
         self.flag_background = 'on'
         self.flag_blackwhite = 'black'
-        if (self.runMode == 'debug'):
+
+        if   (self.runMode == 'debug'):
             self.flag_camzoom    = 'on'
             self.flag_dspzoom    = 'on'
             self.flag_enter      = 'on'
             self.flag_cancel     = 'on'
-        if (self.runMode == 'handsfree'):
+        elif (self.runMode == 'hud'):
+            self.flag_blackwhite = 'white'
+        elif (self.runMode == 'handsfree'):
             self.flag_camzoom    = 'on'
             self.flag_dspzoom    = 'on'
-        if (self.runMode == 'hud'):
-            self.flag_blackwhite = 'white'
-        if (self.runMode == 'camera'):
+        elif (self.runMode == 'camera'):
             self.flag_camzoom    = 'on'
             self.flag_enter      = 'on'
             self.flag_cancel     = 'on'
@@ -742,7 +743,7 @@ class main_vision:
                 camera_switch2 = camera_switch2_org
 
             # リセット
-            if (control == 'reset') \
+            if (control == '_reset_') \
             or (control == 'camchange_on'):
                 cam1Stretch     = self.cam1Stretch
                 cam1Rotate      = self.cam1Rotate
@@ -834,7 +835,7 @@ class main_vision:
                     txt2img_thread.put(['flag_blackwhite', flag_blackwhite ])
 
             # シャッター
-            if (control == 'shutter'):
+            if (control == '_shutter_'):
 
                 # 撮影ログ
                 logset = False
@@ -1654,8 +1655,8 @@ if __name__ == '__main__':
 
                     # 左クリック　写真撮影と入力画像をＡＩ画像認識処理へ
                     if (mouse1 == 'l-click') and (mouse2 == 'l'):
-                        control = 'shutter'
-                        main_vision.put(['control', 'shutter'])
+                        control = '_shutter_'
+                        main_vision.put(['control', '_shutter_'])
 
                     # ズーム操作
                     if (mouse2 == 'camzoom-reset'):
@@ -1673,7 +1674,7 @@ if __name__ == '__main__':
 
 
         # シャッター
-        if (control == 'shutter'):
+        if (control == '_shutter_'):
 
             ## 白表示
             display_height, display_width = display_img.shape[:2]

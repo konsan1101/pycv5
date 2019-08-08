@@ -261,29 +261,37 @@ class main_speech:
         trareader_thread = None
         trareader_switch = 'on'
 
-        if (self.runMode == 'debug'):
+        if   (self.runMode == 'debug'):
             julius_switch    = 'on'
             sttreader_switch = 'on'
             trareader_switch = 'on'
-        if (self.runMode == 'hud'):
+        elif (self.runMode == 'hud'):
             julius_switch    = 'on'
             sttreader_switch = 'off'
             trareader_switch = 'off'
-        if (self.runMode == 'handsfree'):
+        elif (self.runMode == 'handsfree'):
             julius_switch    = 'on'
             sttreader_switch = 'off'
             trareader_switch = 'off'
-        if (self.runMode == 'translator'):
+        elif (self.runMode == 'translator'):
             julius_switch    = 'on'
             sttreader_switch = 'off'
             trareader_switch = 'on'
-        if (self.runMode == 'speech') or (self.runMode == 'number'):
+        elif (self.runMode == 'speech'):
             julius_switch    = 'on'
             sttreader_switch = 'on'
             trareader_switch = 'off'
-        if (self.runMode == 'camera'):
+        elif (self.runMode == 'number'):
+            julius_switch    = 'on'
+            sttreader_switch = 'on'
+            trareader_switch = 'off'
+        elif (self.runMode == 'camera'):
             julius_switch    = 'on'
             sttreader_switch = 'off'
+            trareader_switch = 'off'
+        elif (self.runMode == 'background'):
+            julius_switch    = 'on'
+            sttreader_switch = 'on'
             trareader_switch = 'off'
 
         if (not self.micDev.isdigit()):
@@ -735,7 +743,7 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, mic..., ')
 
-    #runMode  debug, handsfree, translator, speech, number, hud, camera,
+    #runMode  debug, hud, handsfree, translator, speech, number, camera, background,
     #micDev   num or file
     #micType  usb or bluetooth
     #micGuide off, on, display, sound
@@ -755,24 +763,30 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 2):
             runMode  = str(sys.argv[1]).lower()
 
-        if (runMode == 'debug'):
+        if   (runMode == 'debug'):
             micType   = 'bluetooth'
             micGuide  = 'on'
-        if (runMode == 'hud'):
+        elif (runMode == 'hud'):
             micType   = 'bluetooth'
             micGuide  = 'off'
-        if (runMode == 'handsfree'):
+        elif (runMode == 'handsfree'):
             micType   = 'bluetooth'
             micGuide  = 'off'
-        if (runMode == 'translator'):
+        elif (runMode == 'translator'):
             micType   = 'bluetooth'
             micGuide  = 'display'
-        if (runMode == 'speech') or (runMode == 'number'):
+        elif (runMode == 'speech'):
             micType   = 'usb'
             micGuide  = 'display'
-        if (runMode == 'camera'):
+        elif (runMode == 'number'):
+            micType   = 'usb'
+            micGuide  = 'display'
+        elif (runMode == 'camera'):
             micType   = 'bluetooth'
             micGuide  = 'off'
+        elif (runMode == 'background'):
+            micType   = 'usb'
+            micGuide  = 'display'
 
         if (len(sys.argv) >= 3):
             micDev   = str(sys.argv[2]).lower()

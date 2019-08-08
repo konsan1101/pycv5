@@ -344,7 +344,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             or ((procText.find('vision')>=0) and (procText.find('exit' )>=0)):
                 cmdVision = '_close_'
 
-            if (procText == 'reset'):
+            if (procText == '_reset_'):
                 cmdBgm       = '_close_'
                 cmdBrowser   = '_close_'
                 cmdChatting  = '_close_'
@@ -1432,7 +1432,7 @@ def proc_control(cn_r, cn_s, ):
 
                                         if (runMode=='debug') or (runMode=='handsfree'):
                                             if (txt == u'デモ紹介') or (txt == u'デモンストレーション'):
-                                                speechtext = u'reset'
+                                                speechtext = u'_reset_'
                                                 control_sub(   '00', 'control', runMode, micDev, speechtext, 'en', )
                                                 speechtext = u'default'
                                                 control_sub(   '01', 'control', runMode, micDev, speechtext, 'en', )

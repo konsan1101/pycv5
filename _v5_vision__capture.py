@@ -955,7 +955,7 @@ def proc_speech(cn_r, cn_s, ):
                         break
                     # シャッター
                     if (inpText == '_shutter_'):
-                        cn_s.put(['SHUTTER', ''])
+                        cn_s.put(['_shutter_', ''])
                         res_put = True
                     # ズームイン
                     if (inpText == '_zoom_in_'):
@@ -2195,7 +2195,7 @@ if (__name__ == '__main__'):
             if (speech_res == 'ERROR'):
                 break_flag = True
 
-            if (speech_res == 'SHUTTER'):
+            if (speech_res == '_shutter_'):
                 shutter_flag = True
 
             if (speech_res == 'ZOOMIN'):
@@ -2301,7 +2301,7 @@ if (__name__ == '__main__'):
                                 qFunc.logOutput('video_main:L-CLICK!')
                                 #break
 
-                # SHUTTER
+                # shutter_
                 if (shutter_flag == True):
                     shutter_flag = False
                     shutter_last = time.time()

@@ -343,18 +343,18 @@ class proc_controlv:
 
             if (proc_text.find(u'リセット') >= 0):
                 out_name  = 'control'
-                out_value = 'reset'
+                out_value = '_reset_'
                 cn_s.put([out_name, out_value])
 
             elif ((proc_text.find(u'システム') >= 0) and (proc_text.find(u'終了') >= 0)) \
             or    (proc_text == u'バルス'):
                 out_name  = 'control'
-                out_value = 'shutdown'
+                out_value = '_shutdown_'
                 cn_s.put([out_name, out_value])
 
             elif (proc_text == u'シャッター') or (proc_text.find(u'撮影') >= 0):
                 out_name  = 'control'
-                out_value = 'shutter'
+                out_value = '_shutter_'
                 cn_s.put([out_name, out_value])
 
             elif (proc_text == u'ズーム') or (proc_text.find(u'ズームイン') >= 0):
@@ -434,7 +434,7 @@ class proc_controlv:
                     cn_s.put([out_name, out_value])
                     time.sleep(1.00)
                 out_name  = 'control'
-                out_value = 'shutter'
+                out_value = '_shutter_'
                 cn_s.put([out_name, out_value])
 
             else:

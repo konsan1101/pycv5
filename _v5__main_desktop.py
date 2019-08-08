@@ -515,7 +515,7 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, mic..., ')
 
-    #runMode  debug, handsfree, translator, speech, number, hud, camera,
+    #runMode  debug, hud, handsfree, translator, speech, number, camera, background,
 
     # パラメータ
 

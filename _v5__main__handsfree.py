@@ -158,7 +158,7 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, ..., ')
 
-    #runMode  debug, handsfree, translator, speech, number, hud, camera, background,
+    #runMode  debug, hud, handsfree, translator, speech, number, camera, background,
 
     # パラメータ
 
@@ -173,25 +173,28 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 2):
             runMode  = str(sys.argv[1]).lower()
 
-        if (runMode == 'debug'):
+        if   (runMode == 'debug'):
             micType   = 'bluetooth'
             micGuide  = 'on'
-        if (runMode == 'hud'):
+        elif (runMode == 'hud'):
             micType   = 'bluetooth'
             micGuide  = 'off'
-        if (runMode == 'handsfree'):
+        elif (runMode == 'handsfree'):
             micType   = 'bluetooth'
             micGuide  = 'off'
-        if (runMode == 'translator'):
+        elif (runMode == 'translator'):
             micType   = 'bluetooth'
             micGuide  = 'on'
-        if (runMode == 'speech') or (runMode == 'number'):
+        elif (runMode == 'speech'):
             micType   = 'usb'
             micGuide  = 'on'
-        if (runMode == 'camera'):
+        elif (runMode == 'number'):
+            micType   = 'usb'
+            micGuide  = 'on'
+        elif (runMode == 'camera'):
             micType   = 'usb'
             micGuide  = 'off'
-        if (runMode == 'background'):
+        elif (runMode == 'background'):
             micType   = 'usb'
             micGuide  = 'display'
 
@@ -320,12 +323,6 @@ if __name__ == '__main__':
             browser_switch       = 'off'
             player_switch        = 'off'
         elif (runMode == 'background'):
-            main_vision_switch   = 'on'
-            main_desktop_switch  = 'on'
-            bgm_switch           = 'off'
-            browser_switch       = 'off'
-            player_switch        = 'off'
-        else:
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'off'

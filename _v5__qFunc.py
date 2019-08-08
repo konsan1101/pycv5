@@ -877,9 +877,9 @@ class qBusy_status_txts_class(object):
         else:
             txts.append(' Speaker: ________')
         if (self.dev_cam == 'busy'):
-            txts.append(' Camera : disable!')
+            txts.append(' camera : disable!')
         else:
-            txts.append(' Camera : ________')
+            txts.append(' camera : ________')
         if (self.dev_dsp == 'busy'):
             txts.append(' Display: disable!')
         else:

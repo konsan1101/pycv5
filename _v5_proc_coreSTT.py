@@ -403,11 +403,6 @@ class proc_coreSTT:
             inpPlay  = 'off'
             txtPlay  = 'off'
             outPlay  = 'off'
-
-        # elif (self.runMode == 'hud') \
-        # or   (self.runMode == 'speech') \
-        # or   (self.runMode == 'number') \
-        # or   (self.runMode == 'camera'):
         else: 
             inpInput = work_file
             inpOutput= qPath_s_STT  + proc_name + '.' + inpLang + '.txt'
