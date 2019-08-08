@@ -789,7 +789,6 @@ class main_vision:
                     camera_thread1.put(['_camzoom_', cam1Zoom ])
             if (control == '_zoomin_') or (control == '_camzoom_zoom_'):
                 cam1Zoom    = '{:.1f}'.format(float(cam1Zoom) + 0.5)
-                print(cam1Zoom)
                 if (not camera_thread1 is None):
                     camera_thread1.put(['_camzoom_', cam1Zoom ])
             if (control == '_stretch_'):
@@ -1660,8 +1659,7 @@ if __name__ == '__main__':
 
                     # ズーム操作
                     if (mouse2 == 'camzoom_reset'):
-                        main_vision.put(['control', '_camzoom_rese_t'])
-                        main_vision.put(['control', '_background_'])
+                        main_vision.put(['control', '_camzoom_reset_'])
                     if (mouse2 == 'camzoom_zoom'):
                         main_vision.put(['control', '_camzoom_zoom_'])
                     if (mouse2 == 'dspzoom_reset'):

@@ -451,7 +451,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ＢＧＭ再生機能を、起動しました。', 'wait':0, })
 
         if (not bgm_run is None) and (bgm_switch != 'on'):
-            qFunc.txtsWrite(qCtrl_control_bgm, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_control_bgm, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
             #bgm_run.wait()
             bgm_run.terminate()
@@ -466,7 +466,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ブラウザー連携機能を、起動しました。', 'wait':0, })
 
         if (not browser_run is None) and (browser_switch != 'on'):
-            qFunc.txtsWrite(qCtrl_control_browser, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_control_browser, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
             #browser_run.wait()
             browser_run.terminate()
@@ -481,7 +481,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'動画連携機能を、起動しました。', 'wait':0, })
 
         if (not player_run is None) and (player_switch != 'on'):
-            qFunc.txtsWrite(qCtrl_control_player, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_control_player, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
             #player_run.wait()
             player_run.terminate()
@@ -496,7 +496,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ドコモ雑談連携機能を、起動しました。', 'wait':0, })
 
         if (not chatting_run is None) and (chatting_switch != 'on'):
-            qFunc.txtsWrite(qCtrl_control_chatting, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_control_chatting, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
             #chatting_run.wait()
             chatting_run.terminate()
@@ -511,7 +511,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ドコモ知識データベースを、起動しました。', 'wait':0, })
 
         if (not knowledge_run is None) and (knowledge_switch != 'on'):
-            qFunc.txtsWrite(qCtrl_control_knowledge, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_control_knowledge, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
             time.sleep(10.00)
             #knowledge_run.wait()
             knowledge_run.terminate()

@@ -249,11 +249,11 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
                 procText = ''
 
             if (procText == u'システム終了' or procText == u'バルス'):
-                cmdBgm       = '_close_'
-                cmdBrowser   = '_close_'
-                cmdChatting  = '_close_'
-                cmdKnowledge = '_close_'
-                cmdVision    = '_close_'
+                cmdBgm       = '_end_'
+                cmdBrowser   = '_end_'
+                cmdChatting  = '_end_'
+                cmdKnowledge = '_end_'
+                cmdVision    = '_end_'
 
         if (cmdLang == 'en'):
             if ((procText.find('play'     )>=0) and (procText.find('list' )>=0)) \
@@ -282,7 +282,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             or ((procText.find('bgm')      >=0) and (procText.find('stop' )>=0)) \
             or ((procText.find('bgm')      >=0) and (procText.find('close')>=0)) \
             or ((procText.find('bgm')      >=0) and (procText.find('exit' )>=0)):
-                cmdBgm = '_close_'
+                cmdBgm = '_end_'
 
             if ((procText.find('browser')>=0) and (procText.find('start')>=0)) \
             or (procText == 'browser') \
@@ -294,7 +294,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             or ((procText.find('browser')>=0) and (procText.find('stop' )>=0)) \
             or ((procText.find('browser')>=0) and (procText.find('close')>=0)) \
             or ((procText.find('browser')>=0) and (procText.find('exit' )>=0)):
-                cmdBrowser = '_close_'
+                cmdBrowser = '_end_'
 
             if ((procText.find('chat')>=0) and (procText.find('start')>=0)) \
             or (procText == 'chat'):
@@ -304,7 +304,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             or ((procText.find('chat')>=0) and (procText.find('stop' )>=0)) \
             or ((procText.find('chat')>=0) and (procText.find('close')>=0)) \
             or ((procText.find('chat')>=0) and (procText.find('exit' )>=0)):
-                cmdChatting = '_close_'
+                cmdChatting = '_end_'
 
             if ((procText.find('knowledge')>=0) and (procText.find('start')>=0)) \
             or (procText == 'knowledge') \
@@ -315,7 +315,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             or ((procText.find('knowledge')>=0) and (procText.find('stop' )>=0)) \
             or ((procText.find('knowledge')>=0) and (procText.find('close')>=0)) \
             or ((procText.find('knowledge')>=0) and (procText.find('exit' )>=0)):
-                cmdKnowledge = '_close_'
+                cmdKnowledge = '_end_'
 
             if ((procText.find('image') >=0) and (procText.find('start')>=0)) \
             or ((procText.find('vision')>=0) and (procText.find('start')>=0)) \
@@ -342,14 +342,14 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             or ((procText.find('vision')>=0) and (procText.find('stop' )>=0)) \
             or ((procText.find('vision')>=0) and (procText.find('close')>=0)) \
             or ((procText.find('vision')>=0) and (procText.find('exit' )>=0)):
-                cmdVision = '_close_'
+                cmdVision = '_end_'
 
             if (procText == '_reset_'):
-                cmdBgm       = '_close_'
-                cmdBrowser   = '_close_'
-                cmdChatting  = '_close_'
-                cmdKnowledge = '_close_'
-                cmdVision    = '_close_'
+                cmdBgm       = '_end_'
+                cmdBrowser   = '_end_'
+                cmdChatting  = '_end_'
+                cmdKnowledge = '_end_'
+                cmdVision    = '_end_'
 
 
 
@@ -415,7 +415,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
                  if (cmdBgm != ''):
                     try:
                         w = codecs.open(qCtrl_bgm, 'w', 'shift_jis')
-                        if (cmdBgm != '_close_'):
+                        if (cmdBgm != '_end_'):
                             w.write(procText)
                         else:
                             w.write(cmdBgm)
@@ -525,7 +525,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             #bgm_control.terminate()
             #bgm_control = None
 
-    if (cmdBgm == '_close_'):
+    if (cmdBgm == '_end_'):
         if (not bgm_control is None):
             bgm_control.wait()
             bgm_control.terminate()
@@ -541,7 +541,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             #browser_control.terminate()
             #browser_control = None
 
-    if (cmdBrowser == '_close_'):
+    if (cmdBrowser == '_end_'):
         if (not browser_control is None):
             browser_control.wait()
             browser_control.terminate()
@@ -557,7 +557,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             #chatting_control.terminate()
             #chatting_control = None
 
-    if (cmdChatting == '_close_'):
+    if (cmdChatting == '_end_'):
         if (not chatting_control is None):
             chatting_control.wait()
             chatting_control.terminate()
@@ -573,7 +573,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             #knowledge_control.terminate()
             #knowledge_control = None
 
-    if (cmdKnowledge == '_close_'):
+    if (cmdKnowledge == '_end_'):
         if (not knowledge_control is None):
             knowledge_control.wait()
             knowledge_control.terminate()
@@ -589,7 +589,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             #vision_control.terminate()
             #vision_control = None
 
-    if (cmdVision == '_close_'):
+    if (cmdVision == '_end_'):
         if (not vision_control is None):
             vision_control.wait()
             vision_control.terminate()

@@ -385,7 +385,7 @@ if __name__ == '__main__':
 
             # テスト終了
             if  ((time.time() - main_start) > 30):
-                qFunc.txtsWrite(qCtrl_control_self ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_self ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # アイドリング
         if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):

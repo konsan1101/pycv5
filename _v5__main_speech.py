@@ -531,7 +531,7 @@ class main_speech:
                 if (not self.micDev.isdigit()):
                     if  ((time.time() - coreSTT_thread.proc_last) > 120) \
                     and ((time.time() - coreTTS_thread.proc_last) > 120):
-                        qFunc.txtsWrite(qCtrl_control_self, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                        qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                         break
 
                 # 制御処理

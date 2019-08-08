@@ -948,7 +948,7 @@ def proc_speech(cn_r, cn_s, ):
                     except:
                         pass
                     # 終了
-                    if (inpText == '_close_'):
+                    if (inpText == '_end_'):
                         cn_s.put(['END', ''])
                         time.sleep( 5.00)
                         res_put = True
