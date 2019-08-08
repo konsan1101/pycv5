@@ -1,6 +1,6 @@
 @ECHO OFF
 
-ECHO _close_>"temp\control_desktop.tmp"
+ECHO _end_>"temp\control_desktop.tmp"
 rename "temp\control_desktop.tmp" "control_desktop.txt"
 
 ECHO;
