@@ -252,7 +252,7 @@ class main_vision:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -264,8 +264,8 @@ class main_vision:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -635,7 +635,7 @@ class main_vision:
                     speechs.append({ 'text':u'「ＡＩ画像認識」の機能が有効になりました。', 'wait':0, })
 
             if (not coreCV_thread is None) and (coreCV_switch != 'on'):
-                coreCV_thread.stop()                
+                coreCV_thread.stop()
                 del coreCV_thread
                 coreCV_thread = None
 
@@ -1171,13 +1171,13 @@ class main_vision:
                     del yolo_torch_thread[i]
                     yolo_torch_thread[i] = None
 
-            if (not vin2jpg_thread is None):                    
+            if (not vin2jpg_thread is None):
                 vin2jpg_thread.stop()
                 del vin2jpg_thread
                 vin2jpg_thread = None
 
             if (not coreCV_thread is None):
-                coreCV_thread.stop()                
+                coreCV_thread.stop()
                 del coreCV_thread
                 coreCV_thread = None
 
@@ -1252,7 +1252,7 @@ class main_vision:
     def check_mouse_click(self, DisplayEvent, MousePointX, MousePointY, ):
         # R-CLICK
         if (DisplayEvent == cv2.EVENT_RBUTTONDOWN):
-            return 'r-click', 'r'
+            return 'click_r', 'r'
         # L-CLICK
         if (DisplayEvent == cv2.EVENT_LBUTTONUP):
             # ENTER,CANCEL
@@ -1260,30 +1260,30 @@ class main_vision:
                 if   (MousePointY < 80):
                     if   (self.flag_camzoom == 'on') \
                     and  (MousePointX >= 0) and (MousePointX <= 125):
-                        return 'l-click', 'camzoom-reset'
+                        return 'click_l', 'camzoom_reset'
                     elif (self.flag_camzoom == 'on') \
                     and  (MousePointX > 125) and (MousePointX <= 250):
-                        return 'l-click', 'camzoom-zoom'
+                        return 'click_l', 'camzoom_zoom'
                     elif (self.flag_dspzoom == 'on') \
                     and  (MousePointX >= self.dspWidth - 250) and (MousePointX <= self.dspWidth - 125):
-                        return 'l-click', 'dspzoom-reset'
+                        return 'click_l', 'dspzoom_reset'
                     elif (self.flag_dspzoom == 'on') \
                     and  (MousePointX > self.dspWidth -125):
-                        return 'l-click', 'dspzoom-zoom'
+                        return 'click_l', 'dspzoom_zoom'
                     else:
-                        return 'l-click', 'l'
+                        return 'click_l', 'l'
                 elif (MousePointY >= 80) \
                 and  (MousePointY <= self.dspHeight-150):
-                        return 'l-click', 'l'
+                        return 'click_l', 'l'
                 elif (MousePointY >  self.dspHeight-150):
                     if   (self.flag_cancel == 'on') \
                     and  (MousePointX >= 0) and (MousePointX <= 350):
-                        return 'l-click', 'cancel'
+                        return 'click_l', 'cancel'
                     elif (self.flag_enter == 'on') \
                     and  (MousePointX >= self.dspWidth - 350) and (MousePointX <= self.dspWidth):
-                        return 'l-click', 'enter'
+                        return 'click_l', 'enter'
                     else:
-                        return 'l-click', 'l'
+                        return 'click_l', 'l'
         # OTHER
         return '', ''
 
@@ -1654,20 +1654,20 @@ if __name__ == '__main__':
                         control = mouse2
 
                     # 左クリック　写真撮影と入力画像をＡＩ画像認識処理へ
-                    if (mouse1 == 'l-click') and (mouse2 == 'l'):
+                    if (mouse1 == 'click_l') and (mouse2 == 'l'):
                         control = '_shutter_'
-                        main_vision.put(['control', '_shutter_'])
+                        main_vision.put(['control', control])
 
                     # ズーム操作
-                    if (mouse2 == 'camzoom-reset'):
-                        main_vision.put(['control', 'camzoom-reset'])
+                    if (mouse2 == 'camzoom_reset'):
+                        main_vision.put(['control', 'camzoom_reset'])
                         main_vision.put(['control', 'background'])
-                    if (mouse2 == 'camzoom-zoom'):
-                        main_vision.put(['control', 'camzoom-zoom'])
-                    if (mouse2 == 'dspzoom-reset'):
-                        main_vision.put(['control', 'dspzoom-reset'])
-                    if (mouse2 == 'dspzoom-zoom'):
-                        main_vision.put(['control', 'dspzoom-zoom'])
+                    if (mouse2 == 'camzoom_zoom'):
+                        main_vision.put(['control', 'camzoom_zoom'])
+                    if (mouse2 == 'dspzoom_reset'):
+                        main_vision.put(['control', 'dspzoom_reset'])
+                    if (mouse2 == 'dspzoom_zoom'):
+                        main_vision.put(['control', 'dspzoom_zoom'])
 
                 break
 

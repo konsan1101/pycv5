@@ -324,8 +324,8 @@ class main_class:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -459,18 +459,18 @@ class main_class:
 
             pass
 
-        elif (proc_text.lower() == 'demo0-'):
+        elif (proc_text.lower() == '_demo0-'):
             path0 = u'C:/Users/Public/_m4v__Clip/Perfume'
             self.sub_start(path0, panel='0' , vol=0  , order='normal', loop=1, )
             self.sub_start(path0, panel='0-', vol=100, order='top'   , loop=1, )
 
-        elif (proc_text.lower() == 'demo1397'):
+        elif (proc_text.lower() == '_demo1397'):
             path0 = u'C:/Users/Public/_動画_AppleTV'
             path1 = u'C:/Users/Public/_m4v__Clip/Perfume'
             self.sub_start(path0, panel='0'   , vol=0  , order='normal', loop=99, )
             self.sub_start(path1, panel='1397', vol=100, order='top'   , loop=99, )
 
-        elif (proc_text.lower() == 'demo1234'):
+        elif (proc_text.lower() == '_demo1234'):
             path0 = u'C:/Users/Public/_m4v__Clip/etc'
             path1 = u'C:/Users/Public/_m4v__Clip/Perfume'
             path2 = u'C:/Users/Public/_m4v__Clip/BABYMETAL'
@@ -482,7 +482,7 @@ class main_class:
             self.sub_start(path3, panel='37', vol=0  , order='normal', loop=99, )
             self.sub_start(path4, panel='46', vol=0  , order='normal', loop=99, )
 
-        elif (proc_text.lower() == 'test'):
+        elif (proc_text.lower() == '_test'):
             path0 = u'C:/Users/Public/_動画_AppleTV'
             path1 = u'C:/Users/Public/_m4v__Clip/Perfume'
             path2 = u'C:/Users/Public/_m4v__Clip/BABYMETAL'
@@ -681,10 +681,10 @@ if __name__ == '__main__':
             if (runMode == 'debug'):
                 #t = u'C:/Users/Public/_m4v__Clip/Perfume/Perfume_FLASH.m4v'
                 #t = u'C:/Users/Public/_m4v__Clip/Perfume'
-                #t = u'demo0-'   # base + center
-                #t = u'demo1397' # base + 1,3,9,7
-                #t = u'demo1234' # base + 1234,6789
-                t = u'test'      # base + 1-9
+                #t = u'_demo0-'   # base + center
+                #t = u'_demo1397' # base + 1,3,9,7
+                #t = u'_demo1234' # base + 1234,6789
+                t = u'_test'      # base + 1-9
                 qFunc.txtsWrite(qCtrl_control_self ,txts=[t], encoding='utf-8', exclusive=True, mode='w', )
 
         # デバッグ

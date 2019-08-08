@@ -283,8 +283,8 @@ class proc_yolo_torch:
                 img2 = torch.from_numpy(img_).float().div(255.0).unsqueeze(0)
                 img = img2
 
-                im_dim = torch.FloatTensor(dim).repeat(1,2)                        
-                                
+                im_dim = torch.FloatTensor(dim).repeat(1,2)
+
                 if CUDA:
                     im_dim = im_dim.cuda()
                     img = img.cuda()
@@ -351,12 +351,12 @@ class proc_yolo_torch:
                     qFPS_last  = time.time()
 
                     # 結果出力(fps)
-                    out_name  = 'fps'
+                    out_name  = '_fps_'
                     out_value = '{:.2f}'.format(fps)
                     cn_s.put([out_name, out_value])
 
                     # 結果出力(reso)
-                    out_name  = 'reso'
+                    out_name  = '_reso_'
                     out_value = str(out_width) + 'x' + str(out_height)
                     cn_s.put([out_name, out_value])
 

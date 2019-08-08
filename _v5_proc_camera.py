@@ -162,7 +162,7 @@ class proc_camera:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -174,8 +174,8 @@ class proc_camera:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -271,13 +271,13 @@ class proc_camera:
                 cn_s.put([out_name, out_value])
 
             # 連携情報
-            if (inp_name.lower() == 'camstretch'):
+            if (inp_name.lower() == '_camstretch_'):
                 self.camStretch = inp_value
                 qFPS_last = time.time() - 60
-            if (inp_name.lower() == 'camrotate'):
+            if (inp_name.lower() == '_camrotate_'):
                 self.camRotate = inp_value
                 qFPS_last = time.time() - 60
-            if (inp_name.lower() == 'camzoom'):
+            if (inp_name.lower() == '_camzoom_'):
                 self.camZoom = inp_value
                 qFPS_last = time.time() - 60
 
@@ -355,12 +355,12 @@ class proc_camera:
                         qFPS_last  = time.time()
 
                         # 結果出力(fps)
-                        out_name  = 'fps'
+                        out_name  = '_fps_'
                         out_value = '{:.1f}'.format(fps)
                         cn_s.put([out_name, out_value])
 
                         # 結果出力(reso)
-                        out_name  = 'reso'
+                        out_name  = '_reso_'
                         out_value = str(input_width) + 'x' + str(input_height)
                         if (float(self.camZoom) != 1):
                             out_value += ' (Zoom=' + self.camZoom + ')'

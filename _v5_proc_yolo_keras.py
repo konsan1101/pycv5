@@ -438,12 +438,12 @@ class proc_yolo_keras:
                     qFPS_last  = time.time()
 
                     # 結果出力(fps)
-                    out_name  = 'fps'
+                    out_name  = '_fps_'
                     out_value = '{:.2f}'.format(fps)
                     cn_s.put([out_name, out_value])
 
                     # 結果出力(reso)
-                    out_name  = 'reso'
+                    out_name  = '_reso_'
                     out_value = str(out_width) + 'x' + str(out_height)
                     cn_s.put([out_name, out_value])
 

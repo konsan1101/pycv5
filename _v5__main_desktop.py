@@ -34,14 +34,6 @@ qCtrl_control_self       = qCtrl_control_desktop
 qCtrl_control_browser    = 'temp/control_browser.txt'
 qCtrl_control_player     = 'temp/control_player.txt'
 
-# 出力インターフェース
-qCtrl_result_audio       = 'temp/result_audio.txt'
-qCtrl_result_speech      = 'temp/result_speech.txt'
-qCtrl_recognize          = 'temp/result_recognize.txt'
-qCtrl_recognize_sjis     = 'temp/result_recognize_sjis.txt'
-qCtrl_translate          = 'temp/result_translate.txt'
-qCtrl_translate_sjis     = 'temp/result_translate_sjis.txt'
-
 
 
 # qFunc 共通ルーチン

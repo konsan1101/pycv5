@@ -143,7 +143,7 @@ class proc_controlv:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -155,8 +155,8 @@ class proc_controlv:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -359,46 +359,46 @@ class proc_controlv:
 
             elif (proc_text == u'ズーム') or (proc_text.find(u'ズームイン') >= 0):
                 out_name  = 'control'
-                out_value = 'zoomin'
+                out_value = '_zoomin_'
                 cn_s.put([out_name, out_value])
 
             elif (proc_text.find(u'ズームアウト') >= 0):
                 out_name  = 'control'
-                out_value = 'zoomout'
+                out_value = '_zoomout_'
                 cn_s.put([out_name, out_value])
 
             elif (proc_text.find(u'回転') >= 0):
                 out_name  = 'control'
-                out_value = 'rotate'
+                out_value = '_rotate_'
                 cn_s.put([out_name, out_value])
 
             elif (proc_text.find(u'台形') >= 0) or (proc_text.find(u'補正') >= 0):
                 out_name  = 'control'
-                out_value = 'stretch'
+                out_value = '_stretch_'
                 cn_s.put([out_name, out_value])
             
             elif (proc_text.find(u'背景') >= 0):
                 out_name  = 'control'
-                out_value = 'background'
+                out_value = '_background_'
                 cn_s.put([out_name, out_value])
             
             elif (proc_text.find(u'ブラック') >= 0):
                 out_name  = 'control'
-                out_value = 'black'
+                out_value = '_black_'
                 cn_s.put([out_name, out_value])
             
             elif (proc_text.find(u'ホワイト') >= 0):
                 out_name  = 'control'
-                out_value = 'white'
+                out_value = '_white_'
                 cn_s.put([out_name, out_value])
             
             elif (proc_text.find(u'カメラ変更') >= 0):
                 out_name  = 'control'
-                out_value = 'camchange_off'
+                out_value = '_camchange_off_'
                 cn_s.put([out_name, out_value])
                 time.sleep(2.00)
                 out_name  = 'control'
-                out_value = 'camchange_on'
+                out_value = '_camchange_on_'
                 cn_s.put([out_name, out_value])
 
             elif (proc_text.find(u'ここ')   >= 0) \

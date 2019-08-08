@@ -652,42 +652,42 @@ class main_speech:
                 controls_thread = None
 
             if (not adintool_thread is None):
-                adintool_thread.stop()                
+                adintool_thread.stop()
                 del adintool_thread
                 adintool_thread = None
 
             if (not voice2wav_thread is None):
-                voice2wav_thread.stop()                
+                voice2wav_thread.stop()
                 del voice2wav_thread
                 voice2wav_thread = None
 
             if (not coreSTT_thread is None):
-                coreSTT_thread.stop()                
+                coreSTT_thread.stop()
                 del coreSTT_thread
                 coreSTT_thread = None
 
             if (not coreTTS_thread is None):
-                coreTTS_thread.stop()                
+                coreTTS_thread.stop()
                 del coreTTS_thread
                 coreTTS_thread = None
 
             if (not playvoice_thread is None):
-                playvoice_thread.stop()                
+                playvoice_thread.stop()
                 del playvoice_thread
                 playvoice_thread = None
 
             if (not julius_thread is None):
-                julius_thread.stop()                
+                julius_thread.stop()
                 del julius_thread
                 julius_thread = None
 
             if (not sttreader_thread is None):
-                sttreader_thread.stop()                
+                sttreader_thread.stop()
                 del sttreader_thread
                 sttreader_thread = None
 
             if (not trareader_thread is None):
-                trareader_thread.stop()                
+                trareader_thread.stop()
                 del trareader_thread
                 trareader_thread = None
 

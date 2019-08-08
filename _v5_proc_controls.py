@@ -168,7 +168,7 @@ class proc_controls:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -180,8 +180,8 @@ class proc_controls:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -391,13 +391,13 @@ class proc_controls:
 
             if (proc_text.find(u'リセット') >= 0):
                 out_name  = 'control'
-                out_value = 'reset'
+                out_value = '_reset_'
                 cn_s.put([out_name, out_value])
 
             elif ((proc_text.find(u'システム') >= 0) and (proc_text.find(u'終了') >= 0)) \
             or    (proc_text == u'バルス'):
                 out_name  = 'control'
-                out_value = 'shutdown'
+                out_value = '_shutdown_'
                 cn_s.put([out_name, out_value])
 
             elif ((proc_text.find(u'画面') >= 0) and (proc_text.find(u'開始') >= 0)):
@@ -458,7 +458,7 @@ class proc_controls:
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_start_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_player = True
                 time.sleep(5)
-                qFunc.txtsWrite(qCtrl_control_player ,txts=['test'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_player ,txts=['_test'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_player  = False
 
             elif ((proc_text.find(u'動画') >= 0) and (proc_text.find(u'終了') >= 0)):

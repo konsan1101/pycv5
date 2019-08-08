@@ -170,7 +170,7 @@ class proc_overlay:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -182,8 +182,8 @@ class proc_overlay:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -278,25 +278,25 @@ class proc_overlay:
                 cn_s.put([out_name, out_value])
 
             # 表示連携
-            elif (inp_name.lower() == 'flag_camzoom'):
+            elif (inp_name.lower() == '_flag_camzoom_'):
                 self.flag_camzoom = inp_value
-            elif (inp_name.lower() == 'flag_dspzoom'):
+            elif (inp_name.lower() == '_flag_dspzoom_'):
                 self.flag_dspzoom = inp_value
-            elif (inp_name.lower() == 'flag_enter'):
+            elif (inp_name.lower() == '_flag_enter_'):
                 self.flag_enter = inp_value
-            elif (inp_name.lower() == 'flag_cancel'):
+            elif (inp_name.lower() == '_flag_cancel_'):
                 self.flag_cancel = inp_value
-            elif (inp_name.lower() == 'flag_background'):
+            elif (inp_name.lower() == '_flag_background_'):
                 self.flag_background = inp_value
-            elif (inp_name.lower() == 'flag_blackwhite'):
+            elif (inp_name.lower() == '_flag_blackwhite_'):
                 self.flag_blackwhite = inp_value
 
             # 連携情報
-            elif (inp_name.lower() == 'dspstretch'):
+            elif (inp_name.lower() == '_dspstretch_'):
                 self.dspStretch = inp_value
-            elif (inp_name.lower() == 'dsprotate'):
+            elif (inp_name.lower() == '_dsprotate_'):
                 self.dspRotate = inp_value
-            elif (inp_name.lower() == 'dspzoom'):
+            elif (inp_name.lower() == '_dspzoom_'):
                 self.dspZoom = inp_value
 
             # 画像受取
@@ -340,9 +340,9 @@ class proc_overlay:
                     except:
                         print(inp_name.lower() + ' error!')
 
-                if (inp_name.lower() == 'cam1_fps'):
+                if (inp_name.lower() == '_cam1_fps_'):
                     cam1_fps  = inp_value
-                if (inp_name.lower() == 'cam1_reso'):
+                if (inp_name.lower() == '_cam1_reso_'):
                     cam1_reso = inp_value
 
                 # カメラ２（ワイプ画像）
@@ -367,9 +367,9 @@ class proc_overlay:
                     except:
                         print(inp_name.lower() + ' error!')
 
-                if (inp_name.lower() == 'cam2_fps'):
+                if (inp_name.lower() == '_cam2_fps_'):
                     cam2_fps  = inp_value
-                if (inp_name.lower() == 'cam2_reso'):
+                if (inp_name.lower() == '_cam2_reso_'):
                     cam2_reso = inp_value
 
                 # 演算画像
@@ -396,9 +396,9 @@ class proc_overlay:
                     except:
                         print(inp_name.lower() + ' error!')
 
-                if (inp_name.lower() == 'comp_fps'):
+                if (inp_name.lower() == '_comp_fps_'):
                     comp_fps  = inp_value
-                if (inp_name.lower() == 'comp_reso'):
+                if (inp_name.lower() == '_comp_reso_'):
                     comp_reso = inp_value
 
                 # ステータス画像
@@ -983,7 +983,7 @@ class proc_overlay:
     def check_mouse_click(self, DisplayEvent, MousePointX, MousePointY, ):
         # R-CLICK
         if (DisplayEvent == cv2.EVENT_RBUTTONDOWN):
-            return 'r-click', 'r'
+            return 'click_r', 'r'
         # L-CLICK
         if (DisplayEvent == cv2.EVENT_LBUTTONUP):
             # ENTER,CANCEL
@@ -991,30 +991,30 @@ class proc_overlay:
                 if   (MousePointY < 80):
                     if   (self.flag_camzoom == 'on') \
                     and  (MousePointX >= 0) and (MousePointX <= 125):
-                        return 'l-click', 'camzoom-reset'
+                        return 'click_l', 'camzoom-reset'
                     elif (self.flag_camzoom == 'on') \
                     and  (MousePointX > 125) and (MousePointX <= 250):
-                        return 'l-click', 'camzoom-zoom'
+                        return 'click_l', 'camzoom-zoom'
                     elif (self.flag_dspzoom == 'on') \
                     and  (MousePointX >= self.dspWidth - 250) and (MousePointX <= self.dspWidth - 125):
-                        return 'l-click', 'dspzoom-reset'
+                        return 'click_l', 'dspzoom-reset'
                     elif (self.flag_dspzoom == 'on') \
                     and  (MousePointX > self.dspWidth -125):
-                        return 'l-click', 'dspzoom-zoom'
+                        return 'click_l', 'dspzoom-zoom'
                     else:
-                        return 'l-click', 'l'
+                        return 'click_l', 'l'
                 elif (MousePointY >= 80) \
                 and  (MousePointY <= self.dspHeight-150):
-                        return 'l-click', 'l'
+                        return 'click_l', 'l'
                 elif (MousePointY >  self.dspHeight-150):
                     if   (self.flag_cancel == 'on') \
                     and  (MousePointX >= 0) and (MousePointX <= 350):
-                        return 'l-click', 'cancel'
+                        return 'click_l', 'cancel'
                     elif (self.flag_enter == 'on') \
                     and  (MousePointX >= self.dspWidth - 350) and (MousePointX <= self.dspWidth):
-                        return 'l-click', 'enter'
+                        return 'click_l', 'enter'
                     else:
-                        return 'l-click', 'l'
+                        return 'click_l', 'l'
         # OTHER
         return '', ''
 
@@ -1061,10 +1061,10 @@ if __name__ == '__main__':
     detect = cv2.imread('_photos/_photo_face.jpg')
     txt    = cv2.imread('_photos/_photo_ocr_doc.jpg')
 
-    overlay_thread.put(['flag_camzoom', 'on'      ])
-    overlay_thread.put(['flag_dspzoom', 'on'      ])
-    overlay_thread.put(['flag_enter',   'on'      ])
-    overlay_thread.put(['flag_cancel',  'on'      ])
+    overlay_thread.put(['_flag_camzoom_', 'on'    ])
+    overlay_thread.put(['_flag_dspzoom_', 'on'    ])
+    overlay_thread.put(['_flag_enter_',   'on'    ])
+    overlay_thread.put(['_flag_cancel_',  'on'    ])
     overlay_thread.put(['[cam1]',   cam1.copy()   ])
     overlay_thread.put(['[cam2]',   cam2.copy()   ])
     overlay_thread.put(['[comp]',   comp.copy()   ])
