@@ -170,7 +170,7 @@ class main_desktop:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -182,8 +182,8 @@ class main_desktop:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -198,7 +198,7 @@ class main_desktop:
 
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 qFunc.remove(qCtrl_control_self)
 
         # 外部ＰＧリセット
@@ -230,7 +230,7 @@ class main_desktop:
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
-                if (txt == '_close_'):
+                if (txt == '_end_'):
                     break
 
             # 停止要求確認
@@ -382,9 +382,9 @@ class main_desktop:
                     res_data  = capture_thread.get()
                     res_name  = res_data[0]
                     res_value = res_data[1]
-                    if (res_name == 'fps'):
+                    if (res_name == '_fps_'):
                         pass
-                    if (res_name == 'reso'):
+                    if (res_name == '_reso_'):
                         pass
                     if (res_name == '[img]'):
                         main_img = res_value.copy()
@@ -551,7 +551,7 @@ if __name__ == '__main__':
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             qFunc.logOutput(main_id + ':' + str(txt))
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 break
             else:
                 qFunc.remove(qCtrl_control_self)
@@ -574,7 +574,7 @@ if __name__ == '__main__':
                 break
 
         # 終了操作
-        if (control == 'shutdown'):
+        if (control == '_shutdown_'):
             break
 
         # アイドリング

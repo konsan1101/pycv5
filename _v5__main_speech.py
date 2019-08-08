@@ -205,7 +205,7 @@ class main_speech:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -217,8 +217,8 @@ class main_speech:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -233,7 +233,7 @@ class main_speech:
 
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 qFunc.remove(qCtrl_control_self)
 
         # 外部ＰＧリセット
@@ -311,7 +311,7 @@ class main_speech:
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
-                if (txt == '_close_'):
+                if (txt == '_end_'):
                     break
 
             # 停止要求確認
@@ -553,9 +553,9 @@ class main_speech:
                 if (control == ''):
                     if (self.micDev.isdigit()):
                         if  ((time.time() - voice2wav_thread.proc_last) > 30):
-                            control = 'reset_mic'
+                            control = '_reset_mic_'
 
-                if (control == 'reset_mic'):
+                if (control == '_reset_mic_'):
                     if (adintool_switch == 'on'):
                         adintool_thread.stop()
                     if (voice2wav_switch == 'on'):
@@ -607,8 +607,8 @@ class main_speech:
                         proc_text = res_value[0]
                         if ((proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0)) \
                         or  (proc_text == u'バルス'):
-                            qFunc.txtsWrite(qCtrl_control_main, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-                            qFunc.txtsWrite(qCtrl_control_self, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                            qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                            qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                             break
 
                 # 音声認識 外部インターフェース用
@@ -891,7 +891,7 @@ if __name__ == '__main__':
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             qFunc.logOutput(main_id + ':' + str(txt))
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 break
             else:
                 qFunc.remove(qCtrl_control_self)
@@ -906,7 +906,7 @@ if __name__ == '__main__':
                 break
 
         # 終了操作
-        if (control == 'shutdown'):
+        if (control == '_shutdown_'):
             break
 
         # アイドリング
@@ -924,7 +924,7 @@ if __name__ == '__main__':
         qFunc.logOutput(main_id + ':terminate')
 
         # メインプロセス終了
-        qFunc.txtsWrite(qCtrl_control_main      ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # 外部ＰＧリセット
         qFunc.kill('adintool-gui')

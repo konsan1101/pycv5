@@ -190,7 +190,7 @@ class main_class:
 
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 qFunc.remove(qCtrl_control_self)
 
         # 待機ループ
@@ -207,7 +207,7 @@ class main_class:
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
                 qFunc.logOutput(self.proc_id + ':' + str(txt))
-                if (txt == '_close_'):
+                if (txt == '_end_'):
                     break
                 else:
                     qFunc.remove(qCtrl_control_self)
@@ -433,7 +433,7 @@ if __name__ == '__main__':
 
     txts, txt = qFunc.txtsRead(qCtrl_control_self)
     if (txts != False):
-        if (txt == '_close_'):
+        if (txt == '_end_'):
             qFunc.remove(qCtrl_control_self)
 
     # 起動
@@ -455,7 +455,7 @@ if __name__ == '__main__':
         # 終了確認
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 break
 
         # デバッグ

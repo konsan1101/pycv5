@@ -158,7 +158,7 @@ class main_class:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -170,8 +170,8 @@ class main_class:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -186,7 +186,7 @@ class main_class:
 
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 qFunc.remove(qCtrl_control_self)
 
         # 待機ループ
@@ -203,7 +203,7 @@ class main_class:
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
                 qFunc.logOutput(self.proc_id + ':' + str(txt))
-                if (txt == '_close_'):
+                if (txt == '_end_'):
                     break
                 else:
                     qFunc.remove(qCtrl_control_self)
@@ -523,7 +523,7 @@ if __name__ == '__main__':
 
     txts, txt = qFunc.txtsRead(qCtrl_control_self)
     if (txts != False):
-        if (txt == '_close_'):
+        if (txt == '_end_'):
             qFunc.remove(qCtrl_control_self)
 
     # 起動
@@ -545,7 +545,7 @@ if __name__ == '__main__':
         # 終了確認
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 break
 
         # デバッグ

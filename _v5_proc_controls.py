@@ -401,12 +401,12 @@ class proc_controls:
                 cn_s.put([out_name, out_value])
 
             elif ((proc_text.find(u'画面') >= 0) and (proc_text.find(u'開始') >= 0)):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = True
                 chktime = time.time()
                 while (os.path.exists(qCtrl_control_main)) and ((time.time() - chktime) < 5):
                     time.sleep(0.50)
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_vision  = True
 
             elif ((proc_text.find(u'画面') >= 0) and (proc_text.find(u'終了') >= 0)):
@@ -419,7 +419,7 @@ class proc_controls:
                 self.run_vision  = False
 
             elif ((proc_text.find(u'ビジョン') >= 0) and (proc_text.find(u'開始') >= 0)):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_vision = True
 
             elif ((proc_text.find(u'ビジョン') >= 0) and (proc_text.find(u'終了') >= 0)):
@@ -427,7 +427,7 @@ class proc_controls:
                 self.run_vision = False
 
             elif ((proc_text.find(u'デスクトップ') >= 0) and (proc_text.find(u'開始') >= 0)):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = True
 
             elif ((proc_text.find(u'デスクトップ') >= 0) and (proc_text.find(u'終了') >= 0)):
@@ -436,7 +436,7 @@ class proc_controls:
 
             elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
             and (proc_text.find(u'開始') >= 0):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_bgm_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_bgm_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = True
 
             elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
@@ -446,7 +446,7 @@ class proc_controls:
 
             elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
             and (proc_text.find(u'開始') >= 0):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_browser_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_browser_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = True
 
             elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
@@ -455,7 +455,7 @@ class proc_controls:
                 self.run_bgm = False
 
             elif ((proc_text.find(u'動画') >= 0) and (proc_text.find(u'開始') >= 0)):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_player = True
                 time.sleep(5)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=['_test'], encoding='utf-8', exclusive=True, mode='w', )
@@ -467,7 +467,7 @@ class proc_controls:
 
             elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
             and (proc_text.find(u'開始') >= 0):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_chatting_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_chatting_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_chatting = True
 
             elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
@@ -476,7 +476,7 @@ class proc_controls:
                 self.run_chatting = False
 
             elif ((proc_text.find(u'知識') >= 0) and (proc_text.find(u'開始') >= 0)):
-                qFunc.txtsWrite(qCtrl_control_main ,txts=['_knowledge_start_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main ,txts=['_knowledge_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_knowledge = True
 
             elif ((proc_text.find(u'知識') >= 0) and (proc_text.find(u'終了') >= 0)):

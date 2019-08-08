@@ -280,7 +280,7 @@ class main_vision:
 
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 qFunc.remove(qCtrl_control_self)
 
         # 変数
@@ -396,7 +396,7 @@ class main_vision:
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
-                if (txt == '_close_'):
+                if (txt == '_end_'):
                     break
 
             # 停止要求確認
@@ -452,12 +452,12 @@ class main_vision:
                                     )
                 overlay_thread.start()
 
-                overlay_thread.put(['flag_camzoom'   , flag_camzoom    ])
-                overlay_thread.put(['flag_dspzoom'   , flag_dspzoom    ])
-                overlay_thread.put(['flag_enter'     , flag_enter      ])
-                overlay_thread.put(['flag_cancel'    , flag_cancel     ])
-                overlay_thread.put(['flag_background', flag_background ])
-                overlay_thread.put(['flag_blackwhite', flag_blackwhite ])
+                overlay_thread.put(['_flag_camzoom_'   , flag_camzoom    ])
+                overlay_thread.put(['_flag_dspzoom_'   , flag_dspzoom    ])
+                overlay_thread.put(['_flag_enter_'     , flag_enter      ])
+                overlay_thread.put(['_flag_cancel_'    , flag_cancel     ])
+                overlay_thread.put(['_flag_background_', flag_background ])
+                overlay_thread.put(['_flag_blackwhite_', flag_blackwhite ])
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
@@ -509,8 +509,8 @@ class main_vision:
                                     )
                 txt2img_thread.start()
 
-                txt2img_thread.put(['flag_background', flag_background ])
-                txt2img_thread.put(['flag_blackwhite', flag_blackwhite ])
+                txt2img_thread.put(['_flag_background_', flag_background ])
+                txt2img_thread.put(['_flag_blackwhite_', flag_blackwhite ])
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
@@ -706,7 +706,7 @@ class main_vision:
                                     txt2img_thread.put(['[message_txts]', message_txts])
 
             # カメラ変更１
-            if (control == 'camchange_off'):
+            if (control == '_camchange_off_'):
                 camera_switch1_org = camera_switch1
                 camera_switch2_org = camera_switch2
                 camera_switch1 = 'off'
@@ -738,13 +738,13 @@ class main_vision:
                         self.cam1Dev = str(int(self.cam2Dev) - 1)
 
             # カメラ変更２
-            if (control == 'camchange_on'):
+            if (control == '_camchange_on_'):
                 camera_switch1 = camera_switch1_org
                 camera_switch2 = camera_switch2_org
 
             # リセット
             if (control == '_reset_') \
-            or (control == 'camchange_on'):
+            or (control == '_camchange_on_'):
                 cam1Stretch     = self.cam1Stretch
                 cam1Rotate      = self.cam1Rotate
                 cam1Zoom        = self.cam1Zoom
@@ -763,76 +763,76 @@ class main_vision:
                 flag_blackwhite = self.flag_blackwhite
 
                 if (not camera_thread1 is None):
-                    camera_thread1.put(['camstretch'     , cam1Stretch     ])
-                    camera_thread1.put(['camrotate'      , cam1Rotate      ])
-                    camera_thread1.put(['camzoom'        , cam1Zoom        ])
+                    camera_thread1.put(['_camstretch_'     , cam1Stretch     ])
+                    camera_thread1.put(['_camrotate_'      , cam1Rotate      ])
+                    camera_thread1.put(['_camzoom_'        , cam1Zoom        ])
                 if (not camera_thread2 is None):
-                    camera_thread2.put(['camstretch'     , cam2Stretch     ])
-                    camera_thread2.put(['camrotate'      , cam2Rotate      ])
-                    camera_thread2.put(['camzoom'        , cam2Zoom        ])
+                    camera_thread2.put(['_camstretch_'     , cam2Stretch     ])
+                    camera_thread2.put(['_camrotate_'      , cam2Rotate      ])
+                    camera_thread2.put(['_camzoom_'        , cam2Zoom        ])
                 if (not overlay_thread is None):
-                    overlay_thread.put(['dspstretch'     , dspStretch      ])
-                    overlay_thread.put(['dsprotate'      , dspRotate       ])
-                    overlay_thread.put(['dspzoom'        , dspZoom         ])
-                    overlay_thread.put(['flag_camzoom'   , flag_camzoom    ])
-                    overlay_thread.put(['flag_dspzoom'   , flag_dspzoom    ])
-                    overlay_thread.put(['flag_background', flag_background ])
-                    overlay_thread.put(['flag_blackwhite', flag_blackwhite ])
+                    overlay_thread.put(['_dspstretch_'     , dspStretch      ])
+                    overlay_thread.put(['_dsprotate_'      , dspRotate       ])
+                    overlay_thread.put(['_dspzoom_'        , dspZoom         ])
+                    overlay_thread.put(['_flag_camzoom_'   , flag_camzoom    ])
+                    overlay_thread.put(['_flag_dspzoom_'   , flag_dspzoom    ])
+                    overlay_thread.put(['_flag_background_', flag_background ])
+                    overlay_thread.put(['_flag_blackwhite_', flag_blackwhite ])
                 if (not txt2img_thread is None):
-                    txt2img_thread.put(['flag_background', flag_background ])
-                    txt2img_thread.put(['flag_blackwhite', flag_blackwhite ])
+                    txt2img_thread.put(['_flag_background_', flag_background ])
+                    txt2img_thread.put(['_flag_blackwhite_', flag_blackwhite ])
 
             # カメラ操作
-            if (control == 'zoomout') or (control == 'camzoom-reset'):
+            if (control == '_zoomout_') or (control == '_camzoom_reset_'):
                 cam1Zoom    = '1.0'
                 if (not camera_thread1 is None):
-                    camera_thread1.put(['camzoom', cam1Zoom ])
-            if (control == 'zoomin') or (control == 'camzoom-zoom'):
+                    camera_thread1.put(['_camzoom_', cam1Zoom ])
+            if (control == '_zoomin_') or (control == '_camzoom_zoom_'):
                 cam1Zoom    = '{:.1f}'.format(float(cam1Zoom) + 0.5)
                 print(cam1Zoom)
                 if (not camera_thread1 is None):
-                    camera_thread1.put(['camzoom', cam1Zoom ])
-            if (control == 'stretch'):
+                    camera_thread1.put(['_camzoom_', cam1Zoom ])
+            if (control == '_stretch_'):
                 cam1Stretch = str(int(cam1Stretch) + 10)
                 if (not camera_thread1 is None):
-                    camera_thread1.put(['camstretch',  cam1Stretch ])
-            if (control == 'rotate'):
+                    camera_thread1.put(['_camstretch_',  cam1Stretch ])
+            if (control == '_rotate_'):
                 cam1Rotate  = str(int(cam1Rotate)  + 45)
                 if (not camera_thread1 is None):
-                    camera_thread1.put(['camrotate',   cam1Rotate  ])
+                    camera_thread1.put(['_camrotate_',   cam1Rotate  ])
 
             # 表示操作
-            if (control == 'dspzoom-reset'):
+            if (control == '_dspzoom_reset_'):
                 dspZoom    = '1.0'
                 if (not overlay_thread is None):
-                    overlay_thread.put(['dspzoom', dspZoom ])
-            if (control == 'dspzoom-zoom'):
+                    overlay_thread.put(['_dspzoom_', dspZoom ])
+            if (control == '_dspzoom_zoom_'):
                 dspZoom    = '{:.1f}'.format(float(dspZoom) + 0.5)
                 if (not overlay_thread is None):
-                    overlay_thread.put(['dspzoom', dspZoom ])
+                    overlay_thread.put(['_dspzoom_', dspZoom ])
 
             # 背景操作
-            if (control == 'background'):
+            if (control == '_background_'):
                 if   (flag_background == 'on'):
                     flag_background = 'off'
                 elif (flag_background == 'off'):
                     flag_background = 'on'
                 if (not overlay_thread is None):
-                    overlay_thread.put(['flag_background', flag_background ])
+                    overlay_thread.put(['_flag_background_', flag_background ])
                 if (not txt2img_thread is None):
-                    txt2img_thread.put(['flag_background', flag_background ])
-            if (control == 'black'):
+                    txt2img_thread.put(['_flag_background_', flag_background ])
+            if (control == '_black_'):
                 flag_blackwhite = 'black'
                 if (not overlay_thread is None):
-                    overlay_thread.put(['flag_blackwhite', flag_blackwhite ])
+                    overlay_thread.put(['_flag_blackwhite_', flag_blackwhite ])
                 if (not txt2img_thread is None):
-                    txt2img_thread.put(['flag_blackwhite', flag_blackwhite ])
-            if (control == 'white'):
+                    txt2img_thread.put(['_flag_blackwhite_', flag_blackwhite ])
+            if (control == '_white_'):
                 flag_blackwhite = 'white'
                 if (not overlay_thread is None):
-                    overlay_thread.put(['flag_blackwhite', flag_blackwhite ])
+                    overlay_thread.put(['_flag_blackwhite_', flag_blackwhite ])
                 if (not txt2img_thread is None):
-                    txt2img_thread.put(['flag_blackwhite', flag_blackwhite ])
+                    txt2img_thread.put(['_flag_blackwhite_', flag_blackwhite ])
 
             # シャッター
             if (control == '_shutter_'):
@@ -871,10 +871,10 @@ class main_vision:
                         res_data  = camera_thread1.get()
                         res_name  = res_data[0]
                         res_value = res_data[1]
-                        if (res_name == 'fps'):
-                            overlay_thread.put(['cam1_fps', res_value ])
-                        if (res_name == 'reso'):
-                            overlay_thread.put(['cam1_reso', res_value ])
+                        if (res_name == '_fps_'):
+                            overlay_thread.put(['_cam1_fps_', res_value ])
+                        if (res_name == '_reso_'):
+                            overlay_thread.put(['_cam1_reso_', res_value ])
                         if (res_name == '[img]'):
                             main_img = res_value.copy()
 
@@ -931,10 +931,10 @@ class main_vision:
                         res_data  = camera_thread2.get()
                         res_name  = res_data[0]
                         res_value = res_data[1]
-                        if (res_name == 'fps'):
-                            overlay_thread.put(['cam2_fps', res_value ])
-                        if (res_name == 'reso'):
-                            overlay_thread.put(['cam2_reso', res_value ])
+                        if (res_name == '_fps_'):
+                            overlay_thread.put(['_cam2_fps_', res_value ])
+                        if (res_name == '_reso_'):
+                            overlay_thread.put(['_cam2_reso_', res_value ])
                         if (res_name == '[img]'):
                             wipe_img = res_value.copy()
 
@@ -987,10 +987,10 @@ class main_vision:
                         res_data  = yolo_keras_thread.get()
                         res_name  = res_data[0]
                         res_value = res_data[1]
-                        if (res_name == 'fps'):
-                            overlay_thread.put(['comp_fps', res_value ])
-                        if (res_name == 'reso'):
-                            overlay_thread.put(['comp_reso', res_value ])
+                        if (res_name == '_fps_'):
+                            overlay_thread.put(['_comp_fps_', res_value ])
+                        if (res_name == '_reso_'):
+                            overlay_thread.put(['_comp_reso_', res_value ])
                         if (res_name == '[img]'):
                             yolo_img = res_value.copy()
                             overlay_thread.put(['[comp]', yolo_img ])
@@ -1007,10 +1007,10 @@ class main_vision:
                             res_data  = yolo_torch_thread[i].get()
                             res_name  = res_data[0]
                             res_value = res_data[1]
-                            if (res_name == 'fps'):
-                                overlay_thread.put(['comp_fps', '{:.2f}'.format(float(res_value) * yolo_torch_max) ])
-                            if (res_name == 'reso'):
-                                overlay_thread.put(['comp_reso', res_value ])
+                            if (res_name == '_fps_'):
+                                overlay_thread.put(['_comp_fps_', '{:.2f}'.format(float(res_value) * yolo_torch_max) ])
+                            if (res_name == '_reso_'):
+                                overlay_thread.put(['_comp_reso_', res_value ])
                             if (res_name == '[img]'):
                                 #print('yolo get '+str(i))
                                 yolo_img = res_value.copy()
@@ -1568,7 +1568,7 @@ if __name__ == '__main__':
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             qFunc.logOutput(main_id + ':' + str(txt))
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 break
             else:
                 qFunc.remove(qCtrl_control_self)
@@ -1660,14 +1660,14 @@ if __name__ == '__main__':
 
                     # ズーム操作
                     if (mouse2 == 'camzoom_reset'):
-                        main_vision.put(['control', 'camzoom_reset'])
-                        main_vision.put(['control', 'background'])
+                        main_vision.put(['control', '_camzoom_rese_t'])
+                        main_vision.put(['control', '_background_'])
                     if (mouse2 == 'camzoom_zoom'):
-                        main_vision.put(['control', 'camzoom_zoom'])
+                        main_vision.put(['control', '_camzoom_zoom_'])
                     if (mouse2 == 'dspzoom_reset'):
-                        main_vision.put(['control', 'dspzoom_reset'])
+                        main_vision.put(['control', '_dspzoom_reset_'])
                     if (mouse2 == 'dspzoom_zoom'):
-                        main_vision.put(['control', 'dspzoom_zoom'])
+                        main_vision.put(['control', '_dspzoom_zoom_'])
 
                 break
 
@@ -1696,8 +1696,8 @@ if __name__ == '__main__':
             or (control == 'cancel') \
             or (control == 'close'):
                 qFunc.txtsWrite(qCtrl_result_screen, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
-                qFunc.txtsWrite(qCtrl_control_main, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-                qFunc.txtsWrite(qCtrl_control_self, txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # アイドリング
         if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \

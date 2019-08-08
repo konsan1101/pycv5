@@ -348,38 +348,38 @@ if __name__ == '__main__':
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
             qFunc.logOutput(main_id + ':' + str(txt))
-            if (txt == '_close_'):
+            if (txt == '_end_'):
                 break
             else:
                 qFunc.remove(qCtrl_control_self)
                 control = txt
 
         # コントロール
-        if (control == '_vision_start_'):
+        if (control == '_vision_begin_'):
             main_vision_switch   = 'on'
         if (control == '_vision_end_'):
             main_vision_switch   = 'off'
-        if (control == '_desktop_start_'):
+        if (control == '_desktop_begin_'):
             main_desktop_switch  = 'on'
         if (control == '_desktop_end_'):
             main_desktop_switch  = 'off'
-        if (control == '_bgm_start_'):
+        if (control == '_bgm_begin_'):
             bgm_switch           = 'on'
         if (control == '_bgm_end_'):
             bgm_switch           = 'off'
-        if (control == '_browser_start_'):
+        if (control == '_browser_begin_'):
             browser_switch       = 'on'
         if (control == '_browser_end_'):
             browser_switch       = 'off'
-        if (control == '_player_start_'):
+        if (control == '_player_begin_'):
             player_switch        = 'on'
         if (control == '_player_end_'):
             player_switch        = 'off'
-        if (control == '_chatting_start_'):
+        if (control == '_chatting_begin_'):
             chatting_switch      = 'on'
         if (control == '_chatting_end_'):
             chatting_switch      = 'off'
-        if (control == '_knowledge_start_'):
+        if (control == '_knowledge_begin_'):
             knowledge_switch     = 'on'
         if (control == '_knowledge_end_'):
             knowledge_switch     = 'off'
@@ -547,15 +547,15 @@ if __name__ == '__main__':
 
         # プロセス終了
 
-        qFunc.txtsWrite(qCtrl_control_main      ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_speech    ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_vision    ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_desktop   ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_browser   ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_player    ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
-        qFunc.txtsWrite(qCtrl_control_knowledge ,txts=['_close_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_main      ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_speech    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_vision    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_desktop   ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_browser   ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_player    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+        qFunc.txtsWrite(qCtrl_control_knowledge ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
         
         #time.sleep(60.00)
 
