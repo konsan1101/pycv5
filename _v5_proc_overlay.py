@@ -864,7 +864,7 @@ class proc_overlay:
                 # 入力 ZOOM 表示
                 if (self.flag_background == 'on'):
                     if (self.flag_camzoom == 'on'):
-                        cv2.putText(display_img, '_reset_', (35,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (  0,255,  0))
+                        cv2.putText(display_img, 'RESET', (35,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (  0,255,  0))
                         cv2.rectangle(display_img,(35,40),(115,60), (  0,255,  0),1)
                         cv2.putText(display_img, 'ZOOM', (145,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,  0))
                         cv2.rectangle(display_img,(135,40),(215,60),(255,255,  0),1)
@@ -872,7 +872,7 @@ class proc_overlay:
                 # 出力 ZOOM 表示
                 if (self.flag_background == 'on'):
                     if (self.flag_dspzoom == 'on'):
-                        cv2.putText(display_img, '_reset_', (self.dspWidth-230,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (  0,255,  0))
+                        cv2.putText(display_img, 'RESET', (self.dspWidth-230,57), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (  0,255,  0))
                         cv2.rectangle(display_img,(self.dspWidth-230,40),(self.dspWidth-150,60),(  0,255,  0),1)
                         cv2.putText(display_img, 'ZOOM', (self.dspWidth-120,57),  cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,  0))
                         cv2.rectangle(display_img,(self.dspWidth-130,40),(self.dspWidth-50,60), (255,255,  0),1)

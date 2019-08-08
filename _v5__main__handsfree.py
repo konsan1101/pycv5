@@ -112,7 +112,7 @@ qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
 
 # debug
-runMode     = 'hud'
+runMode     = 'handsfree'
 
 qApiInp     = 'free'
 qApiTrn     = 'free'

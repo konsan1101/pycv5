@@ -328,7 +328,7 @@ class main_vision:
             cvdetect_switch1  = 'off'
             cvdetect_switch2  = 'off'
             yolo_keras_switch = 'off'
-            yolo_torch_switch = 'off'
+            yolo_torch_switch = 'on'
             vin2jpg_switch    = 'on'
             coreCV_switch     = 'on'
         if (self.runMode == 'hud'):

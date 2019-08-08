@@ -1,8 +1,8 @@
 @ECHO OFF
 
 ECHO;
-ECHO taskkill /im msaccess.exe /f
-     taskkill /im msaccess.exe /f
+ECHO taskkill /im python.exe /f
+     taskkill /im python.exe /f
 
 ECHO;
 ECHO python _v5__destroy.py
