@@ -573,10 +573,6 @@ if __name__ == '__main__':
                 control  = res_value
                 break
 
-        # 終了操作
-        if (control == '_shutdown_'):
-            break
-
         # アイドリング
         if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
             time.sleep(1.00)
