@@ -8,6 +8,10 @@
 
 
 
+import  time
+
+
+
 # インターフェース
 qCtrl_control_desktop    = 'temp/control_desktop.txt'
 qCtrl_control_bgm        = 'temp/control_bgm.txt'
@@ -38,6 +42,9 @@ qFunc.kill('firefox')
 qFunc.txtsWrite(qCtrl_control_player  , txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 qFunc.kill('ffplay')
 
+
+
+time.sleep(5.00)
 qFunc.kill('python')
 
 

@@ -586,9 +586,6 @@ class main_class:
     # 停止
     def sub_stop(self, proc_text, ):
 
-        # リセット
-        qFunc.kill('ffplay', )
-
         # 全Ｑリセット
         for i in range(1, self.play_max+1):
             if (not self.play_proc[i] is None):
@@ -602,6 +599,9 @@ class main_class:
                 #    self.play_proc[i] = None
                 #    self.play_id[i]   = ''
                 #    self.play_path[i] = ''
+
+        # リセット
+        qFunc.kill('ffplay', )
 
         # ビジー解除
         self.sub_alive()
@@ -710,6 +710,7 @@ if __name__ == '__main__':
         qFunc.logOutput(main_id + ':terminate')
 
         main_class.stop()
+        time.sleep(5.00)
         del main_class
 
         qFunc.logOutput(main_id + ':bye!')

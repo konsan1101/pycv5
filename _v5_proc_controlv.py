@@ -349,7 +349,7 @@ class proc_controlv:
             elif ((proc_text.find(u'システム') >= 0) and (proc_text.find(u'終了') >= 0)) \
             or    (proc_text == u'バルス'):
                 out_name  = 'control'
-                out_value = '_shutdown_'
+                out_value = '_end_'
                 cn_s.put([out_name, out_value])
 
             elif (proc_text == u'シャッター') or (proc_text.find(u'撮影') >= 0):
