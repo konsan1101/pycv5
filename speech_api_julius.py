@@ -237,7 +237,7 @@ class proc_julius:
 
             # レディー設定
             if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
                 qFunc.logOutput(self.proc_id + ':ready', display=self.logDisp,)
 
             # 処理
@@ -319,8 +319,8 @@ class proc_julius:
             qFunc.remove(self.fileBsy)
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
-            or (qFunc.busyCheck(qBusy_dev_mic, 0) == 'busy'):
+            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \
+            or (qFunc.busyCheck(qBusy_dev_mic, 0) == '_busy_'):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.25)

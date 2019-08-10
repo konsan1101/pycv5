@@ -225,10 +225,10 @@ def proc_audio(cn_r, cn_s, ):
                     if (micType == 'usb'):
                         sw = 'on'
                     else:
-                        if  (qFunc.busyCheck(qBusy_s_ctrl, 1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_s_STT,  1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_s_TTS,  1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_s_play, 1) != 'busy'):
+                        if  (qFunc.busyCheck(qBusy_s_ctrl, 1) != '_busy_') \
+                        and (qFunc.busyCheck(qBusy_s_STT,  1) != '_busy_') \
+                        and (qFunc.busyCheck(qBusy_s_TTS,  1) != '_busy_') \
+                        and (qFunc.busyCheck(qBusy_s_play, 1) != '_busy_'):
                             sw = 'on'
 
                 if (sw == 'on'):
@@ -287,10 +287,10 @@ def proc_audio(cn_r, cn_s, ):
 
                 sw = 'on'
                 if (micType == 'bluetooth'):
-                    if (qFunc.busyCheck(qBusy_s_ctrl, 0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_s_STT,  0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_s_TTS,  0) == 'busy') \
-                    or (qFunc.busyCheck(qBusy_s_play, 0) == 'busy'):
+                    if (qFunc.busyCheck(qBusy_s_ctrl, 0) == '_busy_') \
+                    or (qFunc.busyCheck(qBusy_s_STT,  0) == '_busy_') \
+                    or (qFunc.busyCheck(qBusy_s_TTS,  0) == '_busy_') \
+                    or (qFunc.busyCheck(qBusy_s_play, 0) == '_busy_'):
                         sw = 'off'
                 if (adinexe_run == True):
                     files = glob.glob(qPath_s_inp + '*')
@@ -864,10 +864,10 @@ if (__name__ == '__main__'):
                 break
 
         if (micDev.isdigit()):
-            if (qFunc.busyCheck(qBusy_s_ctrl, 0) == 'busy' or \
-                qFunc.busyCheck(qBusy_s_STT,  0) == 'busy' or \
-                qFunc.busyCheck(qBusy_s_TTS,  0) == 'busy' or \
-                qFunc.busyCheck(qBusy_s_play, 0) == 'busy'):
+            if (qFunc.busyCheck(qBusy_s_ctrl, 0) == '_busy_' or \
+                qFunc.busyCheck(qBusy_s_STT,  0) == '_busy_' or \
+                qFunc.busyCheck(qBusy_s_TTS,  0) == '_busy_' or \
+                qFunc.busyCheck(qBusy_s_play, 0) == '_busy_'):
                 v2w_wave_last = 0
             if (v2w_wave_last == 0):
                 v2w_wave_last = time.time()

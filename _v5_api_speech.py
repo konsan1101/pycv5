@@ -668,7 +668,7 @@ def speech_batch(runMode, micDev,
 
 
 
-        if (qFunc.busyCheck(qBusy_dev_com,  0) == 'busy') or (qApiInp == 'julius'):
+        if (qFunc.busyCheck(qBusy_dev_com,  0) == '_busy_') or (qApiInp == 'julius'):
 
             api = 'julius'
             waitfile = qPath_s_jul + fileId + '.txt'
@@ -686,7 +686,7 @@ def speech_batch(runMode, micDev,
 
 
 
-        if (qFunc.busyCheck(qBusy_dev_com,  0) != 'busy') and (qApiInp != 'julius'):
+        if (qFunc.busyCheck(qBusy_dev_com,  0) != '_busy_') and (qApiInp != 'julius'):
 
             soxMsg1  = ''
             soxMsg2  = ''

@@ -533,7 +533,7 @@ if __name__ == '__main__':
                 qFunc.speech(id=main_id, speechs=speechs, lang='', )
 
         # アイドリング
-        if  (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
+        if  (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
             time.sleep(1.00)
         time.sleep(0.25)
 

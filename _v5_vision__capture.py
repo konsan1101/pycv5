@@ -992,29 +992,29 @@ def proc_speech(cn_r, cn_s, ):
                 if (wBusyChange == True):
                     texts=[]
                     texts.append('[Speech Status]')
-                    if (wBusyCtrl == 'busy'):
+                    if (wBusyCtrl == '_busy_'):
                         texts.append(' Ctrl  : Busy!_')
                     else:
                         texts.append(' Ctrl  : ______')
-                    if (wBusyInput == 'busy'):
+                    if (wBusyInput == '_busy_'):
                         texts.append(' Input : Ready_')
                     else:
                         texts.append(' Input : ______')
-                    if (wBusySTT == 'busy'):
+                    if (wBusySTT == '_busy_'):
                         texts.append(' STT   : Busy!_')
                     else:
                         texts.append(' STT   : ______')
-                    if (wBusyTTS == 'busy'):
+                    if (wBusyTTS == '_busy_'):
                         texts.append(' TTS   : Busy!_')
                     else:
                         texts.append(' TTS   : ______')
-                    if (wBusyPlay == 'busy'):
+                    if (wBusyPlay == '_busy_'):
                         texts.append(' Play  : Busy!_')
                     else:
                         texts.append(' Play  : ______')
 
                     text_img = drawTextImage(texts, 150)
-                    cn_s.put(['STATUS', text_img.copy()])
+                    cn_s.put(['_status_', text_img.copy()])
                     res_put = True
 
                 # CV結果
@@ -1292,7 +1292,7 @@ def proc_output(cn_r, cn_s, ):
                     detect_img  = data_get.copy()
                     detect_time = time.time()
 
-                elif (mode_get == 'STATUS'):
+                elif (mode_get == '_status_'):
                     status_img  = data_get.copy()
                     status_time = time.time()
 
@@ -2210,8 +2210,8 @@ if (__name__ == '__main__'):
                 cam2Zoom = '1.0'
                 inp2_s.put(['ZOOM', cam2Zoom])
 
-            if (speech_res == 'STATUS'):
-                output_s.put(['STATUS', speech_dat.copy()])
+            if (speech_res == '_status_'):
+                output_s.put(['_status_', speech_dat.copy()])
 
             if (speech_res == 'CV'):
                 output_s.put(['CV', speech_dat.copy()])

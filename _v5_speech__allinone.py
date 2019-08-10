@@ -131,7 +131,7 @@ def control_speech(seq, fileId, runMode, micDev, useApiTrn, useApiOut, inpLang, 
     xLangTxt = inpLang
     xLangOut = outLang
 
-    #while qFunc.busyCheck(qBusy_s_play , 0) == 'busy':
+    #while qFunc.busyCheck(qBusy_s_play , 0) == '_busy_':
     #    qFunc.logOutput('wait')
     #    time.sleep(1)
 
@@ -506,7 +506,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
         #time.sleep(2.00)
 
-        if (qFunc.busyCheck(qBusy_s_ctrl  , 0) != 'busy'):
+        if (qFunc.busyCheck(qBusy_s_ctrl  , 0) != '_busy_'):
             qFunc.busySet(qBusy_s_ctrl,  True)
             #qFunc.busyCheck(qBusy_s_ctrl , 3)
             #qFunc.busyCheck(qBusy_s_STT  , 3)

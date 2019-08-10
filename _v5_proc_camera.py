@@ -224,7 +224,7 @@ class proc_camera:
 
             # デバイス設定
             if (self.camDev.isdigit()):
-                if (capture is None) and (qFunc.busyCheck(qBusy_dev_cam, 0) != 'busy'): 
+                if (capture is None) and (qFunc.busyCheck(qBusy_dev_cam, 0) != '_busy_'): 
 
                     if (os.name != 'nt'):
                         capture = cv2.VideoCapture(int(self.camDev))
@@ -242,11 +242,11 @@ class proc_camera:
 
                     # ビジー設定 (ready)
                     if (not os.path.exists(self.fileBsy)):
-                        qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                        qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
                         if (str(self.id) == '0'):
                             qFunc.busySet(qBusy_v_inp, True)
 
-                if (not capture is None) and (qFunc.busyCheck(qBusy_dev_cam, 0) == 'busy'): 
+                if (not capture is None) and (qFunc.busyCheck(qBusy_dev_cam, 0) == '_busy_'): 
                     capture.release()
                     capture = None
 
@@ -257,15 +257,15 @@ class proc_camera:
 
             # レディ設定
             if (not capture is None) and (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
             if (capture is None) and (os.path.exists(self.fileRdy)):
                 qFunc.remove(self.fileRdy)
 
             # ステータス応答
-            if (inp_name.lower() == 'status'):
+            if (inp_name.lower() == '_status_'):
                 out_name  = inp_name
                 if (not capture is None):
-                    out_value = 'ready'
+                    out_value = '_ready_'
                 else:
                     out_value = '!ready'
                 cn_s.put([out_name, out_value])
@@ -375,8 +375,8 @@ class proc_camera:
 
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
-            or (qFunc.busyCheck(qBusy_dev_cam, 0) == 'busy'):
+            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \
+            or (qFunc.busyCheck(qBusy_dev_cam, 0) == '_busy_'):
                 time.sleep(1.00)
             time.sleep((1/int(self.camFps))/2)
 
@@ -445,7 +445,7 @@ if __name__ == '__main__':
                 print(res_name, res_value, )
 
         #if (camera_thread.proc_s.qsize() == 0):
-        #    camera_thread.put(['status', ''])
+        #    camera_thread.put(['_status_', ''])
 
         time.sleep(0.02)
 

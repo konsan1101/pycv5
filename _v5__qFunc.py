@@ -503,7 +503,7 @@ class qFunc_class:
         return 1
 
     def guide(self, filename=None, sync=True):
-        if (self.busyCheck(qBusy_dev_spk, 0) == 'busy'):
+        if (self.busyCheck(qBusy_dev_spk, 0) == '_busy_'):
             #self.logOutput('spk_busy!_:' + filename, )
             return False
 
@@ -587,7 +587,7 @@ class qFunc_class:
             while (not os.path.exists(file)) and ((time.time() - chktime) < 1):
                 try:
                     w = open(file, 'w')
-                    w.write('BUSY')
+                    w.write('_busy_')
                     w.close()
                     w = None
                     return True
@@ -649,7 +649,7 @@ class qFunc_class:
             while (os.path.exists(file)) and ((time.time() - chktime) < maxWait):
                 time.sleep(0.10)
         if (os.path.exists(file)):
-            return 'busy'
+            return '_busy_'
         else:
             return 'none'
 
@@ -660,11 +660,11 @@ class qFunc_class:
             busy_flag = False
             chktime2 = time.time()
             while ((time.time() - chktime2) < idolSec):
-                if (self.busyCheck(qBusy_s_wav , 0) == 'busy') \
-                or (self.busyCheck(qBusy_s_STT , 0) == 'busy') \
-                or (self.busyCheck(qBusy_s_TTS , 0) == 'busy') \
-                or (self.busyCheck(qBusy_s_TRA , 0) == 'busy') \
-                or (self.busyCheck(qBusy_s_play, 0) == 'busy'):
+                if (self.busyCheck(qBusy_s_wav , 0) == '_busy_') \
+                or (self.busyCheck(qBusy_s_STT , 0) == '_busy_') \
+                or (self.busyCheck(qBusy_s_TTS , 0) == '_busy_') \
+                or (self.busyCheck(qBusy_s_TRA , 0) == '_busy_') \
+                or (self.busyCheck(qBusy_s_play, 0) == '_busy_'):
                     busy_flag = True
                     time.sleep(0.10)
                     break
@@ -742,7 +742,7 @@ class qBusy_status_txts_class(object):
             while (os.path.exists(file)) and ((time.time() - chktime) < maxWait):
                 time.sleep(0.10)
         if (os.path.exists(file)):
-            return 'busy'
+            return '_busy_'
         else:
             return 'none'
 
@@ -860,109 +860,109 @@ class qBusy_status_txts_class(object):
         # 文字列生成
         txts=[]
         txts.append('[Device control]')
-        if (self.dev_cpu == 'busy'):
+        if (self.dev_cpu == '_busy_'):
             txts.append(' CPU    : slow!___')
         else:
             txts.append(' CPU    : ________')
-        if (self.dev_com == 'busy'):
+        if (self.dev_com == '_busy_'):
             txts.append(' Comm   : disable!')
         else:
             txts.append(' Comm   : ________')
-        if (self.dev_mic == 'busy'):
+        if (self.dev_mic == '_busy_'):
             txts.append(' Mic    : disable!')
         else:
             txts.append(' Mic    : ________')
-        if (self.dev_spk == 'busy'):
+        if (self.dev_spk == '_busy_'):
             txts.append(' Speaker: disable!')
         else:
             txts.append(' Speaker: ________')
-        if (self.dev_cam == 'busy'):
+        if (self.dev_cam == '_busy_'):
             txts.append(' camera : disable!')
         else:
             txts.append(' camera : ________')
-        if (self.dev_dsp == 'busy'):
+        if (self.dev_dsp == '_busy_'):
             txts.append(' Display: disable!')
         else:
             txts.append(' Display: ________')
 
         txts.append('')
         txts.append('[Speech status]')
-        if (self.a_ctrl == 'busy'):
+        if (self.a_ctrl == '_busy_'):
             txts.append(' Ctrl   : active__')
         else:
             txts.append(' Ctrl   : ________')
-        if (self.a_inp == 'busy'):
+        if (self.a_inp == '_busy_'):
             txts.append(' Input  : ready___')
         else:
             txts.append(' Input  : ________')
-        if (self.a_wav == 'busy'):
+        if (self.a_wav == '_busy_'):
             txts.append(' Wave   : busy!___')
         else:
             txts.append(' Wave   : ________')
-        if (self.a_STT == 'busy'):
+        if (self.a_STT == '_busy_'):
             txts.append(' STT    : busy!___')
         else:
             txts.append(' STT    : ________')
-        if (self.a_TTS == 'busy'):
+        if (self.a_TTS == '_busy_'):
             txts.append(' TTS    : busy!___')
         else:
             txts.append(' TTS    : ________')
-        if (self.a_TRA == 'busy'):
+        if (self.a_TRA == '_busy_'):
             txts.append(' TRA    : busy!___')
         else:
             txts.append(' TRA    : ________')
 
-        if (self.a_play == 'busy'):
+        if (self.a_play == '_busy_'):
             txts.append(' Play   : busy!___')
         else:
             txts.append(' Play   : ________')
 
         txts.append('')
         txts.append('[Vision status]')
-        if (self.v_ctrl == 'busy'):
+        if (self.v_ctrl == '_busy_'):
             txts.append(' Ctrl   : active__')
         else:
             txts.append(' Ctrl   : ________')
-        if (self.v_inp == 'busy'):
+        if (self.v_inp == '_busy_'):
             txts.append(' Input  : active__')
         else:
             txts.append(' Input  : ________')
-        if (self.v_QR == 'busy'):
+        if (self.v_QR == '_busy_'):
             txts.append(' QR scan: active__')
         else:
             txts.append(' QR scan: ________')
-        if (self.v_jpg == 'busy'):
+        if (self.v_jpg == '_busy_'):
             txts.append(' jpeg   : busy!___')
         else:
             txts.append(' jpeg   : ________')
-        if (self.v_CV == 'busy'):
+        if (self.v_CV == '_busy_'):
             txts.append(' CV     : busy!___')
         else:
             txts.append(' CV     : ________')
 
         txts.append('')
         txts.append('[Desktop status]')
-        if (self.d_ctrl == 'busy'):
+        if (self.d_ctrl == '_busy_'):
             txts.append(' Ctrl   : active__')
         else:
             txts.append(' Ctrl   : ________')
-        if (self.d_inp == 'busy'):
+        if (self.d_inp == '_busy_'):
             txts.append(' Capture: active__')
         else:
             txts.append(' Capture: ________')
-        if (self.d_QR == 'busy'):
+        if (self.d_QR == '_busy_'):
             txts.append(' QR scan: active__')
         else:
             txts.append(' QR scan: ________')
-        if (self.d_rec == 'busy'):
+        if (self.d_rec == '_busy_'):
             txts.append(' Rec    : rec!____')
         else:
             txts.append(' Rec    : ________')
-        if (self.d_play == 'busy'):
+        if (self.d_play == '_busy_'):
             txts.append(' Play   : play!___')
         else:
             txts.append(' Play   : ________')
-        if (self.d_browser == 'busy'):
+        if (self.d_browser == '_busy_'):
             txts.append(' Browser: play!___')
         else:
             txts.append(' Browser: ________')
@@ -992,11 +992,11 @@ class qBusy_status_txts_class(object):
 
         # 文字列生成
         txts=[]
-        if (self.a_inp == 'busy'):
+        if (self.a_inp == '_busy_'):
             txts.append(' Speech   : ready__')
         else:
             txts.append(' Speech   : _______')
-        if (self.d_rec == 'busy'):
+        if (self.d_rec == '_busy_'):
             txts.append(' Recorder : rec!___')
         else:
             txts.append(' Recorder : _______')

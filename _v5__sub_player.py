@@ -389,12 +389,12 @@ class main_class:
 
             # レディー設定
             if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
 
             # ステータス応答
-            if (inp_name.lower() == 'status'):
+            if (inp_name.lower() == '_status_'):
                 out_name  = inp_name
-                out_value = 'ready'
+                out_value = '_ready_'
                 cn_s.put([out_name, out_value])
 
             # 活動Ｑ検査
@@ -406,7 +406,7 @@ class main_class:
                 self.sub_proc(control, )
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
+            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)
@@ -537,7 +537,7 @@ class main_class:
         else:
             # ビジー設定
             if (not os.path.exists(self.fileBsy)):
-                qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
             return True
 
     # 開始
@@ -570,7 +570,7 @@ class main_class:
 
             # ビジー設定
             if (not os.path.exists(self.fileBsy)):
-                qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
 
             i = hit
             self.play_id[i]   = panel
@@ -697,7 +697,7 @@ if __name__ == '__main__':
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # アイドリング
-        if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
+        if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
             time.sleep(1.00)
         time.sleep(0.50)
 

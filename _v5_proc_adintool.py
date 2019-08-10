@@ -213,19 +213,19 @@ class proc_adintool:
 
             # レディ設定
             if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
 
             # ステータス応答
-            if (inp_name.lower() == 'status'):
+            if (inp_name.lower() == '_status_'):
 
                 out_name  = inp_name
                 out_value = '!ready'
                 if (not adintool_exe is None):
                     files = glob.glob(self.path + '*')
                     if (len(files) == 0):
-                        out_value = 'ready'
+                        out_value = '_ready_'
                     else:
-                        out_value = 'busy'
+                        out_value = '_busy_'
 
                 cn_s.put([out_name, out_value])
 
@@ -235,17 +235,17 @@ class proc_adintool:
 
             # on ?
             sw = 'off'
-            if  (qFunc.busyCheck(qBusy_dev_mic, 1) != 'busy'):
+            if  (qFunc.busyCheck(qBusy_dev_mic, 1) != '_busy_'):
                 if (self.micDev.isdigit()):
                     if (self.micType == 'usb'):
                             sw = 'on'
                     else:
-                        if  (qFunc.busyCheck(qBusy_s_ctrl,  1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_s_wav,   1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_s_STT,   1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_s_TTS,   1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_s_TRA,   1) != 'busy') \
-                        and (qFunc.busyCheck(qBusy_s_play,  1) != 'busy'):
+                        if  (qFunc.busyCheck(qBusy_s_ctrl,  1) != '_busy_') \
+                        and (qFunc.busyCheck(qBusy_s_wav,   1) != '_busy_') \
+                        and (qFunc.busyCheck(qBusy_s_STT,   1) != '_busy_') \
+                        and (qFunc.busyCheck(qBusy_s_TTS,   1) != '_busy_') \
+                        and (qFunc.busyCheck(qBusy_s_TRA,   1) != '_busy_') \
+                        and (qFunc.busyCheck(qBusy_s_play,  1) != '_busy_'):
                             sw = 'on'
 
             # off -> on
@@ -260,7 +260,7 @@ class proc_adintool:
 
                     # ビジー設定 (ready)
                     if (not os.path.exists(self.fileBsy)):
-                        qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                        qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
                     if (str(self.id) == '0'):
                         qFunc.busySet(qBusy_s_inp, True)
 
@@ -286,21 +286,21 @@ class proc_adintool:
 
             # off, accept ?
             sw = 'on'
-            if (qFunc.busyCheck(qBusy_dev_mic, 0) == 'busy'):
+            if (qFunc.busyCheck(qBusy_dev_mic, 0) == '_busy_'):
                     sw = 'off'
             if (self.micType == 'bluetooth'):
                 #if ((self.runMode == 'debug') \
                 # or (self.runMode == 'handsfree') \
                 # or (self.runMode == 'translator')) \                
-                    # if ((qFunc.busyCheck(qBusy_s_wav,   0) == 'busy') \
-                    #  or (qFunc.busyCheck(qBusy_s_STT,   0) == 'busy') \
-                    #  or (qFunc.busyCheck(qBusy_s_TTS,   0) == 'busy') \
-                    #  or (qFunc.busyCheck(qBusy_s_TRA,   0) == 'busy')):
+                    # if ((qFunc.busyCheck(qBusy_s_wav,   0) == '_busy_') \
+                    #  or (qFunc.busyCheck(qBusy_s_STT,   0) == '_busy_') \
+                    #  or (qFunc.busyCheck(qBusy_s_TTS,   0) == '_busy_') \
+                    #  or (qFunc.busyCheck(qBusy_s_TRA,   0) == '_busy_')):
                     #     sw = 'off'
-                #if  (qFunc.busyCheck(qBusy_s_wav,   0) == 'busy') \
-                # or (qFunc.busyCheck(qBusy_s_play,  0) == 'busy'):
+                #if  (qFunc.busyCheck(qBusy_s_wav,   0) == '_busy_') \
+                # or (qFunc.busyCheck(qBusy_s_play,  0) == '_busy_'):
                 #    sw = 'off'
-                if  (qFunc.busyCheck(qBusy_s_play,  0) == 'busy'):
+                if  (qFunc.busyCheck(qBusy_s_play,  0) == '_busy_'):
                     sw = 'off'
             if (not adintool_exe is None):
                 files = glob.glob(self.path + '*')
@@ -343,8 +343,8 @@ class proc_adintool:
 
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
-            or (qFunc.busyCheck(qBusy_dev_mic, 0) == 'busy'):
+            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \
+            or (qFunc.busyCheck(qBusy_dev_mic, 0) == '_busy_'):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.25)
@@ -428,7 +428,7 @@ if __name__ == '__main__':
             print(res_name, res_value, )
 
         if (adintool_thread.proc_s.qsize() == 0):
-            adintool_thread.put(['status', ''])
+            adintool_thread.put(['_status_', ''])
 
         time.sleep(0.05)
 

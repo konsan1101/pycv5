@@ -199,12 +199,12 @@ class proc_txtreader:
 
             # レディ設定
             if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
 
             # ステータス応答
-            if (inp_name.lower() == 'status'):
+            if (inp_name.lower() == '_status_'):
                 out_name  = inp_name
-                out_value = 'ready'
+                out_value = '_ready_'
                 cn_s.put([out_name, out_value])
 
 
@@ -285,7 +285,7 @@ class proc_txtreader:
 
                                 # ビジー設定
                                 if (not os.path.exists(self.fileBsy)):
-                                    qFunc.txtsWrite(self.fileBsy, txts=['busy'], encoding='utf-8', exclusive=False, mode='a', )
+                                    qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
 
                 #except:
                 #    pass
@@ -296,7 +296,7 @@ class proc_txtreader:
             qFunc.remove(self.fileBsy)
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy'):
+            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)
@@ -362,9 +362,9 @@ if __name__ == '__main__':
             print(res_name, res_value, )
 
         if (sttreader_thread.proc_s.qsize() == 0):
-            sttreader_thread.put(['status', ''])
+            sttreader_thread.put(['_status_', ''])
         if (trareader_thread.proc_s.qsize() == 0):
-            trareader_thread.put(['status', ''])
+            trareader_thread.put(['_status_', ''])
 
         time.sleep(0.05)
 

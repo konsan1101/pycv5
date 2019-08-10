@@ -655,12 +655,12 @@ class main_vision:
 
             # レディ設定
             if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['ready'], encoding='utf-8', exclusive=False, mode='a', )
+                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
 
             # ステータス応答
-            if (inp_name.lower() == 'status'):
+            if (inp_name.lower() == '_status_'):
                 out_name  = inp_name
-                out_value = 'ready'
+                out_value = '_ready_'
                 cn_s.put([out_name, out_value])
 
             # 動画ファイル処理（バッチ）時の自動終了
@@ -877,7 +877,7 @@ class main_vision:
                         if (res_name == '[img]'):
                             main_img = res_value.copy()
 
-                            if (qFunc.busyCheck(qBusy_dev_cam, 0) != 'busy'):
+                            if (qFunc.busyCheck(qBusy_dev_cam, 0) != '_busy_'):
 
                                 # 画像識別（ＱＲ）
                                 if ((time.time() - cvreader_last_put) >= 1):
@@ -1032,7 +1032,7 @@ class main_vision:
                 if (not txt2img_thread is None):
 
                     # ステータス状況
-                    if  (qFunc.busyCheck(qBusy_d_rec , 0) != 'busy') \
+                    if  (qFunc.busyCheck(qBusy_d_rec , 0) != '_busy_') \
                     and ((self.runMode == 'debug') \
                      or  (self.runMode == 'handsfree') \
                      or  (self.runMode == 'hud')):
@@ -1105,8 +1105,8 @@ class main_vision:
                                 cn_s.put([out_name, out_value])
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
-            or (qFunc.busyCheck(qBusy_dev_cam, 0) == 'busy'):
+            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \
+            or (qFunc.busyCheck(qBusy_dev_cam, 0) == '_busy_'):
                 time.sleep(1.00)
             time.sleep(0.05)
 
@@ -1574,7 +1574,7 @@ if __name__ == '__main__':
                 control = txt
 
         # ディスプレイ設定
-        if (display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) != 'busy'): 
+        if (display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) != '_busy_'): 
             cv2.namedWindow('Display', cv2.WINDOW_NORMAL)
             #cv2.namedWindow('Display', cv2.WINDOW_AUTOSIZE)
             cv2.moveWindow( 'Display', 0, 0)
@@ -1584,7 +1584,7 @@ if __name__ == '__main__':
             cv2.waitKey(1)
             display = True
             show_onece = True
-        if (not display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) == 'busy'): 
+        if (not display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) == '_busy_'): 
             cv2.destroyWindow('Display')
             cv2.waitKey(1)
             display = None
@@ -1698,8 +1698,8 @@ if __name__ == '__main__':
                 qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # アイドリング
-        if (qFunc.busyCheck(qBusy_dev_cpu, 0) == 'busy') \
-        or (qFunc.busyCheck(qBusy_dev_cam, 0) == 'busy'):
+        if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \
+        or (qFunc.busyCheck(qBusy_dev_cam, 0) == '_busy_'):
             time.sleep(1.00)
         time.sleep(0.02)
 
