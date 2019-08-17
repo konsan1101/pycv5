@@ -264,20 +264,32 @@ class proc_cvreader:
                         qr = ''
                         if (dt):
                             qr = dt
+                            if   (qr == 'http://localhost/v5/mic_on.py'):
+                                qr = '_mic_on_'
+                            elif (qr == 'http://localhost/v5/mic_off.py'):
+                                qr = '_mic_off_'
 
                         read = ''
                         if (qr != '') and (qr != read_last):
                             read = qr
-                            read_last = qr
+                            read_last = read
                             read_time = time.time()
+
                         elif (qr != '') and (qr == read_last):
                             read_time = time.time()
-                        elif (qr == '') and ((time.time() - read_time) > 3):
-                            read_last = ''
+
+                        elif (qr == '') and (read_last != ''):
+                            if (read_last == '_mic_on_') and ((time.time() - read_time) > 3):
+                                read = '_mic_off_'
+                                read_last = ''
+                            elif ((time.time() - read_time) > 3):
+                                read_last = ''
 
                         if (read != ''):
-                            qFunc.logOutput(self.proc_id + ':qrcode [' + dt + ']')
+                            qFunc.logOutput(self.proc_id + ':qrcode [' + qr + ']')
                             qFunc.logOutput(self.proc_id + ':version ' + str(((qrx.shape[0] - 21) / 4) + 1))
+
+                            print(read)
 
                             # 透過変換
                             perspective1 = np.float32([p[0][0],p[1][0],p[2][0],p[3][0]])
