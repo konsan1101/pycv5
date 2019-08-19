@@ -257,40 +257,54 @@ class proc_cvreader:
                     #try:
                     if (True):
 
-                        #dt, p, qrx = qrdetector.detectAndDecode(proc_img)
-                        dt, p, qrx = qrdetector.detectAndDecode(gray1)
-                        #dt, p, qrx = qrdetector.detectAndDecode(gray2)
+                        #qr, p, qrx = qrdetector.detectAndDecode(proc_img)
+                        qr, p, qrx = qrdetector.detectAndDecode(gray1)
+                        #qr, p, qrx = qrdetector.detectAndDecode(gray2)
 
-                        qr = ''
-                        if (dt):
-                            qr = dt
-                            if   (qr == 'http://localhost/v5/mic_on.py'):
-                                qr = '_mic_on_'
-                            elif (qr == 'http://localhost/v5/mic_off.py'):
-                                qr = '_mic_off_'
 
+                        # 読取状況確認 qr -> code
+                        code = ''
+                        if (qr):
+                            code = qr
+                            if   (code == 'http://localhost/v5/mic_on.py'):
+                                code = '_mic_on_'
+                            elif (code == 'http://localhost/v5/mic_off.py'):
+                                code = '_mic_off_'
+
+                        # 新規有効、２重読取無視 code -> read
                         read = ''
-                        if (qr != '') and (qr != read_last):
-                            read = qr
+                        if (code != '') and (code != read_last):
+                            read = code
                             read_last = read
                             read_time = time.time()
 
-                        elif (qr != '') and (qr == read_last):
+                        elif (code != '') and (code == read_last):
                             read_time = time.time()
 
-                        elif (qr == '') and (read_last != ''):
+                        # 一定時間経過確認 -> read
+                        if (code == '') and (read_last != ''):
                             if (read_last == '_mic_on_') and ((time.time() - read_time) > 3):
                                 read = '_mic_off_'
                                 read_last = ''
                             elif ((time.time() - read_time) > 3):
                                 read_last = ''
 
-                        if (read != ''):
+                        # 読取値表示
+                        if (qr) and (read != ''):
                             qFunc.logOutput(self.proc_id + ':qrcode [' + qr + ']')
                             qFunc.logOutput(self.proc_id + ':version ' + str(((qrx.shape[0] - 21) / 4) + 1))
 
-                            print(read)
+                        if (read != ''):
+                            qFunc.logOutput(self.proc_id + ':reader [' + read + ']')
 
+                            # 結果出力
+                            out_name  = 'qrcode'
+                            out_value = read
+                            cn_s.put([out_name, out_value])
+
+                        # 読取画像表示
+                        if (qr) and (read != ''):
+ 
                             # 透過変換
                             perspective1 = np.float32([p[0][0],p[1][0],p[2][0],p[3][0]])
                             sz = int(image_width/4)
@@ -315,16 +329,6 @@ class proc_cvreader:
                             # 結果出力
                             out_name  = '[img]'
                             out_value = matrix_img.copy()
-                            cn_s.put([out_name, out_value])
-
-                            # 結果出力
-                            #out_name  = '[photo]'
-                            #out_value = image_img.copy()
-                            #cn_s.put([out_name, out_value])
-
-                            # 結果出力
-                            out_name  = 'qrcode'
-                            out_value = dt
                             cn_s.put([out_name, out_value])
 
                             # ファイル出力
