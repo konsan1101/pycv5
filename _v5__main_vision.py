@@ -1534,6 +1534,10 @@ if __name__ == '__main__':
 
     qFunc.busyReset_vision(False)
 
+    if (runMode == 'background'):
+        qFunc.busySet(qBusy_dev_cam, True)
+        qFunc.busySet(qBusy_dev_dsp, True)
+
     display_img = None
     display = None
 

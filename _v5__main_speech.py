@@ -867,6 +867,10 @@ if __name__ == '__main__':
 
     qFunc.busyReset_speech(False)
 
+    if (runMode == 'background'):
+        qFunc.busySet(qBusy_dev_mic, True)
+        qFunc.busySet(qBusy_dev_spk, True)
+
     # 起動
 
     if (True):
