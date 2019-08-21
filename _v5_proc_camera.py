@@ -90,6 +90,7 @@ class proc_camera:
         self.camStretch = camStretch
         self.camRotate  = camRotate
         self.camZoom    = camZoom
+        self.camSquare  = '0.05'
         self.camFps     = '5'
         if (camFps.isdigit()):
             self.camFps = str(camFps)
@@ -348,6 +349,43 @@ class proc_camera:
                         zm_img = input_img[y1:y2, x1:x2]
                         input_img = zm_img.copy()
                         input_height, input_width = input_img.shape[:2]
+
+                    # 4角形補足
+                    square_contours = []
+                    if (float(self.camSquare) != 0):
+
+                        # 画像補正
+                        gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
+                        _, thresh = cv2.threshold(gray, 192, 255, cv2.THRESH_BINARY_INV)
+                        thresh_not = cv2.bitwise_not(thresh)
+
+                        # 輪郭抽出・幾何図形取得
+                        contours, hierarchy = cv2.findContours(thresh_not, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                        for i, cnt in enumerate(contours):
+
+                            # 面積で選別
+                            area = cv2.contourArea(cnt)
+                            if (area > ((input_height * input_width) * float(self.camSquare))):
+
+                                # 輪郭長さで輪郭を近似化する。
+                                arclen = cv2.arcLength(cnt, True)
+                                epsilon_len = arclen * 0.05
+                                approx_cnt = cv2.approxPolyDP(cnt, epsilon=epsilon_len, closed=True)
+
+                                # 画数で選別
+                                if (len(approx_cnt) == 4):
+                                #if (True):
+                                    square_contours.append(approx_cnt)
+
+                        # 4角形透過変換
+                        if (len(square_contours) > 0):
+                            dst = []
+                            pts1 = np.float32(square_contours[0])
+                            pts2 = np.float32([[0,input_height],[input_width,input_height],[input_width,0],[0,0]])
+
+                            M = cv2.getPerspectiveTransform(pts1,pts2)
+                            dst = cv2.warpPerspective(input_img,M,(input_width,input_height))
+                            input_img = dst.copy()
 
                     # ＦＰＳ計測
                     fps = qFPS_class.get()
