@@ -404,14 +404,21 @@ if __name__ == '__main__':
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
+    qApiCV     = 'azure'
+    qApiOCR    = qApiCV
+    qApiTrn    = qApiCV
+    qLangCV    = 'ja'
+    qLangOCR   = qLangCV
+    qLangTrn   = 'en'
 
-
-    coreCV_thread = proc_coreCV('coreCV', '0', )
+    coreCV_thread = proc_coreCV('coreCV', '0',
+        qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn, )
     coreCV_thread.start()
 
+    qFunc.makeDirs(qPath_v_jpg,  True )
     #qFunc.copy('_photos/_photo_qrcode.jpg', qPath_v_jpg + '_photo_qrcode.jpg')
     #qFunc.copy('_photos/_photo_ocr_meter.jpg', qPath_v_jpg + '_photo_ocr_meter.jpg')
-    qFunc.copy('_photos/_photo_ocr_bizrobo.png', qPath_v_jpg + '_photo_ocr_bizrobo.png')
+    qFunc.copy('_photos/_photo_ocr_bizrobo.jpg', qPath_v_jpg + '_photo_ocr_bizrobo.jpg')
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):
