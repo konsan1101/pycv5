@@ -321,7 +321,7 @@ class proc_txt2img:
                         if (texts[i].find('active'  )>=0):
                             text_draw.rectangle((0, 5 + (16 + 10)*i, draw_width, (16 + 10)*(i+1)-1), fill=(0xff, 0x00, 0x00))
                             txt_color = (  0,  0,  0)
-                        if (texts[i].find('_ready_'   )>=0):
+                        if (texts[i].find('ready'   )>=0):
                             text_draw.rectangle((0, 5 + (16 + 10)*i, draw_width, (16 + 10)*(i+1)-1), fill=(0x00, 0xff, 0x00))
                             txt_color = (  0,  0,  0)
 

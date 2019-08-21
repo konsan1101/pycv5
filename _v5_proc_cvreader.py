@@ -261,7 +261,6 @@ class proc_cvreader:
                         qr, p, qrx = qrdetector.detectAndDecode(gray1)
                         #qr, p, qrx = qrdetector.detectAndDecode(gray2)
 
-
                         # 読取状況確認 qr -> code
                         code = ''
                         if (qr):
