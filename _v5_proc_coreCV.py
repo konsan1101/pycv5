@@ -409,8 +409,9 @@ if __name__ == '__main__':
     coreCV_thread = proc_coreCV('coreCV', '0', )
     coreCV_thread.start()
 
-    qFunc.copy('_photos/_photo_qrcode.jpg', qPath_v_jpg + '_photo_qrcode.jpg')
-    qFunc.copy('_photos/_photo_ocr_meter.jpg', qPath_v_jpg + '_photo_ocr_meter.jpg')
+    #qFunc.copy('_photos/_photo_qrcode.jpg', qPath_v_jpg + '_photo_qrcode.jpg')
+    #qFunc.copy('_photos/_photo_ocr_meter.jpg', qPath_v_jpg + '_photo_ocr_meter.jpg')
+    qFunc.copy('_photos/_photo_ocr_bizrobo.png', qPath_v_jpg + '_photo_ocr_bizrobo.png')
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):
