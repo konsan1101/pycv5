@@ -404,7 +404,7 @@ if __name__ == '__main__':
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
-    qApiCV     = 'azure'
+    qApiCV     = 'google'
     qApiOCR    = qApiCV
     qApiTrn    = qApiCV
     qLangCV    = 'ja'
@@ -412,13 +412,14 @@ if __name__ == '__main__':
     qLangTrn   = 'en'
 
     coreCV_thread = proc_coreCV('coreCV', '0',
+        'debug', '0',
         qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn, )
     coreCV_thread.start()
 
     qFunc.makeDirs(qPath_v_jpg,  True )
-    #qFunc.copy('_photos/_photo_qrcode.jpg', qPath_v_jpg + '_photo_qrcode.jpg')
-    #qFunc.copy('_photos/_photo_ocr_meter.jpg', qPath_v_jpg + '_photo_ocr_meter.jpg')
-    qFunc.copy('_photos/_photo_ocr_bizrobo.jpg', qPath_v_jpg + '_photo_ocr_bizrobo.jpg')
+    qFunc.copy('_photos/_photo_qrcode.jpg', qPath_v_jpg + '_photo_qrcode.jpg')
+    qFunc.copy('_photos/_photo_ocr_meter.jpg', qPath_v_jpg + '_photo_ocr_meter.jpg')
+    #qFunc.copy('_photos/_photo_ocr_bizrobo.jpg', qPath_v_jpg + '_photo_ocr_bizrobo.jpg')
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):

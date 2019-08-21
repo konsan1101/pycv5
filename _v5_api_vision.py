@@ -88,7 +88,7 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
-qApiCV     = 'google'
+qApiCV     = 'azure'
 qApiOCR    = qApiCV
 qApiTrn    = qApiCV
 qLangCV    = 'ja'
@@ -265,8 +265,10 @@ def qOCR2Trn(useApi='google', inpLang='ja', inpAry=['Hallo'], trnLang='en', apiR
 
     if (resText == '') and (api == 'azure'):
         a_azureAPI = a_azure_api.SpeechAPI()
-        ver, key = a_azure_key.getkey('tra')
-        res = a_azureAPI.authenticate('tra', ver, key, )
+        key     = a_azure_key.getkey('tra', 'key', )
+        authurl = a_azure_key.getkey('tra', 'authurl', )
+        procurl = a_azure_key.getkey('tra', 'procurl', )
+        res = a_azureAPI.authenticate('tra', key, authurl, procurl, )
         if (res == True):
             resAry = []
             resAry.append('[Translate] ' + trnLang + ' (' + api + ')')
