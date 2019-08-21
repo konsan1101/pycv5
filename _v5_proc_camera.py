@@ -90,7 +90,7 @@ class proc_camera:
         self.camStretch = camStretch
         self.camRotate  = camRotate
         self.camZoom    = camZoom
-        self.camSquare  = '0.05'
+        self.camSquare  = '0.2'
         self.camFps     = '5'
         if (camFps.isdigit()):
             self.camFps = str(camFps)
@@ -358,6 +358,7 @@ class proc_camera:
                         gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
                         _, thresh = cv2.threshold(gray, 192, 255, cv2.THRESH_BINARY_INV)
                         thresh_not = cv2.bitwise_not(thresh)
+                        input_img = thresh_not.copy()
 
                         # 輪郭抽出・幾何図形取得
                         contours, hierarchy = cv2.findContours(thresh_not, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
