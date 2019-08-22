@@ -83,14 +83,14 @@ qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 class proc_camera:
 
     def __init__(self, name='thread', id='0', runMode='debug', 
-                    camDev='0', camMode='vga', camStretch='0', camRotate='0', camZoom='1.0', camFps='5', ):
+                    camDev='0', camMode='harf', camStretch='0', camRotate='0', camZoom='1.0', camFps='5', ):
         self.runMode    = runMode
         self.camDev     = camDev
         self.camMode    = camMode
         self.camStretch = camStretch
         self.camRotate  = camRotate
         self.camZoom    = camZoom
-        self.camSquare  = '0.2'
+        self.camSquare  = '0.05'
         self.camFps     = '5'
         if (camFps.isdigit()):
             self.camFps = str(camFps)
@@ -379,14 +379,34 @@ class proc_camera:
                                     square_contours.append(approx_cnt)
 
                         # 4角形透過変換
-                        if (len(square_contours) > 0):
+                        for i, cnt in enumerate(square_contours):
+
+                            # 輪郭に外接する長方形を取得する。
+                            x, y, width, height = cv2.boundingRect(cnt)
+
+                            # 透過変換
                             dst = []
-                            pts1 = np.float32(square_contours[0])
-                            pts2 = np.float32([[0,input_height],[input_width,input_height],[input_width,0],[0,0]])
+                            pts1 = np.float32(cnt)
+                            pts2 = np.float32([[0,height],[width,height],[width,0],[0,0]])
 
                             M = cv2.getPerspectiveTransform(pts1,pts2)
-                            dst = cv2.warpPerspective(input_img,M,(input_width,input_height))
-                            input_img = dst.copy()
+                            dst = cv2.warpPerspective(input_img,M,(width,height))
+
+                            #input_img = dst.copy()
+
+                            # オーバーレイ
+                            over_x = x
+                            over_y = y
+                            over_img = dst.copy()
+                            over_height, over_width = over_img.shape[:2]
+
+                            if  (over_x >=0) and (over_y >=0) \
+                            and ((over_x + over_width) < input_width) \
+                            and ((over_y + over_height) < input_height):
+                                input_img[over_y:over_y+over_height, over_x:over_x+over_width] = over_img
+                                cv2.rectangle(input_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
+
+
 
                     # ＦＰＳ計測
                     fps = qFPS_class.get()
@@ -471,7 +491,7 @@ if __name__ == '__main__':
     camera_thread.start()
 
     chktime = time.time()
-    while ((time.time() - chktime) < 15):
+    while ((time.time() - chktime) < 60):
 
         res_data  = camera_thread.get()
         res_name  = res_data[0]
