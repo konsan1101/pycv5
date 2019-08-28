@@ -18,6 +18,8 @@ import time
 import codecs
 import glob
 
+import unicodedata
+
 
 
 # qFunc 共通ルーチン
@@ -74,6 +76,55 @@ qBusy_d_QR      = qFunc.getValue('qBusy_d_QR'     )
 qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
+
+
+
+def dshow_dev():
+    cam = []
+    mic = []
+
+    if (os.name == 'nt'):
+
+        ffmpeg = subprocess.Popen(['ffmpeg', '-f', 'dshow', '-list_devices', 'true', '-i', 'dummy', ],
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+        flag = ''
+        while True:
+            # バッファから1行読み込む.
+            line = ffmpeg.stderr.readline()
+            # バッファが空 + プロセス終了.
+            if (not line) and (not ffmpeg.poll() is None):
+                break
+            # テキスト
+            txt = line.decode('utf-8')
+            if   (txt.find('DirectShow video devices') >=0):
+                flag = 'cam'
+            elif (txt.find('DirectShow audio devices') >=0):
+                flag = 'mic'
+            elif (flag == 'cam') and (txt.find(']  "') >=0):
+                st = txt.find(']  "') + 4
+                en = txt[st:].find('"')
+                cam.append(txt[st:st+en])
+                #print('cam:', txt[st:st+en])
+            elif (flag == 'mic') and (txt.find(']  "') >=0):
+                st = txt.find(']  "') + 4
+                en = txt[st:].find('"')
+                mic.append(txt[st:st+en])
+                #print('mic:', txt[st:st+en])
+
+        ffmpeg.terminate()
+        ffmpeg = None
+
+    return cam, mic
+
+def is_japanese(string):
+    for ch in string:
+        name = unicodedata.name(ch) 
+        if "CJK UNIFIED" in name \
+        or "HIRAGANA" in name \
+        or "KATAKANA" in name:
+            return True
+    return False
 
 
 
@@ -146,7 +197,7 @@ class proc_recorder:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -158,8 +209,8 @@ class proc_recorder:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -370,6 +421,9 @@ class proc_recorder:
         or (proc_text.lower() == '_rec_restart_') \
         or (proc_text.find(u'録画') >=0):
 
+            # デバイス名取得
+            cam, mic = dshow_dev()
+
             # 開始
             nowTime    = datetime.datetime.now()
             stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
@@ -397,11 +451,31 @@ class proc_recorder:
                 self.rec_start = time.time()
             else:
                 # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
-                self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', \
-                            '-i', 'desktop', '-loglevel', 'warning', \
-                            '-r', '5', self.rec_file1, ], \
-                            stdin=subprocess.PIPE, )
-                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                # ffmpeg -f gdigrab -i desktop -f dshow -i audio="mic" -vcodec libx264 temp_mp4.mp4
+                if (len(mic) > 0) and (not is_japanese(mic[0])):
+                    microphone = 'audio="' + mic[0] + '"'
+                    self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
+                                '-f', 'dshow', '-i', microphone, \
+                                '-loglevel', 'warning', \
+                                '-r', '5', self.rec_file1, ], \
+                                stdin=subprocess.PIPE, )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_file1
+                    #print(cmd)
+                    #self.rec_id = subprocess.Popen(['powershell', ], \
+                    #            stdin=subprocess.PIPE, )
+                    #            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    #self.rec_id.stdin.write(b'chcp 65001\n')
+                    #self.rec_id.stdin.write(cmd.encode())
+                    #self.rec_id.stdin.write(b'\n')
+
+                else:
+                    self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
+                                '-loglevel', 'warning', \
+                                '-r', '5', self.rec_file1, ], \
+                                stdin=subprocess.PIPE, )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
                 self.rec_start = time.time()
 
             # ログ

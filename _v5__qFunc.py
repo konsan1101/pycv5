@@ -300,7 +300,7 @@ class qFunc_class:
 
         if (maxWait == 0):
             try:
-                os.remove(filename)            
+                os.remove(filename) 
                 return True
             except:
                 return False
@@ -308,7 +308,7 @@ class qFunc_class:
             chktime = time.time()
             while (os.path.exists(filename)) and ((time.time() - chktime) <= maxWait):
                 try:
-                    os.remove(filename)            
+                    os.remove(filename)
                     return True
                 except:
                     pass
