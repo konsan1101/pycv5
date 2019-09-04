@@ -23,7 +23,7 @@ import json
 # watson 画像認識、OCR認識
 #import watson_developer_cloud as watson
 import ibm_watson as watson
-import vision_api_watson_key as azure_key
+import vision_api_watson_key as watson_key
 
 
 
@@ -121,53 +121,33 @@ class VisionAPI:
 
             if (True):
                 try:
-                    rb = open(inpImage, 'rb')
-                    photo = rb.read()
-                    rb.close
-                    rb = None
-
                     visual_recognition = watson.VisualRecognitionV3(
                         version = '2018-03-19', 
                         iam_apikey = self.cv_key,)
 
-                    res = visual_recognition.classify(
-                        images_file = rb,
-                        threshold = '0.6',
-                        owners = ["IBM"],
-                        ).get_result()
+                    with open(inpImage, 'rb') as images_file:
+                        res = visual_recognition.classify(
+                            images_file,
+                            threshold = '0.6',
+                            owners = ["IBM"],
+                            accept_language=lang,
+                            ).get_result()
 
-                    print(res)
+#recognize_text
+                    #print(json.dumps(res, indent=2))
+                    #print(res['images'][0]['classifiers'][0]['classes'])
 
-                    #if (res.status_code == 200):
-                    #    res_json = json.loads(res.text)
-                    #    #print(res_json)
-                    #    categories  = ''
-                    #    captions    = ''
-                    #    description = ''
-                    #    try:
-                    #        for names in res_json.get('categories'):
-                    #            nm = str(names.get('name')).replace('_',' ')
-                    #            categories += nm.strip() + ','
-                    #    except:
-                    #        pass
-
-                    #    try:
-                    #        for texts in res_json.get('description').get('captions'):
-                    #            cp = str(texts.get('text'))
-                    #            captions = cp.strip() + ','
-                    #    except:
-                    #        pass
-
-                    #    try:
-                    #        for tag in res_json.get('description').get('tags'):
-                    #            description += str(tag).strip() + ','
-                    #    except:
-                    #        pass
+                    classes = ''
+                    try:
+                        for class_nm in res['images'][0]['classifiers'][0]['classes']:
+                            nm = str(class_nm.get('class'))
+                            #print(nm)
+                            classes += nm.strip() + ','
+                    except:
+                        pass
 
                     res_text = {}
-                    #    res_text['categories']  = categories
-                    #    res_text['captions']    = captions
-                    #    res_text['description'] = description
+                    res_text['classes'] = classes
                 except:
                     pass
 
@@ -187,12 +167,32 @@ class VisionAPI:
 
             if (True):
                 try:
-                    rb = open(inpImage, 'rb')
-                    photo = rb.read()
-                    rb.close
-                    rb = None
+                    visual_recognition = watson.VisualRecognitionV3(
+                        version = '2018-03-19', 
+                        iam_apikey = self.cv_key,)
 
-                    res_text = None
+                    with open(inpImage, 'rb') as images_file:
+                        res = visual_recognition.recognize_text(
+                            images_file,
+                            threshold = '0.6',
+                            owners = ["IBM"],
+                            accept_language=lang,
+                            ).get_result()
+
+                    print(json.dumps(res, indent=2))
+                    #print(res['images'][0]['classifiers'][0]['classes'])
+
+                    classes = ''
+                    try:
+                        for class_nm in res['images'][0]['classifiers'][0]['classes']:
+                            nm = str(class_nm.get('class'))
+                            #print(nm)
+                            classes += nm.strip() + ','
+                    except:
+                        pass
+
+                    res_text = {}
+                    res_text['classes'] = classes
 
                 except:
                     pass
@@ -222,8 +222,6 @@ if __name__ == '__main__':
                 res, api = watsonAPI.cv(inpImage=temp, inpLang='ja', )
                 if (not res is None):
                     print('cv')
-                    print('categories:', res['categories'], '(' + api + ')' )
-                    print('captions:', res['captions']   , '(' + api + ')' )
-                    print('description:', res['description'], '(' + api + ')' )
+                    print('classes:', res['classes'], '(' + api + ')' )
 
 
