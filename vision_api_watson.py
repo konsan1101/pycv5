@@ -133,7 +133,6 @@ class VisionAPI:
                             accept_language=lang,
                             ).get_result()
 
-#recognize_text
                     #print(json.dumps(res, indent=2))
                     #print(res['images'][0]['classifiers'][0]['classes'])
 
@@ -166,7 +165,7 @@ class VisionAPI:
             lang = inpLang
 
             if (True):
-                try:
+                #try:
                     visual_recognition = watson.VisualRecognitionV3(
                         version = '2018-03-19', 
                         iam_apikey = self.cv_key,)
@@ -174,28 +173,23 @@ class VisionAPI:
                     with open(inpImage, 'rb') as images_file:
                         res = visual_recognition.recognize_text(
                             images_file,
-                            threshold = '0.6',
-                            owners = ["IBM"],
                             accept_language=lang,
                             ).get_result()
 
-                    print(json.dumps(res, indent=2))
+                    #print(json.dumps(res, indent=2))
                     #print(res['images'][0]['classifiers'][0]['classes'])
 
-                    classes = ''
-                    try:
-                        for class_nm in res['images'][0]['classifiers'][0]['classes']:
-                            nm = str(class_nm.get('class'))
-                            #print(nm)
-                            classes += nm.strip() + ','
-                    except:
-                        pass
-
                     res_text = {}
-                    res_text['classes'] = classes
+                    #try:
+                    #    for class_nm in res['images'][0]['classifiers'][0]['classes']:
+                    #        nm = str(class_nm.get('class'))
+                    #        #print(nm)
+                    #        res_text.append( nm.strip() )
+                    #except:
+                    #    pass
 
-                except:
-                    pass
+                #except:
+                #    pass
 
             return res_text, 'watson'
 
@@ -211,8 +205,11 @@ if __name__ == '__main__':
         res1 = watsonAPI.authenticate('cv' ,
                     watson_key.getkey('cv' ,'url'),
                     watson_key.getkey('cv' ,'key'), )
-        print('authenticate:', res1, )
-        if (res1 == True):
+        res2 = watsonAPI.authenticate('ocr' ,
+                    watson_key.getkey('ocr' ,'url'),
+                    watson_key.getkey('ocr' ,'key'), )
+        print('authenticate:', res1, res2)
+        if (res1 == True) and (res2 == True):
 
             file = '_photos/_photo_cv.jpg'
             temp = 'temp_photo_cv.jpg'
@@ -223,5 +220,16 @@ if __name__ == '__main__':
                 if (not res is None):
                     print('cv')
                     print('classes:', res['classes'], '(' + api + ')' )
+
+            #file = '_photos/_photo_ocr_meter.jpg'
+            #temp = 'temp_photo_ocr_meter.jpg'
+
+            #res = watsonAPI.convert(inpImage=file, outImage=temp, bw=True, )
+            #if (res == True):
+            #    res, api = watsonAPI.ocr(inpImage=temp, inpLang='ja', )
+            #    if (not res is None):
+            #        print('ocr')
+            #        for text in res:
+            #            print('ocr:', text, '(' + api + ')' )
 
 
