@@ -22,6 +22,11 @@ import unicodedata
 
 
 
+# インターフェース
+qCtrl_control_desktop    = 'temp/control_desktop.txt'
+
+
+
 # qFunc 共通ルーチン
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
@@ -550,21 +555,48 @@ if __name__ == '__main__':
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
-
-
+    # 開始
     recorder_thread = proc_recorder('recorder', '0', )
     recorder_thread.start()
 
-    recorder_thread.put(['control', '_rec_start_'])
-    time.sleep(10)
+    # 単体実行
+    if (len(sys.argv) < 2):
+        recorder_thread.put(['control', '_rec_start_'])
+        time.sleep(10)
 
-    recorder_thread.put(['control', '_rec_start_'])
-    time.sleep(70)
+        recorder_thread.put(['control', '_rec_start_'])
+        time.sleep(70)
 
-    recorder_thread.put(['control', '_rec_stop_'])
-    time.sleep(5)
+        recorder_thread.put(['control', '_rec_stop_'])
+        time.sleep(5)
 
+    # バッチ実行
+    if (len(sys.argv) >= 2):
+
+        # 初期設定
+        qFunc.remove(qCtrl_control_desktop  )
+
+        # 録画開始
+        recorder_thread.put(['control', '_rec_start_'])
+
+        # 待機ループ
+        while (True):
+
+            # 終了確認
+            control = ''
+            txts, txt = qFunc.txtsRead(qCtrl_control_desktop)
+            if (txts != False):
+                qFunc.logOutput(str(txt))
+                if (txt == '_end_'):
+                    break
+                else:
+                    qFunc.remove(qCtrl_control_desktop)
+                    control = txt
+
+    # 終了
     recorder_thread.stop()
     del recorder_thread
+
+
 
 
