@@ -465,8 +465,8 @@ class proc_recorder:
                                 '-r', '5', self.rec_file1, ], \
                                 stdin=subprocess.PIPE, )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                    cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_file1
-                    print(cmd)
+                    #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_file1
+                    #print(cmd)
                     #self.rec_id = subprocess.Popen(['powershell', ], \
                     #            stdin=subprocess.PIPE, )
                     #            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
