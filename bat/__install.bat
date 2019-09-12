@@ -97,12 +97,13 @@ rem python -m pip  install --upgrade watson-developer-cloud
     python -m pip  install --upgrade ibm-watson
 
 ECHO;
-ECHO ---------
-ECHO microsoft
-ECHO ---------
+ECHO ---------------
+ECHO microsoft,azure
+ECHO ---------------
 rem python -m pip  install --upgrade mstranslator
     python -m pip  install --upgrade cognitive_face
     python -m pip  install --upgrade pywin32
+    python -m pip  install --upgrade azure-storage-blob
 
 ECHO;
 ECHO ------
