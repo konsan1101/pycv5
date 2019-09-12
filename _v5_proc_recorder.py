@@ -559,6 +559,8 @@ if __name__ == '__main__':
     recorder_thread = proc_recorder('recorder', '0', )
     recorder_thread.start()
 
+
+
     # 単体実行
     if (len(sys.argv) < 2):
         recorder_thread.put(['control', '_rec_start_'])
@@ -570,11 +572,13 @@ if __name__ == '__main__':
         recorder_thread.put(['control', '_rec_stop_'])
         time.sleep(5)
 
+
+
     # バッチ実行
     if (len(sys.argv) >= 2):
 
         # 初期設定
-        qFunc.remove(qCtrl_control_desktop  )
+        qFunc.remove(qCtrl_control_desktop)
 
         # 録画開始
         recorder_thread.put(['control', '_rec_start_'])
@@ -592,11 +596,13 @@ if __name__ == '__main__':
                 else:
                     qFunc.remove(qCtrl_control_desktop)
                     control = txt
+            
+            time.sleep(0.50)
+
+
 
     # 終了
     recorder_thread.stop()
     del recorder_thread
-
-
 
 

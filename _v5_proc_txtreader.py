@@ -146,7 +146,7 @@ class proc_txtreader:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -158,8 +158,8 @@ class proc_txtreader:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
