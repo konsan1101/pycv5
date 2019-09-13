@@ -517,6 +517,80 @@ class proc_recorder:
             # ログ
             qFunc.logOutput(self.proc_id + ':' + u'desktop recorder → ' + self.rec_file + ' stop', display=True,)
 
+            # サムネイル抽出
+            try:
+                shutil.rmtree(qPath_work + 'movie2jpeg')
+            except:
+                pass
+            try:
+                os.mkdir(qPath_work + 'movie2jpeg')
+            except:
+                pass
+
+            #try:
+            if (True):
+
+                ffmpeg = subprocess.Popen(['ffmpeg', '-i', self.rec_file1, \
+                    '-vf', 'select=gt(scene\,0.1), scale=0:0,showinfo', \
+                    '-vsync', 'vfr', qPath_work + 'movie2jpeg/%04d.jpg', \
+                    #], )
+                    ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+                logb, errb = ffmpeg.communicate()
+                ffmpeg.terminate()
+                ffmpeg = None
+
+                #log = logb.decode()
+                log = errb.decode()
+                txts = log.split('\n')
+                for txt in txts:
+                    print(txt)
+
+                    if (txt.find('Parsed_showinfo')>0) and (txt.find('] n:')>0):
+                        # n, pts_time
+                        n = ''
+                        pts_time = ''
+                        x_n        = txt.find(' n:')
+                        x_pts      = txt.find(' pts:')
+                        x_pts_time = txt.find(' pts_time:')
+                        x_pos      = txt.find(' pos:')
+                        if (x_n != 0) and (x_pts != 0):
+                            n = txt[x_n+3:x_pts].strip()
+                        if (x_pts_time != 0) and (x_pos != 0):
+                            pts_time = txt[x_pts_time+10:x_pos].strip()
+
+                        if (n == '') or (pts_time == ''):
+                            print(txt)
+                            pass
+                        else:
+                            print(n,pts_time)
+
+                            # s => hhmmss
+                            f = self.rec_file.replace(qPath_work, '')
+                            yyyy = int(f[:4])
+                            mm   = int(f[4:6])
+                            dd   = int(f[6:8])
+                            h    = int(f[9:11])
+                            m    = int(f[11:13])
+                            s    = int(f[13:15])
+                            dt1=datetime.datetime(yyyy,mm,dd,h,m,s,0)
+                            dt2=datetime.timedelta(seconds=float(pts_time))
+                            dtx=dt1+dt2
+                            stamp = dtx.strftime('%Y%m%d.%H%M%S.%f')
+                            #print(stamp[:-7])
+
+                            # rename
+                            seq4 = '{:04}'.format(int(n) + 1)
+                            f1 =  qPath_work + 'movie2jpeg/' + seq4 + '.jpg'
+                            f2 =  qPath_work + 'movie2jpeg/' + stamp[:-3] + '.jpg'
+                            f3 =  qPath_d_movie + stamp[:-3] + '.jpg'
+                            os.rename(f1, f2)
+                            qFunc.copy(f2, f3)
+                            os.remove(f2)
+
+            #except:
+            #    pass
+
             # リセット
             qFunc.kill('ffmpeg', )
 
