@@ -133,11 +133,43 @@ def is_japanese(string):
 
 
 
-def movie2jpeg(inpPath='', inpName='',outPath='', wrkPath=''):
+def movie2mp4(inpPath='', inpName='',outPath1='', outPath2='', ):
     # パラメータ
     inpFile = inpPath + inpName
-    if (outPath == ''):
-        outPath = qPath_d_movie
+    if (outPath1 == ''):
+        outPath1 = qPath_d_movie
+    if (outPath2 == ''):
+        outPath2 = qPath_rec
+    outFile1 = outPath1 + inpName[:-4] + '.mp4'
+    outFile2 = outPath2 + inpName[:-4] + '.mp4'
+
+    #try:
+    if (True):
+
+        ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFile, \
+            outFile1, \
+            #], )
+            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+        logb, errb = ffmpeg.communicate()
+        ffmpeg.terminate()
+        ffmpeg = None
+
+        qFunc.copy(outFile1, outFile2)
+        #os.remove(inpFile)
+
+    #except:
+    #    pass
+
+
+
+def movie2jpg(inpPath='', inpName='',outPath1='', outPath2='', wrkPath=''):
+    # パラメータ
+    inpFile = inpPath + inpName
+    if (outPath1 == ''):
+        outPath1 = qPath_d_movie
+    if (outPath2 == ''):
+        outPath2 = qPath_rec
     if (wrkPath == ''):
         wrkPath = qPath_work + 'movie2jpeg/'
 
@@ -161,7 +193,7 @@ def movie2jpeg(inpPath='', inpName='',outPath='', wrkPath=''):
         log = errb.decode()
         txts = log.split('\n')
         for txt in txts:
-            print(txt)
+            #print(txt)
 
             if (txt.find('Parsed_showinfo')>0) and (txt.find('] n:')>0):
                 # n, pts_time
@@ -177,10 +209,10 @@ def movie2jpeg(inpPath='', inpName='',outPath='', wrkPath=''):
                     pts_time = txt[x_pts_time+10:x_pos].strip()
 
                 if (n == '') or (pts_time == ''):
-                    print(txt)
+                    #print(txt)
                     pass
                 else:
-                    print(n,pts_time)
+                    #print(n,pts_time)
 
                     # s => hhmmss
                     #f = self.rec_file.replace(qPath_work, '')
@@ -201,9 +233,11 @@ def movie2jpeg(inpPath='', inpName='',outPath='', wrkPath=''):
                     seq4 = '{:04}'.format(int(n) + 1)
                     f1 =  wrkPath + seq4 + '.jpg'
                     f2 =  wrkPath + stamp[:-3] + '.jpg'
-                    f3 =  outPath + stamp[:-3] + '.jpg'
+                    f3 =  outPath1 + stamp[:-3] + '.jpg'
+                    f4 =  outPath2 + stamp[:-3] + '.jpg'
                     os.rename(f1, f2)
                     qFunc.copy(f2, f3)
+                    qFunc.copy(f2, f4)
                     os.remove(f2)
 
     #except:
@@ -242,15 +276,11 @@ class proc_recorder:
         self.rec_start = {}
         self.rec_limit = {}
         self.rec_file  = {}
-        self.rec_file1 = {}
-        self.rec_file2 = {}
         for i in range(1, self.rec_max+1):
             self.rec_id[i]    = None
             self.rec_start[i] = time.time()
             self.rec_limit[i] = None
             self.rec_file[i]  = ''
-            self.rec_file1[i] = ''
-            self.rec_file2[i] = ''
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -497,21 +527,17 @@ class proc_recorder:
                 or (proc_text.lower() == '_rec_restart_') \
                 or (proc_text.find(u'開始') >=0):
                     self.rec_limit[index] = None
-                    self.rec_file[index]  = qPath_work    + stamp + '.flv'
-                    self.rec_file1[index] = qPath_d_movie + stamp + '.flv'
-                    self.rec_file2[index] = qPath_rec     + stamp + '.flv'
+                    self.rec_file[index]  = qPath_work + stamp + '.flv'
                 else:
-                    self.rec_limit[index] = time.time() + 30
-                    self.rec_file[index]  = qPath_work    + stamp + '.flv'
                     rec_txt = '.' + qFunc.txt2filetxt(proc_text)
-                    self.rec_file1[index] = qPath_d_movie + stamp + rec_txt + '.flv'
-                    self.rec_file2[index] = qPath_rec     + stamp + rec_txt + '.flv'
+                    self.rec_limit[index] = time.time() + 30
+                    self.rec_file[index]  = qPath_work + stamp + rec_txt + '.flv'
 
                 if (os.name != 'nt'):
                     # ffmpeg -f avfoundation -list_devices true -i ""
                     self.rec_id[index] = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
                                 '-i', '1:2', '-loglevel', 'warning', \
-                                '-r', '5', self.rec_file1[index], ], \
+                                '-r', '5', self.rec_file[index], ], \
                                 stdin=subprocess.PIPE, )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                     self.rec_start[index] = time.time()
@@ -523,10 +549,10 @@ class proc_recorder:
                         self.rec_id[index] = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
                                     '-f', 'dshow', '-i', microphone, \
                                     '-loglevel', 'warning', \
-                                    '-r', '5', self.rec_file1[index], ], \
+                                    '-r', '5', self.rec_file[index], ], \
                                     stdin=subprocess.PIPE, )
                                     #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                        #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_file1
+                        #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_file[index]
                         #print(cmd)
                         #self.rec_id[index] = subprocess.Popen(['powershell', ], \
                         #            stdin=subprocess.PIPE, )
@@ -538,7 +564,7 @@ class proc_recorder:
                     else:
                         self.rec_id[index] = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
                                     '-loglevel', 'warning', \
-                                    '-r', '5', self.rec_file1[index], ], \
+                                    '-r', '5', self.rec_file[index], ], \
                                     stdin=subprocess.PIPE, )
                                     #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
@@ -568,7 +594,7 @@ class proc_recorder:
                 index = min_index
 
         # 停止処理
-        if (index == 0):
+        if (index != 0):
             if (not self.rec_id[index] is None):
 
                 # 録画停止
@@ -598,23 +624,41 @@ class proc_recorder:
                 qFunc.logOutput(self.proc_id + ':' + u'desktop recorder → ' + self.rec_file[index] + ' stop', display=True,)
 
                 # サムネイル抽出
-                inpName = self.rec_file1[index].replace(qPath_d_movie ,'')
-                movie2jpeg(inpPath = qPath_d_movie, inpName=inpName, outPath = qPath_d_movie, wrkPath=qPath_work + 'movie2jpeg', )
+                inpName = self.rec_file[index].replace(qPath_work ,'')
+                movie2jpg(inpPath = qPath_work, inpName=inpName, outPath1 = qPath_d_movie, outPath2 = qPath_rec, wrkPath=qPath_work + 'movie2jpeg', )
+                movie2mp4(inpPath = qPath_work, inpName=inpName, outPath1 = qPath_d_movie, outPath2 = qPath_rec, )
 
-                # リセット
-                qFunc.kill('ffmpeg', )
+        # index
+        index = 0
+        if (index == 0):
+            min_start = time.time()
+            min_index = 0
+            max_start = 0
+            max_index = 0
+            for i in range(1, self.rec_max+1):
+                if (not self.rec_id[i] is None):
+                    if (self.rec_start[i] < min_start):
+                        min_start = self.rec_start[i]
+                        min_index = i
+                    if (self.rec_start[i] > max_start):
+                        max_start = self.rec_start[i]
+                        max_index = i
+            if (min_index != 0):
+                index = min_index
 
-                # メッセージ
-                if (proc_text.lower() == '_rec_stop_'):
-                    speechs = []
-                    speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
-                    qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+        # リセット
+        if (index == 0):
+            qFunc.kill('ffmpeg', )
+
+            # メッセージ
+            speechs = []
+            speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
+            qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # ビジー解除
-            if (proc_text.lower() != '_rec_restart_'):
-                qFunc.remove(self.fileBsy)
-                if (str(self.id) == '0'):
-                    qFunc.busySet(qBusy_d_rec, False)
+            qFunc.remove(self.fileBsy)
+            if (str(self.id) == '0'):
+                qFunc.busySet(qBusy_d_rec, False)
 
 
 
@@ -647,20 +691,14 @@ if __name__ == '__main__':
 
     # 単体実行
     if (len(sys.argv) < 2):
-        recorder_thread.put(['control', '_rec_start_'])
-        time.sleep(10)
+        recorder_thread.put(['control', u'デスクトップの録画'])
+        time.sleep(40)
 
-        recorder_thread.put(['control', '_rec_start_'])
-        time.sleep(10)
-
-        recorder_thread.put(['control', '_rec_stop_'])
-        time.sleep(5)
-
-        recorder_thread.put(['control', '_rec_start_'])
+        recorder_thread.put(['control', u'録画開始'])
         time.sleep(70)
 
-        recorder_thread.put(['control', '_rec_stop_'])
-        time.sleep(5)
+        recorder_thread.put(['control', u'録画終了'])
+        time.sleep(10)
 
 
 
