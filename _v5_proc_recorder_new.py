@@ -134,6 +134,7 @@ def is_japanese(string):
 
 
 def movie2mp4(inpPath='', inpName='',outPath1='', outPath2='', ):
+
     # パラメータ
     inpFile = inpPath + inpName
     if (outPath1 == ''):
@@ -146,8 +147,9 @@ def movie2mp4(inpPath='', inpName='',outPath1='', outPath2='', ):
     #try:
     if (True):
 
+        # 動画処理
         ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFile, \
-            outFile1, \
+            '-vcodec', 'libx264', '-r', '2', outFile1, \
             #], )
             ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
@@ -155,6 +157,7 @@ def movie2mp4(inpPath='', inpName='',outPath1='', outPath2='', ):
         ffmpeg.terminate()
         ffmpeg = None
 
+        # コピー
         qFunc.copy(outFile1, outFile2)
         #os.remove(inpFile)
 
@@ -164,6 +167,7 @@ def movie2mp4(inpPath='', inpName='',outPath1='', outPath2='', ):
 
 
 def movie2jpg(inpPath='', inpName='',outPath1='', outPath2='', wrkPath=''):
+
     # パラメータ
     inpFile = inpPath + inpName
     if (outPath1 == ''):
@@ -173,15 +177,30 @@ def movie2jpg(inpPath='', inpName='',outPath1='', outPath2='', wrkPath=''):
     if (wrkPath == ''):
         wrkPath = qPath_work + 'movie2jpeg/'
 
-    # 作業ディレクトリ
-    qFunc.makeDirs(wrkPath, remove=True, )
+    # ファイルに日時
+    dt1 = None
+    f = inpName
+    yyyy = int(f[:4])
+    mm   = int(f[4:6])
+    dd   = int(f[6:8])
+    h    = int(f[9:11])
+    m    = int(f[11:13])
+    s    = int(f[13:15])
+    dt1=datetime.datetime(yyyy,mm,dd,h,m,s,0)
+
+    hit = False
 
     #try:
     if (True):
 
+        # 作業ディレクトリ
+        qFunc.makeDirs(wrkPath, remove=True, )
+
+        # 動画処理
         ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFile, \
-            '-vf', 'select=gt(scene\,0.1), scale=0:0,showinfo', \
-            '-vsync', 'vfr', wrkPath + '%04d.jpg', \
+            '-vf', 'select=gt(scene\,0.05), scale=0:0,showinfo', \
+            '-vsync', 'vfr', \
+            wrkPath + '%04d.jpg', \
             #], )
             ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
@@ -215,30 +234,60 @@ def movie2jpg(inpPath='', inpName='',outPath1='', outPath2='', wrkPath=''):
                     #print(n,pts_time)
 
                     # s => hhmmss
-                    #f = self.rec_file.replace(qPath_work, '')
-                    f = inpName
-                    yyyy = int(f[:4])
-                    mm   = int(f[4:6])
-                    dd   = int(f[6:8])
-                    h    = int(f[9:11])
-                    m    = int(f[11:13])
-                    s    = int(f[13:15])
-                    dt1=datetime.datetime(yyyy,mm,dd,h,m,s,0)
                     dt2=datetime.timedelta(seconds=float(pts_time))
                     dtx=dt1+dt2
                     stamp = dtx.strftime('%Y%m%d.%H%M%S.%f')
                     #print(stamp[:-7])
 
-                    # rename
+                    # コピー
                     seq4 = '{:04}'.format(int(n) + 1)
-                    f1 =  wrkPath + seq4 + '.jpg'
-                    f2 =  wrkPath + stamp[:-3] + '.jpg'
-                    f3 =  outPath1 + stamp[:-3] + '.jpg'
-                    f4 =  outPath2 + stamp[:-3] + '.jpg'
-                    os.rename(f1, f2)
-                    qFunc.copy(f2, f3)
-                    qFunc.copy(f2, f4)
-                    os.remove(f2)
+                    f0 =  wrkPath + seq4 + '.jpg'
+                    if (os.path.exists(f0)):
+                        f1 =  wrkPath + stamp[:-3] + '.jpg'
+                        f2 =  outPath1 + stamp[:-3] + '.jpg'
+                        f3 =  outPath2 + stamp[:-3] + '.jpg'
+                        os.rename(f0, f1)
+                        qFunc.copy(f1, f2)
+                        qFunc.copy(f1, f3)
+                        os.remove(f1)
+
+                        hit = True
+
+    #except:
+    #    pass
+
+    #try:
+    if (hit == True):
+
+        # 作業ディレクトリ
+        qFunc.makeDirs(wrkPath, remove=True, )
+
+        # 動画処理
+        ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFile, \
+            '-ss', '0', '-t', '1', '-r', '1', \
+            '-qmin', '1', '-q', '1', \
+            wrkPath + '%04d.jpg', \
+            ], )
+            #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+        #logb, errb = ffmpeg.communicate()
+        ffmpeg.wait()
+        ffmpeg.terminate()
+        ffmpeg = None
+
+        stamp = dt1.strftime('%Y%m%d.%H%M%S.000000')
+
+        # コピー
+        seq4 = '0000'
+        f0 =  wrkPath + seq4 + '.jpg'
+        if (os.path.exists(f0)):
+            f1 =  wrkPath + stamp[:-3] + '.jpg'
+            f2 =  outPath1 + stamp[:-3] + '.jpg'
+            f3 =  outPath2 + stamp[:-3] + '.jpg'
+            os.rename(f0, f1)
+            qFunc.copy(f1, f2)
+            qFunc.copy(f1, f3)
+            os.remove(f1)
 
     #except:
     #    pass
@@ -625,7 +674,7 @@ class proc_recorder:
 
                 # サムネイル抽出
                 inpName = self.rec_file[index].replace(qPath_work ,'')
-                movie2jpg(inpPath = qPath_work, inpName=inpName, outPath1 = qPath_d_movie, outPath2 = qPath_rec, wrkPath=qPath_work + 'movie2jpeg', )
+                movie2jpg(inpPath = qPath_work, inpName=inpName, outPath1 = qPath_d_movie, outPath2 = qPath_rec, wrkPath=qPath_work + 'movie2jpeg/', )
                 movie2mp4(inpPath = qPath_work, inpName=inpName, outPath1 = qPath_d_movie, outPath2 = qPath_rec, )
 
         # index
