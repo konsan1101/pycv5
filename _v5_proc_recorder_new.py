@@ -198,7 +198,7 @@ def movie2jpg(inpPath='', inpName='',outPath1='', outPath2='', wrkPath=''):
 
         # 動画処理
         ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFile, \
-            '-vf', 'select=gt(scene\,0.05), scale=0:0,showinfo', \
+            '-vf', 'select=gt(scene\,0.1), scale=0:0,showinfo', \
             '-vsync', 'vfr', \
             wrkPath + '%04d.jpg', \
             #], )
@@ -257,28 +257,28 @@ def movie2jpg(inpPath='', inpName='',outPath1='', outPath2='', wrkPath=''):
     #    pass
 
     #try:
-    if (hit == True):
+    #if (hit == True):
+    if (True):
 
         # 作業ディレクトリ
         qFunc.makeDirs(wrkPath, remove=True, )
 
         # 動画処理
         ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFile, \
-            '-ss', '0', '-t', '1', '-r', '1', \
+            '-ss', '0', '-t', '2', '-r', '1', \
             '-qmin', '1', '-q', '1', \
             wrkPath + '%04d.jpg', \
-            ], )
-            #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            #], )
+            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-        #logb, errb = ffmpeg.communicate()
-        ffmpeg.wait()
+        logb, errb = ffmpeg.communicate()
         ffmpeg.terminate()
         ffmpeg = None
 
         stamp = dt1.strftime('%Y%m%d.%H%M%S.000000')
 
         # コピー
-        seq4 = '0000'
+        seq4 = '0001'
         f0 =  wrkPath + seq4 + '.jpg'
         if (os.path.exists(f0)):
             f1 =  wrkPath + stamp[:-3] + '.jpg'
@@ -584,23 +584,28 @@ class proc_recorder:
 
                 if (os.name != 'nt'):
                     # ffmpeg -f avfoundation -list_devices true -i ""
-                    self.rec_id[index] = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
-                                '-i', '1:2', '-loglevel', 'warning', \
-                                '-r', '5', self.rec_file[index], ], \
-                                stdin=subprocess.PIPE, )
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    self.rec_id[index] = subprocess.Popen(['ffmpeg', \
+                                '-f', 'avfoundation', \
+                                '-i', '1:2', \
+                                '-q:v', '0', \
+                                '-r', '5', self.rec_file[index], \
+                                '-loglevel', 'warning', \
+                                ], stdin=subprocess.PIPE, )
+                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                     self.rec_start[index] = time.time()
                 else:
                     # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
                     # ffmpeg -f gdigrab -i desktop -f dshow -i audio="mic" -vcodec libx264 temp_mp4.mp4
                     if (len(mic) > 0) and (not is_japanese(mic[0])):
                         microphone = 'audio="' + mic[0] + '"'
-                        self.rec_id[index] = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
-                                    '-f', 'dshow', '-i', microphone, \
-                                    '-loglevel', 'warning', \
-                                    '-r', '5', self.rec_file[index], ], \
-                                    stdin=subprocess.PIPE, )
-                                    #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        self.rec_id[index] = subprocess.Popen(['ffmpeg', \
+                                '-f', 'gdigrab', '-i', 'desktop', \
+                                '-f', 'dshow', '-i', microphone, \
+                                '-q:v', '0', \
+                                '-r', '5', self.rec_file[index], \
+                                '-loglevel', 'warning', \
+                                ], stdin=subprocess.PIPE, )
+                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                         #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_file[index]
                         #print(cmd)
                         #self.rec_id[index] = subprocess.Popen(['powershell', ], \
@@ -611,11 +616,13 @@ class proc_recorder:
                         #self.rec_id[index].stdin.write(b'\n')
 
                     else:
-                        self.rec_id[index] = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
-                                    '-loglevel', 'warning', \
-                                    '-r', '5', self.rec_file[index], ], \
-                                    stdin=subprocess.PIPE, )
-                                    #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        self.rec_id[index] = subprocess.Popen(['ffmpeg', \
+                                '-f', 'gdigrab', '-i', 'desktop', \
+                                '-q:v', '0', \
+                                '-r', '5', self.rec_file[index], \
+                                '-loglevel', 'warning', \
+                                ], stdin=subprocess.PIPE, )
+                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                     self.rec_start[index] = time.time()
 
