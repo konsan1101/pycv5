@@ -132,6 +132,7 @@ def is_japanese(string):
     return False
 
 
+
 def movie2jpeg(inpPath='', inpName='',outPath='', wrkPath=''):
     # パラメータ
     inpFile = inpPath + inpName
@@ -236,7 +237,13 @@ class proc_recorder:
         self.proc_seq  = 0
 
         # 変数設定
-        self.rec_max  = 10
+        self.rec_max   = 10
+        self.rec_id    = {}
+        self.rec_start = {}
+        self.rec_limit = {}
+        self.rec_file  = {}
+        self.rec_file1 = {}
+        self.rec_file2 = {}
         for i in range(1, self.rec_max+1):
             self.rec_id[i]    = None
             self.rec_start[i] = time.time()
@@ -309,7 +316,7 @@ class proc_recorder:
 
         # 録画開始
         if (self.runMode == 'recorder'):
-            self.sub_proc('_rec_start_', )
+            self.sub_proc(u'録画開始', )
 
         # 待機ループ
         self.proc_step = '5'
@@ -346,15 +353,19 @@ class proc_recorder:
                     if (time.time() > self.rec_limit[i]):
                         self.rec_limit[i] = None
                         
-                        # 録画停止
+                        # 録画ストップ
                         if (not self.rec_id[i] is None):
                             self.sub_stop(i, '_rec_stop_', )
 
-            # 5分毎、自動リスタート
+            # 一定時間（5分毎）、自動リスタート
             for i in range(1, self.rec_max+1):
                 if (not self.rec_id[i] is None):
                     if ((time.time() - self.rec_start[i]) > (60 * 1)):
-                        self.sub_start(0, '_rec_start_', )
+
+                        # 録画リスタート
+                        self.sub_start(0, '_rec_restart_', )
+
+                        # 録画ストップ
                         self.sub_stop(i, '_rec_stop_', )
 
             # ステータス応答
@@ -365,7 +376,7 @@ class proc_recorder:
 
             # 処理
             elif (inp_name.lower() != ''):
-                self.sub_proc(0, inp_value, )
+                self.sub_proc(inp_value, )
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
@@ -383,10 +394,8 @@ class proc_recorder:
             # レディ解除
             qFunc.remove(self.fileRdy)
 
-            # 録画停止
-            for i in range(1, self.rec_max+1):
-                if (not self.rec_id[i] is None):
-                    self.sub_stop(i, '_rec_stop_', )
+            # 録画終了
+            self.sub_proc(u'録画終了')
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -407,85 +416,29 @@ class proc_recorder:
 
 
     # 処理
-    def sub_proc(self, i, proc_text, ):
+    def sub_proc(self, proc_text, ):
 
         if (proc_text.find(u'リセット') >=0):
 
-            # 停止
-            last_file  = ''
-            last_file1 = ''
-            last_file2 = ''
-            if (not self.rec_id is None):
-                self.sub_stop(proc_text, )
-                last_file  = self.rec_file
-                last_file1 = self.rec_file1
-                last_file2 = self.rec_file2
-
-            # 保管
-            if (last_file != ''):
-                qFunc.copy(last_file1, last_file2)
+            # 全録画ストップ
+            for i in range(1, self.rec_max+1):
+                if (not self.rec_id[i] is None):
+                    self.sub_stop(i, '_rec_stop_', )
 
         elif (proc_text.lower() == '_rec_stop_') \
           or (proc_text.find(u'録画') >=0) and (proc_text.find(u'停止') >=0) \
           or (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
 
-            # 停止
-            last_file  = ''
-            last_file1 = ''
-            last_file2 = ''
-            if (not self.rec_id is None):
-                self.sub_stop(proc_text, )
-                last_file  = self.rec_file
-                last_file1 = self.rec_file1
-                last_file2 = self.rec_file2
-
-            # 保管
-            if (last_file != ''):
-                qFunc.copy(last_file1, last_file2)
-
-        elif (proc_text.lower() == '_rec_restart_'):
-
-            # 停止
-            last_file  = ''
-            last_file1 = ''
-            last_file2 = ''
-            if (not self.rec_id is None):
-                self.sub_stop(proc_text, )
-                last_file  = self.rec_file
-                last_file1 = self.rec_file1
-                last_file2 = self.rec_file2
-
-            # 開始
-            self.sub_start(proc_text, )
-
-            # メッセージ
-            speechs = []
-            speechs.append({ 'text':u'デスクトップ録画が継続中です。', 'wait':0, })
-            qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
-
-            # 保管
-            if (last_file != ''):
-                qFunc.copy(last_file1, last_file2)
+            # 全録画ストップ
+            for i in range(1, self.rec_max+1):
+                if (not self.rec_id[i] is None):
+                    self.sub_stop(i, '_rec_stop_', )
 
         elif (proc_text.lower() == '_rec_start_') \
           or (proc_text.find(u'録画') >=0):
 
-            # 停止
-            last_file  = ''
-            last_file1 = ''
-            last_file2 = ''
-            if (not self.rec_id is None):
-                self.sub_stop(proc_text, )
-                last_file  = self.rec_file
-                last_file1 = self.rec_file1
-                last_file2 = self.rec_file2
-
-            # 開始
-            self.sub_start(proc_text, )
-
-            # 保管
-            if (last_file != ''):
-                qFunc.copy(last_file1, last_file2)
+            # 録画スタート
+            self.sub_start(0, proc_text, )
 
 
 
@@ -523,6 +476,11 @@ class proc_recorder:
             or (proc_text.find(u'録画') >=0):
                 speechs = []
                 speechs.append({ 'text':u'録画を開始します。', 'wait':0, })
+                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
+            elif (proc_text.lower() == '_rec_restart_'):
+                speechs = []
+                speechs.append({ 'text':u'録画が継続中です。', 'wait':0, })
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             if (proc_text.lower() == '_rec_start_') \
@@ -691,6 +649,12 @@ if __name__ == '__main__':
     if (len(sys.argv) < 2):
         recorder_thread.put(['control', '_rec_start_'])
         time.sleep(10)
+
+        recorder_thread.put(['control', '_rec_start_'])
+        time.sleep(10)
+
+        recorder_thread.put(['control', '_rec_stop_'])
+        time.sleep(5)
 
         recorder_thread.put(['control', '_rec_start_'])
         time.sleep(70)
