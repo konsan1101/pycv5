@@ -348,13 +348,14 @@ class proc_recorder:
                         
                         # 録画停止
                         if (not self.rec_id[i] is None):
-                            self.sub_proc(i, '_rec_stop_', )
+                            self.sub_stop(i, '_rec_stop_', )
 
             # 5分毎、自動リスタート
             for i in range(1, self.rec_max+1):
                 if (not self.rec_id[i] is None):
                     if ((time.time() - self.rec_start[i]) > (60 * 1)):
-                        self.sub_proc(i, '_rec_restart_', )
+                        self.sub_start(0, '_rec_start_', )
+                        self.sub_stop(i, '_rec_stop_', )
 
             # ステータス応答
             if (inp_name.lower() == '_status_'):
@@ -385,7 +386,7 @@ class proc_recorder:
             # 録画停止
             for i in range(1, self.rec_max+1):
                 if (not self.rec_id[i] is None):
-                    self.sub_proc(i, '_rec_stop_', )
+                    self.sub_stop(i, '_rec_stop_', )
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -489,134 +490,173 @@ class proc_recorder:
 
 
     # 録画開始
-    def sub_start(self, proc_text, ):
+    def sub_start(self, index, proc_text, ):
 
-        # ビジー設定
-        if (not os.path.exists(self.fileBsy)):
-            qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
-            if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_d_rec, True)
-
-        # メッセージ
-        if (proc_text.lower() == '_rec_start_') \
-        or (proc_text.find(u'録画') >=0):
-            speechs = []
-            speechs.append({ 'text':u'録画を開始します。', 'wait':0, })
-            qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
-
-        if (proc_text.lower() == '_rec_start_') \
-        or (proc_text.lower() == '_rec_restart_') \
-        or (proc_text.find(u'録画') >=0):
-
-            # デバイス名取得
-            cam, mic = dshow_dev()
-
-            # 開始
-            nowTime    = datetime.datetime.now()
-            stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
-            if (proc_text.lower() == '_rec_start_') \
-            or (proc_text.lower() == '_rec_restart_') \
-            or (proc_text.find(u'開始') >=0):
-                self.rec_limit = None
-                self.rec_file  = qPath_work    + stamp + '.flv'
-                self.rec_file1 = qPath_d_movie + stamp + '.flv'
-                self.rec_file2 = qPath_rec     + stamp + '.flv'
-            else:
-                self.rec_limit = time.time() + 30
-                self.rec_file  = qPath_work    + stamp + '.flv'
-                rec_txt = '.' + qFunc.txt2filetxt(proc_text)
-                self.rec_file1 = qPath_d_movie + stamp + rec_txt + '.flv'
-                self.rec_file2 = qPath_rec     + stamp + rec_txt + '.flv'
-
-            if (os.name != 'nt'):
-                # ffmpeg -f avfoundation -list_devices true -i ""
-                self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
-                            '-i', '1:2', '-loglevel', 'warning', \
-                            '-r', '5', self.rec_file1, ], \
-                            stdin=subprocess.PIPE, )
-                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                self.rec_start = time.time()
-            else:
-                # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
-                # ffmpeg -f gdigrab -i desktop -f dshow -i audio="mic" -vcodec libx264 temp_mp4.mp4
-                if (len(mic) > 0) and (not is_japanese(mic[0])):
-                    microphone = 'audio="' + mic[0] + '"'
-                    self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
-                                '-f', 'dshow', '-i', microphone, \
-                                '-loglevel', 'warning', \
-                                '-r', '5', self.rec_file1, ], \
-                                stdin=subprocess.PIPE, )
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                    #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_file1
-                    #print(cmd)
-                    #self.rec_id = subprocess.Popen(['powershell', ], \
-                    #            stdin=subprocess.PIPE, )
-                    #            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                    #self.rec_id.stdin.write(b'chcp 65001\n')
-                    #self.rec_id.stdin.write(cmd.encode())
-                    #self.rec_id.stdin.write(b'\n')
-
+        # index
+        if (index == 0):
+            min_start = time.time()
+            min_index = 0
+            max_start = 0
+            max_index = 0
+            for i in range(1, self.rec_max+1):
+                if (self.rec_id[i] is None):
+                    index = i
                 else:
-                    self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
-                                '-loglevel', 'warning', \
-                                '-r', '5', self.rec_file1, ], \
-                                stdin=subprocess.PIPE, )
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    if (self.rec_start[i] < min_start):
+                        min_start = self.rec_start[i]
+                        min_index = i
+                    if (self.rec_start[i] > max_start):
+                        max_start = self.rec_start[i]
+                        max_index = i
 
-                self.rec_start = time.time()
+        # 開始処理
+        if (index != 0):
 
-            # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'desktop recorder → ' + self.rec_file + ' start', display=True,)
-
-    # 録画停止
-    def sub_stop(self, proc_text, ):
-
-        if (not self.rec_id is None):
-
-            # 録画停止
-            if (os.name != 'nt'):
-                self.rec_id.stdin.write(b'q\n')
-                try:
-                    self.rec_id.stdin.flush()
-                except:
-                    pass
-                time.sleep(2.00)
-                #self.rec_id.send_signal(signal.SIGINT)
-            else:
-                self.rec_id.stdin.write(b'q\n')
-                try:
-                    self.rec_id.stdin.flush()
-                except:
-                    pass
-                time.sleep(2.00)
-                #self.rec_id.send_signal(signal.CTRL_C_EVENT)
-
-            time.sleep(2.00)
-            self.rec_id.wait()
-            self.rec_id.terminate()
-            self.rec_id = None
-
-            # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'desktop recorder → ' + self.rec_file + ' stop', display=True,)
-
-            # サムネイル抽出
-            inpName = self.rec_file1.replace(qPath_d_movie ,'')
-            movie2jpeg(inpPath = qPath_d_movie, inpName=inpName, outPath = qPath_d_movie, wrkPath=qPath_work + 'movie2jpeg', )
-
-            # リセット
-            qFunc.kill('ffmpeg', )
+            # ビジー設定
+            if (not os.path.exists(self.fileBsy)):
+                qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
+                if (str(self.id) == '0'):
+                    qFunc.busySet(qBusy_d_rec, True)
 
             # メッセージ
-            if (proc_text.lower() == '_rec_stop_'):
+            if (proc_text.lower() == '_rec_start_') \
+            or (proc_text.find(u'録画') >=0):
                 speechs = []
-                speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
+                speechs.append({ 'text':u'録画を開始します。', 'wait':0, })
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
-        # ビジー解除
-        if (proc_text.lower() != '_rec_restart_'):
-            qFunc.remove(self.fileBsy)
-            if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_d_rec, False)
+            if (proc_text.lower() == '_rec_start_') \
+            or (proc_text.lower() == '_rec_restart_') \
+            or (proc_text.find(u'録画') >=0):
+
+                # デバイス名取得
+                cam, mic = dshow_dev()
+
+                # 開始
+                nowTime    = datetime.datetime.now()
+                stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
+                if (proc_text.lower() == '_rec_start_') \
+                or (proc_text.lower() == '_rec_restart_') \
+                or (proc_text.find(u'開始') >=0):
+                    self.rec_limit[index] = None
+                    self.rec_file[index]  = qPath_work    + stamp + '.flv'
+                    self.rec_file1[index] = qPath_d_movie + stamp + '.flv'
+                    self.rec_file2[index] = qPath_rec     + stamp + '.flv'
+                else:
+                    self.rec_limit[index] = time.time() + 30
+                    self.rec_file[index]  = qPath_work    + stamp + '.flv'
+                    rec_txt = '.' + qFunc.txt2filetxt(proc_text)
+                    self.rec_file1[index] = qPath_d_movie + stamp + rec_txt + '.flv'
+                    self.rec_file2[index] = qPath_rec     + stamp + rec_txt + '.flv'
+
+                if (os.name != 'nt'):
+                    # ffmpeg -f avfoundation -list_devices true -i ""
+                    self.rec_id[index] = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
+                                '-i', '1:2', '-loglevel', 'warning', \
+                                '-r', '5', self.rec_file1[index], ], \
+                                stdin=subprocess.PIPE, )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    self.rec_start[index] = time.time()
+                else:
+                    # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
+                    # ffmpeg -f gdigrab -i desktop -f dshow -i audio="mic" -vcodec libx264 temp_mp4.mp4
+                    if (len(mic) > 0) and (not is_japanese(mic[0])):
+                        microphone = 'audio="' + mic[0] + '"'
+                        self.rec_id[index] = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
+                                    '-f', 'dshow', '-i', microphone, \
+                                    '-loglevel', 'warning', \
+                                    '-r', '5', self.rec_file1[index], ], \
+                                    stdin=subprocess.PIPE, )
+                                    #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_file1
+                        #print(cmd)
+                        #self.rec_id[index] = subprocess.Popen(['powershell', ], \
+                        #            stdin=subprocess.PIPE, )
+                        #            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        #self.rec_id[index].stdin.write(b'chcp 65001\n')
+                        #self.rec_id[index].stdin.write(cmd.encode())
+                        #self.rec_id[index].stdin.write(b'\n')
+
+                    else:
+                        self.rec_id[index] = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
+                                    '-loglevel', 'warning', \
+                                    '-r', '5', self.rec_file1[index], ], \
+                                    stdin=subprocess.PIPE, )
+                                    #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+                    self.rec_start[index] = time.time()
+
+                # ログ
+                qFunc.logOutput(self.proc_id + ':' + u'desktop recorder → ' + self.rec_file[index] + ' start', display=True,)
+
+    # 録画停止
+    def sub_stop(self, index, proc_text, ):
+
+        # index
+        if (index == 0):
+            min_start = time.time()
+            min_index = 0
+            max_start = 0
+            max_index = 0
+            for i in range(1, self.rec_max+1):
+                if (not self.rec_id[i] is None):
+                    if (self.rec_start[i] < min_start):
+                        min_start = self.rec_start[i]
+                        min_index = i
+                    if (self.rec_start[i] > max_start):
+                        max_start = self.rec_start[i]
+                        max_index = i
+            if (min_index != 0):
+                index = min_index
+
+        # 停止処理
+        if (index == 0):
+            if (not self.rec_id[index] is None):
+
+                # 録画停止
+                if (os.name != 'nt'):
+                    self.rec_id[index].stdin.write(b'q\n')
+                    try:
+                        self.rec_id[index].stdin.flush()
+                    except:
+                        pass
+                    time.sleep(2.00)
+                    #self.rec_id[index].send_signal(signal.SIGINT)
+                else:
+                    self.rec_id[index].stdin.write(b'q\n')
+                    try:
+                        self.rec_id[index].stdin.flush()
+                    except:
+                        pass
+                    time.sleep(2.00)
+                    #self.rec_id[index].send_signal(signal.CTRL_C_EVENT)
+
+                time.sleep(2.00)
+                self.rec_id[index].wait()
+                self.rec_id[index].terminate()
+                self.rec_id[index] = None
+
+                # ログ
+                qFunc.logOutput(self.proc_id + ':' + u'desktop recorder → ' + self.rec_file[index] + ' stop', display=True,)
+
+                # サムネイル抽出
+                inpName = self.rec_file1[index].replace(qPath_d_movie ,'')
+                movie2jpeg(inpPath = qPath_d_movie, inpName=inpName, outPath = qPath_d_movie, wrkPath=qPath_work + 'movie2jpeg', )
+
+                # リセット
+                qFunc.kill('ffmpeg', )
+
+                # メッセージ
+                if (proc_text.lower() == '_rec_stop_'):
+                    speechs = []
+                    speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
+                    qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
+            # ビジー解除
+            if (proc_text.lower() != '_rec_restart_'):
+                qFunc.remove(self.fileBsy)
+                if (str(self.id) == '0'):
+                    qFunc.busySet(qBusy_d_rec, False)
 
 
 
