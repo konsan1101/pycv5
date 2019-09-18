@@ -132,23 +132,75 @@ def is_japanese(string):
     return False
 
 
-def movie2jpeg(inpPath='', inpName='',outPath='', wrkPath=''):
+
+def movie2mp4(inpPath='', inpName='',outPath1='', outPath2='', ):
+
     # パラメータ
     inpFile = inpPath + inpName
-    if (outPath == ''):
-        outPath = qPath_d_movie
-    if (wrkPath == ''):
-        wrkPath = qPath_work + 'movie2jpeg/'
-
-    # 作業ディレクトリ
-    qFunc.makeDirs(wrkPath, remove=True, )
+    if (outPath1 == ''):
+        outPath1 = qPath_d_movie
+    if (outPath2 == ''):
+        outPath2 = qPath_rec
+    outFile1 = outPath1 + inpName[:-4] + '.mp4'
+    outFile2 = outPath2 + inpName[:-4] + '.mp4'
 
     #try:
     if (True):
 
+        # 動画処理
+        ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFile, \
+            '-vcodec', 'libx264', '-r', '2', outFile1, \
+            #], )
+            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+        logb, errb = ffmpeg.communicate()
+        ffmpeg.terminate()
+        ffmpeg = None
+
+        # コピー
+        qFunc.copy(outFile1, outFile2)
+        #os.remove(inpFile)
+
+    #except:
+    #    pass
+
+
+
+def movie2jpg(inpPath='', inpName='',outPath1='', outPath2='', wrkPath=''):
+
+    # パラメータ
+    inpFile = inpPath + inpName
+    if (outPath1 == ''):
+        outPath1 = qPath_d_movie
+    if (outPath2 == ''):
+        outPath2 = qPath_rec
+    if (wrkPath == ''):
+        wrkPath = qPath_work + 'movie2jpeg/'
+
+    # ファイルに日時
+    dt1 = None
+    f = inpName
+    yyyy = int(f[:4])
+    mm   = int(f[4:6])
+    dd   = int(f[6:8])
+    h    = int(f[9:11])
+    m    = int(f[11:13])
+    s    = int(f[13:15])
+    dt1=datetime.datetime(yyyy,mm,dd,h,m,s,0)
+
+    hit = False
+
+    #try:
+    if (True):
+
+        # 作業ディレクトリ
+        qFunc.makeDirs(wrkPath, remove=True, )
+
+        # 動画処理
         ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFile, \
             '-vf', 'select=gt(scene\,0.1), scale=0:0,showinfo', \
-            '-vsync', 'vfr', wrkPath + '%04d.jpg', \
+            '-vsync', 'vfr', \
+            wrkPath + '%04d.jpg', \
             #], )
             ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
@@ -160,7 +212,7 @@ def movie2jpeg(inpPath='', inpName='',outPath='', wrkPath=''):
         log = errb.decode()
         txts = log.split('\n')
         for txt in txts:
-            print(txt)
+            #print(txt)
 
             if (txt.find('Parsed_showinfo')>0) and (txt.find('] n:')>0):
                 # n, pts_time
@@ -176,34 +228,66 @@ def movie2jpeg(inpPath='', inpName='',outPath='', wrkPath=''):
                     pts_time = txt[x_pts_time+10:x_pos].strip()
 
                 if (n == '') or (pts_time == ''):
-                    print(txt)
+                    #print(txt)
                     pass
                 else:
-                    print(n,pts_time)
+                    #print(n,pts_time)
 
                     # s => hhmmss
-                    #f = self.rec_file.replace(qPath_work, '')
-                    f = inpName
-                    yyyy = int(f[:4])
-                    mm   = int(f[4:6])
-                    dd   = int(f[6:8])
-                    h    = int(f[9:11])
-                    m    = int(f[11:13])
-                    s    = int(f[13:15])
-                    dt1=datetime.datetime(yyyy,mm,dd,h,m,s,0)
                     dt2=datetime.timedelta(seconds=float(pts_time))
                     dtx=dt1+dt2
                     stamp = dtx.strftime('%Y%m%d.%H%M%S.%f')
                     #print(stamp[:-7])
 
-                    # rename
+                    # コピー
                     seq4 = '{:04}'.format(int(n) + 1)
-                    f1 =  wrkPath + seq4 + '.jpg'
-                    f2 =  wrkPath + stamp[:-3] + '.jpg'
-                    f3 =  outPath + stamp[:-3] + '.jpg'
-                    os.rename(f1, f2)
-                    qFunc.copy(f2, f3)
-                    os.remove(f2)
+                    f0 =  wrkPath + seq4 + '.jpg'
+                    if (os.path.exists(f0)):
+                        f1 =  wrkPath + stamp[:-3] + '.jpg'
+                        f2 =  outPath1 + stamp[:-3] + '.jpg'
+                        f3 =  outPath2 + stamp[:-3] + '.jpg'
+                        os.rename(f0, f1)
+                        qFunc.copy(f1, f2)
+                        qFunc.copy(f1, f3)
+                        os.remove(f1)
+
+                        hit = True
+
+    #except:
+    #    pass
+
+    #try:
+    #if (hit == True):
+    if (True):
+
+        # 作業ディレクトリ
+        qFunc.makeDirs(wrkPath, remove=True, )
+
+        # 動画処理
+        ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFile, \
+            '-ss', '0', '-t', '2', '-r', '1', \
+            '-qmin', '1', '-q', '1', \
+            wrkPath + '%04d.jpg', \
+            #], )
+            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+        logb, errb = ffmpeg.communicate()
+        ffmpeg.terminate()
+        ffmpeg = None
+
+        stamp = dt1.strftime('%Y%m%d.%H%M%S.000000')
+
+        # コピー
+        seq4 = '0001'
+        f0 =  wrkPath + seq4 + '.jpg'
+        if (os.path.exists(f0)):
+            f1 =  wrkPath + stamp[:-3] + '.jpg'
+            f2 =  outPath1 + stamp[:-3] + '.jpg'
+            f3 =  outPath2 + stamp[:-3] + '.jpg'
+            os.rename(f0, f1)
+            qFunc.copy(f1, f2)
+            qFunc.copy(f1, f3)
+            os.remove(f1)
 
     #except:
     #    pass
@@ -236,12 +320,16 @@ class proc_recorder:
         self.proc_seq  = 0
 
         # 変数設定
-        self.rec_id     = None
-        self.rec_start  = time.time()
-        self.rec_limit  = None
-        self.rec_file   = ''
-        self.rec_file1  = ''
-        self.rec_file2  = ''
+        self.rec_max   = 10
+        self.rec_id    = {}
+        self.rec_start = {}
+        self.rec_limit = {}
+        self.rec_file  = {}
+        for i in range(1, self.rec_max+1):
+            self.rec_id[i]    = None
+            self.rec_start[i] = time.time()
+            self.rec_limit[i] = None
+            self.rec_file[i]  = ''
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -307,7 +395,7 @@ class proc_recorder:
 
         # 録画開始
         if (self.runMode == 'recorder'):
-            self.sub_proc('_rec_start_', )
+            self.sub_proc(u'録画開始', )
 
         # 待機ループ
         self.proc_step = '5'
@@ -339,18 +427,25 @@ class proc_recorder:
                 qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
 
             # 制限時間、自動停止
-            if (not self.rec_limit is None):
-                if (time.time() > self.rec_limit):
-                    self.rec_limit = None
-                    
-                    # 録画停止
-                    if (not self.rec_id is None):
-                        self.sub_proc('_rec_stop_', )
+            for i in range(1, self.rec_max+1):
+                if (not self.rec_limit[i] is None):
+                    if (time.time() > self.rec_limit[i]):
+                        self.rec_limit[i] = None
+                        
+                        # 録画ストップ
+                        if (not self.rec_id[i] is None):
+                            self.sub_stop(i, '_rec_stop_', )
 
-            # 5分毎、自動リスタート
-            if (not self.rec_id is None):
-                if ((time.time() - self.rec_start) > (60 * 1)):
-                    self.sub_proc('_rec_restart_', )
+            # 一定時間（5分毎）、自動リスタート
+            for i in range(1, self.rec_max+1):
+                if (not self.rec_id[i] is None):
+                    if ((time.time() - self.rec_start[i]) > (60 * 1)):
+
+                        # 録画リスタート
+                        self.sub_start(0, '_rec_restart_', )
+
+                        # 録画ストップ
+                        self.sub_stop(i, '_rec_stop_', )
 
             # ステータス応答
             if (inp_name.lower() == '_status_'):
@@ -378,9 +473,8 @@ class proc_recorder:
             # レディ解除
             qFunc.remove(self.fileRdy)
 
-            # 録画停止
-            if (not self.rec_id is None):
-                self.sub_proc('_rec_stop_', )
+            # 録画終了
+            self.sub_proc(u'録画終了')
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -405,210 +499,219 @@ class proc_recorder:
 
         if (proc_text.find(u'リセット') >=0):
 
-            # 停止
-            last_file  = ''
-            last_file1 = ''
-            last_file2 = ''
-            if (not self.rec_id is None):
-                self.sub_stop(proc_text, )
-                last_file  = self.rec_file
-                last_file1 = self.rec_file1
-                last_file2 = self.rec_file2
-
-            # 保管
-            if (last_file != ''):
-                qFunc.copy(last_file1, last_file2)
+            # 全録画ストップ
+            for i in range(1, self.rec_max+1):
+                if (not self.rec_id[i] is None):
+                    self.sub_stop(i, '_rec_stop_', )
 
         elif (proc_text.lower() == '_rec_stop_') \
           or (proc_text.find(u'録画') >=0) and (proc_text.find(u'停止') >=0) \
           or (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
 
-            # 停止
-            last_file  = ''
-            last_file1 = ''
-            last_file2 = ''
-            if (not self.rec_id is None):
-                self.sub_stop(proc_text, )
-                last_file  = self.rec_file
-                last_file1 = self.rec_file1
-                last_file2 = self.rec_file2
-
-            # 保管
-            if (last_file != ''):
-                qFunc.copy(last_file1, last_file2)
-
-        elif (proc_text.lower() == '_rec_restart_'):
-
-            # 停止
-            last_file  = ''
-            last_file1 = ''
-            last_file2 = ''
-            if (not self.rec_id is None):
-                self.sub_stop(proc_text, )
-                last_file  = self.rec_file
-                last_file1 = self.rec_file1
-                last_file2 = self.rec_file2
-
-            # 開始
-            self.sub_start(proc_text, )
-
-            # メッセージ
-            speechs = []
-            speechs.append({ 'text':u'デスクトップ録画が継続中です。', 'wait':0, })
-            qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
-
-            # 保管
-            if (last_file != ''):
-                qFunc.copy(last_file1, last_file2)
+            # 全録画ストップ
+            for i in range(1, self.rec_max+1):
+                if (not self.rec_id[i] is None):
+                    self.sub_stop(i, '_rec_stop_', )
 
         elif (proc_text.lower() == '_rec_start_') \
           or (proc_text.find(u'録画') >=0):
 
-            # 停止
-            last_file  = ''
-            last_file1 = ''
-            last_file2 = ''
-            if (not self.rec_id is None):
-                self.sub_stop(proc_text, )
-                last_file  = self.rec_file
-                last_file1 = self.rec_file1
-                last_file2 = self.rec_file2
-
-            # 開始
-            self.sub_start(proc_text, )
-
-            # 保管
-            if (last_file != ''):
-                qFunc.copy(last_file1, last_file2)
+            # 録画スタート
+            self.sub_start(0, proc_text, )
 
 
 
     # 録画開始
-    def sub_start(self, proc_text, ):
+    def sub_start(self, index, proc_text, ):
 
-        # ビジー設定
-        if (not os.path.exists(self.fileBsy)):
-            qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
-            if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_d_rec, True)
+        # index
+        if (index == 0):
+            min_start = time.time()
+            min_index = 0
+            max_start = 0
+            max_index = 0
+            for i in range(1, self.rec_max+1):
+                if (self.rec_id[i] is None):
+                    index = i
+                else:
+                    if (self.rec_start[i] < min_start):
+                        min_start = self.rec_start[i]
+                        min_index = i
+                    if (self.rec_start[i] > max_start):
+                        max_start = self.rec_start[i]
+                        max_index = i
 
-        # メッセージ
-        if (proc_text.lower() == '_rec_start_') \
-        or (proc_text.find(u'録画') >=0):
-            speechs = []
-            speechs.append({ 'text':u'録画を開始します。', 'wait':0, })
-            qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+        # 開始処理
+        if (index != 0):
 
-        if (proc_text.lower() == '_rec_start_') \
-        or (proc_text.lower() == '_rec_restart_') \
-        or (proc_text.find(u'録画') >=0):
+            # ビジー設定
+            if (not os.path.exists(self.fileBsy)):
+                qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
+                if (str(self.id) == '0'):
+                    qFunc.busySet(qBusy_d_rec, True)
 
-            # デバイス名取得
-            cam, mic = dshow_dev()
+            # メッセージ
+            if (proc_text.lower() == '_rec_start_') \
+            or (proc_text.find(u'録画') >=0):
+                speechs = []
+                speechs.append({ 'text':u'録画を開始します。', 'wait':0, })
+                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
-            # 開始
-            nowTime    = datetime.datetime.now()
-            stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
+            elif (proc_text.lower() == '_rec_restart_'):
+                speechs = []
+                speechs.append({ 'text':u'録画が継続中です。', 'wait':0, })
+                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
             if (proc_text.lower() == '_rec_start_') \
             or (proc_text.lower() == '_rec_restart_') \
-            or (proc_text.find(u'開始') >=0):
-                self.rec_limit = None
-                self.rec_file  = qPath_work    + stamp + '.flv'
-                self.rec_file1 = qPath_d_movie + stamp + '.flv'
-                self.rec_file2 = qPath_rec     + stamp + '.flv'
-            else:
-                self.rec_limit = time.time() + 30
-                self.rec_file  = qPath_work    + stamp + '.flv'
-                rec_txt = '.' + qFunc.txt2filetxt(proc_text)
-                self.rec_file1 = qPath_d_movie + stamp + rec_txt + '.flv'
-                self.rec_file2 = qPath_rec     + stamp + rec_txt + '.flv'
+            or (proc_text.find(u'録画') >=0):
 
-            if (os.name != 'nt'):
-                # ffmpeg -f avfoundation -list_devices true -i ""
-                self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'avfoundation', \
-                            '-i', '1:2', '-loglevel', 'warning', \
-                            '-r', '5', self.rec_file1, ], \
-                            stdin=subprocess.PIPE, )
-                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                self.rec_start = time.time()
-            else:
-                # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
-                # ffmpeg -f gdigrab -i desktop -f dshow -i audio="mic" -vcodec libx264 temp_mp4.mp4
-                if (len(mic) > 0) and (not is_japanese(mic[0])):
-                    microphone = 'audio="' + mic[0] + '"'
-                    self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
-                                '-f', 'dshow', '-i', microphone, \
-                                '-loglevel', 'warning', \
-                                '-r', '5', self.rec_file1, ], \
-                                stdin=subprocess.PIPE, )
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                    #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_file1
-                    #print(cmd)
-                    #self.rec_id = subprocess.Popen(['powershell', ], \
-                    #            stdin=subprocess.PIPE, )
-                    #            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                    #self.rec_id.stdin.write(b'chcp 65001\n')
-                    #self.rec_id.stdin.write(cmd.encode())
-                    #self.rec_id.stdin.write(b'\n')
+                # デバイス名取得
+                cam, mic = dshow_dev()
 
+                # 開始
+                nowTime    = datetime.datetime.now()
+                stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
+                if (proc_text.lower() == '_rec_start_') \
+                or (proc_text.lower() == '_rec_restart_') \
+                or (proc_text.find(u'開始') >=0):
+                    self.rec_limit[index] = None
+                    self.rec_file[index]  = qPath_work + stamp + '.flv'
                 else:
-                    self.rec_id = subprocess.Popen(['ffmpeg', '-f', 'gdigrab', '-i', 'desktop', \
+                    rec_txt = '.' + qFunc.txt2filetxt(proc_text)
+                    self.rec_limit[index] = time.time() + 30
+                    self.rec_file[index]  = qPath_work + stamp + rec_txt + '.flv'
+
+                if (os.name != 'nt'):
+                    # ffmpeg -f avfoundation -list_devices true -i ""
+                    self.rec_id[index] = subprocess.Popen(['ffmpeg', \
+                                '-f', 'avfoundation', \
+                                '-i', '1:2', \
+                                '-q:v', '0', \
+                                '-r', '5', self.rec_file[index], \
                                 '-loglevel', 'warning', \
-                                '-r', '5', self.rec_file1, ], \
-                                stdin=subprocess.PIPE, )
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                                ], stdin=subprocess.PIPE, )
+                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    self.rec_start[index] = time.time()
+                else:
+                    # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
+                    # ffmpeg -f gdigrab -i desktop -f dshow -i audio="mic" -vcodec libx264 temp_mp4.mp4
+                    if (len(mic) > 0) and (not is_japanese(mic[0])):
+                        microphone = 'audio="' + mic[0] + '"'
+                        self.rec_id[index] = subprocess.Popen(['ffmpeg', \
+                                '-f', 'gdigrab', '-i', 'desktop', \
+                                '-f', 'dshow', '-i', microphone, \
+                                '-q:v', '0', \
+                                '-r', '5', self.rec_file[index], \
+                                '-loglevel', 'warning', \
+                                ], stdin=subprocess.PIPE, )
+                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_file[index]
+                        #print(cmd)
+                        #self.rec_id[index] = subprocess.Popen(['powershell', ], \
+                        #            stdin=subprocess.PIPE, )
+                        #            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        #self.rec_id[index].stdin.write(b'chcp 65001\n')
+                        #self.rec_id[index].stdin.write(cmd.encode())
+                        #self.rec_id[index].stdin.write(b'\n')
 
-                self.rec_start = time.time()
+                    else:
+                        self.rec_id[index] = subprocess.Popen(['ffmpeg', \
+                                '-f', 'gdigrab', '-i', 'desktop', \
+                                '-q:v', '0', \
+                                '-r', '5', self.rec_file[index], \
+                                '-loglevel', 'warning', \
+                                ], stdin=subprocess.PIPE, )
+                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-            # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'desktop recorder → ' + self.rec_file + ' start', display=True,)
+                    self.rec_start[index] = time.time()
+
+                # ログ
+                qFunc.logOutput(self.proc_id + ':' + u'desktop recorder → ' + self.rec_file[index] + ' start', display=True,)
 
     # 録画停止
-    def sub_stop(self, proc_text, ):
+    def sub_stop(self, index, proc_text, ):
 
-        if (not self.rec_id is None):
+        # index
+        if (index == 0):
+            min_start = time.time()
+            min_index = 0
+            max_start = 0
+            max_index = 0
+            for i in range(1, self.rec_max+1):
+                if (not self.rec_id[i] is None):
+                    if (self.rec_start[i] < min_start):
+                        min_start = self.rec_start[i]
+                        min_index = i
+                    if (self.rec_start[i] > max_start):
+                        max_start = self.rec_start[i]
+                        max_index = i
+            if (min_index != 0):
+                index = min_index
 
-            # 録画停止
-            if (os.name != 'nt'):
-                self.rec_id.stdin.write(b'q\n')
-                try:
-                    self.rec_id.stdin.flush()
-                except:
-                    pass
+        # 停止処理
+        if (index != 0):
+            if (not self.rec_id[index] is None):
+
+                # 録画停止
+                if (os.name != 'nt'):
+                    self.rec_id[index].stdin.write(b'q\n')
+                    try:
+                        self.rec_id[index].stdin.flush()
+                    except:
+                        pass
+                    time.sleep(2.00)
+                    #self.rec_id[index].send_signal(signal.SIGINT)
+                else:
+                    self.rec_id[index].stdin.write(b'q\n')
+                    try:
+                        self.rec_id[index].stdin.flush()
+                    except:
+                        pass
+                    time.sleep(2.00)
+                    #self.rec_id[index].send_signal(signal.CTRL_C_EVENT)
+
                 time.sleep(2.00)
-                #self.rec_id.send_signal(signal.SIGINT)
-            else:
-                self.rec_id.stdin.write(b'q\n')
-                try:
-                    self.rec_id.stdin.flush()
-                except:
-                    pass
-                time.sleep(2.00)
-                #self.rec_id.send_signal(signal.CTRL_C_EVENT)
+                self.rec_id[index].wait()
+                self.rec_id[index].terminate()
+                self.rec_id[index] = None
 
-            time.sleep(2.00)
-            self.rec_id.wait()
-            self.rec_id.terminate()
-            self.rec_id = None
+                # ログ
+                qFunc.logOutput(self.proc_id + ':' + u'desktop recorder → ' + self.rec_file[index] + ' stop', display=True,)
 
-            # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'desktop recorder → ' + self.rec_file + ' stop', display=True,)
+                # サムネイル抽出
+                inpName = self.rec_file[index].replace(qPath_work ,'')
+                movie2jpg(inpPath = qPath_work, inpName=inpName, outPath1 = qPath_d_movie, outPath2 = qPath_rec, wrkPath=qPath_work + 'movie2jpeg/', )
+                movie2mp4(inpPath = qPath_work, inpName=inpName, outPath1 = qPath_d_movie, outPath2 = qPath_rec, )
 
-            # サムネイル抽出
-            inpName = self.rec_file1.replace(qPath_d_movie ,'')
-            movie2jpeg(inpPath = qPath_d_movie, inpName=inpName, outPath = qPath_d_movie, wrkPath=qPath_work + 'movie2jpeg', )
+        # index
+        index = 0
+        if (index == 0):
+            min_start = time.time()
+            min_index = 0
+            max_start = 0
+            max_index = 0
+            for i in range(1, self.rec_max+1):
+                if (not self.rec_id[i] is None):
+                    if (self.rec_start[i] < min_start):
+                        min_start = self.rec_start[i]
+                        min_index = i
+                    if (self.rec_start[i] > max_start):
+                        max_start = self.rec_start[i]
+                        max_index = i
+            if (min_index != 0):
+                index = min_index
 
-            # リセット
+        # リセット
+        if (index == 0):
             qFunc.kill('ffmpeg', )
 
             # メッセージ
-            if (proc_text.lower() == '_rec_stop_'):
-                speechs = []
-                speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
-                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+            speechs = []
+            speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
+            qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
-        # ビジー解除
-        if (proc_text.lower() != '_rec_restart_'):
+            # ビジー解除
             qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
                 qFunc.busySet(qBusy_d_rec, False)
@@ -644,14 +747,14 @@ if __name__ == '__main__':
 
     # 単体実行
     if (len(sys.argv) < 2):
-        recorder_thread.put(['control', '_rec_start_'])
-        time.sleep(10)
+        recorder_thread.put(['control', u'デスクトップの録画'])
+        time.sleep(40)
 
-        recorder_thread.put(['control', '_rec_start_'])
+        recorder_thread.put(['control', u'録画開始'])
         time.sleep(70)
 
-        recorder_thread.put(['control', '_rec_stop_'])
-        time.sleep(5)
+        recorder_thread.put(['control', u'録画終了'])
+        time.sleep(10)
 
 
 
