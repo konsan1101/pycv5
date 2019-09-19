@@ -156,8 +156,8 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
                 '-i', inpFilev, \
                 '-vcodec', 'libx264', '-r', '2', \
                 outFile, \
-                ], )
-                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                #], )
+                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
         else:
             ffmpeg = subprocess.Popen(['ffmpeg', \
                 '-i', inpFilev, '-i', inpFilea, \
@@ -166,11 +166,11 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
                 #'-map', '0:v:0', '-map', '1:a:0', \
                 outFile, \
                 '-loglevel', 'warning', \
-                ], )
-                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                #], )
+                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-        #logb, errb = ffmpeg.communicate()
-        ffmpeg.wait()
+        logb, errb = ffmpeg.communicate()
+        #ffmpeg.wait()
         ffmpeg.terminate()
         ffmpeg = None
 
@@ -218,11 +218,11 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
             '-qmin', '1', '-q', '1', \
             wrkPath + '%04d.jpg', \
             '-loglevel', 'warning', \
-            ], )
-            #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            #], )
+            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-        #logb, errb = ffmpeg.communicate()
-        ffmpeg.wait()
+        logb, errb = ffmpeg.communicate()
+        #ffmpeg.wait()
         ffmpeg.terminate()
         ffmpeg = None
 
@@ -261,7 +261,7 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
             ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
         logb, errb = ffmpeg.communicate()
-        ffmpeg.wait()
+        #ffmpeg.wait()
         ffmpeg.terminate()
         ffmpeg = None
 
