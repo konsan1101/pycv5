@@ -848,7 +848,7 @@ if __name__ == '__main__':
         time.sleep(45)
 
         recorder_thread.put(['control', u'録画終了'])
-        time.sleep(10)
+        time.sleep(20)
 
 
 
