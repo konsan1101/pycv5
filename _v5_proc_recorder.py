@@ -621,6 +621,7 @@ class proc_recorder:
                     self.rec_ffmpeg[index] = subprocess.Popen(['ffmpeg', \
                                 '-f', 'avfoundation', \
                                 '-i', '1:2', \
+                                '-vcodec', 'flv1', \
                                 '-q:v', '0', \
                                 '-r', '5', self.rec_filev[index], \
                                 '-loglevel', 'warning', \
@@ -645,6 +646,7 @@ class proc_recorder:
                         self.rec_ffmpeg[index] = subprocess.Popen(['ffmpeg', \
                                 '-f', 'gdigrab', '-i', 'desktop', \
                                 '-f', 'dshow', '-i', microphone, \
+                                '-vcodec', 'flv1', \
                                 '-q:v', '0', \
                                 '-r', '5', self.rec_filev[index], \
                                 '-loglevel', 'warning', \
@@ -667,6 +669,7 @@ class proc_recorder:
 
                         self.rec_ffmpeg[index] = subprocess.Popen(['ffmpeg', \
                                 '-f', 'gdigrab', '-i', 'desktop', \
+                                '-vcodec', 'flv1', \
                                 '-q:v', '0', \
                                 '-r', '5', self.rec_filev[index], \
                                 '-loglevel', 'warning', \
