@@ -593,104 +593,124 @@ class proc_recorder:
             or (proc_text.lower() == '_rec_restart_') \
             or (proc_text.find(u'録画') >=0):
 
-                # デバイス名取得
-                cam, mic = dshow_dev()
+                # 録画・録音開始
+                check = False
+                while (check == False):
 
-                # 開始
-                nowTime    = datetime.datetime.now()
-                stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
-                if (proc_text.lower() == '_rec_start_') \
-                or (proc_text.lower() == '_rec_restart_') \
-                or (proc_text.find(u'開始') >=0):
-                    self.rec_limit[index] = None
-                    self.rec_filev[index] = qPath_work + stamp + '.flv'
-                    self.rec_filea[index] = ''
-                    if (len(mic) > 0):
-                        self.rec_filea[index] = qPath_work + stamp + '.wav'
-                else:
-                    rec_txt = '.' + qFunc.txt2filetxt(proc_text)
-                    self.rec_limit[index] = time.time() + 30
-                    self.rec_filev[index] = qPath_work + stamp + rec_txt + '.flv'
-                    self.rec_filea[index] = ''
-                    if (len(mic) > 0):
-                        self.rec_filea[index] = qPath_work + stamp + rec_txt + '.wav'
+                    # デバイス名取得
+                    cam, mic = dshow_dev()
 
-                if (os.name != 'nt'):
+                    nowTime    = datetime.datetime.now()
+                    stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
+                    if (proc_text.lower() == '_rec_start_') \
+                    or (proc_text.lower() == '_rec_restart_') \
+                    or (proc_text.find(u'開始') >=0):
+                        self.rec_start[index] = time.time()
+                        self.rec_limit[index] = None
+                        self.rec_filev[index] = qPath_work + stamp + '.flv'
+                        self.rec_filea[index] = ''
+                        if (len(mic) > 0):
+                            self.rec_filea[index] = qPath_work + stamp + '.wav'
+                    else:
+                        rec_txt = '.' + qFunc.txt2filetxt(proc_text)
+                        self.rec_start[index] = time.time()
+                        self.rec_limit[index] = time.time() + 30
+                        self.rec_filev[index] = qPath_work + stamp + rec_txt + '.flv'
+                        self.rec_filea[index] = ''
+                        if (len(mic) > 0):
+                            self.rec_filea[index] = qPath_work + stamp + rec_txt + '.wav'
 
-                    # ffmpeg -f avfoundation -list_devices true -i ""
-                    self.rec_ffmpeg[index] = subprocess.Popen(['ffmpeg', \
-                                '-f', 'avfoundation', \
-                                '-i', '1:2', \
-                                '-vcodec', 'flv1', \
-                                '-q:v', '0', \
-                                '-r', '5', self.rec_filev[index], \
-                                '-loglevel', 'warning', \
-                                ], stdin=subprocess.PIPE, )
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                    # 録画開始
+                    if (os.name != 'nt'):
 
-                    if (self.rec_filea[index] != ''):
-                        self.rec_sox[index] = subprocess.Popen(['sox', \
-                                '-q', '-d', '-r', '16000', '-b', '16', '-c', '1', \
-                                self.rec_filea[index], \
-                                ], stdin=subprocess.PIPE, )
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-
-                    self.rec_start[index] = time.time()
-
-                else:
-
-                    # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
-                    # ffmpeg -f gdigrab -i desktop -f dshow -i audio="mic" -vcodec libx264 temp_mp4.mp4
-                    if (len(mic) > 0) and (not is_japanese(mic[0])):
-                        microphone = 'audio="' + mic[0] + '"'
+                        # ffmpeg -f avfoundation -list_devices true -i ""
                         self.rec_ffmpeg[index] = subprocess.Popen(['ffmpeg', \
-                                '-f', 'gdigrab', '-i', 'desktop', \
-                                '-f', 'dshow', '-i', microphone, \
-                                '-vcodec', 'flv1', \
-                                '-q:v', '0', \
-                                '-r', '5', self.rec_filev[index], \
-                                '-loglevel', 'warning', \
-                                ], stdin=subprocess.PIPE, )
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-
-                        if (self.rec_filea[index] != ''):
-                            self.rec_filea[index] = ''
-
-                        #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_filev[index]
-                        #print(cmd)
-                        #self.rec_ffmpeg[index] = subprocess.Popen(['powershell', ], \
-                        #            stdin=subprocess.PIPE, )
-                        #            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                        #self.rec_ffmpeg[index].stdin.write(b'chcp 65001\n')
-                        #self.rec_ffmpeg[index].stdin.write(cmd.encode())
-                        #self.rec_ffmpeg[index].stdin.write(b'\n')
+                                    '-f', 'avfoundation', \
+                                    '-i', '1:2', \
+                                    '-vcodec', 'flv1', \
+                                    '-q:v', '0', \
+                                    '-r', '5', self.rec_filev[index], \
+                                    '-loglevel', 'warning', \
+                                    ], stdin=subprocess.PIPE, )
+                                    #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                     else:
 
-                        self.rec_ffmpeg[index] = subprocess.Popen(['ffmpeg', \
-                                '-f', 'gdigrab', '-i', 'desktop', \
-                                '-vcodec', 'flv1', \
-                                '-q:v', '0', \
-                                '-r', '5', self.rec_filev[index], \
-                                '-loglevel', 'warning', \
-                                ], stdin=subprocess.PIPE, )
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
+                        # ffmpeg -f gdigrab -i desktop -f dshow -i audio="mic" -vcodec libx264 temp_mp4.mp4
+                        if (len(mic) > 0) and (not is_japanese(mic[0])):
+                            microphone = 'audio="' + mic[0] + '"'
+                            self.rec_ffmpeg[index] = subprocess.Popen(['ffmpeg', \
+                                    '-f', 'gdigrab', '-i', 'desktop', \
+                                    '-f', 'dshow', '-i', microphone, \
+                                    '-vcodec', 'flv1', \
+                                    '-q:v', '0', \
+                                    '-r', '5', self.rec_filev[index], \
+                                    '-loglevel', 'warning', \
+                                    ], stdin=subprocess.PIPE, )
+                                    #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
+                            if (self.rec_filea[index] != ''):
+                                self.rec_filea[index] = ''
+
+                            #cmd = 'ffmpeg -f gdigrab -i desktop -f dshow -i ' + microphone + ' -loglevel warning -r 5 ' + self.rec_filev[index]
+                            #print(cmd)
+                            #self.rec_ffmpeg[index] = subprocess.Popen(['powershell', ], \
+                            #            stdin=subprocess.PIPE, )
+                            #            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                            #self.rec_ffmpeg[index].stdin.write(b'chcp 65001\n')
+                            #self.rec_ffmpeg[index].stdin.write(cmd.encode())
+                            #self.rec_ffmpeg[index].stdin.write(b'\n')
+
+                        else:
+
+                            self.rec_ffmpeg[index] = subprocess.Popen(['ffmpeg', \
+                                    '-f', 'gdigrab', '-i', 'desktop', \
+                                    '-vcodec', 'flv1', \
+                                    '-q:v', '0', \
+                                    '-r', '5', self.rec_filev[index], \
+                                    '-loglevel', 'warning', \
+                                    ], stdin=subprocess.PIPE, )
+                                    #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+                    # 録音開始
+                    if (self.rec_filea[index] != ''):
+
+                        self.rec_sox[index] = subprocess.Popen(['sox', \
+                            '-q', '-d', '-r', '16000', '-b', '16', '-c', '1', \
+                            self.rec_filea[index], \
+                            ], stdin=subprocess.PIPE, )
+                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+                    rec_namev = self.rec_filev[index].replace(qPath_work, '')
+                    rec_namea = self.rec_filea[index].replace(qPath_work, '')
+
+                    # 起動確認
+                    time.sleep(1.00)
+
+                    check = True
+                    if (not os.path.exists(self.rec_filev[index])):
+                        check = False
+                    if (self.rec_filea[index] != ''):
+                        if (not os.path.exists(self.rec_filea[index])):
+                            check = False
+
+                    if (check == False):
+                        # ログ
+                        qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec start error!', display=True,)
+
+                        self.rec_ffmpeg[index].terminate()
+                        self.rec_ffmpeg[index] = None
                         if (self.rec_filea[index] != ''):
-                            self.rec_sox[index] = subprocess.Popen(['sox', \
-                                '-q', '-d', '-r', '16000', '-b', '16', '-c', '1', \
-                                self.rec_filea[index], \
-                                ], stdin=subprocess.PIPE, )
-                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-
-                    self.rec_start[index] = time.time()
+                            self.rec_sox[index].terminate()
+                            self.rec_sox[index] = None
 
                 # ログ
-                rec_namev = self.rec_filev[index].replace(qPath_work, '')
-                rec_namea = self.rec_filea[index].replace(qPath_work, '')
                 qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec start', display=True,)
-                if (rec_namea != ''):
+                if (self.rec_filea[index] != ''):
                     qFunc.logOutput(self.proc_id + ':' + rec_namea + ' rec start', display=True,)
+
+
 
     # 録画停止
     def sub_stop(self, index, proc_text, ):
