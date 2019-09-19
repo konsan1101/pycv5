@@ -92,12 +92,12 @@ import storage_api_azure_key as azure_key
 class proc_blobup:
 
     def __init__(self, name='thread', id='0', runMode='debug', 
-        path='qPath_d_movie', ):
+        path='qPath_d_upload', ):
 
         self.runMode   = runMode
         self.path      = path
-        if   (path == 'qPath_d_movie'):
-             self.path = qPath_d_movie
+        if   (path == 'qPath_d_upload'):
+             self.path = qPath_d_upload
 
         self.breakFlag = threading.Event()
         self.breakFlag.clear()
@@ -357,7 +357,7 @@ if __name__ == '__main__':
     qFunc.logOutput(qLogFile, )
 
     # 開始
-    blobup_thread = proc_blobup('blobup', '0', path=qPath_d_movie, )
+    blobup_thread = proc_blobup('blobup', '0', path=qPath_d_upload, )
     blobup_thread.start()
 
 
