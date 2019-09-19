@@ -156,8 +156,9 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
                 '-i', inpFilev, \
                 '-vcodec', 'libx264', '-r', '2', \
                 outFile, \
-                #], )
-                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                '-loglevel', 'warning', \
+                ], )
+                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
         else:
             ffmpeg = subprocess.Popen(['ffmpeg', \
                 '-i', inpFilev, '-i', inpFilea, \
@@ -166,11 +167,11 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
                 #'-map', '0:v:0', '-map', '1:a:0', \
                 outFile, \
                 '-loglevel', 'warning', \
-                #], )
-                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                ], )
+                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-        logb, errb = ffmpeg.communicate()
-        #ffmpeg.wait()
+        #logb, errb = ffmpeg.communicate()
+        ffmpeg.wait()
         ffmpeg.terminate()
         ffmpeg = None
 
@@ -218,11 +219,11 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
             '-qmin', '1', '-q', '1', \
             wrkPath + '%04d.jpg', \
             '-loglevel', 'warning', \
-            #], )
-            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            ], )
+            #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
-        logb, errb = ffmpeg.communicate()
-        #ffmpeg.wait()
+        #logb, errb = ffmpeg.communicate()
+        ffmpeg.wait()
         ffmpeg.terminate()
         ffmpeg = None
 
@@ -257,7 +258,6 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
             '-vsync', 'vfr', \
             wrkPath + '%04d.jpg', \
             #'-loglevel', 'warning', \
-            #], )
             ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
         logb, errb = ffmpeg.communicate()
@@ -626,14 +626,14 @@ class proc_recorder:
                                 '-r', '5', self.rec_filev[index], \
                                 '-loglevel', 'warning', \
                                 ], stdin=subprocess.PIPE, )
-                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                     if (self.rec_filea[index] != ''):
                         self.rec_sox[index] = subprocess.Popen(['sox', \
                                 '-q', '-d', '-r', '16000', '-b', '16', '-c', '1', \
                                 self.rec_filea[index], \
                                 ], stdin=subprocess.PIPE, )
-                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                     self.rec_start[index] = time.time()
 
@@ -651,7 +651,7 @@ class proc_recorder:
                                 '-r', '5', self.rec_filev[index], \
                                 '-loglevel', 'warning', \
                                 ], stdin=subprocess.PIPE, )
-                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                         if (self.rec_filea[index] != ''):
                             self.rec_filea[index] = ''
@@ -674,14 +674,14 @@ class proc_recorder:
                                 '-r', '5', self.rec_filev[index], \
                                 '-loglevel', 'warning', \
                                 ], stdin=subprocess.PIPE, )
-                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                         if (self.rec_filea[index] != ''):
                             self.rec_sox[index] = subprocess.Popen(['sox', \
                                 '-q', '-d', '-r', '16000', '-b', '16', '-c', '1', \
                                 self.rec_filea[index], \
                                 ], stdin=subprocess.PIPE, )
-                                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                     self.rec_start[index] = time.time()
 
@@ -728,11 +728,12 @@ class proc_recorder:
                     # 録音停止
                     if (not self.rec_sox[index] is None):
                         self.rec_sox[index].send_signal(signal.SIGINT)
-                        self.rec_sox[index].wait()
+                        time.sleep(2.00)
+                        #self.rec_sox[index].wait()
                         self.rec_sox[index].terminate()
                         self.rec_sox[index] = None
 
-                    time.sleep(2.00)
+                    #time.sleep(2.00)
                     #self.rec_ffmpeg[index].send_signal(signal.SIGINT)
 
                 else:
@@ -748,45 +749,54 @@ class proc_recorder:
                     # 録音停止
                     if (not self.rec_sox[index] is None):
                         self.rec_sox[index].send_signal(signal.CTRL_C_EVENT)
-                        self.rec_sox[index].wait()
+                        time.sleep(2.00)
+                        #self.rec_sox[index].wait()
                         self.rec_sox[index].terminate()
                         self.rec_sox[index] = None
 
-                    time.sleep(2.00)
+                    #time.sleep(2.00)
                     #self.rec_ffmpeg[index].send_signal(signal.CTRL_C_EVENT)
 
                 time.sleep(2.00)
-                self.rec_ffmpeg[index].wait()
+                #logb, errb = self.rec_ffmpeg[index].communicate()
+                #self.rec_ffmpeg[index].wait()
                 self.rec_ffmpeg[index].terminate()
                 self.rec_ffmpeg[index] = None
 
                 # ログ
                 rec_namev = self.rec_filev[index].replace(qPath_work, '')
                 rec_namea = self.rec_filea[index].replace(qPath_work, '')
-                qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec stop', display=True,)
+                if (os.path.exists(self.rec_filev[index])):
+                        qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec stop', display=True,)
+                else:
+                        qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec error', display=True,)
                 if (rec_namea != ''):
-                    qFunc.logOutput(self.proc_id + ':' + rec_namea + ' rec stop', display=True,)
+                    if (os.path.exists(self.rec_filea[index])):
+                        qFunc.logOutput(self.proc_id + ':' + rec_namea + ' rec stop', display=True,)
 
                 # サムネイル抽出
-                res = movie2jpg(inpPath = qPath_work, inpNamev=rec_namev, outPath = qPath_rec, wrkPath=qPath_work + 'movie2jpeg/', )
-                if (res != False):
-                    for f in res:
-                        outFile = f.replace(qPath_rec, '')
-                        qFunc.copy(f, qPath_d_movie  + outFile)
-                        qFunc.copy(f, qPath_d_upload + outFile)
+                if (os.path.exists(self.rec_filev[index])):
+                    res = movie2jpg(inpPath = qPath_work, inpNamev=rec_namev, outPath = qPath_rec, wrkPath=qPath_work + 'movie2jpeg/', )
+                    if (res != False):
+                        for f in res:
+                            outFile = f.replace(qPath_rec, '')
+                            qFunc.copy(f, qPath_d_movie  + outFile)
+                            qFunc.copy(f, qPath_d_upload + outFile)
 
-                        # ログ
-                        qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
+                            # ログ
+                            qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
 
-                res = movie2mp4(inpPath = qPath_work, inpNamev=rec_namev, inpNamea=rec_namea, outPath = qPath_rec, )
-                if (res != False):
-                    for f in res:
-                        outFile = f.replace(qPath_rec, '')
-                        qFunc.copy(f, qPath_d_movie  + outFile)
-                        qFunc.copy(f, qPath_d_upload + outFile)
+                # 動画変換
+                if (os.path.exists(self.rec_filev[index])):
+                    res = movie2mp4(inpPath = qPath_work, inpNamev=rec_namev, inpNamea=rec_namea, outPath = qPath_rec, )
+                    if (res != False):
+                        for f in res:
+                            outFile = f.replace(qPath_rec, '')
+                            qFunc.copy(f, qPath_d_movie  + outFile)
+                            qFunc.copy(f, qPath_d_upload + outFile)
 
-                        # ログ
-                        qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
+                            # ログ
+                            qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
 
         # index
         index = 0
