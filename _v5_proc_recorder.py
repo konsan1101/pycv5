@@ -154,18 +154,22 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
         if (inpFilea == ''):
             ffmpeg = subprocess.Popen(['ffmpeg', \
                 '-i', inpFilev, \
-                '-vcodec', 'libx264', '-r', '2', outFile, \
-                #], )
-                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                '-vcodec', 'libx264', '-r', '2', \
+                outFile, \
+                ], )
+                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
         else:
             ffmpeg = subprocess.Popen(['ffmpeg', \
                 '-i', inpFilev, '-i', inpFilea, \
-                '-vcodec', 'libx264', '-acodec', 'aac', '-ab', '96k', '-ac', '1', '-ar', '48000', \
-                '-map', '0:v:0', '-map', '1:a:0', \
-                '-r', '2', outFile, \
-                #], )
-                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                '-vcodec', 'libx264', '-r', '2', \
+                '-acodec', 'aac', '-ab', '96k', '-ac', '1', '-ar', '48000', \
+                #'-map', '0:v:0', '-map', '1:a:0', \
+                outFile, \
+                '-loglevel', 'warning', \
+                ], )
+                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
+        #logb, errb = ffmpeg.communicate()
         ffmpeg.wait()
         ffmpeg.terminate()
         ffmpeg = None
@@ -213,9 +217,11 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
             '-ss', '0', '-t', '2', '-r', '1', \
             '-qmin', '1', '-q', '1', \
             wrkPath + '%04d.jpg', \
-            #], )
-            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            '-loglevel', 'warning', \
+            ], )
+            #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
+        #logb, errb = ffmpeg.communicate()
         ffmpeg.wait()
         ffmpeg.terminate()
         ffmpeg = None
@@ -250,10 +256,12 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
             '-vf', 'select=gt(scene\,0.1), scale=0:0,showinfo', \
             '-vsync', 'vfr', \
             wrkPath + '%04d.jpg', \
+            #'-loglevel', 'warning', \
             #], )
             ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
         logb, errb = ffmpeg.communicate()
+        ffmpeg.wait()
         ffmpeg.terminate()
         ffmpeg = None
 
@@ -848,7 +856,7 @@ if __name__ == '__main__':
         time.sleep(45)
 
         recorder_thread.put(['control', u'録画終了'])
-        time.sleep(20)
+        time.sleep(45)
 
 
 
