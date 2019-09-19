@@ -53,9 +53,10 @@ qPath_v_cv      = 'temp/v5_5cv_txt/'
 qPath_v_photo   = 'temp/v5_7photo/'
 qPath_v_msg     = 'temp/v5_7photo_msg/'
 qPath_d_ctrl    = 'temp/d5_0control/'
-qPath_d_prtscn  = 'temp/d5_1screen/'
+qPath_d_play    = 'temp/d5_1play/'
+qPath_d_prtscn  = 'temp/d5_2screen/'
 qPath_d_movie   = 'temp/d5_5movie/'
-qPath_d_play    = 'temp/d5_7play/'
+qPath_d_upload  = 'temp/d5_9upload/'
 
 qBusy_dev_cpu   = qPath_work + 'busy_dev_cpu.txt'
 qBusy_dev_com   = qPath_work + 'busy_dev_commnication.txt'
@@ -121,9 +122,10 @@ class qFunc_class:
         self.makeDirs(qPath_v_photo,  False)
         self.makeDirs(qPath_v_msg,    False)
         self.makeDirs(qPath_d_ctrl,   False)
+        self.makeDirs(qPath_d_play,   False)
         self.makeDirs(qPath_d_prtscn, False)
         self.makeDirs(qPath_d_movie,  False)
-        self.makeDirs(qPath_d_play,   False)
+        self.makeDirs(qPath_d_upload, False)
 
         return True
 
@@ -151,9 +153,10 @@ class qFunc_class:
         if (field == 'qPath_v_photo'   ): return qPath_v_photo
         if (field == 'qPath_v_msg'     ): return qPath_v_msg
         if (field == 'qPath_d_ctrl'    ): return qPath_d_ctrl
+        if (field == 'qPath_d_play'    ): return qPath_d_play
         if (field == 'qPath_d_prtscn'  ): return qPath_d_prtscn
         if (field == 'qPath_d_movie'   ): return qPath_d_movie
-        if (field == 'qPath_d_play'    ): return qPath_d_play
+        if (field == 'qPath_d_upload'  ): return qPath_d_upload
 
         if (field == 'qBusy_dev_cpu'   ): return qBusy_dev_cpu
         if (field == 'qBusy_dev_com'   ): return qBusy_dev_com

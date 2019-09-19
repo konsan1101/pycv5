@@ -53,9 +53,10 @@ qPath_v_cv      = qFunc.getValue('qPath_v_cv'     )
 qPath_v_photo   = qFunc.getValue('qPath_v_photo'  )
 qPath_v_msg     = qFunc.getValue('qPath_v_msg'    )
 qPath_d_ctrl    = qFunc.getValue('qPath_d_ctrl'   )
+qPath_d_play    = qFunc.getValue('qPath_d_play'   )
 qPath_d_prtscn  = qFunc.getValue('qPath_d_prtscn' )
 qPath_d_movie   = qFunc.getValue('qPath_d_movie'  )
-qPath_d_play    = qFunc.getValue('qPath_d_play'   )
+qPath_d_upload  = qFunc.getValue('qPath_d_upload' )
 
 qBusy_dev_cpu   = qFunc.getValue('qBusy_dev_cpu'  )
 qBusy_dev_com   = qFunc.getValue('qBusy_dev_com'  )
@@ -747,11 +748,12 @@ if __name__ == '__main__':
 
     # 単体実行
     if (len(sys.argv) < 2):
-        recorder_thread.put(['control', u'デスクトップの録画'])
-        time.sleep(40)
 
         recorder_thread.put(['control', u'録画開始'])
-        time.sleep(70)
+        time.sleep(45)
+
+        recorder_thread.put(['control', u'デスクトップの録画'])
+        time.sleep(45)
 
         recorder_thread.put(['control', u'録画終了'])
         time.sleep(10)
