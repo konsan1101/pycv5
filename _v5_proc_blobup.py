@@ -286,7 +286,7 @@ class proc_blobup:
                             inpPath  = qPath_work
                             inpFile  = work_name
                             blobFile = proc_name
-                            res = azureAPI.blob_put(container='default', inpPath=inpPath, inpFile=inpFile, blobFile=blobFile, )
+                            res = azureAPI.blob_put(container=qHOSTNAME, inpPath=inpPath, inpFile=inpFile, blobFile=blobFile, )
 
                             if (res == True):
 
