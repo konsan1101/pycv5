@@ -786,8 +786,8 @@ if __name__ == '__main__':
             micType   = 'bluetooth'
             micGuide  = 'off'
         elif (runMode == 'background'):
-            micType   = 'usb'
-            micGuide  = 'display'
+            micType   = 'bluetooth'
+            micGuide  = 'off'
 
         if (len(sys.argv) >= 3):
             micDev   = str(sys.argv[2]).lower()
@@ -869,7 +869,7 @@ if __name__ == '__main__':
     qFunc.busyReset_speech(False)
 
     if (runMode == 'background'):
-        qFunc.busySet(qBusy_dev_mic, True)
+        #qFunc.busySet(qBusy_dev_mic, True)
         qFunc.busySet(qBusy_dev_spk, True)
 
     # 起動
