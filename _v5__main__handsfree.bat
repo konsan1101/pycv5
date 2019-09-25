@@ -71,8 +71,8 @@ IF %mode%@==number@      GOTO MODEGO
 IF %mode%@==camera@      SET  dev=usb
 IF %mode%@==camera@      SET  guide=off
 IF %mode%@==camera@      GOTO MODEGO
-IF %mode%@==background@  SET  dev=usb
-IF %mode%@==background@  SET  guide=display
+IF %mode%@==background@  SET  dev=bluetooth
+IF %mode%@==background@  SET  guide=off
 IF %mode%@==background@  GOTO MODEGO
 GOTO MODE
 :MODEGO
