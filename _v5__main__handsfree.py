@@ -196,8 +196,8 @@ if __name__ == '__main__':
             micType   = 'usb'
             micGuide  = 'off'
         elif (runMode == 'background'):
-            micType   = 'usb'
-            micGuide  = 'display'
+            micType   = 'bluetooth'
+            micGuide  = 'off'
 
         if (len(sys.argv) >= 3):
             micDev   = str(sys.argv[2]).lower()
