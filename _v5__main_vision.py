@@ -1679,17 +1679,19 @@ if __name__ == '__main__':
         # シャッター
         if (control == '_shutter_'):
 
-            ## 白表示
-            display_height, display_width = display_img.shape[:2]
-            white_img = np.zeros((display_height,display_width,3), np.uint8)
-            cv2.rectangle(white_img,(0,0),(display_width,display_height),(255,255,255),-1)
-            alpha_img = cv2.addWeighted(display_img, 0.5, white_img, 0.5, 0.0)
-            cv2.imshow('Display', alpha_img )
-            if (cv2.waitKey(1) >= 0):
-                qFunc.logOutput('key accept !', )
+            if (display == True):
 
-            # シャッター音
-            qFunc.guide('_shutter', sync=False)
+                # 白表示
+                display_height, display_width = display_img.shape[:2]
+                white_img = np.zeros((display_height,display_width,3), np.uint8)
+                cv2.rectangle(white_img,(0,0),(display_width,display_height),(255,255,255),-1)
+                alpha_img = cv2.addWeighted(display_img, 0.5, white_img, 0.5, 0.0)
+                cv2.imshow('Display', alpha_img )
+                if (cv2.waitKey(1) >= 0):
+                    qFunc.logOutput('key accept !', )
+
+                # シャッター音
+                qFunc.guide('_shutter', sync=False)
 
 
 
