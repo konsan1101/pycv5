@@ -97,6 +97,7 @@ import _v5_proc_controld
 import _v5_proc_capture
 import _v5_proc_cvreader
 import _v5_proc_recorder
+import _v5_proc_uploader
 
 
 
@@ -215,6 +216,11 @@ class main_desktop:
         cvreader_switch  = 'on'
         recorder_thread  = None
         recorder_switch  = 'on'
+        uploader_thread  = None
+        uploader_switch  = 'off'
+
+        if (self.runMode == 'background'):
+            uploader_switch  = 'on'
 
         # 待機ループ
         self.proc_step = '5'
@@ -321,12 +327,28 @@ class main_desktop:
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'「デスクトップ録画」の機能が有効になりました。', 'wait':0, })
+                    speechs.append({ 'text':u'「デスクトップ記録」の機能が有効になりました。', 'wait':0, })
 
             if (not recorder_thread is None) and (recorder_switch != 'on'):
                 recorder_thread.stop()                
                 del recorder_thread
                 recorder_thread = None
+
+            if (uploader_thread is None) and (uploader_switch == 'on'):
+                uploader_thread  = _v5_proc_uploader.proc_uploader(
+                                    name='uploader', id='0',
+                                    runMode=self.runMode,
+                                    )
+                uploader_thread.start()
+
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'handsfree'):
+                    speechs.append({ 'text':u'「ブロブ連携」の機能が有効になりました。', 'wait':0, })
+
+            if (not uploader_thread is None) and (uploader_switch != 'on'):
+                uploader_thread.stop()                
+                del uploader_thread
+                uploader_thread = None
 
             if (len(speechs) != 0):
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
@@ -415,7 +437,7 @@ class main_desktop:
                                 qFunc.txtsWrite(qCtrl_control_browser, txts=[res_value], encoding='utf-8', exclusive=True, mode='w', )
                                 qFunc.txtsWrite(qCtrl_control_player, txts=[res_value], encoding='utf-8', exclusive=True, mode='w', )
 
-                # 録画機能
+                # 記録機能
                 if (not recorder_thread is None):
                     res_data  = recorder_thread.get()
 
@@ -456,6 +478,11 @@ class main_desktop:
                 recorder_thread.stop()
                 del recorder_thread
                 recorder_thread = None
+
+            if (not uploader_thread is None):
+                uploader_thread.stop()
+                del uploader_thread
+                uploader_thread = None
 
             # 外部ＰＧリセット
             qFunc.kill('ffmpeg')
@@ -563,6 +590,7 @@ if __name__ == '__main__':
         if (control.lower() == '_rec_start_') \
         or (control.lower() == '_rec_stop_') \
         or (control.lower() == '_rec_restart_') \
+        or (control.find(u'記録') >= 0) \
         or (control.find(u'録画') >= 0):
             main_desktop.put(['recorder', control])
             control = ''

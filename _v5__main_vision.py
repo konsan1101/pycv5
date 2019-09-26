@@ -284,7 +284,7 @@ class main_vision:
             if (txt == '_end_'):
                 qFunc.remove(qCtrl_control_self)
 
-        # 変数
+        # 起動条件
         controlv_thread   = None
         controlv_switch   = 'on'
         overlay_thread    = None

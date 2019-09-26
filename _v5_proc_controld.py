@@ -355,6 +355,7 @@ class proc_controld:
             elif (proc_text.lower() == '_rec_start_') \
               or (proc_text.lower() == '_rec_stop_') \
               or (proc_text.lower() == '_rec_restart_') \
+              or (proc_text.find(u'記録') >= 0) \
               or (proc_text.find(u'録画') >= 0):
                 print('controld', proc_text)
                 cn_s.put(['recorder', proc_text])
