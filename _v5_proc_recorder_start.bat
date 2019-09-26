@@ -4,8 +4,8 @@ ECHO;
 rem -----------------------------------------------
 ECHO start /b cmd /c _v5_proc_recorder.exe recorder
      start /b cmd /c _v5_proc_recorder.exe recorder
-ECHO start /b cmd /c _v5_proc_blobup.exe   recorder
-     start /b cmd /c _v5_proc_blobup.exe   recorder
+ECHO start /b cmd /c _v5_proc_uploader.exe recorder
+     start /b cmd /c _v5_proc_uploader.exe recorder
 rem -----------------------------------------------
 
 ECHO;
