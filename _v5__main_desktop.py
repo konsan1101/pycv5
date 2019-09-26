@@ -556,7 +556,7 @@ if __name__ == '__main__':
     qFunc.makeDirs(qPath_d_play,   True )
     qFunc.makeDirs(qPath_d_prtscn, True )
     qFunc.makeDirs(qPath_d_movie,  True )
-    qFunc.makeDirs(qPath_d_upload, False)
+    qFunc.makeDirs(qPath_d_upload, True )
 
     qFunc.busyReset_desktop(False)
 
