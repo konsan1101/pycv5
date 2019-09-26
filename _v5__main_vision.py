@@ -836,31 +836,32 @@ class main_vision:
 
             # シャッター
             if (control == '_shutter_'):
+                if (qFunc.busyCheck(qBusy_dev_cam, 0) != '_busy_'):
 
-                # 撮影ログ
-                logset = False
-                if (not photo_img is None):
-                    if ((time.time() - photo_time) < 5.00):
-                        overlay_thread.put(['[shutter]', photo_img ])
-                        overlay_thread.put(['[array]',   photo_img ])
-                        logset = True
-                if (logset == False):
+                    # 撮影ログ
+                    logset = False
+                    if (not photo_img is None):
+                        if ((time.time() - photo_time) < 5.00):
+                            overlay_thread.put(['[shutter]', photo_img ])
+                            overlay_thread.put(['[array]',   photo_img ])
+                            logset = True
+                    if (logset == False):
+                        if (not main_img is None):
+                            overlay_thread.put(['[shutter]', main_img ])
+                            overlay_thread.put(['[array]',   main_img ])
+
+                    # ＡＩ画像認識処理へ
+                    nowTime = datetime.datetime.now()
+                    stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
+                    filename0 = qPath_v_inp   + stamp + '.photo.jpg'
+                    #try:
                     if (not main_img is None):
-                        overlay_thread.put(['[shutter]', main_img ])
-                        overlay_thread.put(['[array]',   main_img ])
+                        cv2.imwrite(filename0, main_img)
+                    #except:
+                    #    pass
 
-                # ＡＩ画像認識処理へ
-                nowTime = datetime.datetime.now()
-                stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
-                filename0 = qPath_v_inp   + stamp + '.photo.jpg'
-                #try:
-                if (not main_img is None):
-                    cv2.imwrite(filename0, main_img)
-                #except:
-                #    pass
-
-                # 写真保存
-                self.save_photo(stamp, main_img, display_img, message_txts, message_time, photo_img, photo_time, )
+                    # 写真保存
+                    self.save_photo(stamp, main_img, display_img, message_txts, message_time, photo_img, photo_time, )
 
             if  (cn_s.qsize() == 0) \
             and (overlay_thread.proc_s.qsize() == 0):
