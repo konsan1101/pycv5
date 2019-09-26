@@ -89,7 +89,7 @@ import storage_api_azure_key as azure_key
 
 
 
-class proc_blobup:
+class proc_uploader:
 
     def __init__(self, name='thread', id='0', runMode='debug', 
         path='qPath_d_upload', ):
@@ -357,8 +357,8 @@ if __name__ == '__main__':
     qFunc.logOutput(qLogFile, )
 
     # 開始
-    blobup_thread = proc_blobup('blobup', '0', path=qPath_d_upload, )
-    blobup_thread.start()
+    uploader_thread = proc_uploader('uploader', '0', path=qPath_d_upload, )
+    uploader_thread.start()
 
 
 
@@ -368,14 +368,14 @@ if __name__ == '__main__':
         chktime = time.time()
         while ((time.time() - chktime) < 15):
 
-            res_data  = blobup_thread.get()
+            res_data  = uploader_thread.get()
             res_name  = res_data[0]
             res_value = res_data[1]
             if (res_name != ''):
                 print(res_name, res_value, )
 
-            if (blobup_thread.proc_s.qsize() == 0):
-                blobup_thread.put(['_status_', ''])
+            if (uploader_thread.proc_s.qsize() == 0):
+                uploader_thread.put(['_status_', ''])
 
             time.sleep(1.00)
 
@@ -402,7 +402,7 @@ if __name__ == '__main__':
                     control = txt
 
             # メッセージ
-            res_data  = blobup_thread.get()
+            res_data  = uploader_thread.get()
             res_name  = res_data[0]
             res_value = res_data[1]
             if (res_name != ''):
@@ -413,7 +413,7 @@ if __name__ == '__main__':
 
 
     # 終了
-    blobup_thread.stop()
-    del blobup_thread
+    uploader_thread.stop()
+    del uploader_thread
 
 
