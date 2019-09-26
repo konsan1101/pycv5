@@ -420,9 +420,9 @@ class proc_recorder:
         # 初期設定
         self.proc_step = '1'
 
-        # 録画開始
+        # 記録開始
         if (self.runMode == 'recorder'):
-            self.sub_proc(u'録画開始', )
+            self.sub_proc(u'記録開始', )
 
         # 待機ループ
         self.proc_step = '5'
@@ -459,19 +459,23 @@ class proc_recorder:
                     if (time.time() > self.rec_limit[i]):
                         self.rec_limit[i] = None
                         
-                        # 録画ストップ
+                        # 記録ストップ
                         if (not self.rec_ffmpeg[i] is None):
                             self.sub_stop(i, '_rec_stop_', )
 
             # 一定時間（5分毎）、自動リスタート
             for i in range(1, self.rec_max+1):
                 if (not self.rec_ffmpeg[i] is None):
-                    if ((time.time() - self.rec_start[i]) > (60 * 1)):
+                    if (self.runMode != 'debug'):
+                        limit_sec = 60 * 5
+                    else:
+                        limit_sec = 60 * 1
+                    if ((time.time() - self.rec_start[i]) > limit_sec):
 
-                        # 録画リスタート
+                        # 記録リスタート
                         self.sub_start(0, '_rec_restart_', )
 
-                        # 録画ストップ
+                        # 記録ストップ
                         self.sub_stop(i, '_rec_stop_', )
 
             # ステータス応答
@@ -500,8 +504,8 @@ class proc_recorder:
             # レディ解除
             qFunc.remove(self.fileRdy)
 
-            # 録画終了
-            self.sub_proc(u'録画終了')
+            # 記録終了
+            self.sub_proc(u'記録終了')
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
@@ -526,29 +530,32 @@ class proc_recorder:
 
         if (proc_text.find(u'リセット') >=0):
 
-            # 全録画ストップ
+            # 全記録ストップ
             for i in range(1, self.rec_max+1):
                 if (not self.rec_ffmpeg[i] is None):
                     self.sub_stop(i, '_rec_stop_', )
 
         elif (proc_text.lower() == '_rec_stop_') \
+          or (proc_text.find(u'記録') >=0) and (proc_text.find(u'停止') >=0) \
+          or (proc_text.find(u'記録') >=0) and (proc_text.find(u'終了') >=0) \
           or (proc_text.find(u'録画') >=0) and (proc_text.find(u'停止') >=0) \
           or (proc_text.find(u'録画') >=0) and (proc_text.find(u'終了') >=0):
 
-            # 全録画ストップ
+            # 全記録ストップ
             for i in range(1, self.rec_max+1):
                 if (not self.rec_ffmpeg[i] is None):
                     self.sub_stop(i, '_rec_stop_', )
 
         elif (proc_text.lower() == '_rec_start_') \
+          or (proc_text.find(u'記録') >=0) \
           or (proc_text.find(u'録画') >=0):
 
-            # 録画スタート
+            # 記録スタート
             self.sub_start(0, proc_text, )
 
 
 
-    # 録画開始
+    # 記録開始
     def sub_start(self, index, proc_text, ):
 
         # index
@@ -579,21 +586,23 @@ class proc_recorder:
 
             # メッセージ
             if (proc_text.lower() == '_rec_start_') \
+            or (proc_text.find(u'記録') >=0) \
             or (proc_text.find(u'録画') >=0):
                 speechs = []
-                speechs.append({ 'text':u'録画を開始します。', 'wait':0, })
+                speechs.append({ 'text':u'記録を開始します。', 'wait':0, })
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             elif (proc_text.lower() == '_rec_restart_'):
                 speechs = []
-                speechs.append({ 'text':u'録画が継続中です。', 'wait':0, })
+                speechs.append({ 'text':u'記録は継続しています。', 'wait':0, })
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             if (proc_text.lower() == '_rec_start_') \
             or (proc_text.lower() == '_rec_restart_') \
+            or (proc_text.find(u'記録') >=0) \
             or (proc_text.find(u'録画') >=0):
 
-                # 録画・録音開始
+                # 記録・録音開始
                 check = False
                 while (check == False):
 
@@ -614,13 +623,16 @@ class proc_recorder:
                     else:
                         rec_txt = '.' + qFunc.txt2filetxt(proc_text)
                         self.rec_start[index] = time.time()
-                        self.rec_limit[index] = time.time() + 30
+                        if (self.runMode != 'debug'):
+                            self.rec_limit[index] = time.time() + 60
+                        else:
+                            self.rec_limit[index] = time.time() + 30
                         self.rec_filev[index] = qPath_work + stamp + rec_txt + '.flv'
                         self.rec_filea[index] = ''
                         if (len(mic) > 0):
                             self.rec_filea[index] = qPath_work + stamp + rec_txt + '.wav'
 
-                    # 録画開始
+                    # 記録開始
                     if (os.name != 'nt'):
 
                         # ffmpeg -f avfoundation -list_devices true -i ""
@@ -712,7 +724,7 @@ class proc_recorder:
 
 
 
-    # 録画停止
+    # 記録停止
     def sub_stop(self, index, proc_text, ):
 
         # index
@@ -737,7 +749,7 @@ class proc_recorder:
 
                 if (os.name != 'nt'):
 
-                    # 録画停止
+                    # 記録停止
                     if (not self.rec_ffmpeg[index] is None):
                         self.rec_ffmpeg[index].stdin.write(b'q\n')
                         try:
@@ -758,7 +770,7 @@ class proc_recorder:
 
                 else:
 
-                    # 録画停止
+                    # 記録停止
                     if (not self.rec_ffmpeg[index] is None):
                         self.rec_ffmpeg[index].stdin.write(b'q\n')
                         try:
@@ -842,7 +854,7 @@ class proc_recorder:
 
             # メッセージ
             speechs = []
-            speechs.append({ 'text':u'録画を終了しました。', 'wait':0, })
+            speechs.append({ 'text':u'記録を終了しました。', 'wait':0, })
             qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # ビジー解除
@@ -882,13 +894,13 @@ if __name__ == '__main__':
     # 単体実行
     if (len(sys.argv) < 2):
 
-        recorder_thread.put(['control', u'録画開始'])
+        recorder_thread.put(['control', u'記録開始'])
         time.sleep(45)
 
-        recorder_thread.put(['control', u'デスクトップの録画'])
+        recorder_thread.put(['control', u'デスクトップの記録'])
         time.sleep(45)
 
-        recorder_thread.put(['control', u'録画終了'])
+        recorder_thread.put(['control', u'記録終了'])
         time.sleep(45)
 
 
@@ -899,7 +911,7 @@ if __name__ == '__main__':
         # 初期設定
         qFunc.remove(qCtrl_control_desktop)
 
-        # 録画開始
+        # 記録開始
         recorder_thread.put(['control', '_rec_start_'])
 
         # 待機ループ
