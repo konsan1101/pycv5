@@ -143,7 +143,12 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
         inpFilea = inpPath + inpNamea
     if (outPath == ''):
         outPath = qPath_rec
-    outFile = outPath + inpNamev[:-4] + '.mp4'
+    inpTime = inpNamev[:15]
+    inpText = inpNamev[15:-4]
+    if (inpText == ''):
+        outFile = outPath + '_' + inpTime + '.___' + '.mp4'
+    else:
+        outFile = outPath + inpTime + '.___' + inpText + '.mp4'
 
     result = False
 
@@ -193,6 +198,8 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
         outPath = qPath_rec
     if (wrkPath == ''):
         wrkPath = qPath_work + 'movie2jpeg/'
+    inpTime = inpNamev[:15]
+    inpText = inpNamev[15:-4]
 
     # ファイルに日時
     dt1 = None
@@ -233,8 +240,12 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
         seq4 = '0001'
         f0 =  wrkPath + seq4 + '.jpg'
         if (os.path.exists(f0)):
-            f1 =  wrkPath + stamp[:-3] + '.jpg'
-            f2 =  outPath + stamp[:-3] + '.jpg'
+            if (inpText == ''):
+                f1 =  wrkPath + '_' + stamp[:-3] + '.jpg'
+                f2 =  outPath + '_' + stamp[:-3] + '.jpg'
+            else:
+                f1 =  wrkPath + stamp[:-3] + inpText + '.jpg'
+                f2 =  outPath + stamp[:-3] + inpText + '.jpg'
             os.rename(f0, f1)
             qFunc.copy(f1, f2)
             os.remove(f1)
@@ -300,8 +311,12 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
                     seq4 = '{:04}'.format(int(n) + 1)
                     f0 =  wrkPath + seq4 + '.jpg'
                     if (os.path.exists(f0)):
-                        f1 =  wrkPath + stamp[:-3] + '.jpg'
-                        f2 =  outPath + stamp[:-3] + '.jpg'
+                        if (inpText == ''):
+                            f1 =  wrkPath + '_' + stamp[:-3] + '.jpg'
+                            f2 =  outPath + '_' + stamp[:-3] + '.jpg'
+                        else:
+                            f1 =  wrkPath + stamp[:-3] + inpText + '.jpg'
+                            f2 =  outPath + stamp[:-3] + inpText + '.jpg'
                         os.rename(f0, f1)
                         qFunc.copy(f1, f2)
                         os.remove(f1)
