@@ -121,6 +121,14 @@ ECHO ------
     python -m pip  uninstall gtts-token
     python -m pip  install --upgrade gtts-token
 
+ECHO;
+ECHO ------------
+ECHO deep larning
+ECHO ------------
+    python -m pip  install --upgrade gym
+    python -m pip  install --upgrade atari-py
+    python -m pip  install --upgrade scikit-image
+
 
 
 PAUSE
