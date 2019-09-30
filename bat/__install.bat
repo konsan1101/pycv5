@@ -70,8 +70,8 @@ ECHO;
 ECHO -----------
 ECHO yolo3 keras
 ECHO -----------
-rem python -m pip  install --upgrade tensorflow
-    python -m pip  install --upgrade tensorflow==1.5.0
+rem python -m pip  install --upgrade tensorflow==1.5.0
+    python -m pip  install --upgrade tensorflow
     python -m pip  install --upgrade keras
 
 ECHO;
@@ -81,12 +81,22 @@ ECHO -------------
 ECHO (python36)
     python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-win_amd64.whl
     python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-win_amd64.whl
-    python -m pip  install pandas
+    python -m pip  install --upgrade pandas
 
 ECHO (python37)
-rem python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp37-cp37m-win_amd64.whl
-rem python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp37-cp37m-win_amd64.whl
-rem python -m pip  install pandas
+rem python -m pip  install torch===1.2.0 torchvision===0.4.0 -f https://download.pytorch.org/whl/torch_stable.html
+rem python -m pip  install --upgrade torchvision
+rem python -m pip  install --upgrade pandas
+
+ECHO;
+ECHO ------------
+ECHO deep larning
+ECHO ------------
+    python -m pip  install --upgrade gym
+    python -m pip  install --upgrade atari-py
+    python -m pip  install --upgrade scikit-image
+
+
 
 ECHO;
 ECHO ----------
@@ -120,14 +130,6 @@ ECHO ------
     python -m pip  install --upgrade ggtrans
     python -m pip  uninstall gtts-token
     python -m pip  install --upgrade gtts-token
-
-ECHO;
-ECHO ------------
-ECHO deep larning
-ECHO ------------
-    python -m pip  install --upgrade gym
-    python -m pip  install --upgrade atari-py
-    python -m pip  install --upgrade scikit-image
 
 
 
