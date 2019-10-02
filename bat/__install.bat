@@ -95,6 +95,8 @@ ECHO ------------
     python -m pip  install --upgrade gym
     python -m pip  install --upgrade atari-py
     python -m pip  install --upgrade scikit-image
+    python -m pip  install --upgrade plotly
+    python -m pip  install --upgrade seaborn
 
 
 
