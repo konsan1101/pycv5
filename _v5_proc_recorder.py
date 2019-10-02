@@ -85,6 +85,23 @@ qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
 
 
+def check_sox():
+    result = True
+
+    try:
+        sox = subprocess.Popen(['sox', '-q', '-d', '-r', '16000', '-b', '16', '-c', '1', \
+                'trim', '0.5', qPath_Work + 'check_sox.wav', \
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+        sox.wait()
+        sox.terminate()
+        sox = None
+    except:
+        return False
+    
+    return result
+
+
+
 def dshow_dev():
     cam = []
     mic = []
@@ -624,6 +641,9 @@ class proc_recorder:
                     # デバイス名取得
                     cam, mic = dshow_dev()
 
+                    # soxのチェック
+                    sox_enable = check_sox()
+
                     nowTime    = datetime.datetime.now()
                     stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
                     if (proc_text.lower() == '_rec_start_') \
@@ -633,7 +653,7 @@ class proc_recorder:
                         self.rec_limit[index] = None
                         self.rec_filev[index] = qPath_work + stamp + '.flv'
                         self.rec_filea[index] = ''
-                        if (len(mic) > 0):
+                        if (len(mic) > 0) and (sox_enable == True):
                             self.rec_filea[index] = qPath_work + stamp + '.wav'
                     else:
                         rec_txt = '.' + qFunc.txt2filetxt(proc_text)
@@ -644,7 +664,7 @@ class proc_recorder:
                             self.rec_limit[index] = time.time() + 30
                         self.rec_filev[index] = qPath_work + stamp + rec_txt + '.flv'
                         self.rec_filea[index] = ''
-                        if (len(mic) > 0):
+                        if (len(mic) > 0) and (sox_enable == True):
                             self.rec_filea[index] = qPath_work + stamp + rec_txt + '.wav'
 
                     # 記録開始
