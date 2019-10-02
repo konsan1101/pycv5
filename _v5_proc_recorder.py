@@ -91,7 +91,7 @@ def check_sox():
     try:
         sox = subprocess.Popen(['sox', '-q', '-d', '-r', '16000', '-b', '16', '-c', '1', \
                 'trim', '0.5', qPath_Work + 'check_sox.wav', \
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
         sox.wait()
         sox.terminate()
         sox = None
