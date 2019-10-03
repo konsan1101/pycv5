@@ -1,24 +1,40 @@
 @echo off
 cd "C:\Users\kondou\Documents\GitHub\pycv5"
 
-    pyinstaller _v5__main_speech.py  --onefile
+rd build /s /q
+rd dist /s /q
+pause
 
-    pyinstaller _v5__main_vision.py  --onefile
+set pyname=_v5__main__handsfree
+    echo;
+    echo %pyname%.py
+    pyinstaller %pyname%.py  --onefile
+    copy "C:\Users\kondou\Documents\GitHub\pycv5\dist\%pyname%.exe"   "%pyname%.exe"
+    del  "%pyname%.spec"
 
-    pyinstaller _v5__main_desktop.py --onefile
+set pyname=_v5__main_speech
+    echo;
+    echo %pyname%.py
+    pyinstaller %pyname%.py  --onefile
+    copy "C:\Users\kondou\Documents\GitHub\pycv5\dist\%pyname%.exe"   "%pyname%.exe"
+    del  "%pyname%.spec"
 
-    copy "C:\Users\kondou\Documents\GitHub\pycv5\dist\_v5__main_speech.exe"   "_v5__main_speech.exe"
-    del  "_v5__main_speech.spec"
+set pyname=_v5__main_vision
+    echo;
+    echo %pyname%.py
+    pyinstaller %pyname%.py  --onefile
+    copy "C:\Users\kondou\Documents\GitHub\pycv5\dist\%pyname%.exe"   "%pyname%.exe"
+    del  "%pyname%.spec"
 
-    copy "C:\Users\kondou\Documents\GitHub\pycv5\dist\_v5__main_vision.exe"   "_v5__main_vision.exe"
-    del  "_v5__main_vision.spec"
-
-    copy "C:\Users\kondou\Documents\GitHub\pycv5\dist\_v5__main_desktop.exe"  "_v5__main_desktop.exe"
-    del  "_v5__main_desktop.spec"
+set pyname=_v5__main_desktop
+    echo;
+    echo %pyname%.py
+    pyinstaller %pyname%.py  --onefile
+    copy "C:\Users\kondou\Documents\GitHub\pycv5\dist\%pyname%.exe"   "%pyname%.exe"
+    del  "%pyname%.spec"
 
 rd build /s /q
 rd dist /s /q
-
 pause
 
 
