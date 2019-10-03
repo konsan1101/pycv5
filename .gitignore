@@ -110,12 +110,8 @@ temp/
 yolo3_weights/yolov3.weights
 yolo3_weights/yolo.h5
 
-_v5__main__handsfree.exe
-_v5__main_speech.exe
-_v5__main_vision.exe
-_v5__main_desktop.exe
-_v5_proc_coreSTT.exe
-_v5_proc_coreTTS.exe
+_v5__main_*.exe
+_v5_proc_*.exe
 
 *key.py
 *key.json
