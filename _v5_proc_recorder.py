@@ -921,12 +921,16 @@ if __name__ == '__main__':
     qFunc.logOutput(qLogFile, )
 
     # 開始
-    recorder_thread = proc_recorder('recorder', '0', )
+    runMode = 'debug'
+    if (len(sys.argv) >= 2):
+        runMode  = str(sys.argv[1]).lower()
+
+    recorder_thread = proc_recorder('recorder', '0', runMode, )
     recorder_thread.start()
 
 
 
-    # 単体実行
+    # テスト実行
     if (len(sys.argv) < 2):
 
         recorder_thread.put(['control', u'記録開始'])
@@ -940,7 +944,7 @@ if __name__ == '__main__':
 
 
 
-    # バッチ実行
+    # 単体実行
     if (len(sys.argv) >= 2):
 
         # 初期設定

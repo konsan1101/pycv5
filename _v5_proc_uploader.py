@@ -357,12 +357,16 @@ if __name__ == '__main__':
     qFunc.logOutput(qLogFile, )
 
     # 開始
-    uploader_thread = proc_uploader('uploader', '0', path=qPath_d_upload, )
+    runMode = 'debug'
+    if (len(sys.argv) >= 2):
+        runMode  = str(sys.argv[1]).lower()
+
+    uploader_thread = proc_uploader('uploader', '0', runMode, path=qPath_d_upload, )
     uploader_thread.start()
 
 
 
-    # 単体実行
+    # テスト実行
     if (len(sys.argv) < 2):
 
         chktime = time.time()
@@ -381,7 +385,7 @@ if __name__ == '__main__':
 
 
 
-    # バッチ実行
+    # 単体実行
     if (len(sys.argv) >= 2):
 
         # 初期設定
