@@ -452,10 +452,6 @@ class proc_recorder:
         # 初期設定
         self.proc_step = '1'
 
-        # 記録開始
-        if (self.runMode == 'recorder'):
-            self.sub_proc(u'記録開始', )
-
         # 待機ループ
         self.proc_step = '5'
 
@@ -920,6 +916,9 @@ if __name__ == '__main__':
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
+    # 初期設定
+    qFunc.remove(qCtrl_control_desktop)
+
     # 開始
     runMode = 'debug'
     if (len(sys.argv) >= 2):
@@ -947,9 +946,6 @@ if __name__ == '__main__':
     # 単体実行
     if (len(sys.argv) >= 2):
 
-        # 初期設定
-        qFunc.remove(qCtrl_control_desktop)
-
         # 記録開始
         recorder_thread.put(['control', '_rec_start_'])
 
@@ -974,5 +970,6 @@ if __name__ == '__main__':
     # 終了
     recorder_thread.stop()
     del recorder_thread
+
 
 

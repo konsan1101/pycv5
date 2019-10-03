@@ -356,6 +356,9 @@ if __name__ == '__main__':
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
+    # 初期設定
+    qFunc.remove(qCtrl_control_desktop)
+
     # 開始
     runMode = 'debug'
     if (len(sys.argv) >= 2):
@@ -387,9 +390,6 @@ if __name__ == '__main__':
 
     # 単体実行
     if (len(sys.argv) >= 2):
-
-        # 初期設定
-        qFunc.remove(qCtrl_control_desktop)
 
         # 待機ループ
         while (True):
