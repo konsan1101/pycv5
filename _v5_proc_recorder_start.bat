@@ -9,8 +9,12 @@ ECHO start /b cmd /c _v5_proc_uploader.exe recorder
 rem -----------------------------------------------
 
 ECHO;
-ECHO bye!
+PING localhost -w 1000 -n 5 >nul
 
+ECHO;
+ECHO start!
+
+ECHO;
 ping localhost -w 1000 -n 5 >nul
 
 EXIT

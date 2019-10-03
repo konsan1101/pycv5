@@ -20,6 +20,11 @@ import glob
 
 
 
+# インターフェース
+qCtrl_control_speech     = 'temp/control_speech.txt'
+
+
+
 # qFunc 共通ルーチン
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
@@ -161,7 +166,7 @@ class proc_coreSTT:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -173,8 +178,8 @@ class proc_coreSTT:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -477,28 +482,74 @@ if __name__ == '__main__':
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
+    # 初期設定
+    qFunc.remove(qCtrl_control_speech)
+    qFunc.busyReset_speech(False)
 
+    # パラメータ
+    runMode = 'debug'
+    api     = 'free'
+    if (len(sys.argv) >= 2):
+        runMode  = str(sys.argv[1]).lower()
+    if (len(sys.argv) >= 3):
+        api      = str(sys.argv[2]).lower()
 
-    coreSTT_thread = proc_coreSTT('coreSTT', '0', )
+    # 開始
+    coreSTT_thread = proc_coreSTT('coreSTT', '0', runMode, qApiInp=api)
     coreSTT_thread.start()
 
-    qFunc.copy('_sounds/_sound_hallo.wav', qPath_s_wav + '_sound_hallo.wav')
 
-    chktime = time.time()
-    while ((time.time() - chktime) < 15):
 
-        res_data  = coreSTT_thread.get()
-        res_name  = res_data[0]
-        res_value = res_data[1]
-        if (res_name != ''):
-            print(res_name, res_value, )
+    # テスト実行
+    if (len(sys.argv) < 2):
 
-        if (coreSTT_thread.proc_s.qsize() == 0):
-            coreSTT_thread.put(['_status_', ''])
+        qFunc.copy('_sounds/_sound_hallo.wav', qPath_s_wav + '_sound_hallo.wav')
 
-        time.sleep(0.05)
+        chktime = time.time()
+        while ((time.time() - chktime) < 15):
 
-    time.sleep(1.00)
+            res_data  = coreSTT_thread.get()
+            res_name  = res_data[0]
+            res_value = res_data[1]
+            if (res_name != ''):
+                print(res_name, res_value, )
+
+            if (coreSTT_thread.proc_s.qsize() == 0):
+                coreSTT_thread.put(['_status_', ''])
+
+            time.sleep(0.05)
+
+
+
+    # 単体実行
+    if (len(sys.argv) >= 2):
+
+        # 待機ループ
+        while (True):
+
+            # 終了確認
+            control = ''
+            txts, txt = qFunc.txtsRead(qCtrl_control_speech)
+            if (txts != False):
+                qFunc.logOutput(str(txt))
+                if (txt == '_end_'):
+                    break
+                else:
+                    qFunc.remove(qCtrl_control_speech)
+                    control = txt
+
+            # メッセージ
+            res_data  = coreSTT_thread.get()
+            res_name  = res_data[0]
+            res_value = res_data[1]
+            #if (res_name != ''):
+            #    print(res_name, res_value, )
+
+            time.sleep(0.50)
+
+
+
+    # 終了
     coreSTT_thread.stop()
     del coreSTT_thread
 

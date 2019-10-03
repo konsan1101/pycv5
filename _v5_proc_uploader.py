@@ -358,12 +358,14 @@ if __name__ == '__main__':
 
     # 初期設定
     qFunc.remove(qCtrl_control_desktop)
+    qFunc.busyReset_desktop(False)
 
-    # 開始
+    # パラメータ
     runMode = 'debug'
     if (len(sys.argv) >= 2):
         runMode  = str(sys.argv[1]).lower()
 
+    # 開始
     uploader_thread = proc_uploader('uploader', '0', runMode, path=qPath_d_upload, )
     uploader_thread.start()
 
@@ -409,8 +411,8 @@ if __name__ == '__main__':
             res_data  = uploader_thread.get()
             res_name  = res_data[0]
             res_value = res_data[1]
-            if (res_name != ''):
-                print(res_name, res_value, )
+            #if (res_name != ''):
+            #    print(res_name, res_value, )
 
             time.sleep(0.50)
 

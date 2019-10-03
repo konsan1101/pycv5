@@ -87,9 +87,18 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
-qApiInp    = 'free'
-qApiTrn    = 'free'
-qApiOut    = 'free'
+
+
+google = False
+
+if (google == True):
+    qApiInp    = 'free'
+    qApiTrn    = 'free'
+    qApiOut    = 'free'
+else:
+    qApiInp    = 'azure'
+    qApiTrn    = 'azure'
+    qApiOut    = 'azure'
 if (qOS == 'windows'):
     qApiOut = 'winos'
 if (qOS == 'darwin'):
@@ -100,10 +109,10 @@ qLangTxt   = qLangInp
 qLangOut   = qLangTrn[:2]
 
 
-
 # google 音声認識、翻訳機能、音声合成
-import speech_api_google     as google_api
-import speech_api_google_key as google_key
+if (google == True):
+    import speech_api_google     as google_api
+    import speech_api_google_key as google_key
 
 # watson 音声認識、翻訳機能、音声合成
 import speech_api_watson     as watson_api
@@ -143,7 +152,10 @@ def qVoiceInput(useApi='free', inpLang='auto', inpFile='_sounds/_sound_hallo.wav
     if  (api != 'free') and (api != 'google') and (api != 'google8k') \
     and (api != 'watson') and (api != 'azure') \
     and (api != 'docomo') and (api != 'nict'):
-        api = 'free'
+        if (google == True):
+            api = 'free'
+        else:
+            api = 'azure'
 
     if (resText == '') and (api == 'watson'):
         watsonAPI = watson_api.SpeechAPI()
@@ -184,16 +196,17 @@ def qVoiceInput(useApi='free', inpLang='auto', inpFile='_sounds/_sound_hallo.wav
         if (resText == '') and (apiRecovery == True):
             api   = 'free'
 
-    if (resText == '') and (api == 'google' or api == 'google8k' or api == 'free'):
-        googleAPI = google_api.SpeechAPI()
-        res = googleAPI.authenticate('stt', google_key.getkey('stt'), )
-        if (res == True):
-            if   (api == 'google'):
-                resText, resApi = googleAPI.recognize(inpWave=inpFile, inpLang=inpLang, api=api)
-            elif (api == 'google8k'):
-                resText, resApi = googleAPI.recognize(inpWave=inpFile, inpLang=inpLang, api=api)
-            else:
-                resText, resApi = googleAPI.recognize(inpWave=inpFile, inpLang=inpLang, api=api)
+    if (google == True):
+        if (resText == '') and (api == 'google' or api == 'google8k' or api == 'free'):
+            googleAPI = google_api.SpeechAPI()
+            res = googleAPI.authenticate('stt', google_key.getkey('stt'), )
+            if (res == True):
+                if   (api == 'google'):
+                    resText, resApi = googleAPI.recognize(inpWave=inpFile, inpLang=inpLang, api=api)
+                elif (api == 'google8k'):
+                    resText, resApi = googleAPI.recognize(inpWave=inpFile, inpLang=inpLang, api=api)
+                else:
+                    resText, resApi = googleAPI.recognize(inpWave=inpFile, inpLang=inpLang, api=api)
 
     if (resText != ''):
         return resText, resApi
@@ -256,7 +269,10 @@ def qTranslator(useApi='free', inpLang='ja', outLang='en', inpText=u'こんに�
     if  (api != 'free') and (api != 'google') \
     and (api != 'watson') and (api != 'azure') \
     and (api != 'nict'):
-        api = 'free'
+        if (google == True):
+            api = 'free'
+        else:
+            api = 'azure'
     if (inpText == '' or inpLang == outLang):
         api = 'none'
 
@@ -330,14 +346,15 @@ def qTranslator(useApi='free', inpLang='ja', outLang='en', inpText=u'こんに�
                 resApi  = api
                 apirun  = False
 
-        if (resText == '') and (api == 'google' or api == 'free'):
-            googleAPI = google_api.SpeechAPI()
-            res = googleAPI.authenticate('tra', google_key.getkey('tra'), )
-            if (res == True):
-                if   (api == 'google'):
-                    resText, resApi = googleAPI.translate(inpText=inpText, inpLang=inpLang, outLang=outLang, api=api, )
-                else:
-                    resText, resApi = googleAPI.translate(inpText=inpText, inpLang=inpLang, outLang=outLang, api=api, )
+        if (google == True):
+            if (resText == '') and (api == 'google' or api == 'free'):
+                googleAPI = google_api.SpeechAPI()
+                res = googleAPI.authenticate('tra', google_key.getkey('tra'), )
+                if (res == True):
+                    if   (api == 'google'):
+                        resText, resApi = googleAPI.translate(inpText=inpText, inpLang=inpLang, outLang=outLang, api=api, )
+                    else:
+                        resText, resApi = googleAPI.translate(inpText=inpText, inpLang=inpLang, outLang=outLang, api=api, )
 
     if (apirun == True):
         if (resText != ''):
@@ -447,7 +464,14 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
     and (api != 'watson') and (api != 'azure') \
     and (api != 'winos')  and (api != 'macos') \
     and (api != 'hoya')  and (api != 'nict'):
-        api = 'free'
+        if (google == True):
+            api = 'free'
+        else:
+            api = 'azure'
+            if (qOS == 'windows'):
+                api = 'winos'
+            if (qOS == 'darwin'):
+                api = 'macos'
 
     apirun = True
 
@@ -588,23 +612,24 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
                 resApi  = api
                 apirun  = False
 
-        if (resText == '') and (api == 'google' or api == 'free'):
-            googleAPI = google_api.SpeechAPI()
-            res = googleAPI.authenticate('tts', google_key.getkey('tts'), )
-            if (res == True):
-                if (api == 'google'):
-                    resText, resApi = googleAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileMp3, api='auto', )
-                else:
-                    resText, resApi = googleAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileMp3, api='free', )
-                if (resText != ''):
-                    if (tempFileMp3[-4:].lower() == outFile[-4:].lower()):
-                        qFunc.copy(tempFileMp3, outFile)
+        if (google == True):
+            if (resText == '') and (api == 'google' or api == 'free'):
+                googleAPI = google_api.SpeechAPI()
+                res = googleAPI.authenticate('tts', google_key.getkey('tts'), )
+                if (res == True):
+                    if (api == 'google'):
+                        resText, resApi = googleAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileMp3, api='auto', )
                     else:
-                        sox = subprocess.Popen(['sox', '-q', tempFileMp3, outFile, ], \
-                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                        sox.wait()
-                        sox.terminate()
-                        sox = None
+                        resText, resApi = googleAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileMp3, api='free', )
+                    if (resText != ''):
+                        if (tempFileMp3[-4:].lower() == outFile[-4:].lower()):
+                            qFunc.copy(tempFileMp3, outFile)
+                        else:
+                            sox = subprocess.Popen(['sox', '-q', tempFileMp3, outFile, ], \
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                            sox.wait()
+                            sox.terminate()
+                            sox = None
 
     if (apirun == True):
         if (resText != ''):

@@ -7,6 +7,12 @@ RENAME "temp\control_desktop.tmp" "control_desktop.txt"
 ECHO;
 PING localhost -w 1000 -n 5 >nul
 
+ECHO;
+ECHO bye!
+
+ECHO;
+ping localhost -w 1000 -n 5 >nul
+
 EXIT
 
 

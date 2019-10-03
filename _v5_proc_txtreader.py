@@ -20,6 +20,11 @@ import glob
 
 
 
+# インターフェース
+qCtrl_control_speech     = 'temp/control_speech.txt'
+
+
+
 # qFunc 共通ルーチン
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
@@ -284,6 +289,12 @@ class proc_txtreader:
                                     out_value = proc_txts
                                     cn_s.put([out_name, out_value])
 
+                                # 結果出力(sendkey)
+                                if (self.runMode == 'sendkey'):
+                                    for txt in proc_txts:
+                                        #qFunc.notePad(txt)
+                                        qFunc.sendKey(txt)
+
                                 # ビジー設定
                                 if (not os.path.exists(self.fileBsy)):
                                     qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
@@ -340,36 +351,86 @@ if __name__ == '__main__':
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
+    # 初期設定
+    qFunc.remove(qCtrl_control_speech)
+    qFunc.busyReset_speech(False)
 
+    # パラメータ
+    runMode = 'debug'
+    if (len(sys.argv) >= 2):
+        runMode  = str(sys.argv[1]).lower()
 
-    sttreader_thread = proc_txtreader('sttreader', '0', path=qPath_s_STT, )
+    # 開始
+    sttreader_thread = proc_txtreader('sttreader', '0', runMode, path=qPath_s_STT, )
     sttreader_thread.start()
-    trareader_thread = proc_txtreader('trareader', '0', path=qPath_s_TRA, )
+    trareader_thread = proc_txtreader('trareader', '0', runMode, path=qPath_s_TRA, )
     trareader_thread.start()
 
-    chktime = time.time()
-    while ((time.time() - chktime) < 15):
 
-        res_data  = sttreader_thread.get()
-        res_name  = res_data[0]
-        res_value = res_data[1]
-        if (res_name != ''):
-            print(res_name, res_value, )
 
-        res_data  = trareader_thread.get()
-        res_name  = res_data[0]
-        res_value = res_data[1]
-        if (res_name != ''):
-            print(res_name, res_value, )
+    # テスト実行
+    if (len(sys.argv) < 2):
 
-        if (sttreader_thread.proc_s.qsize() == 0):
-            sttreader_thread.put(['_status_', ''])
-        if (trareader_thread.proc_s.qsize() == 0):
-            trareader_thread.put(['_status_', ''])
+        chktime = time.time()
+        while ((time.time() - chktime) < 15):
 
-        time.sleep(0.05)
+            res_data  = sttreader_thread.get()
+            res_name  = res_data[0]
+            res_value = res_data[1]
+            if (res_name != ''):
+                print(res_name, res_value, )
 
-    time.sleep(1.00)
+            res_data  = trareader_thread.get()
+            res_name  = res_data[0]
+            res_value = res_data[1]
+            if (res_name != ''):
+                print(res_name, res_value, )
+
+            if (sttreader_thread.proc_s.qsize() == 0):
+                sttreader_thread.put(['_status_', ''])
+            if (trareader_thread.proc_s.qsize() == 0):
+                trareader_thread.put(['_status_', ''])
+
+            time.sleep(0.05)
+
+
+
+    # 単体実行
+    if (len(sys.argv) >= 2):
+
+        # 待機ループ
+        while (True):
+
+            # 終了確認
+            control = ''
+            txts, txt = qFunc.txtsRead(qCtrl_control_speech)
+            if (txts != False):
+                qFunc.logOutput(str(txt))
+                if (txt == '_end_'):
+                    break
+                else:
+                    qFunc.remove(qCtrl_control_speech)
+                    control = txt
+
+            # メッセージ
+            res_data  = sttreader_thread.get()
+            res_name  = res_data[0]
+            res_value = res_data[1]
+            #if (res_name != ''):
+            #    print(res_name, res_value, )
+
+            # メッセージ
+            res_data  = trareader_thread.get()
+            res_name  = res_data[0]
+            res_value = res_data[1]
+            #if (res_name != ''):
+            #    print(res_name, res_value, )
+
+            time.sleep(0.50)
+
+
+
+    # 終了
     sttreader_thread.stop()
     trareader_thread.stop()
     del sttreader_thread

@@ -29,6 +29,7 @@ import ctypes
 import array
 
 import pyautogui
+import pyperclip
 import cv2
 
 
@@ -463,7 +464,18 @@ class qFunc_class:
             SWP_SHOWWINDOW = 0x0040
             ctypes.windll.user32.SetWindowPos(parent_handle, HWND_TOP, posX, posY, dspWidth, dspHeight, SWP_SHOWWINDOW)
 
-
+    def sendKey(self, txt='', cr=False, lf=True, ):
+        out_txt = txt
+        if (cr==True) or (lf==True):
+            out_txt = out_txt.replace('\r', '')
+            out_txt = out_txt.replace('\n', '')
+        if (cr==True):
+            out_txt += '\r'
+        if (lf==True):
+            out_txt += '\n'
+        pyperclip.copy(out_txt)
+        pyautogui.hotkey('ctrl', 'v')
+        return True
 
     def notePad(self, txt='', cr=False, lf=True, ):
         winTitle  = u'無題 - メモ帳'

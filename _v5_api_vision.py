@@ -89,6 +89,8 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
+google = False
+
 qApiCV     = 'azure'
 qApiOCR    = qApiCV
 qApiTrn    = qApiCV
@@ -99,12 +101,14 @@ qLangTrn   = 'en'
 
 
 # google 画像認識、OCR認識
-import vision_api_google     as google_api
-import vision_api_google_key as google_key
+if (google == True):
+    import vision_api_google     as google_api
+    import vision_api_google_key as google_key
 
 # google 機械翻訳
-import speech_api_google     as a_google_api
-import speech_api_google_key as a_google_key
+if (google == True):
+    import speech_api_google     as a_google_api
+    import speech_api_google_key as a_google_key
 
 # azure 画像認識、OCR認識
 import vision_api_azure     as azure_api
@@ -125,7 +129,10 @@ def qVisionCV(useApi='google', inpLang='ja', inpFile='vision__cv_photo.jpg', tmp
     api   = useApi
     if  (api != 'free') and (api != 'google') \
     and (api != 'azure'):
-        api = 'google'
+        if (google == True):
+            api = 'google'
+        else:
+            api = 'azure'
 
     if (resText == '') and (api == 'azure'):
         azureAPI = azure_api.VisionAPI()
@@ -161,32 +168,33 @@ def qVisionCV(useApi='google', inpLang='ja', inpFile='vision__cv_photo.jpg', tmp
         if (resText == '') and (apiRecovery == True):
             api   = 'free'
 
-    if (resText == '') and ((api == 'free') or (api == 'google')):
-        googleAPI = google_api.VisionAPI()
-        res = googleAPI.authenticate('cv' ,
-                   google_key.getkey('cv' ,'url'),
-                   google_key.getkey('cv' ,'key'), )
-        if (res == True):
-            res = googleAPI.convert(inpImage=inpFile, outImage=tmpFile, bw=False, )
+    if (google == True):
+        if (resText == '') and ((api == 'free') or (api == 'google')):
+            googleAPI = google_api.VisionAPI()
+            res = googleAPI.authenticate('cv' ,
+                    google_key.getkey('cv' ,'url'),
+                    google_key.getkey('cv' ,'key'), )
             if (res == True):
-                res, api = googleAPI.cv(inpImage=tmpFile, inpLang=inpLang, )
-                if (not res is None):
-                    #print(res)
-                    if (res['landmark'] != ''):
-                        resText = res['landmark']
-                        resLM   = resText
-                    else:
-                        resText = res['label']
-                    resApi  = api
-                    resAry  = []
-                    if (res['landmark'] != ''):
-                        resAry.append('[landmark] ' + inpLang + ' (' + api + ')')
-                        resAry.append(' ' + res['landmark'])
-                        resAry.append('')
-                    if (res['label'] != ''):
-                        resAry.append('[label] ' + inpLang + ' (' + api + ')')
-                        resAry.append(' ' + res['label'])
-                        resAry.append('')
+                res = googleAPI.convert(inpImage=inpFile, outImage=tmpFile, bw=False, )
+                if (res == True):
+                    res, api = googleAPI.cv(inpImage=tmpFile, inpLang=inpLang, )
+                    if (not res is None):
+                        #print(res)
+                        if (res['landmark'] != ''):
+                            resText = res['landmark']
+                            resLM   = resText
+                        else:
+                            resText = res['label']
+                        resApi  = api
+                        resAry  = []
+                        if (res['landmark'] != ''):
+                            resAry.append('[landmark] ' + inpLang + ' (' + api + ')')
+                            resAry.append(' ' + res['landmark'])
+                            resAry.append('')
+                        if (res['label'] != ''):
+                            resAry.append('[label] ' + inpLang + ' (' + api + ')')
+                            resAry.append(' ' + res['label'])
+                            resAry.append('')
 
     if (resText != ''):
         return resText, resApi, resAry, resLM
@@ -203,7 +211,10 @@ def qVisionOCR(useApi='google', inpLang='ja', inpFile='vision__ocr_photo.jpg', t
     api   = useApi
     if  (api != 'free') and (api != 'google') \
     and (api != 'azure'):
-        api = 'google'
+        if (google == True):
+            api = 'google'
+        else:
+            api = 'azure'
 
     if (resText == '') and (api == 'azure'):
         azureAPI = azure_api.VisionAPI()
@@ -226,26 +237,27 @@ def qVisionOCR(useApi='google', inpLang='ja', inpFile='vision__ocr_photo.jpg', t
                             resText += ' ' + text
                             resText = str(resText).strip()
 
-    if (resText == '') and ((api == 'free') or (api == 'google')):
-        googleAPI = google_api.VisionAPI()
-        res = googleAPI.authenticate('ocr' ,
-                   google_key.getkey('ocr' ,'url'),
-                   google_key.getkey('ocr' ,'key'), )
-        if (res == True):
-            res = googleAPI.convert(inpImage=inpFile, outImage=tmpFile, bw=True, )
+    if (google == True):
+        if (resText == '') and ((api == 'free') or (api == 'google')):
+            googleAPI = google_api.VisionAPI()
+            res = googleAPI.authenticate('ocr' ,
+                    google_key.getkey('ocr' ,'url'),
+                    google_key.getkey('ocr' ,'key'), )
             if (res == True):
-                res, api = googleAPI.ocr(inpImage=tmpFile, inpLang=inpLang, )
-                if (not res is None):
-                    #print(res)
-                    resText = ''
-                    resApi  = api
-                    resAry  = []
-                    if (len(res) > 0):
-                        resAry.append('[OCR] ' + inpLang + ' (' + api + ')')
-                        for text in res:
-                            resAry.append(' ' + text)
-                            resText += ' ' + text
-                            resText = str(resText).strip()
+                res = googleAPI.convert(inpImage=inpFile, outImage=tmpFile, bw=True, )
+                if (res == True):
+                    res, api = googleAPI.ocr(inpImage=tmpFile, inpLang=inpLang, )
+                    if (not res is None):
+                        #print(res)
+                        resText = ''
+                        resApi  = api
+                        resAry  = []
+                        if (len(res) > 0):
+                            resAry.append('[OCR] ' + inpLang + ' (' + api + ')')
+                            for text in res:
+                                resAry.append(' ' + text)
+                                resText += ' ' + text
+                                resText = str(resText).strip()
 
     if (resText != ''):
         return resText, resApi, resAry
@@ -262,7 +274,10 @@ def qOCR2Trn(useApi='google', inpLang='ja', inpAry=['Hallo'], trnLang='en', apiR
     api   = useApi
     if  (api != 'free') and (api != 'google') \
     and (api != 'azure'):
-        api = 'google'
+        if (google == True):
+            api = 'google'
+        else:
+            api = 'azure'
 
     if (resText == '') and (api == 'azure'):
         a_azureAPI = a_azure_api.SpeechAPI()
@@ -284,22 +299,23 @@ def qOCR2Trn(useApi='google', inpLang='ja', inpAry=['Hallo'], trnLang='en', apiR
                     resAry.append(text)
                     resText += str(text) + ','
 
-    if (resText == '') and ((api == 'free') or (api == 'google')):
-        a_googleAPI = a_google_api.SpeechAPI()
-        a_res = a_googleAPI.authenticate('tra', a_google_key.getkey('tra'), )
-        if (a_res == True):
-            resAry = []
-            resAry.append('[Translate] ' + trnLang + ' (' + api + ')')
-            l = 0
-            for text in inpAry:
-                l+=1
-                if ( l>1 ):
-                    outText, api = a_googleAPI.translate(inpText=text, inpLang=inpLang, outLang=trnLang, )
-                    if (outText != ''):
-                        text   = outText
-                        resApi = api
-                    resAry.append(text)
-                    resText += str(text) + ','
+    if (google == True):
+        if (resText == '') and ((api == 'free') or (api == 'google')):
+            a_googleAPI = a_google_api.SpeechAPI()
+            a_res = a_googleAPI.authenticate('tra', a_google_key.getkey('tra'), )
+            if (a_res == True):
+                resAry = []
+                resAry.append('[Translate] ' + trnLang + ' (' + api + ')')
+                l = 0
+                for text in inpAry:
+                    l+=1
+                    if ( l>1 ):
+                        outText, api = a_googleAPI.translate(inpText=text, inpLang=inpLang, outLang=trnLang, )
+                        if (outText != ''):
+                            text   = outText
+                            resApi = api
+                        resAry.append(text)
+                        resText += str(text) + ','
 
     if (resText != ''):
         return resText, resApi, resAry

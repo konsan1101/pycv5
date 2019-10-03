@@ -110,6 +110,9 @@ temp/
 yolo3_weights/yolov3.weights
 yolo3_weights/yolo.h5
 
+_v5_proc_coreSTT.exe
+_v5_proc_coreTTS.exe
+
 *key.py
 *key.json
 
