@@ -78,15 +78,9 @@ ECHO;
 ECHO -------------
 ECHO yolo3 pytorch
 ECHO -------------
-ECHO (python36)
-    python -m pip  install https://download.pytorch.org/whl/cu100/torch-1.1.0-cp36-cp36m-win_amd64.whl
-    python -m pip  install https://download.pytorch.org/whl/cu100/torchvision-0.3.0-cp36-cp36m-win_amd64.whl
+    python -m pip  install --upgrade torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+    python -m pip  install --upgrade torchvision
     python -m pip  install --upgrade pandas
-
-ECHO (python37)
-rem python -m pip  install torch===1.2.0 torchvision===0.4.0 -f https://download.pytorch.org/whl/torch_stable.html
-rem python -m pip  install --upgrade torchvision
-rem python -m pip  install --upgrade pandas
 
 ECHO;
 ECHO ------------
@@ -95,8 +89,6 @@ ECHO ------------
     python -m pip  install --upgrade gym
     python -m pip  install --upgrade atari-py
     python -m pip  install --upgrade scikit-image
-    python -m pip  install           plotly==3.10
-    python -m pip  install --upgrade seaborn
 
 
 
