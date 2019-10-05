@@ -207,7 +207,7 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
 
 
 
-def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
+def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath='', sfps=1, scene=0.1, ):
 
     # パラメータ
     inpFilev = inpPath + inpNamev
@@ -281,15 +281,23 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath=''):
         qFunc.makeDirs(wrkPath, remove=True, )
 
         # 動画処理
-        ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFilev, \
-            '-vf', 'select=gt(scene\,0.1), scale=0:0,showinfo', \
-            '-vsync', 'vfr', \
-            wrkPath + '%04d.jpg', \
-            #'-loglevel', 'warning', \
-            ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+        if (scene == None):
+            ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFilev, \
+                '-filter:v', 'fps=fps=' + str(sfps) + ':round=down, showinfo', \
+                wrkPath + '%04d.jpg', \
+                #'-loglevel', 'warning', \
+                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+        else:
+            ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFilev, \
+                #'-filter:v', 'fps=fps=' + str(sfps) + ':round=down, select=gt(scene\,' + str(scene) + '), scale=0:0, showinfo', \
+                '-filter:v', 'select=gt(scene\,' + str(scene) + '), scale=0:0, showinfo', \
+                '-vsync', 'vfr', \
+                wrkPath + '%04d.jpg', \
+                #'-loglevel', 'warning', \
+                ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
         logb, errb = ffmpeg.communicate()
-        #ffmpeg.wait()
+        ffmpeg.wait()
         ffmpeg.terminate()
         ffmpeg = None
 
@@ -839,7 +847,9 @@ class proc_recorder:
 
                 # サムネイル抽出
                 if (os.path.exists(self.rec_filev[index])):
-                    res = movie2jpg(inpPath = qPath_work, inpNamev=rec_namev, outPath = qPath_rec, wrkPath=qPath_work + 'movie2jpeg/', )
+                    #wrkPath = qPath_work + 'movie2jpeg/'
+                    wrkPath = qPath_work + 'recorder_m2j/'
+                    res = movie2jpg(inpPath = qPath_work, inpNamev=rec_namev, outPath = qPath_rec, wrkPath=wrkPath, sfps=1, scene=0.1, )
                     if (res != False):
                         for f in res:
                             outFile = f.replace(qPath_rec, '')
@@ -861,6 +871,13 @@ class proc_recorder:
                             # ログ
                             qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
 
+                # ワーク削除
+                if (os.path.exists(self.rec_filev[index])):
+                    if (os.path.exists(self.rec_filev[index])):
+                            qFunc.remove(self.rec_filev[index])
+                    if (os.path.exists(self.rec_filea[index])):
+                        qFunc.remove(self.rec_filea[index])
+                                
         # index
         index = 0
         if (index == 0):
