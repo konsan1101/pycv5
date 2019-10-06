@@ -193,12 +193,12 @@ class proc_yolo_torch:
         bbox_attrs = 5 + num_classes
         
         print("Loading network.....")
-        model = Darknet('yolo3_weights/yolov3.cfg')
-        model.load_weights('yolo3_weights/yolov3.weights')
-        model.net_info["height"] = 416
-        #model = Darknet('yolo3_weights/yolov3-tiny.cfg')
-        #model.load_weights('yolo3_weights/yolov3-tiny.weights')
+        #model = Darknet('yolo3_weights/yolov3.cfg')
+        #model.load_weights('yolo3_weights/yolov3.weights')
         #model.net_info["height"] = 416
+        model = Darknet('yolo3_weights/yolov3-tiny.cfg')
+        model.load_weights('yolo3_weights/yolov3-tiny.weights')
+        model.net_info["height"] = 416
         print("Network successfully loaded")
 
         inp_dim = int(model.net_info["height"])
@@ -433,7 +433,7 @@ if __name__ == '__main__':
         if (yolo_torch_thread.proc_s.qsize() == 0):
             yolo_torch_thread.put(['[img]', inp.copy()])
 
-        if (yolo_torch_thread.proc_r.qsize() != 0):
+        while (yolo_torch_thread.proc_r.qsize() != 0):
             res_data  = yolo_torch_thread.get()
             res_name  = res_data[0]
             res_value = res_data[1]
@@ -448,6 +448,8 @@ if __name__ == '__main__':
                     cv2.imshow('Display', res_value.copy() )
                     cv2.waitKey(1)
                     #time.sleep(0.25)
+                if (res_name == '_fps_'):
+                    print(res_name, res_value, )
                 #else:
                 #    print(res_name, res_value, )
 
