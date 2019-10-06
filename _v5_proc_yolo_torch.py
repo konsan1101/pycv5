@@ -334,11 +334,11 @@ class proc_yolo_torch:
                                 out_value = orig_im[y1:y2, x1:x2].copy()
                                 cn_s.put([out_name, out_value])
 
-                        t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 1 , 1)[0]
+                        t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1 , 1)[0]
                         x2 = x1 + t_size[0] + 3
                         y1 = y2 - t_size[1] - 4
                         cv2.rectangle(out_img, (x1, y1), (x2, y2), color, -1)
-                        cv2.putText(out_img, label, (x1, y1 + t_size[1] + 2), cv2.FONT_HERSHEY_PLAIN, 1, [225,255,255], 1)
+                        cv2.putText(out_img, label, (x1, y1 + t_size[1] + 2), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, [225,255,255], 1)
 
                     except:
                         pass
