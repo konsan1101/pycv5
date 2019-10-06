@@ -107,6 +107,7 @@ venv.bak/
 julius/model/dnn/logicalTri
 julius/model/dnn/logicalTri.bin
 temp/
+cv2dnn/yolov3/yolov3.weights
 yolo3_weights/yolov3.weights
 yolo3_weights/yolo.h5
 

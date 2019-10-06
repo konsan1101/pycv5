@@ -174,9 +174,9 @@ class proc_cv2dnn_ssd:
         self.proc_step = '1'
 
         # 定義ファイル
-        file_config  = u'C:/Users/kondou/Documents/GitHub/py-etc/opencv_dnn/ssd_mobilenetv2/frozen_inference_graph.pb'
-        file_weights = u'C:/Users/kondou/Documents/GitHub/py-etc/opencv_dnn/ssd_mobilenetv2/ssd_mobilenet_v2_coco_2018_03_29.pbtxt'
-        file_labels  = u'C:/Users/kondou/Documents/GitHub/py-etc/opencv_dnn/ssd_mobilenetv2/labels.txt'
+        file_config  = 'cv2dnn/ssd/frozen_inference_graph.pb'
+        file_weights = 'cv2dnn/ssd/ssd_mobilenet_v2_coco_2018_03_29.pbtxt'
+        file_labels  = 'cv2dnn/ssd/labels.txt'
 
         print("Loading Network.....")
         model = cv2.dnn.readNetFromTensorflow(file_config, file_weights)

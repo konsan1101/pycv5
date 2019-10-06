@@ -174,11 +174,11 @@ class proc_cv2dnn_yolo:
         self.proc_step = '1'
 
         # 定義ファイル
-        file_config  = u'yolo3_weights/yolov3.cfg'
-        file_weights = u'yolo3_weights/yolov3.weights'
-        #file_config  = u'yolo3_weights/yolov3-tiny.cfg'
-        #file_weights = u'yolo3_weights/yolov3-tiny.weights'
-        file_labels  = u'yolo3_weights/coco-labels.txt'
+        file_config  = 'cv2dnn/yolov3/yolov3.cfg'
+        file_weights = 'cv2dnn/yolov3/yolov3.weights'
+        #file_config  = 'cv2dnn/yolov3/yolov3-tiny.cfg'
+        #file_weights = 'cv2dnn/yolov3/yolov3-tiny.weights'
+        file_labels  = 'cv2dnn/yolov3/coco-labels.txt'
 
         print("Loading Network.....")
         model = cv2.dnn.readNetFromDarknet(file_config, file_weights)
