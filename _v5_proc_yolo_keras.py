@@ -511,7 +511,7 @@ if __name__ == '__main__':
     yolo_keras_thread = proc_yolo_keras('yolokeras', '0', )
     yolo_keras_thread.start()
 
-    inp = cv2.imread('_photos/_photo_qrcode.jpg')
+    inp = cv2.imread('cv2dnn/dog.jpg')
     inp = cv2.resize(inp, (960, 540))
 
     chktime = time.time()

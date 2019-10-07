@@ -174,10 +174,10 @@ class proc_cv2dnn_yolo:
         self.proc_step = '1'
 
         # 定義ファイル
-        file_config  = 'cv2dnn/yolov3/yolov3.cfg'
-        file_weights = 'cv2dnn/yolov3/yolov3.weights'
-        #file_config  = 'cv2dnn/yolov3/yolov3-tiny.cfg'
-        #file_weights = 'cv2dnn/yolov3/yolov3-tiny.weights'
+        #file_config  = 'cv2dnn/yolov3/yolov3.cfg'
+        #file_weights = 'cv2dnn/yolov3/yolov3.weights'
+        file_config  = 'cv2dnn/yolov3/yolov3-tiny.cfg'
+        file_weights = 'cv2dnn/yolov3/yolov3-tiny.weights'
         file_labels  = 'cv2dnn/yolov3/coco-labels.txt'
 
         print("Loading Network.....")
@@ -284,9 +284,9 @@ class proc_cv2dnn_yolo:
                         scores = detection[5:]
                         classid = np.argmax(scores)
 
-                        # 予測確率を取り出し0.7以上か判定する。
+                        # 予測確率を取り出し0.5以上か判定する。
                         confidence = scores[classid]
-                        if confidence > .7:
+                        if confidence > .5:
 
                             # クラス名を取り出す。
                             class_name  = classNames[classid]
@@ -398,7 +398,7 @@ if __name__ == '__main__':
     cv2dnn_yolo_thread = proc_cv2dnn_yolo('dnn_yolo', '0', )
     cv2dnn_yolo_thread.start()
 
-    inp = cv2.imread('_photos/_photo_qrcode.jpg')
+    inp = cv2.imread('cv2dnn/dog.jpg')
     inp = cv2.resize(inp, (960, 540))
 
     chktime = time.time()

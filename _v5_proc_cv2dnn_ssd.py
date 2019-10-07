@@ -276,9 +276,9 @@ class proc_cv2dnn_ssd:
                 # detectionには[?,id番号、予測確率、Xの開始点、Yの開始点、Xの終了点、Yの終了点]が入っている。
                 for detection in detections:
 
-                    # 予測確率を取り出し0.7以上か判定する。
+                    # 予測確率を取り出し0.5以上か判定する。
                     confidence = detection[2]
-                    if confidence > .7:
+                    if confidence > .5:
 
                         # id番号を取り出し、辞書からクラス名を取り出す。
                         classid = detection[1]
@@ -387,7 +387,7 @@ if __name__ == '__main__':
     cv2dnn_ssd_thread = proc_cv2dnn_ssd('dnn_ssd', '0', )
     cv2dnn_ssd_thread.start()
 
-    inp = cv2.imread('_photos/_photo_qrcode.jpg')
+    inp = cv2.imread('cv2dnn/dog.jpg')
     inp = cv2.resize(inp, (960, 540))
 
     chktime = time.time()
