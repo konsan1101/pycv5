@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# COPYRIGHT (C) 2019 Mitsuo KONDOU.
+# COPYRIGHT (C) 2014-2019 Mitsuo KONDOU.
 # This software is released under the MIT License.
 # https://github.com/konsan1101
 # Thank you for keeping the rules.
@@ -189,7 +189,7 @@ class proc_yolo_torch:
         nms_thesh = float(0.45)
         CUDA = torch.cuda.is_available()
         num_classes = 80
-        #CUDA = torch.cuda.is_available()        
+        #CUDA = torch.cuda.is_available()
         bbox_attrs = 5 + num_classes
         
         print("Loading network.....")
@@ -338,7 +338,7 @@ class proc_yolo_torch:
                         x2 = x1 + t_size[0] + 3
                         y1 = y2 - t_size[1] - 4
                         cv2.rectangle(out_img, (x1, y1), (x2, y2), color, -1)
-                        cv2.putText(out_img, label, (x1, y1 + t_size[1] + 2), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, [225,255,255], 1)
+                        cv2.putText(out_img, label, (x1, y1 + t_size[1] + 2), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,0), 1)
 
                     except:
                         pass

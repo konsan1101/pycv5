@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# COPYRIGHT (C) 2019 Mitsuo KONDOU.
+# COPYRIGHT (C) 2014-2019 Mitsuo KONDOU.
 # This software is released under the MIT License.
 # https://github.com/konsan1101
 # Thank you for keeping the rules.
@@ -569,8 +569,11 @@ class proc_overlay:
             and (cn_s.qsize() == 0):
 
                 display_mode = 'cam'
+                #if (self.runMode == 'debug'):
                 if (self.runMode == 'debug'):
                     display_mode = 'dbg'
+                if (self.runMode == 'handsfree'):
+                    display_mode = 'live'
                 elif (self.runMode == 'hud'):
                     display_mode = 'hud'
                 if  (qFunc.busyCheck(qBusy_d_rec , 0) == '_busy_'):
@@ -603,6 +606,18 @@ class proc_overlay:
                     if (not cam2_mini is None):
                         wipe_mini2 = cam2_mini.copy()
                         wipe_time2 = cam2_time
+
+                if (display_mode == 'live'):
+                    if (not comp_base is None):
+                        base_base  = comp_base.copy()
+                        base_time  = comp_time
+                        if (comp_fps != ''):
+                            base_txt1  = comp_fps + 'fps'
+                        if (comp_reso != ''):
+                            base_txt2  = comp_reso
+                    if (not cam1_mini is None):
+                        wipe_mini1 = cam2_mini.copy()
+                        wipe_time1 = cam2_time
 
                 if (display_mode == 'rec'):
                     if (not cam1_base is None):

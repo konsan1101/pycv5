@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# COPYRIGHT (C) 2019 Mitsuo KONDOU.
+# COPYRIGHT (C) 2014-2019 Mitsuo KONDOU.
 # This software is released under the MIT License.
 # https://github.com/konsan1101
 # Thank you for keeping the rules.
@@ -113,8 +113,8 @@ import _v5_proc_camera
 import _v5_proc_txt2img
 import _v5_proc_cvreader
 import _v5_proc_cvdetect
-import _v5_proc_yolo_keras
-import _v5_proc_yolo_torch
+import _v5_proc_cv2dnn_yolo
+import _v5_proc_cv2dnn_ssd
 import _v5_proc_vin2jpg
 import _v5_proc_coreCV
 
@@ -285,74 +285,74 @@ class main_vision:
                 qFunc.remove(qCtrl_control_self)
 
         # 起動条件
-        controlv_thread   = None
-        controlv_switch   = 'on'
-        overlay_thread    = None
-        overlay_switch    = 'on'
-        camera_thread1    = None
-        camera_switch1    = 'on'
-        camera_thread2    = None
-        camera_switch2    = 'on'
-        txt2img_thread    = None
-        txt2img_switch    = 'on'
-        cvreader_thread   = None
-        cvreader_switch   = 'on'
-        cvdetect_thread1  = None
-        cvdetect_switch1  = 'on'
-        cvdetect_thread2  = None
-        cvdetect_switch2  = 'on'
-        yolo_keras_thread = None
-        yolo_keras_switch = 'on'
-        yolo_torch_max    = 2
-        yolo_torch_seq    = 0
-        yolo_torch_thread = {}
-        yolo_torch_switch = 'on'
-        for i in range(yolo_torch_max):
-            yolo_torch_thread[i] = None
-        vin2jpg_thread    = None
-        vin2jpg_switch    = 'on'
-        coreCV_thread     = None
-        coreCV_switch     = 'on'
+        controlv_thread    = None
+        controlv_switch    = 'on'
+        overlay_thread     = None
+        overlay_switch     = 'on'
+        camera_thread1     = None
+        camera_switch1     = 'on'
+        camera_thread2     = None
+        camera_switch2     = 'on'
+        txt2img_thread     = None
+        txt2img_switch     = 'on'
+        cvreader_thread    = None
+        cvreader_switch    = 'on'
+        cvdetect_thread1   = None
+        cvdetect_switch1   = 'on'
+        cvdetect_thread2   = None
+        cvdetect_switch2   = 'on'
+        cv2dnn_yolo_thread = None
+        cv2dnn_yolo_switch = 'on'
+        cv2dnn_ssd_max     = 2
+        cv2dnn_ssd_seq     = 0
+        cv2dnn_ssd_thread  = {}
+        cv2dnn_ssd_switch  = 'on'
+        for i in range(cv2dnn_ssd_max):
+            cv2dnn_ssd_thread[i] = None
+        vin2jpg_thread     = None
+        vin2jpg_switch     = 'on'
+        coreCV_thread      = None
+        coreCV_switch      = 'on'
 
         if (self.runMode == 'debug'):
-            camera_switch2    = 'on'
-            cvreader_switch   = 'on'
-            cvdetect_switch1  = 'on'
-            cvdetect_switch2  = 'on'
-            yolo_keras_switch = 'on'
-            yolo_torch_switch = 'on'
-            vin2jpg_switch    = 'on'
-            coreCV_switch     = 'on'
+            camera_switch2     = 'on'
+            cvreader_switch    = 'on'
+            cvdetect_switch1   = 'on'
+            cvdetect_switch2   = 'on'
+            cv2dnn_yolo_switch = 'on'
+            cv2dnn_ssd_switch  = 'on'
+            vin2jpg_switch     = 'on'
+            coreCV_switch      = 'on'
         if (self.runMode == 'handsfree'):
-            camera_switch2    = 'on'
-            cvreader_switch   = 'on'
-            cvdetect_switch1  = 'off'
-            cvdetect_switch2  = 'off'
-            yolo_keras_switch = 'off'
-            yolo_torch_switch = 'on'
-            vin2jpg_switch    = 'on'
-            coreCV_switch     = 'on'
+            camera_switch2     = 'on'
+            cvreader_switch    = 'on'
+            cvdetect_switch1   = 'off'
+            cvdetect_switch2   = 'off'
+            cv2dnn_yolo_switch = 'off'
+            cv2dnn_ssd_switch  = 'on'
+            vin2jpg_switch     = 'on'
+            coreCV_switch      = 'on'
         if (self.runMode == 'hud'):
-            camera_switch2    = 'off'
-            cvreader_switch   = 'on'
-            cvdetect_switch1  = 'off'
-            cvdetect_switch2  = 'off'
-            yolo_keras_switch = 'off'
-            yolo_torch_switch = 'off'
-            vin2jpg_switch    = 'off'
-            coreCV_switch     = 'off'
+            camera_switch2     = 'off'
+            cvreader_switch    = 'on'
+            cvdetect_switch1   = 'off'
+            cvdetect_switch2   = 'off'
+            cv2dnn_yolo_switch  = 'off'
+            cv2dnn_ssd_switch  = 'off'
+            vin2jpg_switch     = 'off'
+            coreCV_switch      = 'off'
         if (self.runMode == 'camera'):
-            camera_switch2    = 'off'
-            cvreader_switch   = 'on'
-            cvdetect_switch1  = 'off'
-            cvdetect_switch2  = 'off'
-            yolo_keras_switch = 'off'
-            yolo_torch_switch = 'off'
-            vin2jpg_switch    = 'off'
-            coreCV_switch     = 'off'
+            camera_switch2     = 'off'
+            cvreader_switch    = 'on'
+            cvdetect_switch1   = 'off'
+            cvdetect_switch2   = 'off'
+            cv2dnn_yolo_switch = 'off'
+            cv2dnn_ssd_switch  = 'off'
+            vin2jpg_switch     = 'off'
+            coreCV_switch      = 'off'
 
         if (self.cam2Dev == 'none'):
-            camera_switch2    = 'off'
+            camera_switch2     = 'off'
 
         busy_status_txts = _v5__qFunc.qBusy_status_txts_class()
 
@@ -362,7 +362,7 @@ class main_vision:
         cvreader_last_put  = time.time()
         cvdetect1_last_put = time.time()
         cvdetect2_last_put = time.time()
-        yolo_last_put      = time.time()
+        cv2dnn_last_put    = time.time()
 
         main_img        = None
         display_img     = None
@@ -569,42 +569,42 @@ class main_vision:
                 del cvdetect_thread2
                 cvdetect_thread2 = None
 
-            if (yolo_keras_thread is None) and (yolo_keras_switch == 'on'):
-                yolo_keras_thread = _v5_proc_yolo_torch.proc_yolo_torch(
-                                    name='yolokeras', id='0',
+            if (cv2dnn_yolo_thread is None) and (cv2dnn_yolo_switch == 'on'):
+                cv2dnn_yolo_thread = _v5_proc_cv2dnn_yolo.proc_cv2dnn_yolo(
+                                    name='cv2_yolo', id='0',
                                     runMode=self.runMode, 
                                     procMode='320x240',
                                     )
-                yolo_keras_thread.start()
+                cv2dnn_yolo_thread.start()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
-                    speechs.append({ 'text':u'「画像認識（Ｋｅｒａｓ）」の機能が有効になりました。', 'wait':0, })
+                    speechs.append({ 'text':u'「画像認識（ｙｏｌｏ）」の機能が有効になりました。', 'wait':0, })
 
-            if (not yolo_keras_thread is None) and (yolo_keras_switch != 'on'):
-                yolo_keras_thread.stop()
-                del yolo_keras_thread
-                yolo_keras_thread = None
+            if (not cv2dnn_yolo_thread is None) and (cv2dnn_yolo_switch != 'on'):
+                cv2dnn_yolo_thread.stop()
+                del cv2dnn_yolo_thread
+                cv2dnn_yolo_thread = None
 
-            for i in range(yolo_torch_max):
-                if (yolo_torch_thread[i] is None) and (yolo_torch_switch == 'on'):
-                    yolo_torch_thread[i] = _v5_proc_yolo_torch.proc_yolo_torch(
-                                        name='yolotorch', id=str(i),
+            for i in range(cv2dnn_ssd_max):
+                if (cv2dnn_ssd_thread[i] is None) and (cv2dnn_ssd_switch == 'on'):
+                    cv2dnn_ssd_thread[i] = _v5_proc_cv2dnn_ssd.proc_cv2dnn_ssd(
+                                        name='cv2_ssd', id=str(i),
                                         runMode=self.runMode, 
                                         procMode='320x240',
                                         )
-                    yolo_torch_thread[i].start()
+                    cv2dnn_ssd_thread[i].start()
 
                     if (i == 0):
                         if (self.runMode == 'debug') \
                         or (self.runMode == 'handsfree'):
-                            speechs.append({ 'text':u'「画像認識（Ｐｙｔｏｒｃｈ）」の機能が有効になりました。', 'wait':0, })
+                            speechs.append({ 'text':u'「画像認識（ｓｓｄ）」の機能が有効になりました。', 'wait':0, })
 
-            for i in range(yolo_torch_max):
-                if (not yolo_torch_thread[i] is None) and (yolo_torch_switch != 'on'):
-                    yolo_torch_thread[i].stop()
-                    del yolo_torch_thread[i]
-                    yolo_torch_thread[i] = None
+            for i in range(cv2dnn_ssd_max):
+                if (not cv2dnn_ssd_thread[i] is None) and (cv2dnn_ssd_switch != 'on'):
+                    cv2dnn_ssd_thread[i].stop()
+                    del cv2dnn_ssd_thread[i]
+                    cv2dnn_ssd_thread[i] = None
 
             if (vin2jpg_thread is None) and (vin2jpg_switch == 'on'):
                 vin2jpg_thread = _v5_proc_vin2jpg.proc_vin2jpg(
@@ -902,23 +902,22 @@ class main_vision:
                                             cvdetect_thread2.put(['[img]', main_img ])
                                             cvdetect2_last_put = time.time()
 
-                                # 画像識別（YOLO）keras
-                                if  ((time.time() - yolo_last_put) >= 1):
-                                    if (not yolo_keras_thread is None):
-                                        if (yolo_keras_thread.proc_s.qsize() == 0):
-                                            yolo_keras_thread.put(['[img]', main_img ])
-                                            yolo_last_put = time.time()
+                                # 画像識別（cv2dnn）yolo
+                                if  ((time.time() - cv2dnn_last_put) >= 1):
+                                    if (not cv2dnn_yolo_thread is None):
+                                        if (cv2dnn_yolo_thread.proc_s.qsize() == 0):
+                                            cv2dnn_yolo_thread.put(['[img]', main_img ])
+                                            cv2dnn_last_put = time.time()
 
-                                # 画像識別（YOLO）torch
-                                if ((time.time() - yolo_last_put) >= (1/yolo_torch_max)/2):
-                                    i = yolo_torch_seq
-                                    if (not yolo_torch_thread[i] is None):
-                                        if (yolo_torch_thread[i].proc_s.qsize() == 0):
-                                            yolo_torch_thread[i].put(['[img]', main_img ])
-                                            yolo_last_put = time.time()
-                                            #print('yolo put ' + str(i))
-                                            yolo_torch_seq += 1
-                                            yolo_torch_seq = yolo_torch_seq % yolo_torch_max
+                                # 画像識別（cv2dnn）ssd
+                                if ((time.time() - cv2dnn_last_put) >= (1/cv2dnn_ssd_max)/2):
+                                    i = cv2dnn_ssd_seq
+                                    if (not cv2dnn_ssd_thread[i] is None):
+                                        if (cv2dnn_ssd_thread[i].proc_s.qsize() == 0):
+                                            cv2dnn_ssd_thread[i].put(['[img]', main_img ])
+                                            cv2dnn_last_put = time.time()
+                                            cv2dnn_ssd_seq += 1
+                                            cv2dnn_ssd_seq = cv2dnn_ssd_seq % cv2dnn_ssd_max
                                             break
 
                             # 画像合成（メイン画像）
@@ -982,10 +981,10 @@ class main_vision:
                             detect_img2 = res_value.copy()
                             overlay_thread.put(['[detect2]', detect_img2 ])
 
-                # 画像合成（YOLO識別結果）keras
-                if (not yolo_keras_thread is None):
-                    while (yolo_keras_thread.proc_r.qsize() != 0):
-                        res_data  = yolo_keras_thread.get()
+                # 画像合成（cv2dnn識別結果）yolo
+                if (not cv2dnn_yolo_thread is None):
+                    while (cv2dnn_yolo_thread.proc_r.qsize() != 0):
+                        res_data  = cv2dnn_yolo_thread.get()
                         res_name  = res_data[0]
                         res_value = res_data[1]
                         if (res_name == '_fps_'):
@@ -993,29 +992,28 @@ class main_vision:
                         if (res_name == '_reso_'):
                             overlay_thread.put(['_comp_reso_', res_value ])
                         if (res_name == '[img]'):
-                            yolo_img = res_value.copy()
-                            overlay_thread.put(['[comp]', yolo_img ])
+                            cv2dnn_img = res_value.copy()
+                            overlay_thread.put(['[comp]', cv2dnn_img ])
                         if (res_name == '[array]'):
                             ary_imgy = res_value.copy()
                             overlay_thread.put(['[array]', ary_imgy ])
                             if (cvdetect_thread1 is None):
                                 overlay_thread.put(['[detect1]', ary_imgy ])
 
-                # 画像合成（YOLO識別結果）torch
-                for i in range(yolo_torch_max):
-                    if (not yolo_torch_thread[i] is None):
-                        while (yolo_torch_thread[i].proc_r.qsize() != 0):
-                            res_data  = yolo_torch_thread[i].get()
+                # 画像合成（cv2dnn識別結果）ssd
+                for i in range(cv2dnn_ssd_max):
+                    if (not cv2dnn_ssd_thread[i] is None):
+                        while (cv2dnn_ssd_thread[i].proc_r.qsize() != 0):
+                            res_data  = cv2dnn_ssd_thread[i].get()
                             res_name  = res_data[0]
                             res_value = res_data[1]
                             if (res_name == '_fps_'):
-                                overlay_thread.put(['_comp_fps_', '{:.2f}'.format(float(res_value) * yolo_torch_max) ])
+                                overlay_thread.put(['_comp_fps_', '{:.2f}'.format(float(res_value) * cv2dnn_ssd_max) ])
                             if (res_name == '_reso_'):
                                 overlay_thread.put(['_comp_reso_', res_value ])
                             if (res_name == '[img]'):
-                                #print('yolo get '+str(i))
-                                yolo_img = res_value.copy()
-                                overlay_thread.put(['[comp]', yolo_img ])
+                                cv2dnn_img = res_value.copy()
+                                overlay_thread.put(['[comp]', cv2dnn_img ])
                             if (res_name == '[array]'):
                                 ary_imgy = res_value.copy()
                                 overlay_thread.put(['[array]', ary_imgy ])
@@ -1161,16 +1159,16 @@ class main_vision:
                 del cvdetect_thread2
                 cvdetect_thread2 = None
 
-            if (not yolo_keras_thread is None):
-                yolo_keras_thread.stop()
-                del yolo_keras_thread
-                yolo_keras_thread = None
+            if (not cv2dnn_yolo_thread is None):
+                cv2dnn_yolo_thread.stop()
+                del cv2dnn_yolo_thread
+                cv2dnn_yolo_thread = None
 
-            for i in range(yolo_torch_max):
-                if (not yolo_torch_thread[i] is None):
-                    yolo_torch_thread[i].stop()
-                    del yolo_torch_thread[i]
-                    yolo_torch_thread[i] = None
+            for i in range(cv2dnn_ssd_max):
+                if (not cv2dnn_ssd_thread[i] is None):
+                    cv2dnn_ssd_thread[i].stop()
+                    del cv2dnn_ssd_thread[i]
+                    cv2dnn_ssd_thread[i] = None
 
             if (not vin2jpg_thread is None):
                 vin2jpg_thread.stop()

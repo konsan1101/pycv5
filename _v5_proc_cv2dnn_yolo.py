@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# COPYRIGHT (C) 2019 Mitsuo KONDOU.
+# COPYRIGHT (C) 2014-2019 Mitsuo KONDOU.
 # This software is released under the MIT License.
 # https://github.com/konsan1101
 # Thank you for keeping the rules.
@@ -261,14 +261,29 @@ class proc_cv2dnn_yolo:
 
                 # 画像の読み込み
                 image = inp_value.copy()
-                inp_image = image
-                out_image = image
-
-                # 画像の縦と横サイズを取得
                 image_height, image_width = image.shape[:2]
 
+                # 入力画像成形
+                if (image_width > image_height):
+                    image_size = image_width
+                    inp_image = np.zeros((image_width,image_width,3), np.uint8)
+                    offset = int((image_width-image_height)/2)
+                    inp_image[offset:offset+image_height, 0:image_width] = image.copy()
+
+                    out_image = inp_image.copy()
+                elif (image_height > image_width):
+                    image_size = image_height
+                    inp_image = np.zeros((image_height,image_height,3), np.uint8)
+                    offset = int((image_height-image_width)/2)
+                    inp_image[0:image_height, offset:offset+image_width] = image.copy()
+                    out_image = inp_image.copy()
+                else:
+                    image_size = image_width
+                    inp_image = image.copy()
+                    out_image = inp_image.copy()
+
                 # Imageをセットする
-                blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
+                blob = cv2.dnn.blobFromImage(inp_image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
                 model.setInput(blob)
 
                 # 画像から物体検出を行う
@@ -286,14 +301,15 @@ class proc_cv2dnn_yolo:
 
                         # 予測確率を取り出し0.5以上か判定する。
                         confidence = scores[classid]
-                        if confidence > .5:
+                        if (confidence >= 0.5):
 
                             # クラス名を取り出す。
                             class_name  = classNames[classid]
                             class_color = [ int(c) for c in classColors[classid] ]
+                            label       = class_name + ' {0:.2f}'.format(confidence)
 
                             # 予測値に元の画像サイズを掛けて、四角で囲むための4点の座標情報を得る
-                            axis = detection[0:4] * (image_width, image_height, image_width, image_height)
+                            axis = detection[0:4] * (image_size, image_size, image_size, image_size)
 
                             # floatからintに変換して、変数に取り出す。画像に四角や文字列を書き込むには、座標情報はintで渡す必要がある。
                             center_x, center_y, b_width, b_height = axis.astype(np.int)[:4]
@@ -309,7 +325,11 @@ class proc_cv2dnn_yolo:
                                 cv2.rectangle(out_image, (start_x, start_y), (end_x, end_y), class_color, thickness=2)
 
                                 # (画像、文字列、開始座標、フォント、文字サイズ、色)を指定
-                                cv2.putText(out_image, class_name, (start_x, start_y), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255))
+                                t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1 , 1)[0]
+                                x = start_x + t_size[0] + 3
+                                y = end_y - t_size[1] - 4
+                                cv2.rectangle(out_image, (start_x, y), (x, end_y), class_color, -1)
+                                cv2.putText(out_image, label, (start_x, y + t_size[1] + 2), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,255), 1)
 
                                 # 認識画像出力
                                 if (class_name == 'person') \
@@ -319,6 +339,14 @@ class proc_cv2dnn_yolo:
                                     out_name  = '[array]'
                                     out_value = inp_image[start_y:end_y, start_x:end_x].copy()
                                     cn_s.put([out_name, out_value])
+
+                # 出力画像復元
+                if (image_width > image_height):
+                    offset = int((image_width-image_height)/2)
+                    out_image = out_image[offset:offset+image_height, 0:image_width].copy()
+                elif (image_height > image_width):
+                    offset = int((image_height-image_width)/2)
+                    out_image = out_image[0:image_height, offset:offset+image_width].copy()
 
                  # ＦＰＳ計測
                 fps = qFPS_class.get()
@@ -399,7 +427,6 @@ if __name__ == '__main__':
     cv2dnn_yolo_thread.start()
 
     inp = cv2.imread('cv2dnn/dog.jpg')
-    inp = cv2.resize(inp, (960, 540))
 
     chktime = time.time()
     while ((time.time() - chktime) < 120):
