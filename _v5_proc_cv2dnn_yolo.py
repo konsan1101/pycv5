@@ -182,6 +182,8 @@ class proc_cv2dnn_yolo:
 
         print("Loading Network.....")
         model = cv2.dnn.readNetFromDarknet(file_config, file_weights)
+        model.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
+        model.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
         layer_names = model.getLayerNames()
         layer_names = [layer_names[i[0] - 1] for i in model.getUnconnectedOutLayers()]
         print("Network successfully loaded")
