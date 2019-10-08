@@ -271,15 +271,15 @@ class main_speech:
             sttreader_switch = 'off'
             trareader_switch = 'off'
         elif (self.runMode == 'handsfree'):
-            julius_switch    = 'on'
+            julius_switch    = 'off'
             sttreader_switch = 'off'
             trareader_switch = 'off'
         elif (self.runMode == 'translator'):
-            julius_switch    = 'on'
+            julius_switch    = 'off'
             sttreader_switch = 'off'
             trareader_switch = 'on'
         elif (self.runMode == 'speech'):
-            julius_switch    = 'on'
+            julius_switch    = 'off'
             sttreader_switch = 'on'
             trareader_switch = 'off'
         elif (self.runMode == 'number'):
@@ -291,7 +291,7 @@ class main_speech:
             sttreader_switch = 'off'
             trareader_switch = 'off'
         elif (self.runMode == 'background'):
-            julius_switch    = 'on'
+            julius_switch    = 'off'
             sttreader_switch = 'on'
             trareader_switch = 'off'
 

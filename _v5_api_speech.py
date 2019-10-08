@@ -89,7 +89,12 @@ qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
 
 
-google = False
+if getattr(sys, 'frozen', False):
+    #print('exe')
+    google = False
+else:
+    #print('python')
+    google = True
 
 if (google == True):
     qApiInp    = 'free'

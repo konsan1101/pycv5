@@ -174,11 +174,13 @@ class proc_cv2dnn_yolo:
         self.proc_step = '1'
 
         # 定義ファイル
-        #file_config  = 'cv2dnn/yolov3/yolov3.cfg'
-        #file_weights = 'cv2dnn/yolov3/yolov3.weights'
         file_config  = 'cv2dnn/yolov3/yolov3-tiny.cfg'
         file_weights = 'cv2dnn/yolov3/yolov3-tiny.weights'
         file_labels  = 'cv2dnn/yolov3/coco-labels.txt'
+        #file_config  = 'cv2dnn/yolov3/yolov3.cfg'
+        #file_weights = 'cv2dnn/yolov3/yolov3.weights'
+        threshold_score = 0.5
+        threshold_nms   = 0.4
 
         print("Loading Network.....")
         model = cv2.dnn.readNetFromDarknet(file_config, file_weights)
@@ -291,6 +293,10 @@ class proc_cv2dnn_yolo:
                 # 画像から物体検出を行う
                 output = model.forward(layer_names)
 
+                pass_classids = []
+                pass_scores   = []
+                pass_boxes    = []
+
                 # ループ
                 for detections in output:
 
@@ -301,46 +307,62 @@ class proc_cv2dnn_yolo:
                         scores = detection[5:]
                         classid = np.argmax(scores)
 
-                        # 予測確率を取り出し0.5以上か判定する。
-                        confidence = scores[classid]
-                        if (confidence >= 0.5):
+                        # 予測確率がthreshold_score以上を取り出す。
+                        score = scores[classid]
+                        if (score >= threshold_score):
 
-                            # クラス名を取り出す。
-                            class_name  = classNames[classid]
-                            class_color = [ int(c) for c in classColors[classid] ]
-                            label       = class_name + ' {0:.2f}'.format(confidence)
-
-                            # 予測値に元の画像サイズを掛けて、四角で囲むための4点の座標情報を得る
+                            # 元の画像サイズを掛けて、四角で囲むための4点の座標情報を得る
                             axis = detection[0:4] * (image_size, image_size, image_size, image_size)
 
-                            # floatからintに変換して、変数に取り出す。画像に四角や文字列を書き込むには、座標情報はintで渡す必要がある。
+                            # floatからintに変換して、変数に取り出す。
                             center_x, center_y, b_width, b_height = axis.astype(np.int)[:4]
-                            start_x = int(center_x - b_width/2)
-                            end_x   = int(center_x + b_width/2)
-                            start_y = int(center_y - b_height/2)
-                            end_y   = int(center_y + b_height/2)
+                            left   = int(center_x - b_width/2)
+                            top    = int(center_y - b_height/2)
+                            width  = int(b_width)
+                            height = int(b_height)
 
-                            # 一定の大きさ以上を有効とする
-                            if ((end_x - start_x)>10) and ((end_y - start_y)>10):
+                            # 変数に取り出す。
+                            if (width>=10) and ((height)>=10):
+                                pass_classids.append(classid)
+                                pass_scores.append(float(score))
+                                pass_boxes.append([left, top, width, height])
 
-                                # (画像、開始座標、終了座標、色、線の太さ)を指定
-                                cv2.rectangle(out_image, (start_x, start_y), (end_x, end_y), class_color, thickness=2)
+                # 重複した領域を排除した内容を利用する。
+                indices = cv2.dnn.NMSBoxes(pass_boxes, pass_scores, float(threshold_score), float(threshold_nms))
+                for i in indices:
+                    i = i[0]
+                    classid = pass_classids[i]
+                    score   = pass_scores[i]
+                    box     = pass_boxes[i]
+                    left    = box[0]
+                    top     = box[1]
+                    width   = box[2]
+                    height  = box[3]
 
-                                # (画像、文字列、開始座標、フォント、文字サイズ、色)を指定
-                                t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1 , 1)[0]
-                                x = start_x + t_size[0] + 3
-                                y = end_y - t_size[1] - 4
-                                cv2.rectangle(out_image, (start_x, y), (x, end_y), class_color, -1)
-                                cv2.putText(out_image, label, (start_x, y + t_size[1] + 2), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,255), 1)
+                    # クラス名を取り出す。
+                    class_name  = classNames[classid]
+                    class_color = [ int(c) for c in classColors[classid] ]
+                    label       = class_name + ' {0:.2f}'.format(score)
 
-                                # 認識画像出力
-                                if (class_name == 'person') \
-                                or (class_name == 'car'):
+                    # (画像、開始座標、終了座標、色、線の太さ)を指定
+                    cv2.rectangle(out_image, (left, top), (left+width, top+height), class_color, thickness=2)
 
-                                    # 結果出力
-                                    out_name  = '[array]'
-                                    out_value = inp_image[start_y:end_y, start_x:end_x].copy()
-                                    cn_s.put([out_name, out_value])
+                    # (画像、文字列、開始座標、フォント、文字サイズ、色)を指定
+                    t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_COMPLEX_SMALL, 1 , 1)[0]
+                    x = left + t_size[0] + 3
+                    y = top + t_size[1] + 4
+                    cv2.rectangle(out_image, (left, top), (x, y), class_color, -1)
+                    cv2.putText(out_image, label, (left, top + t_size[1] + 1), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,255), 1)
+
+                    # 認識画像出力
+                    if (class_name == 'person') \
+                    or (class_name == 'car'):
+
+                        # 結果出力
+                        out_name  = '[array]'
+                        #out_value = inp_image[top:top+height, left:left+width].copy()
+                        out_value = out_image[top:top+height, left:left+width].copy()
+                        cn_s.put([out_name, out_value])
 
                 # 出力画像復元
                 if (image_width > image_height):

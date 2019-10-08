@@ -337,7 +337,7 @@ class main_vision:
             cvreader_switch    = 'on'
             cvdetect_switch1   = 'off'
             cvdetect_switch2   = 'off'
-            cv2dnn_yolo_switch  = 'off'
+            cv2dnn_yolo_switch = 'off'
             cv2dnn_ssd_switch  = 'off'
             vin2jpg_switch     = 'off'
             coreCV_switch      = 'off'

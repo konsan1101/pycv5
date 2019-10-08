@@ -376,7 +376,46 @@ class proc_camera:
 
                                 # 画数で選別
                                 if (len(approx_cnt) == 4):
-                                #if (True):
+
+                                    # 座標ずらす
+                                    x0=approx_cnt[0][0][0]
+                                    y0=approx_cnt[0][0][1]
+                                    x1=approx_cnt[1][0][0]
+                                    y1=approx_cnt[1][0][1]
+                                    x2=approx_cnt[2][0][0]
+                                    y2=approx_cnt[2][0][1]
+                                    x3=approx_cnt[3][0][0]
+                                    y3=approx_cnt[3][0][1]
+                                    if (x1<=x0):
+                                        if (abs(x1-x0) > abs(y1-y0)):
+                                            approx_cnt[0][0][0]=x1
+                                            approx_cnt[0][0][1]=y1
+                                            approx_cnt[1][0][0]=x2
+                                            approx_cnt[1][0][1]=y2
+                                            approx_cnt[2][0][0]=x3
+                                            approx_cnt[2][0][1]=y3
+                                            approx_cnt[3][0][0]=x0
+                                            approx_cnt[3][0][1]=y0
+                                    elif (x1>x0):
+                                        if (abs(x1-x0) > abs(y1-y0)):
+                                            approx_cnt[0][0][0]=x3
+                                            approx_cnt[0][0][1]=y3
+                                            approx_cnt[1][0][0]=x0
+                                            approx_cnt[1][0][1]=y0
+                                            approx_cnt[2][0][0]=x1
+                                            approx_cnt[2][0][1]=y1
+                                            approx_cnt[3][0][0]=x2
+                                            approx_cnt[3][0][1]=y2
+                                        else:
+                                            approx_cnt[0][0][0]=x2
+                                            approx_cnt[0][0][1]=y2
+                                            approx_cnt[1][0][0]=x3
+                                            approx_cnt[1][0][1]=y3
+                                            approx_cnt[2][0][0]=x0
+                                            approx_cnt[2][0][1]=y0
+                                            approx_cnt[3][0][0]=x1
+                                            approx_cnt[3][0][1]=y1
+
                                     square_contours.append(approx_cnt)
 
                         # 4角形透過変換
@@ -388,7 +427,7 @@ class proc_camera:
                             # 透過変換
                             dst = []
                             pts1 = np.float32(cnt)
-                            pts2 = np.float32([[0,height],[width,height],[width,0],[0,0]])
+                            pts2 = np.float32([[0,0],[0,height],[width,height],[width,0]])
 
                             M = cv2.getPerspectiveTransform(pts1,pts2)
                             dst = cv2.warpPerspective(input_img,M,(width,height))

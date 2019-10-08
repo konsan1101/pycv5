@@ -10,10 +10,16 @@ ECHO OK
 
 :API
 ECHO;
-ECHO API(free,google,watson,azure,nict,docomo)選択（入力無しはfree）
+ECHO API選択（入力無しはfree）
 SET api=
-SET /P api="free,google,watson,azure,nict,docomo："
+SET /P api="f=free,g=google,w=watson,a=azure,n=nict,d=docomo："
 IF %api%@==@        SET api=free
+IF %api%@==f@       SET api=free
+IF %api%@==g@       SET api=google
+IF %api%@==w@       SET api=watson
+IF %api%@==a@       SET api=azure
+IF %api%@==n@       SET api=nict
+IF %api%@==d@       SET api=docomo
 IF %api%@==free@    GOTO APIGO
 IF %api%@==google@  GOTO APIGO
 IF %api%@==watson@  GOTO APIGO

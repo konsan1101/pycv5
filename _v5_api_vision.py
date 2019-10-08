@@ -89,7 +89,12 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 
-google = False
+if getattr(sys, 'frozen', False):
+    #print('exe')
+    google = False
+else:
+    #print('python')
+    google = True
 
 qApiCV     = 'azure'
 qApiOCR    = qApiCV
