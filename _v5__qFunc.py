@@ -83,6 +83,7 @@ qBusy_d_QR      = qPath_work + 'busy_d_2QR.txt'
 qBusy_d_rec     = qPath_work + 'busy_d_5rec.txt'
 qBusy_d_play    = qPath_work + 'busy_d_7play.txt'
 qBusy_d_browser = qPath_work + 'busy_d_8web.txt'
+qBusy_d_upload  = qPath_work + 'busy_d_9blob.txt'
 
 
 
@@ -183,6 +184,7 @@ class qFunc_class:
         if (field == 'qBusy_d_rec'     ): return qBusy_d_rec
         if (field == 'qBusy_d_play'    ): return qBusy_d_play
         if (field == 'qBusy_d_browser' ): return qBusy_d_browser
+        if (field == 'qBusy_d_upload'  ): return qBusy_d_upload
 
         print('check program !' + field)
         return None
@@ -656,6 +658,7 @@ class qFunc_class:
         self.busySet(qBusy_d_rec,     Flag)
         self.busySet(qBusy_d_play,    Flag)
         self.busySet(qBusy_d_browser, Flag)
+        self.busySet(qBusy_d_upload,  Flag)
         return True
 
     def busyCheck(self, file, maxWait=0, ):
@@ -750,6 +753,7 @@ class qBusy_status_txts_class(object):
         self.d_rec     = 'none'
         self.d_play    = 'none'
         self.d_browser = 'none'
+        self.d_upload  = 'none'
 
     def busyCheck(self, file, maxWait=0, ):
         if (maxWait != 0):
@@ -868,7 +872,11 @@ class qBusy_status_txts_class(object):
         if (check != self.d_browser):
             change = True
         self.d_browser = check
- 
+        check = self.busyCheck(qBusy_d_upload, 0)
+        if (check != self.d_upload):
+            change = True
+        self.d_upload = check
+
         if (change != True):
             return False
 
@@ -981,6 +989,10 @@ class qBusy_status_txts_class(object):
             txts.append(' Browser: play!___')
         else:
             txts.append(' Browser: ________')
+        if (self.d_upload == '_busy_'):
+            txts.append(' Upload : active__')
+        else:
+            txts.append(' Upload : ________')
 
         txts.append('')
         return txts

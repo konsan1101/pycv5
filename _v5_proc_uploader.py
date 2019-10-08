@@ -80,6 +80,7 @@ qBusy_d_QR      = qFunc.getValue('qBusy_d_QR'     )
 qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
+qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
 
 
 
@@ -303,6 +304,8 @@ class proc_uploader:
                                 # ビジー設定
                                 if (not os.path.exists(self.fileBsy)):
                                     qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
+                                    if (str(self.id) == '0'):
+                                        qFunc.busySet(qBusy_d_upload, True)
 
                 #except:
                 #    pass
@@ -311,6 +314,8 @@ class proc_uploader:
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
+            if (str(self.id) == '0'):
+                qFunc.busySet(qBusy_d_upload, False)
 
             # アイドリング
             if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
@@ -330,6 +335,8 @@ class proc_uploader:
 
             # ビジー解除
             qFunc.remove(self.fileBsy)
+            if (str(self.id) == '0'):
+                qFunc.busySet(qBusy_d_upload, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):

@@ -86,6 +86,7 @@ qBusy_d_QR      = qFunc.getValue('qBusy_d_QR'     )
 qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
+qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
 
 
 
@@ -239,9 +240,9 @@ class proc_txt2img:
                 cn_s.put([out_name, out_value])
 
             # 表示連携
-            elif (inp_name.lower() == 'flag_background'):
+            elif (inp_name.lower() == '_flag_background_'):
                 self.flag_background = inp_value
-            elif (inp_name.lower() == 'flag_blackwhite'):
+            elif (inp_name.lower() == '_flag_blackwhite_'):
                 self.flag_blackwhite = inp_value
 
             # 処理
@@ -317,7 +318,7 @@ class proc_txt2img:
                         or (texts[i].find('slow!'   )>=0) \
                         or (texts[i].find('disable!')>=0) \
                         or (texts[i].find('rec!'    )>=0):
-                            text_draw.rectangle((0, 5 + (16 + 10)*i, draw_width, (16 + 10)*(i+1)-1), fill=(0x00, 0x00, 0xff))
+                            text_draw.rectangle((0, 5 + (16 + 10)*i, draw_width, (16 + 10)*(i+1)-1), fill=(0xff, 0x00, 0xff))
                             txt_color = (  0,  0,  0)
                         if (texts[i].find('active'  )>=0):
                             text_draw.rectangle((0, 5 + (16 + 10)*i, draw_width, (16 + 10)*(i+1)-1), fill=(0xff, 0xff, 0x00))

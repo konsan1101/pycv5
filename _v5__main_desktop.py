@@ -91,6 +91,7 @@ qBusy_d_QR      = qFunc.getValue('qBusy_d_QR'     )
 qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
+qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
 
 # thread ルーチン群
 import _v5_proc_controld
@@ -211,15 +212,27 @@ class main_desktop:
         controld_thread  = None
         controld_switch  = 'on'
         capture_thread   = None
-        capture_switch   = 'on'
+        capture_switch   = 'off'
         cvreader_thread  = None
-        cvreader_switch  = 'on'
+        cvreader_switch  = 'off'
         recorder_thread  = None
         recorder_switch  = 'on'
         uploader_thread  = None
         uploader_switch  = 'off'
 
-        if (self.runMode == 'background'):
+        if (self.runMode == 'debug'):
+            capture_switch   = 'on'
+            cvreader_switch  = 'on'
+            uploader_switch  = 'on'
+        elif (self.runMode == 'hud'):
+            uploader_switch  = 'on'
+        elif (self.runMode == 'handsfree'):
+            uploader_switch  = 'on'
+        elif (self.runMode == 'camera'):
+            uploader_switch  = 'on'
+        elif (self.runMode == 'background'):
+            capture_switch   = 'on'
+            cvreader_switch  = 'on'
             uploader_switch  = 'on'
 
         # 待機ループ
@@ -330,7 +343,7 @@ class main_desktop:
                     speechs.append({ 'text':u'「デスクトップ記録」の機能が有効になりました。', 'wait':0, })
 
             if (not recorder_thread is None) and (recorder_switch != 'on'):
-                recorder_thread.stop()                
+                recorder_thread.stop()
                 del recorder_thread
                 recorder_thread = None
 
@@ -346,7 +359,7 @@ class main_desktop:
                     speechs.append({ 'text':u'「ブロブ連携」の機能が有効になりました。', 'wait':0, })
 
             if (not uploader_thread is None) and (uploader_switch != 'on'):
-                uploader_thread.stop()                
+                uploader_thread.stop()
                 del uploader_thread
                 uploader_thread = None
 

@@ -79,6 +79,7 @@ qBusy_d_QR      = qFunc.getValue('qBusy_d_QR'     )
 qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
+qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
 
 # julius 音声認識
 import speech_api_julius
