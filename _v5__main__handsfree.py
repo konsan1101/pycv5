@@ -370,32 +370,38 @@ if __name__ == '__main__':
 
         # リブート
 
-        reboot_hit = False
         if (control == '_reboot_'):
-            if (not main_speech_run is None):
-                qFunc.txtsWrite(qCtrl_control_speech    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+            reboot_hit = False
+
+            speechs = []
+            speechs.append({ 'text':u'再起動処理を、開始しました。', 'wait':0, })
+            qFunc.speech(id=main_id, speechs=speechs, lang='', )
+
+            if (not main_desktop_run is None):
+                qFunc.txtsWrite(qCtrl_control_desktop   ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 reboot_hit = True
             if (not main_vision_run is None):
                 qFunc.txtsWrite(qCtrl_control_vision    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 reboot_hit = True
-            if (not main_desktop_run is None):
-                qFunc.txtsWrite(qCtrl_control_desktop   ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+            if (not main_speech_run is None):
+                time.sleep(10.00)
+                qFunc.txtsWrite(qCtrl_control_speech    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 reboot_hit = True
 
-        if (reboot_hit == True):
-            time.sleep(10.00)
-            if (not main_speech_run is None):
-                main_speech_run.wait()
-                main_speech_run.terminate()
-                main_speech_run = None
-            if (not main_vision_run is None):
-                main_vision_run.wait()
-                main_vision_run.terminate()
-                main_vision_run = None
-            if (not main_desktop_run is None):
-                main_desktop_run.wait()
-                main_desktop_run.terminate()
-                main_desktop_run = None
+            if (reboot_hit == True):
+                time.sleep(10.00)
+                if (not main_speech_run is None):
+                    main_speech_run.wait()
+                    main_speech_run.terminate()
+                    main_speech_run = None
+                if (not main_vision_run is None):
+                    main_vision_run.wait()
+                    main_vision_run.terminate()
+                    main_vision_run = None
+                if (not main_desktop_run is None):
+                    main_desktop_run.wait()
+                    main_desktop_run.terminate()
+                    main_desktop_run = None
 
         # コントロール
 

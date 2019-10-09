@@ -925,9 +925,6 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':terminate')
 
-        # メインプロセス終了
-        qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
-
         # 外部ＰＧリセット
         qFunc.kill('adintool-gui')
         qFunc.kill('adintool')

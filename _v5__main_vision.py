@@ -913,14 +913,16 @@ class main_vision:
                                             cvdetect2_last_put = time.time()
 
                                 # 画像識別（cv2dnn）yolo
-                                if  ((time.time() - cv2dnn_last_put) >= 1):
+                                #if ((time.time() - cv2dnn_last_put) >= 1):
+                                if (True):
                                     if (not cv2dnn_yolo_thread is None):
                                         if (cv2dnn_yolo_thread.proc_s.qsize() == 0):
                                             cv2dnn_yolo_thread.put(['[img]', main_img ])
                                             cv2dnn_last_put = time.time()
 
                                 # 画像識別（cv2dnn）ssd
-                                if ((time.time() - cv2dnn_last_put) >= (1/cv2dnn_ssd_max)/2):
+                                if ((time.time() - cv2dnn_last_put) >= (0.5/cv2dnn_ssd_max)):
+                                #if (True):
                                     i = cv2dnn_ssd_seq
                                     if (not cv2dnn_ssd_thread[i] is None):
                                         if (cv2dnn_ssd_thread[i].proc_s.qsize() == 0):

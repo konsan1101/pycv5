@@ -948,7 +948,11 @@ class proc_overlay:
                         cv2.putText(display_img, puttext, (self.dspWidth - 260,30), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
 
                 # タイムスタンプ
-                if (display_mode == 'rec'):
+                if (display_mode == 'live'):
+                    nowTime = datetime.datetime.now()
+                    stamp   = nowTime.strftime('%Y-%m-%d %H:%M:%S.%f')
+                    cv2.putText(display_img, stamp[:-3], ( 20, self.dspHeight-20), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,0,0))
+                elif (display_mode == 'rec'):
                     nowTime = datetime.datetime.now()
                     stamp   = nowTime.strftime('%Y-%m-%d %H:%M:%S.%f')
                     cv2.putText(display_img, stamp[:-3], ( 20, self.dspHeight-20), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,0))
