@@ -178,7 +178,7 @@ class proc_cv2dnn_ssd:
         file_config  = 'cv2dnn/ssd/frozen_inference_graph.pb'
         file_weights = 'cv2dnn/ssd/ssd_mobilenet_v2_coco_2018_03_29.pbtxt'
         file_labels  = 'cv2dnn/ssd/labels.txt'
-        threshold_score = 0.5
+        threshold_score = 0.25
         threshold_nms   = 0.4
 
         print("Loading Network.....")
@@ -312,14 +312,19 @@ class proc_cv2dnn_ssd:
                         height = int(end_y - start_y)
 
                         # 変数に取り出す。
-                        if (width>=10) and ((height)>=10):
+                        if  (width  >= image_size/20) and (width  <= image_size/2) \
+                        and (height >= image_size/30) and (height <= image_size/1.5):
                             classid = detection[1]
                             pass_classids.append(classid)
                             pass_scores.append(float(score))
                             pass_boxes.append([left, top, width, height])
 
                 # 重複した領域を排除した内容を利用する。
-                indices = cv2.dnn.NMSBoxes(pass_boxes, pass_scores, float(threshold_score), float(threshold_nms))
+                indices = cv2.dnn.NMSBoxes(pass_boxes, pass_scores, float(0.8), float(threshold_nms))
+                if (len(indices)<3):
+                    indices = cv2.dnn.NMSBoxes(pass_boxes, pass_scores, float(0.5), float(threshold_nms))
+                if (len(indices)<3):
+                    indices = cv2.dnn.NMSBoxes(pass_boxes, pass_scores, float(0.0), float(threshold_nms))
                 for i in indices:
                     i = i[0]
                     classid = pass_classids[i]
@@ -346,14 +351,15 @@ class proc_cv2dnn_ssd:
                     cv2.putText(out_image, label, (left, top + t_size[1] + 1), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,255), 1)
 
                     # 認識画像出力
-                    if (class_name == 'person') \
-                    or (class_name == 'car'):
+                    if (score >= 0.5):
+                        if (class_name == 'person') \
+                        or (class_name == 'car'):
 
-                        # 結果出力
-                        out_name  = '[array]'
-                        #out_value = inp_image[top:top+height, left:left+width].copy()
-                        out_value = out_image[top:top+height, left:left+width].copy()
-                        cn_s.put([out_name, out_value])
+                            # 結果出力
+                            out_name  = '[array]'
+                            #out_value = inp_image[top:top+height, left:left+width].copy()
+                            out_value = out_image[top:top+height, left:left+width].copy()
+                            cn_s.put([out_name, out_value])
 
                 # 出力画像復元
                 if (image_width > image_height):

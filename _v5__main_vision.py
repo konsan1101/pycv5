@@ -324,16 +324,7 @@ class main_vision:
             cv2dnn_ssd_switch  = 'on'
             vin2jpg_switch     = 'on'
             coreCV_switch      = 'on'
-        if (self.runMode == 'handsfree'):
-            camera_switch2     = 'on'
-            cvreader_switch    = 'on'
-            cvdetect_switch1   = 'off'
-            cvdetect_switch2   = 'off'
-            cv2dnn_yolo_switch = 'off'
-            cv2dnn_ssd_switch  = 'on'
-            vin2jpg_switch     = 'on'
-            coreCV_switch      = 'on'
-        if (self.runMode == 'hud'):
+        elif (self.runMode == 'hud'):
             camera_switch2     = 'off'
             cvreader_switch    = 'on'
             cvdetect_switch1   = 'off'
@@ -342,7 +333,25 @@ class main_vision:
             cv2dnn_ssd_switch  = 'off'
             vin2jpg_switch     = 'off'
             coreCV_switch      = 'off'
-        if (self.runMode == 'camera'):
+        elif (self.runMode == 'handsfree'):
+            camera_switch2     = 'on'
+            cvreader_switch    = 'on'
+            cvdetect_switch1   = 'off'
+            cvdetect_switch2   = 'off'
+            cv2dnn_yolo_switch = 'off'
+            cv2dnn_ssd_switch  = 'on'
+            vin2jpg_switch     = 'on'
+            coreCV_switch      = 'on'
+        elif (self.runMode == 'camera'):
+            camera_switch2     = 'off'
+            cvreader_switch    = 'on'
+            cvdetect_switch1   = 'off'
+            cvdetect_switch2   = 'off'
+            cv2dnn_yolo_switch = 'off'
+            cv2dnn_ssd_switch  = 'off'
+            vin2jpg_switch     = 'off'
+            coreCV_switch      = 'off'
+        elif (self.runMode == 'background'):
             camera_switch2     = 'off'
             cvreader_switch    = 'on'
             cvdetect_switch1   = 'off'

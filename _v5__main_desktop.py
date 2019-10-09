@@ -212,9 +212,9 @@ class main_desktop:
         controld_thread  = None
         controld_switch  = 'on'
         capture_thread   = None
-        capture_switch   = 'off'
+        capture_switch   = 'on'
         cvreader_thread  = None
-        cvreader_switch  = 'off'
+        cvreader_switch  = 'on'
         recorder_thread  = None
         recorder_switch  = 'on'
         uploader_thread  = None
@@ -223,16 +223,27 @@ class main_desktop:
         if (self.runMode == 'debug'):
             capture_switch   = 'on'
             cvreader_switch  = 'on'
+            recorder_switch  = 'on'
             uploader_switch  = 'on'
         elif (self.runMode == 'hud'):
+            capture_switch   = 'off'
+            cvreader_switch  = 'off'
+            recorder_switch  = 'on'
             uploader_switch  = 'on'
         elif (self.runMode == 'handsfree'):
+            capture_switch   = 'off'
+            cvreader_switch  = 'off'
+            recorder_switch  = 'on'
             uploader_switch  = 'on'
         elif (self.runMode == 'camera'):
+            capture_switch   = 'off'
+            cvreader_switch  = 'off'
+            recorder_switch  = 'on'
             uploader_switch  = 'on'
         elif (self.runMode == 'background'):
             capture_switch   = 'on'
             cvreader_switch  = 'on'
+            recorder_switch  = 'on'
             uploader_switch  = 'on'
 
         # 待機ループ

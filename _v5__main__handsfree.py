@@ -313,11 +313,23 @@ if __name__ == '__main__':
             browser_switch       = 'on'
             player_switch        = 'on'
         elif (runMode == 'translator'):
-            pass
+            main_vision_switch   = 'off'
+            main_desktop_switch  = 'off'
+            bgm_switch           = 'off'
+            browser_switch       = 'off'
+            player_switch        = 'off'
         elif (runMode == 'speech'):
-            pass
+            main_vision_switch   = 'off'
+            main_desktop_switch  = 'off'
+            bgm_switch           = 'off'
+            browser_switch       = 'off'
+            player_switch        = 'off'
         elif (runMode == 'number'):
-            pass
+            main_vision_switch   = 'off'
+            main_desktop_switch  = 'off'
+            bgm_switch           = 'off'
+            browser_switch       = 'off'
+            player_switch        = 'off'
         elif (runMode == 'camera'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
@@ -356,7 +368,37 @@ if __name__ == '__main__':
                 qFunc.remove(qCtrl_control_self)
                 control = txt
 
+        # リブート
+
+        reboot_hit = False
+        if (control == '_reboot_'):
+            if (not main_speech_run is None):
+                qFunc.txtsWrite(qCtrl_control_speech    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                reboot_hit = True
+            if (not main_vision_run is None):
+                qFunc.txtsWrite(qCtrl_control_vision    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                reboot_hit = True
+            if (not main_desktop_run is None):
+                qFunc.txtsWrite(qCtrl_control_desktop   ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                reboot_hit = True
+
+        if (reboot_hit == True):
+            time.sleep(10.00)
+            if (not main_speech_run is None):
+                main_speech_run.wait()
+                main_speech_run.terminate()
+                main_speech_run = None
+            if (not main_vision_run is None):
+                main_vision_run.wait()
+                main_vision_run.terminate()
+                main_vision_run = None
+            if (not main_desktop_run is None):
+                main_desktop_run.wait()
+                main_desktop_run.terminate()
+                main_desktop_run = None
+
         # コントロール
+
         if (control == '_vision_begin_'):
             main_vision_switch   = 'on'
         if (control == '_vision_end_'):
@@ -367,23 +409,23 @@ if __name__ == '__main__':
             main_desktop_switch  = 'off'
         if (control == '_bgm_begin_'):
             bgm_switch           = 'on'
-        if (control == '_bgm_end_'):
+        if (control == '_bgm_end_') or (control == '_reboot_'):
             bgm_switch           = 'off'
         if (control == '_browser_begin_'):
             browser_switch       = 'on'
-        if (control == '_browser_end_'):
+        if (control == '_browser_end_') or (control == '_reboot_'):
             browser_switch       = 'off'
         if (control == '_player_begin_'):
             player_switch        = 'on'
-        if (control == '_player_end_'):
+        if (control == '_player_end_') or (control == '_reboot_'):
             player_switch        = 'off'
         if (control == '_chatting_begin_'):
             chatting_switch      = 'on'
-        if (control == '_chatting_end_'):
+        if (control == '_chatting_end_') or (control == '_reboot_'):
             chatting_switch      = 'off'
         if (control == '_knowledge_begin_'):
             knowledge_switch     = 'on'
-        if (control == '_knowledge_end_'):
+        if (control == '_knowledge_end_') or (control == '_reboot_'):
             knowledge_switch     = 'off'
 
         # 活動メッセージ
@@ -413,6 +455,7 @@ if __name__ == '__main__':
                 speechs.append({ 'text':u'ハンズフリーカメラ機能を、起動しました。', 'wait':0, })
 
         if (not main_speech_run is None) and (main_speech_switch != 'on'):
+            time.sleep(10.00)
             #main_speech_run.wait()
             main_speech_run.terminate()
             main_speech_run = None
@@ -425,6 +468,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'カメラ機能を、起動しました。', 'wait':0, })
 
         if (not main_vision_run is None) and (main_vision_switch != 'on'):
+            time.sleep(10.00)
             #main_vision_run.wait()
             main_vision_run.terminate()
             main_vision_run = None
@@ -440,6 +484,7 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'デスクトップ制御機能を、起動しました。', 'wait':0, })
 
         if (not main_desktop_run is None) and (main_desktop_switch != 'on'):
+            time.sleep(10.00)
             #main_desktop_run.wait()
             main_desktop_run.terminate()
             main_desktop_run = None

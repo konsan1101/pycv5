@@ -374,7 +374,7 @@ class main_speech:
                     speechs.append({ 'text':u'「マイク入力」の機能が有効になりました。', 'wait':0, })
 
             if (not adintool_thread is None) and (adintool_switch != 'on'):
-                adintool_thread.stop()                
+                adintool_thread.stop()
                 del adintool_thread
                 adintool_thread = None
 
@@ -391,7 +391,7 @@ class main_speech:
                     speechs.append({ 'text':u'「音響補正」の機能が有効になりました。', 'wait':0, })
 
             if (not voice2wav_thread is None) and (voice2wav_switch != 'on'):
-                voice2wav_thread.stop()                
+                voice2wav_thread.stop()
                 del voice2wav_thread
                 voice2wav_thread = None
 
@@ -412,7 +412,7 @@ class main_speech:
                     speechs.append({ 'text':u'「ＡＩ機械翻訳」の機能が有効になりました。', 'wait':0, })
 
             if (not coreSTT_thread is None) and (coreSTT_switch != 'on'):
-                coreSTT_thread.stop()                
+                coreSTT_thread.stop()
                 del coreSTT_thread
                 coreSTT_thread = None
 
@@ -431,7 +431,7 @@ class main_speech:
                     speechs.append({ 'text':u'「ＡＩ音声合成」の機能が有効になりました。', 'wait':0, })
 
             if (not coreTTS_thread is None) and (coreTTS_switch != 'on'):
-                coreTTS_thread.stop()                
+                coreTTS_thread.stop()
                 del coreTTS_thread
                 coreTTS_thread = None
 
@@ -448,7 +448,7 @@ class main_speech:
                     speechs.append({ 'text':u'「スピーカー出力」の機能が有効になりました。', 'wait':0, })
 
             if (not playvoice_thread is None) and (playvoice_switch != 'on'):
-                playvoice_thread.stop()                
+                playvoice_thread.stop()
                 del playvoice_thread
                 playvoice_thread = None
 
@@ -464,7 +464,7 @@ class main_speech:
                     speechs.append({ 'text':u'「ＪＵＬＩＵＳローカル音声認識」の機能が有効になりました。', 'wait':0, })
 
             if (not julius_thread is None) and (julius_switch != 'on'):
-                julius_thread.stop()                
+                julius_thread.stop()
                 del julius_thread
                 julius_thread = None
 
@@ -481,11 +481,11 @@ class main_speech:
                     speechs.append({ 'text':u'「音声認識結果のテキスト連携」の機能が有効になりました。', 'wait':0, })
 
             if (not sttreader_thread is None) and (sttreader_switch != 'on'):
-                sttreader_thread.stop()                
+                sttreader_thread.stop()
                 del sttreader_thread
                 sttreader_thread = None
 
-            if (trareader_thread is None) and (trareader_switch == 'on'):                                        
+            if (trareader_thread is None) and (trareader_switch == 'on'):
                 trareader_thread = _v5_proc_txtreader.proc_txtreader(
                                     name='trareader', id='0', 
                                     runMode=runMode,
@@ -498,7 +498,7 @@ class main_speech:
                     speechs.append({ 'text':u'「機械翻訳結果のテキスト連携」の機能が有効になりました。', 'wait':0, })
 
             if (not trareader_thread is None) and (trareader_switch != 'on'):
-                trareader_thread.stop()                
+                trareader_thread.stop()
                 del trareader_thread
                 trareader_thread = None
 

@@ -406,6 +406,17 @@ class proc_controls:
                 cn_s.put([out_name, out_value])
                 qFunc.txtsWrite(qCtrl_control_main ,txts=[out_value], encoding='utf-8', exclusive=True, mode='w', )
 
+            elif (proc_text.find(u'リブート') >= 0) or (proc_text.find(u'再起動') >= 0):
+                out_name  = 'control'
+                out_value = '_reboot_'
+                cn_s.put([out_name, out_value])
+                qFunc.txtsWrite(qCtrl_control_main   , txts=[out_value], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_bgm = False
+                self.run_browser = False
+                self.run_player = False
+                self.run_chatting = False
+                self.run_knowledge = False
+
             elif ((proc_text.find(u'画面') >= 0) and (proc_text.find(u'開始') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = True
@@ -453,12 +464,12 @@ class proc_controls:
             elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
             and (proc_text.find(u'開始') >= 0):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_browser_begin_'], encoding='utf-8', exclusive=True, mode='w', )
-                self.run_bgm = True
+                self.run_browser = True
 
             elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
             and (proc_text.find(u'終了') >= 0):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_browser_end_'], encoding='utf-8', exclusive=True, mode='w', )
-                self.run_bgm = False
+                self.run_browser = False
 
             elif ((proc_text.find(u'動画') >= 0) and (proc_text.find(u'開始') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_begin_'], encoding='utf-8', exclusive=True, mode='w', )

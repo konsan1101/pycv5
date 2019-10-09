@@ -180,7 +180,7 @@ class proc_cv2dnn_yolo:
         file_labels  = 'cv2dnn/yolov3/coco-labels.txt'
         #file_config  = 'cv2dnn/yolov3/yolov3.cfg'
         #file_weights = 'cv2dnn/yolov3/yolov3.weights'
-        threshold_score = 0.5
+        threshold_score = 0.25
         threshold_nms   = 0.4
 
         print("Loading Network.....")
@@ -323,13 +323,18 @@ class proc_cv2dnn_yolo:
                             height = int(b_height)
 
                             # 変数に取り出す。
-                            if (width>=10) and ((height)>=10):
+                            if  (width  >= image_size/20) and (width  <= image_size/2) \
+                            and (height >= image_size/30) and (height <= image_size/1.5):
                                 pass_classids.append(classid)
                                 pass_scores.append(float(score))
                                 pass_boxes.append([left, top, width, height])
 
                 # 重複した領域を排除した内容を利用する。
-                indices = cv2.dnn.NMSBoxes(pass_boxes, pass_scores, float(threshold_score), float(threshold_nms))
+                indices = cv2.dnn.NMSBoxes(pass_boxes, pass_scores, float(0.8), float(threshold_nms))
+                if (len(indices)<3):
+                    indices = cv2.dnn.NMSBoxes(pass_boxes, pass_scores, float(0.5), float(threshold_nms))
+                if (len(indices)<3):
+                    indices = cv2.dnn.NMSBoxes(pass_boxes, pass_scores, float(0.0), float(threshold_nms))
                 for i in indices:
                     i = i[0]
                     classid = pass_classids[i]
@@ -356,14 +361,15 @@ class proc_cv2dnn_yolo:
                     cv2.putText(out_image, label, (left, top + t_size[1] + 1), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,255), 1)
 
                     # 認識画像出力
-                    if (class_name == 'person') \
-                    or (class_name == 'car'):
+                    if (score >= 0.5):
+                        if (class_name == 'person') \
+                        or (class_name == 'car'):
 
-                        # 結果出力
-                        out_name  = '[array]'
-                        #out_value = inp_image[top:top+height, left:left+width].copy()
-                        out_value = out_image[top:top+height, left:left+width].copy()
-                        cn_s.put([out_name, out_value])
+                            # 結果出力
+                            out_name  = '[array]'
+                            #out_value = inp_image[top:top+height, left:left+width].copy()
+                            out_value = out_image[top:top+height, left:left+width].copy()
+                            cn_s.put([out_name, out_value])
 
                 # 出力画像復元
                 if (image_width > image_height):
