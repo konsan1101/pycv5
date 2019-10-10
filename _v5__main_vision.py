@@ -339,7 +339,9 @@ class main_vision:
             cvdetect_switch1   = 'off'
             cvdetect_switch2   = 'off'
             cv2dnn_yolo_switch = 'off'
-            cv2dnn_ssd_switch  = 'on'
+            cv2dnn_ssd_switch  = 'off'
+            if (qHOSTNAME == 'kondow-s10') \
+                cv2dnn_ssd_switch  = 'on'
             vin2jpg_switch     = 'on'
             coreCV_switch      = 'on'
         elif (self.runMode == 'camera'):

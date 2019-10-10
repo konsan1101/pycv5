@@ -610,12 +610,20 @@ class proc_overlay:
 
                 if (display_mode == 'live'):
                     if (not comp_base is None):
-                        base_base  = comp_base.copy()
-                        base_time  = comp_time
-                        if (comp_fps != ''):
-                            base_txt1  = comp_fps + 'fps'
-                        if (comp_reso != ''):
-                            base_txt2  = comp_reso
+                        if ((time.time() - comp_time) <= 5):
+                            base_base  = comp_base.copy()
+                            base_time  = comp_time
+                            base_fps   = comp_fps
+                            base_reso  = comp_reso
+                        else:
+                            base_base  = cam1_base.copy()
+                            base_time  = cam1_time
+                            base_fps   = cam1_fps
+                            base_reso  = cam1_reso
+                        if (base_fps != ''):
+                            base_txt1  = base_fps + 'fps'
+                        if (base_reso != ''):
+                            base_txt2  = base_reso
                     if (not cam1_mini is None):
                         wipe_mini1 = cam2_mini.copy()
                         wipe_time1 = cam2_time
