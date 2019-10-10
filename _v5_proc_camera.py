@@ -369,7 +369,7 @@ class proc_camera:
                             thresh_not = cv2.bitwise_not(thresh)
 
                             # 輪郭抽出・幾何図形取得（黒字に白）
-                            contours, hierarchy = cv2.findContours(thresh_not1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                            contours, hierarchy = cv2.findContours(thresh_not, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
                             for i, cnt in enumerate(contours):
 
                                 # 面積で選別
