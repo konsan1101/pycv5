@@ -340,7 +340,7 @@ class main_vision:
             cvdetect_switch2   = 'off'
             cv2dnn_yolo_switch = 'off'
             cv2dnn_ssd_switch  = 'off'
-            if (qHOSTNAME == 'kondow-s10'):
+            if (qHOSTNAME == 'kondou-s10'):
                 cv2dnn_ssd_switch  = 'on'
             vin2jpg_switch     = 'on'
             coreCV_switch      = 'on'
@@ -735,7 +735,7 @@ class main_vision:
                         self.cam1Dev = self.cam2Dev_org
                         self.cam2Dev = self.cam1Dev_org
                     # kondou-s10 カメラ2,1の場合
-                    elif (qHOSTNAME == 'kondow-s10') \
+                    elif (qHOSTNAME == 'kondou-s10') \
                     and ((self.cam1Dev == '2') and (self.cam2Dev == '1')):
                         self.cam1Dev = '0'
                     # surface-go カメラ1,2の場合
