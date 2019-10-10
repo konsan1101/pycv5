@@ -356,62 +356,68 @@ class proc_camera:
                     square_contours = []
                     if (float(self.camSquare) != 0):
 
-                        # 画像補正
+                        # 0:黒字に白、1:白地に黒
                         gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
-                        _, thresh = cv2.threshold(gray, 192, 255, cv2.THRESH_BINARY_INV)
-                        thresh_not = cv2.bitwise_not(thresh)
-                        #input_img = cv2.cvtColor(thresh_not, cv2.COLOR_GRAY2BGR)
+                        for bw in range(2):
 
-                        # 輪郭抽出・幾何図形取得
-                        contours, hierarchy = cv2.findContours(thresh_not, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-                        for i, cnt in enumerate(contours):
+                            # 画像補正
+                            if (bw == 0):
+                                _, thresh = cv2.threshold(gray, 192, 255, cv2.THRESH_BINARY_INV)
+                            else:
+                                gray2 = cv2.bitwise_not(gray)
+                                _, thresh = cv2.threshold(gray2, 192, 255, cv2.THRESH_BINARY_INV)
+                            thresh_not = cv2.bitwise_not(thresh)
 
-                            # 面積で選別
-                            area = cv2.contourArea(cnt)
-                            if (area > ((input_height * input_width) * float(self.camSquare))):
+                            # 輪郭抽出・幾何図形取得（黒字に白）
+                            contours, hierarchy = cv2.findContours(thresh_not1, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                            for i, cnt in enumerate(contours):
 
-                                # 輪郭長さで輪郭を近似化する。
-                                arclen = cv2.arcLength(cnt, True)
-                                epsilon_len = arclen * 0.05
-                                approx_cnt = cv2.approxPolyDP(cnt, epsilon=epsilon_len, closed=True)
+                                # 面積で選別
+                                area = cv2.contourArea(cnt)
+                                if (area > ((input_height * input_width) * float(self.camSquare))):
 
-                                # 画数で選別
-                                if (len(approx_cnt) == 4):
+                                    # 輪郭長さで輪郭を近似化する。
+                                    arclen = cv2.arcLength(cnt, True)
+                                    epsilon_len = arclen * 0.05
+                                    approx_cnt = cv2.approxPolyDP(cnt, epsilon=epsilon_len, closed=True)
 
-                                    # 座標ずらす
-                                    x = np.array([])
-                                    y = np.array([])
-                                    for i in range(4):
-                                        x = np.append(x, approx_cnt[i][0][0])
-                                        y = np.append(y, approx_cnt[i][0][1])
-                                    ave_x = np.mean(x)
-                                    ave_y = np.mean(y)
+                                    # 画数で選別
+                                    if (len(approx_cnt) == 4):
 
-                                    hit1 = False
-                                    hit2 = False
-                                    hit3 = False
-                                    hit4 = False
-                                    for i in range(4):
-                                        if (x[i] <= ave_x) and (y[i] <= ave_y):
-                                            hit1 = True
-                                            approx_cnt[0][0][0]=x[i]
-                                            approx_cnt[0][0][1]=y[i]
-                                        if (x[i] <= ave_x) and (y[i] > ave_y):
-                                            hit2 = True
-                                            approx_cnt[1][0][0]=x[i]
-                                            approx_cnt[1][0][1]=y[i]
-                                        if (x[i] > ave_x) and (y[i] > ave_y):
-                                            hit3 = True
-                                            approx_cnt[2][0][0]=x[i]
-                                            approx_cnt[2][0][1]=y[i]
-                                        if (x[i] > ave_x) and (y[i] <= ave_y):
-                                            hit4 = True
-                                            approx_cnt[3][0][0]=x[i]
-                                            approx_cnt[3][0][1]=y[i]
+                                        # 座標ずらす
+                                        x = np.array([])
+                                        y = np.array([])
+                                        for i in range(4):
+                                            x = np.append(x, approx_cnt[i][0][0])
+                                            y = np.append(y, approx_cnt[i][0][1])
+                                        ave_x = np.mean(x)
+                                        ave_y = np.mean(y)
 
-                                    if  (hit1 == True) and (hit2 == True) \
-                                    and (hit3 == True) and (hit4 == True):
-                                        square_contours.append(approx_cnt)
+                                        hit1 = False
+                                        hit2 = False
+                                        hit3 = False
+                                        hit4 = False
+                                        for i in range(4):
+                                            if (x[i] <= ave_x) and (y[i] <= ave_y):
+                                                hit1 = True
+                                                approx_cnt[0][0][0]=x[i]
+                                                approx_cnt[0][0][1]=y[i]
+                                            if (x[i] <= ave_x) and (y[i] > ave_y):
+                                                hit2 = True
+                                                approx_cnt[1][0][0]=x[i]
+                                                approx_cnt[1][0][1]=y[i]
+                                            if (x[i] > ave_x) and (y[i] > ave_y):
+                                                hit3 = True
+                                                approx_cnt[2][0][0]=x[i]
+                                                approx_cnt[2][0][1]=y[i]
+                                            if (x[i] > ave_x) and (y[i] <= ave_y):
+                                                hit4 = True
+                                                approx_cnt[3][0][0]=x[i]
+                                                approx_cnt[3][0][1]=y[i]
+
+                                        if  (hit1 == True) and (hit2 == True) \
+                                        and (hit3 == True) and (hit4 == True):
+                                            square_contours.append(approx_cnt)
 
                         # 4角形透過変換
                         for i, cnt in enumerate(square_contours):

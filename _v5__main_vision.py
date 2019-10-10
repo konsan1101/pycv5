@@ -1006,9 +1006,9 @@ class main_vision:
                             overlay_thread.put(['_comp_fps_', res_value ])
                         if (res_name == '_reso_'):
                             overlay_thread.put(['_comp_reso_', res_value ])
-                        if (res_name == '[img]'):
-                            cv2dnn_img = res_value.copy()
-                            overlay_thread.put(['[comp]', cv2dnn_img ])
+                        #if (res_name == '[img]'):
+                        #    cv2dnn_img = res_value.copy()
+                        #    overlay_thread.put(['[comp]', cv2dnn_img ])
                         if (res_name == '[array]'):
                             ary_imgy = res_value.copy()
                             overlay_thread.put(['[array]', ary_imgy ])
