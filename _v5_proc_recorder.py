@@ -91,7 +91,7 @@ def check_sox():
 
     try:
         sox = subprocess.Popen(['sox', '-q', '-d', '-r', '16000', '-b', '16', '-c', '1', \
-                'trim', '0.5', qPath_Work + 'check_sox.wav', \
+                qPath_work + 'check_sox.wav', 'trim', '0', '0.5', \
                 ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
         sox.wait()
         sox.terminate()
@@ -100,8 +100,6 @@ def check_sox():
         return False
     
     return result
-
-
 
 def dshow_dev():
     cam = []
@@ -177,8 +175,7 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
         if (inpFilea == ''):
             ffmpeg = subprocess.Popen(['ffmpeg', \
                 '-i', inpFilev, \
-                #'-vcodec', 'libx264', '-r', '2', \
-                '-vcodec', 'libx264', \
+                '-vcodec', 'libx264', '-r', '2', \
                 outFile, \
                 '-loglevel', 'warning', \
                 ], )
@@ -186,10 +183,8 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
         else:
             ffmpeg = subprocess.Popen(['ffmpeg', \
                 '-i', inpFilev, '-i', inpFilea, \
-                #'-vcodec', 'libx264', '-r', '2', \
-                '-vcodec', 'libx264', \
+                '-vcodec', 'libx264', '-r', '2', \
                 '-acodec', 'aac', '-ab', '96k', '-ac', '1', '-ar', '44100', \
-                #'-map', '0:v:0', '-map', '1:a:0', \
                 outFile, \
                 '-loglevel', 'warning', \
                 ], )
@@ -651,6 +646,7 @@ class proc_recorder:
 
                     # soxのチェック
                     sox_enable = check_sox()
+                    print('sox_enable', sox_enable)
 
                     nowTime    = datetime.datetime.now()
                     stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
@@ -788,6 +784,10 @@ class proc_recorder:
                 index = min_index
 
         # 停止処理
+        rec_filev = ''
+        rec_filea = ''
+        rec_namev = ''
+        rec_namea = ''
         if (index != 0):
 
             if (os.name != 'nt'):
@@ -839,52 +839,24 @@ class proc_recorder:
             self.rec_ffmpeg[index] = None
 
             # ログ
-            rec_namev = self.rec_filev[index].replace(qPath_work, '')
-            rec_namea = self.rec_filea[index].replace(qPath_work, '')
-            if (os.path.exists(self.rec_filev[index])):
+            rec_filev = self.rec_filev[index]
+            rec_filea = self.rec_filea[index]
+            rec_namev = rec_filev.replace(qPath_work, '')
+            rec_namea = rec_filea.replace(qPath_work, '')
+            if (os.path.exists(rec_filev)):
                     qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec stop (ch=' + str(index) + ')', display=True,)
             else:
                     qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec err  (ch=' + str(index) + ')', display=True,)
+                    rec_filev = ''
+                    rec_namev = ''
+                    rec_filea = ''
+                    rec_namea = ''
             if (rec_namea != ''):
-                if (os.path.exists(self.rec_filea[index])):
+                if (os.path.exists(rec_filea)):
                     qFunc.logOutput(self.proc_id + ':' + rec_namea + ' rec stop (ch=' + str(index) + ')', display=True,)
-
-            # サムネイル抽出
-            if (os.path.exists(self.rec_filev[index])):
-                #wrkPath = qPath_work + 'movie2jpeg/'
-                wrkPath = qPath_work + 'recorder_m2j/'
-                res = movie2jpg(inpPath = qPath_work, inpNamev=rec_namev, outPath = qPath_rec, wrkPath=wrkPath, sfps=1, scene=0.1, )
-                if (res != False):
-                    for f in res:
-                        outFile = f.replace(qPath_rec, '')
-                        qFunc.copy(f, qPath_d_movie  + outFile)
-                        qFunc.copy(f, qPath_d_upload + outFile)
-
-                        # ログ
-                        qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
-
-            print('---------------- movie2mp4 ------------------')
-
-            # 動画変換
-            if (os.path.exists(self.rec_filev[index])):
-                res = movie2mp4(inpPath = qPath_work, inpNamev=rec_namev, inpNamea=rec_namea, outPath = qPath_rec, )
-                if (res != False):
-                    for f in res:
-                        outFile = f.replace(qPath_rec, '')
-                        qFunc.copy(f, qPath_d_movie  + outFile)
-                        qFunc.copy(f, qPath_d_upload + outFile)
-
-                        # ログ
-                        qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
-
-            print('----------- work del -------------')
-
-            # ワーク削除
-            if (os.path.exists(self.rec_filev[index])):
-                if (os.path.exists(self.rec_filev[index])):
-                    qFunc.remove(self.rec_filev[index])
-                if (os.path.exists(self.rec_filea[index])):
-                    qFunc.remove(self.rec_filea[index])
+                else:
+                    rec_filea = ''
+                    rec_namea = ''
 
         # いちばん古い録画 -> index
         index = 0
@@ -904,8 +876,6 @@ class proc_recorder:
             if (min_index != 0):
                 index = min_index
 
-        print('-----------', index, '-------------')
-
         # 録画中がなければリセット
         if (index == 0):
             #qFunc.kill('ffmpeg', )
@@ -919,6 +889,40 @@ class proc_recorder:
             qFunc.remove(self.fileBsy)
             if (str(self.id) == '0'):
                 qFunc.busySet(qBusy_d_rec, False)
+
+        # サムネイル抽出
+        if (rec_filev != ''):
+
+            #wrkPath = qPath_work + 'movie2jpeg/'
+            wrkPath = qPath_work + 'recorder_m2j/'
+            res = movie2jpg(inpPath = qPath_work, inpNamev=rec_namev, outPath = qPath_rec, wrkPath=wrkPath, sfps=1, scene=0.1, )
+            if (res != False):
+                for f in res:
+                    outFile = f.replace(qPath_rec, '')
+                    qFunc.copy(f, qPath_d_movie  + outFile)
+                    qFunc.copy(f, qPath_d_upload + outFile)
+
+                    # ログ
+                    qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
+
+        # 動画変換
+        if (rec_filev != ''):
+
+            res = movie2mp4(inpPath = qPath_work, inpNamev=rec_namev, inpNamea=rec_namea, outPath = qPath_rec, )
+            if (res != False):
+                for f in res:
+                    outFile = f.replace(qPath_rec, '')
+                    qFunc.copy(f, qPath_d_movie  + outFile)
+                    qFunc.copy(f, qPath_d_upload + outFile)
+
+                    # ログ
+                    qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
+
+        # ワーク削除
+        if (rec_filev != ''):
+            qFunc.remove(rec_filev)
+        if (rec_filea != ''):
+            qFunc.remove(rec_filea)
 
 
 

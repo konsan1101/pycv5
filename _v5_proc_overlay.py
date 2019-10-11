@@ -959,7 +959,7 @@ class proc_overlay:
                 if (display_mode == 'live'):
                     nowTime = datetime.datetime.now()
                     stamp   = nowTime.strftime('%Y-%m-%d %H:%M:%S.%f')
-                    cv2.putText(display_img, stamp[:-3], ( 20, self.dspHeight-20), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,0,0))
+                    cv2.putText(display_img, stamp[:-3], ( 20, self.dspHeight-20), cv2.FONT_HERSHEY_COMPLEX_SMALL, 2, (255,255,0))
                 elif (display_mode == 'rec'):
                     nowTime = datetime.datetime.now()
                     stamp   = nowTime.strftime('%Y-%m-%d %H:%M:%S.%f')
