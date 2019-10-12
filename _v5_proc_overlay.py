@@ -29,6 +29,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_cache     = qFunc.getValue('qPath_cache'    )
+qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
 qPath_rec       = qFunc.getValue('qPath_rec'      )
@@ -843,16 +846,6 @@ class proc_overlay:
                             display_img[over_y:over_y+over_height, over_x:over_x+over_width] = alpha_img
                             over_y += over_height + 10
 
-                # 右下基準
-                if (self.flag_enter != 'on') and (self.flag_cancel != 'on'):
-                    over_y = self.dspHeight - 70
-                else:
-                    over_y = self.dspHeight - 140
-                over_x = self.dspWidth - 10
-                if (display_mode == 'rec'):
-                    over_y = self.dspHeight - 10
-                    over_x = self.dspWidth  - 10
-
                 # 台形補正
                 if (int(self.dspStretch) != 0):
                     x = int((self.dspWidth/2) * abs(int(self.dspStretch))/100)
@@ -901,6 +894,15 @@ class proc_overlay:
                         cv2.rectangle(display_img,(self.dspWidth-230,40),(self.dspWidth-150,60),(  0,255,  0),1)
                         cv2.putText(display_img, 'ZOOM', (self.dspWidth-120,57),  cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,255,  0))
                         cv2.rectangle(display_img,(self.dspWidth-130,40),(self.dspWidth-50,60), (255,255,  0),1)
+
+                # 右下基準
+                over_y = self.dspHeight - 10
+                over_x = self.dspWidth  - 10
+                if (self.flag_enter == 'on'):
+                    over_y = self.dspHeight - 140
+                else:
+                    if (display_mode != 'rec'):
+                        over_y = self.dspHeight - 70
 
                 # ステータス画像 alpha blending
                 if ((time.time() - status_time) <= 30) and (not status_img is None):

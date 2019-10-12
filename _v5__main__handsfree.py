@@ -60,6 +60,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_cache     = qFunc.getValue('qPath_cache'    )
+qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
 qPath_rec       = qFunc.getValue('qPath_rec'      )
@@ -113,14 +116,26 @@ qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
 
 
 
+if getattr(sys, 'frozen', False):
+    #print('exe')
+    google = False
+else:
+    #print('python')
+    google = True
+
 # debug
 runMode     = 'handsfree'
 
-qApiInp     = 'free'
-qApiTrn     = 'free'
-qApiOut     = qApiTrn
-if (qOS == 'windows'):
-    qApiOut = 'winos'
+if (google == True):
+    qApiInp     = 'free'
+    qApiTrn     = 'free'
+    qApiOut     = qApiTrn
+    if (qOS == 'windows'):
+        qApiOut = 'winos'
+else:
+    qApiInp     = 'azure'
+    qApiTrn     = 'azure'
+    qApiOut     = qApiTrn
 if (qOS == 'darwin'):
     qApiOut = 'macos'
 qLangInp    = 'ja'
@@ -442,10 +457,21 @@ if __name__ == '__main__':
 
         # プロセス設定
 
+        running = 'python'
+        if getattr(sys, 'frozen', False):
+            running = 'exe'
+
         speechs = []
 
         if (main_speech_run is None) and (main_speech_switch == 'on'):
-            main_speech_run = subprocess.Popen(['python', qPython_main_speech, 
+            if (running == 'python'):
+                main_speech_run = subprocess.Popen(['python', qPython_main_speech, 
+                                runMode, micDev, micType, micGuide, micLevel,
+                                qApiInp, qApiTrn, qApiOut,
+                                qLangInp, qLangTrn, qLangTxt, qLangOut, ], )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            else:
+                main_speech_run = subprocess.Popen([qPython_main_speech[:-3], 
                                 runMode, micDev, micType, micGuide, micLevel,
                                 qApiInp, qApiTrn, qApiOut,
                                 qLangInp, qLangTrn, qLangTxt, qLangOut, ], )
@@ -467,7 +493,12 @@ if __name__ == '__main__':
             main_speech_run = None
 
         if (main_vision_run is None) and (main_vision_switch == 'on'):
-            main_vision_run = subprocess.Popen(['python', qPython_main_vision, 
+            if (running == 'python'):
+                main_vision_run = subprocess.Popen(['python', qPython_main_vision, 
+                                runMode, ], )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            else:
+                main_vision_run = subprocess.Popen([qPython_main_vision[:-3],
                                 runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
@@ -482,7 +513,13 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'カメラ機能を、終了しました。', 'wait':0, })
 
         if (main_desktop_run is None) and (main_desktop_switch == 'on'):
-            main_desktop_run = subprocess.Popen(['python', qPython_main_desktop, 
+            if (running == 'python'):
+                main_desktop_run = subprocess.Popen(['python', qPython_main_desktop, 
+                                #'debug', ], )
+                                runMode, ], )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            else:
+                main_desktop_run = subprocess.Popen([qPython_main_desktop[:-3], 
                                 #'debug', ], )
                                 runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -498,7 +535,11 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'デスクトップ制御機能を、終了しました。', 'wait':0, })
 
         if (bgm_run is None) and (bgm_switch == 'on'):
-            bgm_run = subprocess.Popen(['python', qPython_bgm, runMode, ], )
+            if (running == 'python'):
+                bgm_run = subprocess.Popen(['python', qPython_bgm, runMode, ], )
+                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            else:
+                bgm_run = subprocess.Popen([qPython_bgm[:-3], runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'ＢＧＭ再生機能を、起動しました。', 'wait':0, })
@@ -513,7 +554,11 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ＢＧＭ再生機能を、終了しました。', 'wait':0, })
 
         if (browser_run is None) and (browser_switch == 'on'):
-            browser_run = subprocess.Popen(['python', qPython_browser, runMode, ], )
+            if (running == 'python'):
+                browser_run = subprocess.Popen(['python', qPython_browser, runMode, ], )
+                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            else:
+                browser_run = subprocess.Popen([qPython_browser[:-3], runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'ブラウザー連携機能を、起動しました。', 'wait':0, })
@@ -528,7 +573,11 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ブラウザー連携機能を、終了しました。', 'wait':0, })
 
         if (player_run is None) and (player_switch == 'on'):
-            player_run = subprocess.Popen(['python', qPython_player, runMode, ], )
+            if (running == 'python'):
+                player_run = subprocess.Popen(['python', qPython_player, runMode, ], )
+                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            else:
+                player_run = subprocess.Popen([qPython_player[:-3], runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'動画連携機能を、起動しました。', 'wait':0, })
@@ -543,7 +592,11 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'動画連携機能を、終了しました。', 'wait':0, })
 
         if (chatting_run is None) and (chatting_switch == 'on'):
-            chatting_run = subprocess.Popen(['python', qPython_chatting, runMode, ], )
+            if (running == 'python'):
+                chatting_run = subprocess.Popen(['python', qPython_chatting, runMode, ], )
+                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            else:
+                chatting_run = subprocess.Popen([qPython_chatting[:-3], runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'ドコモ雑談連携機能を、起動しました。', 'wait':0, })
@@ -558,7 +611,11 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ドコモ雑談連携機能を、終了しました。', 'wait':0, })
 
         if (knowledge_run is None) and (knowledge_switch == 'on'):
-            knowledge_run = subprocess.Popen(['python', qPython_knowledge, runMode, ], )
+            if (running == 'python'):
+                knowledge_run = subprocess.Popen(['python', qPython_knowledge, runMode, ], )
+                            #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            else:
+                knowledge_run = subprocess.Popen([qPython_knowledge[:-3], runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
             speechs.append({ 'text':u'ドコモ知識データベースを、起動しました。', 'wait':0, })
@@ -612,41 +669,49 @@ if __name__ == '__main__':
         
         #time.sleep(60.00)
 
+        time.sleep(0.50)
         if (not main_speech_run is None):
             main_speech_run.wait()
             main_speech_run.terminate()
             main_speech_run = None
 
+        time.sleep(0.50)
         if (not main_vision_run is None):
             main_vision_run.wait()
             main_vision_run.terminate()
             main_vision_run = None
 
+        time.sleep(0.50)
         if (not main_desktop_run is None):
             main_desktop_run.wait()
             main_desktop_run.terminate()
             main_desktop_run = None
 
+        time.sleep(0.50)
         if (not bgm_run is None):
             bgm_run.wait()
             bgm_run.terminate()
             bgm_run = None
 
+        time.sleep(0.50)
         if (not browser_run is None):
             #browser_run.wait()
             browser_run.terminate()
             browser_run = None
 
+        time.sleep(0.50)
         if (not player_run is None):
             #player_run.wait()
             player_run.terminate()
             player_run = None
 
+        time.sleep(0.50)
         if (not chatting_run is None):
             #chatting_run.wait()
             chatting_run.terminate()
             chatting_run = None
 
+        time.sleep(0.50)
         if (not knowledge_run is None):
             #knowledge_run.wait()
             knowledge_run.terminate()

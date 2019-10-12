@@ -37,6 +37,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_cache     = qFunc.getValue('qPath_cache'    )
+qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
 qPath_rec       = qFunc.getValue('qPath_rec'      )
@@ -231,7 +234,7 @@ def qTranslator_cacheFile(useApi='free', inpLang='ja', outLang='en', inpText=u'ã
         while (f[-1:] == '_'):
             f = f[:-1]
 
-        cacheFile='temp/_cache/' + f + '_' + inpLang + '_' + outLang + '_' + useApi + '_utf8.txt'
+        cacheFile=qPath_cache + f + '_' + inpLang + '_' + outLang + '_' + useApi + '_utf8.txt'
         return cacheFile
 
     return ''
@@ -383,7 +386,7 @@ def qVoiceOutput_cacheFile(useApi='free', outLang='en', outText='Hallo', ):
         while (f[-1:] == '_'):
             f = f[:-1]
 
-        cacheFile='temp/_cache/' + f + '_' + outLang + '_' + useApi + '.mp3'
+        cacheFile=qPath_cache + f + '_' + outLang + '_' + useApi + '.mp3'
         return cacheFile
 
     return ''

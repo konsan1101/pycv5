@@ -26,6 +26,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_cache     = qFunc.getValue('qPath_cache'    )
+qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
 qPath_rec       = qFunc.getValue('qPath_rec'      )
@@ -352,6 +355,34 @@ class proc_controlv:
             or    (proc_text == u'バルス'):
                 out_name  = 'control'
                 out_value = '_end_'
+                cn_s.put([out_name, out_value])
+
+            elif (self.runMode == 'background') and (proc_text == u'カメラ'):
+                qFunc.busySet(qBusy_dev_cam, False)
+                qFunc.busySet(qBusy_dev_dsp, False)
+            elif (self.runMode == 'background') \
+            and  ((proc_text.find(u'カメラ') >= 0) and (proc_text.find(u'開始') >= 0)):
+                qFunc.busySet(qBusy_dev_cam, False)
+                qFunc.busySet(qBusy_dev_dsp, False)
+            elif (self.runMode == 'background') \
+            and  ((proc_text.find(u'カメラ') >= 0) and (proc_text.find(u'終了') >= 0)):
+                qFunc.busySet(qBusy_dev_cam, True)
+                qFunc.busySet(qBusy_dev_dsp, True)
+
+            elif ((self.runMode == 'camera') or (self.runMode == 'background')) \
+            and  (proc_text == u'エンター'):
+                out_name  = 'control'
+                out_value = '_enter_'
+                cn_s.put([out_name, out_value])
+            elif ((self.runMode == 'camera') or (self.runMode == 'background')) \
+            and  (proc_text == u'キャンセル'):
+                out_name  = 'control'
+                out_value = '_cancel_'
+                cn_s.put([out_name, out_value])
+            elif ((self.runMode == 'camera') or (self.runMode == 'background')) \
+            and  (proc_text == u'クローズ'):
+                out_name  = 'control'
+                out_value = '_close_'
                 cn_s.put([out_name, out_value])
 
             elif (proc_text == u'シャッター') or (proc_text.find(u'撮影') >= 0):

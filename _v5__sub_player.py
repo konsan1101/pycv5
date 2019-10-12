@@ -44,6 +44,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_cache     = qFunc.getValue('qPath_cache'    )
+qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
 qPath_rec       = qFunc.getValue('qPath_rec'      )
@@ -134,18 +137,13 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
     if (os.name == 'nt'):
         hwnd = 0
         chktime = time.time()
-        while (hwnd == 0) and ((time.time() - chktime) < 3):
+        while (hwnd == 0) and ((time.time() - chktime) < 5):
             hwnd = ctypes.windll.user32.FindWindowW(None, str(id))
             time.sleep(0.10)
 
-    if (width != 0) or (height != 0):
-        if (os.name == 'nt'):
-            if (hwnd != 0):
+        if (hwnd != 0):
+            if (width != 0) or (height != 0):
                 ctypes.windll.user32.SetWindowPos(hwnd,z_order,int(left),int(top),0,0,1)
-    else:
-        if (os.name == 'nt'):
-            if (hwnd != 0):
-                ctypes.windll.user32.SetWindowPos(hwnd,z_order,0,0,0,0,1)
 
     ffplay.wait()
     ffplay.terminate()
@@ -351,6 +349,8 @@ class main_class:
         onece = True
         last_alive = time.time()
 
+        last_menu  = 0
+
         while (self.proc_step == '5'):
             self.proc_beat = time.time()
 
@@ -403,6 +403,21 @@ class main_class:
             if (os.path.exists(self.fileBsy)):
                 self.sub_alive()
 
+            # 選択アナウンス
+            if (control.find(u'メニュー') >=0):
+                last_menu = time.time()
+            if (control.lower() >= '01') and (control.lower() <= '09'):
+                last_menu = 0
+
+            if (last_menu != 0):
+                if ((time.time() - last_menu) > 120):
+                    if (onece == True):
+                        onece = False
+
+                        speechs = []
+                        speechs.append({ 'text':u'画面表示位置を指定して再生はいかがですか？', 'wait':0, })
+                        qFunc.speech(id='speech', speechs=speechs, lang='', )
+
             # 処理
             if (control != ''):
                 self.sub_proc(control, )
@@ -444,72 +459,72 @@ class main_class:
 
     # 処理
     def sub_proc(self, proc_text, ):
+        path = {}
+        path['00'] = u'C:/Users/Public/_動画_AppleTV'
+        path['01'] = u'C:/Users/Public/_m4v__Clip/Perfume'
+        path['02'] = u'C:/Users/Public/_m4v__Clip/BABYMETAL'
+        path['03'] = u'C:/Users/Public/_m4v__Clip/OneOkRock'
+        path['04'] = u'C:/Users/Public/_m4v__Clip/きゃりーぱみゅぱみゅ'
+        path['05'] = u'C:/Users/Public/_m4v__Clip/etc'
+        path['06'] = u'C:/Users/Public/_m4v__Clip/SekaiNoOwari'
+        path['07'] = u'C:/Users/Public/_m4v__Clip/GB'
+        path['08'] = path['01']
+        path['09'] = path['02']
 
         if (proc_text.find(u'リセット') >=0):
-
-            # 停止
             #self.sub_stop(proc_text, )
             self.sub_stop('_stop_', )
 
         elif (proc_text.lower() == '_stop_'):
-
-            # 停止
             #self.sub_stop(proc_text, )
             self.sub_stop('_stop_', )
 
         elif (proc_text.lower() == '_start_'):
-
             pass
 
         elif (proc_text.lower() == '_demo0-'):
-            path0 = u'C:/Users/Public/_m4v__Clip/Perfume'
-            self.sub_start(path0, panel='0' , vol=0  , order='normal', loop=1, )
-            self.sub_start(path0, panel='0-', vol=100, order='top'   , loop=1, )
+            self.sub_stop('_stop_', )
+            self.sub_start(path['01'], panel='0' , vol=0  , order='normal', loop=1, )
+            self.sub_start(path['01'], panel='0-', vol=100, order='top'   , loop=1, )
 
         elif (proc_text.lower() == '_demo1397'):
-            path0 = u'C:/Users/Public/_動画_AppleTV'
-            path1 = u'C:/Users/Public/_m4v__Clip/Perfume'
-            self.sub_start(path0, panel='0'   , vol=0  , order='normal', loop=99, )
-            self.sub_start(path1, panel='1397', vol=100, order='top'   , loop=99, )
+            self.sub_stop('_stop_', )
+            self.sub_start(path['00'], panel='0'   , vol=0  , order='normal', loop=99, )
+            self.sub_start(path['01'], panel='1397', vol=100, order='top'   , loop=99, )
 
         elif (proc_text.lower() == '_demo1234'):
-            path0 = u'C:/Users/Public/_m4v__Clip/etc'
-            path1 = u'C:/Users/Public/_m4v__Clip/Perfume'
-            path2 = u'C:/Users/Public/_m4v__Clip/BABYMETAL'
-            path3 = u'C:/Users/Public/_m4v__Clip/OneOkRock'
-            path4 = u'C:/Users/Public/_m4v__Clip/きゃりーぱみゅぱみゅ'
-            self.sub_start(path0, panel='0' , vol=100, order='normal', loop=99, )
-            self.sub_start(path1, panel='19', vol=0  , order='normal', loop=99, )
-            self.sub_start(path2, panel='28', vol=0  , order='normal', loop=99, )
-            self.sub_start(path3, panel='37', vol=0  , order='normal', loop=99, )
-            self.sub_start(path4, panel='46', vol=0  , order='normal', loop=99, )
+            self.sub_stop('_stop_', )
+            self.sub_start(path['05'], panel='0' , vol=100, order='normal', loop=99, )
+            self.sub_start(path['01'], panel='19', vol=0  , order='normal', loop=99, )
+            self.sub_start(path['02'], panel='28', vol=0  , order='normal', loop=99, )
+            self.sub_start(path['03'], panel='37', vol=0  , order='normal', loop=99, )
+            self.sub_start(path['04'], panel='46', vol=0  , order='normal', loop=99, )
 
-        elif (proc_text.lower() == '_test'):
-            path0 = u'C:/Users/Public/_動画_AppleTV'
-            path1 = u'C:/Users/Public/_m4v__Clip/Perfume'
-            path2 = u'C:/Users/Public/_m4v__Clip/BABYMETAL'
-            path3 = u'C:/Users/Public/_m4v__Clip/OneOkRock'
-            path4 = u'C:/Users/Public/_m4v__Clip/きゃりーぱみゅぱみゅ'
-            path5 = u'C:/Users/Public/_m4v__Clip/etc'
-            path6 = u'C:/Users/Public/_m4v__Clip/SekaiNoOwari'
-            path7 = u'C:/Users/Public/_m4v__Clip/GB'
-            path8 = path1
-            path9 = path2
-            self.sub_start(path0, panel='0' , vol=0  , order='normal', loop=99, )
-            self.sub_start(path1, panel='1-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path2, panel='2-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path3, panel='3-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path4, panel='4-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path5, panel='5-', vol=100, order='top'   , loop=99, )
-            self.sub_start(path6, panel='6-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path7, panel='7-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path8, panel='8-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path9, panel='9-', vol=0  , order='normal', loop=99, )
+        elif (proc_text.find(u'メニュー') >=0) or (proc_text.lower() == '_test_'):
+            self.sub_stop('_stop_', )
+            self.sub_start(path['00'], panel='0' , vol=0  , order='normal', loop=99, )
+            self.sub_start(path['01'], panel='1-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path['02'], panel='2-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path['03'], panel='3-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path['04'], panel='4-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path['06'], panel='6-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path['07'], panel='7-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path['08'], panel='8-', vol=0  , order='normal', loop=99, )
+            self.sub_start(path['09'], panel='9-', vol=0  , order='normal', loop=99, )
+            if (proc_text.find(u'メニュー') >=0):
+                self.sub_start(path['05'], panel='5-', vol=0  , order='normal', loop=99, )
+            if (proc_text.lower() == '_test_'):
+                self.sub_start(path['05'], panel='5-', vol=100, order='top'   , loop=99, )
+
+        elif (proc_text.lower() >= '01') and (proc_text.lower() <= '09'):
+            self.sub_stop('_stop_', )
+            self.sub_start(path[proc_text], panel='0-', vol=100, order='top' , loop=99, )
 
         else:
-
-            # 開始
-            self.sub_start(proc_text, panel='0-', vol=100, order='normal', loop=1, )
+            if (os.path.isfile(proc_text)) \
+            or (os.path.isdir(proc_text)):
+                self.sub_stop('_stop_', )
+                self.sub_start(proc_text, panel='0-', vol=100, order='top', loop=1, )
 
 
 
@@ -686,7 +701,7 @@ if __name__ == '__main__':
                 #t = u'_demo0-'   # base + center
                 #t = u'_demo1397' # base + 1,3,9,7
                 #t = u'_demo1234' # base + 1234,6789
-                t = u'_test'      # base + 1-9
+                t = u'_test_'      # base + 1-9
                 qFunc.txtsWrite(qCtrl_control_self ,txts=[t], encoding='utf-8', exclusive=True, mode='w', )
 
         # デバッグ

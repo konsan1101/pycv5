@@ -35,6 +35,10 @@ import cv2
 
 
 
+qPath_cache     = '_cache/'
+qPath_sounds    = '_sounds/'
+qPath_fonts     = '_fonts/'
+
 qPath_log       = 'temp/_log/'
 qPath_work      = 'temp/_work/'
 qPath_rec       = 'temp/_recorder/'
@@ -103,7 +107,7 @@ class qFunc_class:
                 
     def init(self, ):
         self.makeDirs('temp/_log/',   False)
-        self.makeDirs('temp/_cache/', False)
+        self.makeDirs(qPath_cache,    False)
 
         self.makeDirs(qPath_log,      False)
         self.makeDirs(qPath_work,     False)
@@ -135,6 +139,10 @@ class qFunc_class:
     def getValue(self, field):
         if (field == 'qOS'             ): return qOS
         if (field == 'qHOSTNAME'       ): return qHOSTNAME
+
+        if (field == 'qPath_cache'     ): return qPath_cache
+        if (field == 'qPath_sounds'    ): return qPath_sounds
+        if (field == 'qPath_fonts'     ): return qPath_fonts
 
         if (field == 'qPath_log'       ): return qPath_log
         if (field == 'qPath_work'      ): return qPath_work
@@ -468,12 +476,17 @@ class qFunc_class:
             ctypes.windll.user32.SetWindowPos(parent_handle, HWND_TOP, posX, posY, dspWidth, dspHeight, SWP_SHOWWINDOW)
 
     def in_japanese(self, txt=''):
-        for s in txt:
-            name = unicodedata.name(s) 
-            if ('CJK UNIFIED' in name) \
-            or ('HIRAGANA' in name) \
-            or ('KATAKANA' in name):
-                return True
+        t = txt.replace('\r', '')
+        t = t.replace('\n', '')
+        try:
+            for s in t:
+                name = unicodedata.name(s) 
+                if ('CJK UNIFIED' in name) \
+                or ('HIRAGANA' in name) \
+                or ('KATAKANA' in name):
+                    return True
+        except:
+            pass
         return False
 
     def sendKey(self, txt='', cr=False, lf=True, ):
@@ -549,19 +562,19 @@ class qFunc_class:
 
         playfile = filename
         if (filename == '_up'):
-            playfile = '_sounds/_sound_up.mp3'
+            playfile = qPath_sounds + '_sound_up.mp3'
         if (filename == '_ready'):
-            playfile = '_sounds/_sound_ready.mp3'
+            playfile = qPath_sounds + '_sound_ready.mp3'
         if (filename == '_accept'):
-            playfile = '_sounds/_sound_accept.mp3'
+            playfile = qPath_sounds + '_sound_accept.mp3'
         if (filename == '_ok'):
-            playfile = '_sounds/_sound_ok.mp3'
+            playfile = qPath_sounds + '_sound_ok.mp3'
         if (filename == '_ng'):
-            playfile = '_sounds/_sound_ng.mp3'
+            playfile = qPath_sounds + '_sound_ng.mp3'
         if (filename == '_down'):
-            playfile = '_sounds/_sound_down.mp3'
+            playfile = qPath_sounds + '_sound_down.mp3'
         if (filename == '_shutter'):
-            playfile = '_sounds/_sound_shutter.mp3'
+            playfile = qPath_sounds + '_sound_shutter.mp3'
 
         if (os.path.exists(playfile)):
 

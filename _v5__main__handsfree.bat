@@ -91,6 +91,8 @@ ECHO;
 ECHO python _v5__destroy.py
      python _v5__destroy.py
 
+ECHO;
+ECHO Waiting...5s
 ping localhost -w 1000 -n 5 >nul
 
 ECHO;
@@ -100,6 +102,10 @@ rem  start "" /b python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% 
 ECHO             python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio% ja en
                  python _v5__main__handsfree.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio%
 rem ------------------------------------------------------------------------------------------InpTrn
+
+ECHO;
+ECHO Waiting...5s
+ping localhost -w 1000 -n 5 >nul
 
 ECHO;
 ECHO python _v5__destroy.py

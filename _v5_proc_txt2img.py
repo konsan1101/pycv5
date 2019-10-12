@@ -24,19 +24,15 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-qFONT_default = {'file':'_fonts/_vision_font_ipaexg.ttf','offset':8}
-qFONT_status  = {'file':'_fonts/_vision_font_ipag.ttf','offset':8}
-qFONT_zh = {'file':'C:/Windows/Fonts/msyh.ttc', 'offset':5}
-qFONT_ko = {'file':'C:/Windows/Fonts/batang.ttc', 'offset':10}
-
-
-
 # qFunc 共通ルーチン
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_cache     = qFunc.getValue('qPath_cache'    )
+qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
 qPath_rec       = qFunc.getValue('qPath_rec'      )
@@ -87,6 +83,14 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
+
+
+
+# フォント
+qFONT_default = {'file':qPath_fonts + '_vision_font_ipaexg.ttf','offset':8}
+qFONT_status  = {'file':qPath_fonts + '_vision_font_ipag.ttf','offset':8}
+qFONT_zh = {'file':'C:/Windows/Fonts/msyh.ttc', 'offset':5}
+qFONT_ko = {'file':'C:/Windows/Fonts/batang.ttc', 'offset':10}
 
 
 

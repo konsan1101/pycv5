@@ -56,6 +56,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_cache     = qFunc.getValue('qPath_cache'    )
+qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
 qPath_rec       = qFunc.getValue('qPath_rec'      )
@@ -121,11 +124,23 @@ import _v5_proc_coreCV
 
 
 
+if getattr(sys, 'frozen', False):
+    #print('exe')
+    google = False
+else:
+    #print('python')
+    google = True
+
 runMode    = 'hud'
 
-qApiCV     = 'google'
-qApiOCR    = qApiCV
-qApiTrn    = 'free'
+if (google == True):
+    qApiCV     = 'google'
+    qApiOCR    = qApiCV
+    qApiTrn    = 'free'
+else:
+    qApiCV     = 'azure'
+    qApiOCR    = qApiCV
+    qApiTrn    = 'azure'
 qLangCV    = 'ja'
 qLangOCR   = qLangCV
 qLangTrn   = 'en'
@@ -214,6 +229,10 @@ class main_vision:
             self.flag_camzoom    = 'on'
             self.flag_dspzoom    = 'on'
         elif (self.runMode == 'camera'):
+            self.flag_camzoom    = 'on'
+            self.flag_enter      = 'on'
+            self.flag_cancel     = 'on'
+        elif (self.runMode == 'background'):
             self.flag_camzoom    = 'on'
             self.flag_enter      = 'on'
             self.flag_cancel     = 'on'
@@ -317,6 +336,7 @@ class main_vision:
 
         if (self.runMode == 'debug'):
             camera_switch2     = 'on'
+            txt2img_switch     = 'on'
             cvreader_switch    = 'on'
             cvdetect_switch1   = 'on'
             cvdetect_switch2   = 'on'
@@ -326,6 +346,7 @@ class main_vision:
             coreCV_switch      = 'on'
         elif (self.runMode == 'hud'):
             camera_switch2     = 'off'
+            txt2img_switch     = 'on'
             cvreader_switch    = 'on'
             cvdetect_switch1   = 'off'
             cvdetect_switch2   = 'off'
@@ -335,6 +356,7 @@ class main_vision:
             coreCV_switch      = 'off'
         elif (self.runMode == 'handsfree'):
             camera_switch2     = 'on'
+            txt2img_switch     = 'on'
             cvreader_switch    = 'on'
             cvdetect_switch1   = 'off'
             cvdetect_switch2   = 'off'
@@ -347,6 +369,7 @@ class main_vision:
             coreCV_switch      = 'on'
         elif (self.runMode == 'camera'):
             camera_switch2     = 'off'
+            txt2img_switch     = 'on'
             cvreader_switch    = 'on'
             cvdetect_switch1   = 'off'
             cvdetect_switch2   = 'off'
@@ -356,6 +379,7 @@ class main_vision:
             coreCV_switch      = 'off'
         elif (self.runMode == 'background'):
             camera_switch2     = 'off'
+            txt2img_switch     = 'on'
             cvreader_switch    = 'on'
             cvdetect_switch1   = 'off'
             cvdetect_switch2   = 'off'
@@ -1669,7 +1693,7 @@ if __name__ == '__main__':
                     if (mouse2 == 'enter') \
                     or (mouse2 == 'cancel') \
                     or (mouse2 == 'close'):
-                        control = mouse2
+                        control = '_' + mouse2 + '_'
 
                     # 左クリック　写真撮影と入力画像をＡＩ画像認識処理へ
                     if (mouse1 == 'click_l') and (mouse2 == 'l'):
@@ -1709,14 +1733,23 @@ if __name__ == '__main__':
 
 
 
-        # 終了操作
+        # カメラ操作
         if (runMode == 'camera'):
-            if (control == 'enter') \
-            or (control == 'cancel') \
-            or (control == 'close'):
+            if (control == '_enter_') \
+            or (control == '_cancel_') \
+            or (control == '_close_'):
                 qFunc.txtsWrite(qCtrl_result_screen, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+
+        # バックグラウンドクリック操作
+        if (runMode == 'background'):
+            if (control == '_enter_') \
+            or (control == '_cancel_') \
+            or (control == '_close_'):
+                qFunc.txtsWrite(qCtrl_result_screen, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.busySet(qBusy_dev_cam, True)
+                qFunc.busySet(qBusy_dev_dsp, True)
 
         # アイドリング
         if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \

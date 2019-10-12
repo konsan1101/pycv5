@@ -39,6 +39,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_cache     = qFunc.getValue('qPath_cache'    )
+qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
 qPath_rec       = qFunc.getValue('qPath_rec'      )
@@ -373,21 +376,26 @@ class proc_controls:
 
     def sub_proc(self, seq4, proc_file, work_file, proc_name, proc_text, cn_s, ):
 
+        jp_true = qFunc.in_japanese(proc_text)
+
         # インターフェース
         #if (self.run_vision    == True):
         #    qFunc.txtsWrite(qCtrl_control_vision   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         #if (self.run_desktop   == True):
         #    qFunc.txtsWrite(qCtrl_control_desktop  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_bgm       == True):
-            qFunc.txtsWrite(qCtrl_control_bgm       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_bgm       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_browser   == True):
-            qFunc.txtsWrite(qCtrl_control_browser   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+            if (jp_true == True):
+                qFunc.txtsWrite(qCtrl_control_browser   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_player    == True):
-            qFunc.txtsWrite(qCtrl_control_player    ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_player    ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_chatting  == True):
-            qFunc.txtsWrite(qCtrl_control_chatting  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+            if (jp_true == True):
+                qFunc.txtsWrite(qCtrl_control_chatting  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_knowledge == True):
-            qFunc.txtsWrite(qCtrl_control_knowledge ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+            if (jp_true == True):
+                qFunc.txtsWrite(qCtrl_control_knowledge ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
 
         if (cn_s.qsize() < 99):
 
@@ -475,8 +483,7 @@ class proc_controls:
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_player = True
                 time.sleep(5)
-                qFunc.txtsWrite(qCtrl_control_player ,txts=['_test'], encoding='utf-8', exclusive=True, mode='w', )
-                self.run_player  = False
+                qFunc.txtsWrite(qCtrl_control_player ,txts=[u'メニュー'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif ((proc_text.find(u'動画') >= 0) and (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_end_'], encoding='utf-8', exclusive=True, mode='w', )

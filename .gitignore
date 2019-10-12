@@ -104,6 +104,7 @@ venv.bak/
 .mypy_cache/
 
 .vscode
+x_cache/
 julius/model/dnn/logicalTri
 julius/model/dnn/logicalTri.bin
 temp/
@@ -112,6 +113,7 @@ yolo3_weights/yolov3.weights
 yolo3_weights/yolo.h5
 
 _v5__main_*.exe
+_v5__sub_*.exe
 _v5_proc_*.exe
 
 *key.py

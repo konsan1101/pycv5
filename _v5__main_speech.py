@@ -47,6 +47,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qPath_cache     = qFunc.getValue('qPath_cache'    )
+qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
 qPath_rec       = qFunc.getValue('qPath_rec'      )
@@ -112,14 +115,26 @@ import speech_api_julius
 
 
 
+if getattr(sys, 'frozen', False):
+    #print('exe')
+    google = False
+else:
+    #print('python')
+    google = True
+
 # debug
 runMode     = 'hud'
 
-qApiInp     = 'free'
-qApiTrn     = 'free'
-qApiOut     = qApiTrn
-if (qOS == 'windows'):
-    qApiOut = 'winos'
+if (google == True):
+    qApiInp     = 'free'
+    qApiTrn     = 'free'
+    qApiOut     = qApiTrn
+    if (qOS == 'windows'):
+        qApiOut = 'winos'
+else:
+    qApiInp     = 'azure'
+    qApiTrn     = 'azure'
+    qApiOut     = qApiTrn
 if (qOS == 'darwin'):
     qApiOut = 'macos'
 qLangInp    = 'ja'
