@@ -18,7 +18,7 @@ import time
 import codecs
 import glob
 
-import unicodedata
+import multiprocessing
 
 
 
@@ -138,70 +138,6 @@ def dshow_dev():
         ffmpeg = None
 
     return cam, mic
-
-def is_japanese(string):
-    for ch in string:
-        name = unicodedata.name(ch) 
-        if "CJK UNIFIED" in name \
-        or "HIRAGANA" in name \
-        or "KATAKANA" in name:
-            return True
-    return False
-
-
-
-def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
-
-    # パラメータ
-    inpFilev = inpPath + inpNamev
-    inpFilea = ''
-    if (inpNamea != ''):
-        inpFilea = inpPath + inpNamea
-    if (outPath == ''):
-        outPath = qPath_rec
-    inpTime = inpNamev[:15]
-    inpText = inpNamev[15:-4]
-    if (inpText == ''):
-        outFile = outPath + '_' + inpTime + '.___' + '.mp4'
-    else:
-        outFile = outPath + inpTime + '.___' + inpText + '.mp4'
-
-    result = False
-
-    #try:
-    if (True):
-
-        # 動画処理
-        if (inpFilea == ''):
-            ffmpeg = subprocess.Popen(['ffmpeg', \
-                '-i', inpFilev, \
-                '-vcodec', 'libx264', '-r', '2', \
-                outFile, \
-                '-loglevel', 'warning', \
-                ], )
-                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-        else:
-            ffmpeg = subprocess.Popen(['ffmpeg', \
-                '-i', inpFilev, '-i', inpFilea, \
-                '-vcodec', 'libx264', '-r', '2', \
-                '-acodec', 'aac', '-ab', '96k', '-ac', '1', '-ar', '44100', \
-                outFile, \
-                '-loglevel', 'warning', \
-                ], )
-                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-
-        #logb, errb = ffmpeg.communicate()
-        ffmpeg.wait()
-        ffmpeg.terminate()
-        ffmpeg = None
-
-        # 戻り値
-        return [outFile]
-
-    #except:
-    #    pass
-
-    return result
 
 
 
@@ -353,6 +289,96 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath='', sfps=1, scene=0.1,
 
     return result
 
+def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
+
+    # パラメータ
+    inpFilev = inpPath + inpNamev
+    inpFilea = ''
+    if (inpNamea != ''):
+        inpFilea = inpPath + inpNamea
+    if (outPath == ''):
+        outPath = qPath_rec
+    inpTime = inpNamev[:15]
+    inpText = inpNamev[15:-4]
+    if (inpText == ''):
+        outFile = outPath + '_' + inpTime + '.___' + '.mp4'
+    else:
+        outFile = outPath + inpTime + '.___' + inpText + '.mp4'
+
+    result = False
+
+    #try:
+    if (True):
+
+        # 動画処理
+        if (inpFilea == ''):
+            ffmpeg = subprocess.Popen(['ffmpeg', \
+                '-i', inpFilev, \
+                '-vcodec', 'libx264', '-r', '2', \
+                outFile, \
+                '-loglevel', 'warning', \
+                ], )
+                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+        else:
+            ffmpeg = subprocess.Popen(['ffmpeg', \
+                '-i', inpFilev, '-i', inpFilea, \
+                '-vcodec', 'libx264', '-r', '2', \
+                '-acodec', 'aac', '-ab', '96k', '-ac', '1', '-ar', '44100', \
+                outFile, \
+                '-loglevel', 'warning', \
+                ], )
+                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+        #logb, errb = ffmpeg.communicate()
+        ffmpeg.wait()
+        ffmpeg.terminate()
+        ffmpeg = None
+
+        # 戻り値
+        return [outFile]
+
+    #except:
+    #    pass
+
+    return result
+
+def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
+
+    # ログ
+    print(proc_id + ':thread ' + str(index) + ':start')
+
+    # サムネイル抽出
+    wrkPath = qPath_work + 'movie2jpg' + str(index) + '/'
+    res = movie2jpg(inpPath=qPath_work, inpNamev=rec_namev, outPath=qPath_rec, wrkPath=wrkPath, sfps=1, scene=0.1, )
+    if (res != False):
+        for f in res:
+            outFile = f.replace(qPath_rec, '')
+            qFunc.copy(f, qPath_d_movie  + outFile)
+            qFunc.copy(f, qPath_d_upload + outFile)
+
+            # ログ
+            print(proc_id + ':thread ' + str(index) + ':' + rec_namev + u' → ' + outFile)
+
+    # 動画変換
+    res = movie2mp4(inpPath=qPath_work, inpNamev=rec_namev, inpNamea=rec_namea, outPath = qPath_rec, )
+    if (res != False):
+        for f in res:
+            outFile = f.replace(qPath_rec, '')
+            qFunc.copy(f, qPath_d_movie  + outFile)
+            qFunc.copy(f, qPath_d_upload + outFile)
+
+            # ログ
+            print(proc_id + ':thread ' + str(index) + ':' + rec_namev + u' → ' + outFile)
+
+    # ワーク削除
+    if (rec_filev != ''):
+        qFunc.remove(rec_filev)
+    if (rec_filea != ''):
+        qFunc.remove(rec_filea)
+
+    # ログ
+    print(proc_id + ':thread ' + str(index) + ':complete')
+
 
 
 class proc_recorder:
@@ -395,6 +421,11 @@ class proc_recorder:
             self.rec_limit[i]  = None
             self.rec_filev[i]  = ''
             self.rec_filea[i]  = ''
+        self.batch_max    = 10
+        self.batch_index  = 0
+        self.batch_thread = {}
+        for i in range(self.batch_max):
+            self.batch_thread[i] = None
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -646,7 +677,7 @@ class proc_recorder:
 
                     # soxのチェック
                     sox_enable = check_sox()
-                    print('sox_enable', sox_enable)
+                    #print('sox_enable', sox_enable)
 
                     nowTime    = datetime.datetime.now()
                     stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
@@ -689,7 +720,7 @@ class proc_recorder:
 
                         # ffmpeg -f gdigrab -i desktop -r 5 temp_flv.flv
                         # ffmpeg -f gdigrab -i desktop -f dshow -i audio="mic" -vcodec libx264 temp_mp4.mp4
-                        if (len(mic) > 0) and (not is_japanese(mic[0])):
+                        if (len(mic) > 0) and (not qFunc.in_japanese(mic[0])):
                             microphone = 'audio="' + mic[0] + '"'
                             self.rec_ffmpeg[index] = subprocess.Popen(['ffmpeg', \
                                     '-f', 'gdigrab', '-i', 'desktop', \
@@ -890,39 +921,29 @@ class proc_recorder:
             if (str(self.id) == '0'):
                 qFunc.busySet(qBusy_d_rec, False)
 
-        # サムネイル抽出
+        # 後処理
         if (rec_filev != ''):
+            #movie_proc(
+            #    self.proc_id, self.batch_index,
+            #    rec_filev, rec_namev, rec_filea, rec_namea,
+            #    )
 
-            #wrkPath = qPath_work + 'movie2jpeg/'
-            wrkPath = qPath_work + 'recorder_m2j/'
-            res = movie2jpg(inpPath = qPath_work, inpNamev=rec_namev, outPath = qPath_rec, wrkPath=wrkPath, sfps=1, scene=0.1, )
-            if (res != False):
-                for f in res:
-                    outFile = f.replace(qPath_rec, '')
-                    qFunc.copy(f, qPath_d_movie  + outFile)
-                    qFunc.copy(f, qPath_d_upload + outFile)
+            # threading
+            self.batch_thread[self.batch_index] = threading.Thread(target=movie_proc, args=(
+                self.proc_id, self.batch_index,
+                rec_filev, rec_namev, rec_filea, rec_namea,
+                ))
+            self.batch_thread[self.batch_index].setDaemon(True)
+            self.batch_thread[self.batch_index].start()
 
-                    # ログ
-                    qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
+            # multiprocessing
+            #self.batch_thread[self.batch_index] = multiprocessing.Process(target=movie_proc, args=(
+            #    self.proc_id, self.batch_index,
+            #    rec_filev, rec_namev, rec_filea, rec_namea,
+            #    ))
+            #self.batch_thread[self.batch_index].start()
 
-        # 動画変換
-        if (rec_filev != ''):
-
-            res = movie2mp4(inpPath = qPath_work, inpNamev=rec_namev, inpNamea=rec_namea, outPath = qPath_rec, )
-            if (res != False):
-                for f in res:
-                    outFile = f.replace(qPath_rec, '')
-                    qFunc.copy(f, qPath_d_movie  + outFile)
-                    qFunc.copy(f, qPath_d_upload + outFile)
-
-                    # ログ
-                    qFunc.logOutput(self.proc_id + ':' + rec_namev + u' → ' + outFile, display=True,)
-
-        # ワーク削除
-        if (rec_filev != ''):
-            qFunc.remove(rec_filev)
-        if (rec_filea != ''):
-            qFunc.remove(rec_filea)
+            self.batch_index = (self.batch_index + 1) % self.batch_max
 
 
 

@@ -28,6 +28,7 @@ qHOSTNAME = socket.gethostname().lower()
 import ctypes
 import array
 
+import unicodedata
 import pyautogui
 import pyperclip
 import cv2
@@ -466,17 +467,39 @@ class qFunc_class:
             SWP_SHOWWINDOW = 0x0040
             ctypes.windll.user32.SetWindowPos(parent_handle, HWND_TOP, posX, posY, dspWidth, dspHeight, SWP_SHOWWINDOW)
 
+    def in_japanese(self, txt=''):
+        for s in txt:
+            name = unicodedata.name(s) 
+            if ('CJK UNIFIED' in name) \
+            or ('HIRAGANA' in name) \
+            or ('KATAKANA' in name):
+                return True
+        return False
+
     def sendKey(self, txt='', cr=False, lf=True, ):
+        copipe = True
+        try:
+            if (self.in_japanese(out_txt)==False):
+                copipe = False
+        except:
+            pass
+
         out_txt = txt
         if (cr==True) or (lf==True):
+            copipe = True
             out_txt = out_txt.replace('\r', '')
             out_txt = out_txt.replace('\n', '')
         if (cr==True):
             out_txt += '\r'
         if (lf==True):
             out_txt += '\n'
-        pyperclip.copy(out_txt)
-        pyautogui.hotkey('ctrl', 'v')
+
+        if (copipe == True):
+            pyperclip.copy(out_txt)
+            pyautogui.hotkey('ctrl', 'v')
+        else:
+            pyautogui.typewrite(out_txt)
+
         return True
 
     def notePad(self, txt='', cr=False, lf=True, ):
@@ -1068,6 +1091,8 @@ if (__name__ == '__main__'):
     qFunc.kill('sox')
 
     qFunc.notePad(txt=u'開始')
+    #qFunc.sendKey(txt=u'日本語')
+    #qFunc.sendKey(txt=u'abcdefg',lf=False)
 
     x,y = qFunc.getResolution('full')
     print('getResolution x,y = ', x, y, )
