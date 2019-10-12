@@ -104,7 +104,7 @@ venv.bak/
 .mypy_cache/
 
 .vscode
-x_cache/
+_cache/
 julius/model/dnn/logicalTri
 julius/model/dnn/logicalTri.bin
 temp/
