@@ -130,7 +130,7 @@ if (__name__ == '__main__'):
         text = u'プレイリスト 0'
         api_speech.loopback(text, 'ja,free,', )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         speechs = []
         speechs.append({'text':u'こんにちは。私はハンズフリーコントロール翻訳システムです。', 'wait':0, })
@@ -158,14 +158,14 @@ if (__name__ == '__main__'):
         text = u'A.P.I.一覧。'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
     if (check == 'all') or (check == u'翻訳') or (check == 'demo'):
 
         text = u'スペシャル。'
         api_speech.loopback(text, 'ja,free,', )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         if (check == 'all'):
             now2=datetime.datetime.now()
@@ -180,7 +180,7 @@ if (__name__ == '__main__'):
         text = u'コンテスト。'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         if (check == 'all'):
             now2=datetime.datetime.now()
@@ -193,12 +193,12 @@ if (__name__ == '__main__'):
             api_speech.loopback(text, lang, )
 
     if (check == 'all') or (check == u'翻訳'):
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'n.i.c.t.'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         if (check == 'all'):
             now2=datetime.datetime.now()
@@ -213,7 +213,7 @@ if (__name__ == '__main__'):
         text = u'アイビーエム。'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         if (check == 'all'):
             now2=datetime.datetime.now()
@@ -228,7 +228,7 @@ if (__name__ == '__main__'):
         text = u'マイクロソフト。'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         if (check == 'all'):
             now2=datetime.datetime.now()
@@ -243,7 +243,7 @@ if (__name__ == '__main__'):
         text = u'グーグル。'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         if (check == 'all'):
             now2=datetime.datetime.now()
@@ -258,7 +258,7 @@ if (__name__ == '__main__'):
         text = u'デフォルト。'
         api_speech.loopback(text, 'ja,free,', )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         if (check == 'all'):
             now2=datetime.datetime.now()
@@ -277,7 +277,7 @@ if (__name__ == '__main__'):
         text = u'言語は何ですか？'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'フランス語。'
         api_speech.loopback(text, lang, )
@@ -296,7 +296,7 @@ if (__name__ == '__main__'):
 
 
     if (check == 'all') or (check == u'ハンズフリー') or (check == 'demo'):
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         speechs = []
         speechs.append({'text':u'ハンズフリー制御', 'wait':0, })
@@ -312,18 +312,18 @@ if (__name__ == '__main__'):
         speechs.append({'text':u'それでは、ハンズフリー機能の自己テストを開始します。', 'wait':0, })
         qFunc.speech(speechs, '', )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'プレイリスト。一覧。'
         #api_speech.loopback(text, lang, )
         api_speech.loopback(text, 'ja,free,', )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'bgm'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'bgm。ストップ。'
         api_speech.loopback(text, lang, )
@@ -331,19 +331,19 @@ if (__name__ == '__main__'):
         text = u'三木市の天気。'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
     if (check == 'all') or (check == u'ハンズフリー'):
 
         text = u'姫路市のニュース。'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'岡山大学の住所を調べて？'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'ブラウザー。'
         api_speech.loopback(text, lang, )
@@ -351,7 +351,7 @@ if (__name__ == '__main__'):
         text = u'岡山大学。'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'ブラウザー。ストップ。'
         api_speech.loopback(text, lang, )
@@ -362,7 +362,7 @@ if (__name__ == '__main__'):
         text = u'富士山の高さは？'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'知識データベース終了。'
         api_speech.loopback(text, lang, )
@@ -373,7 +373,7 @@ if (__name__ == '__main__'):
         text = u'富士山の高さ知ってる？'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'雑談終了。'
         api_speech.loopback(text, lang, )
@@ -381,17 +381,17 @@ if (__name__ == '__main__'):
         text = u'ここの住所調べて？'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'ここから姫路城の経路調べて？'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         text = u'アミに電話して。'
         api_speech.loopback(text, lang, )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
     if (check == 'all') or (check == u'ハンズフリー') or (check == 'demo'):
 
@@ -403,7 +403,7 @@ if (__name__ == '__main__'):
 
 
     if (check == 'all') or (check == u'連携') or (check == 'demo'):
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         speechs = []
         speechs.append({'text':u'外部ＡＩ連携機能', 'wait':0, })
@@ -418,7 +418,7 @@ if (__name__ == '__main__'):
         speechs.append({'text':u'それでは、外部ＡＩ連携機能の自己テストを開始します。', 'wait':0, })
         qFunc.speech(speechs, '', )
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         speechtext  = u'ja,hoya,調子はどうですか？'
 
@@ -429,7 +429,7 @@ if (__name__ == '__main__'):
         smtspk.terminate()
         smtspk = None
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
     if (check == 'all') or (check == u'連携'):
 
@@ -442,7 +442,7 @@ if (__name__ == '__main__'):
         smtspk.terminate()
         smtspk = None
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         smart = 'google'
         smtspk= subprocess.Popen(['python', '_handsfree_smart_speaker.py', runMode, speechtext, smart, ], )
@@ -451,7 +451,7 @@ if (__name__ == '__main__'):
         smtspk.terminate()
         smtspk = None
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         smart = 'alexa'
         smtspk= subprocess.Popen(['python', '_handsfree_smart_speaker.py', runMode, speechtext, smart, ], )
@@ -460,7 +460,7 @@ if (__name__ == '__main__'):
         smtspk.terminate()
         smtspk = None
 
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
     if (check == 'all') or (check == u'連携') or (check == 'demo'):
         speechs = []
@@ -471,7 +471,7 @@ if (__name__ == '__main__'):
 
 
     if (check == 'all') or (check == 'demo'):
-        qFunc.busyWait(idolSec=5, maxWait=30, )
+        qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         speechs = []
         speechs.append({'text':u'自己診断と機能紹介が終わりました。', 'wait':0, })

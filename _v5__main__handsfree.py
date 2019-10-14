@@ -286,9 +286,9 @@ if __name__ == '__main__':
         qFunc.remove(qCtrl_control_chatting  )
         qFunc.remove(qCtrl_control_knowledge )
 
-        qFunc.busyReset_speech(False)
-        qFunc.busyReset_vision(False)
-        qFunc.busyReset_desktop(False)
+        qFunc.statusReset_speech(False)
+        qFunc.statusReset_vision(False)
+        qFunc.statusReset_desktop(False)
 
         # 起動条件
 
@@ -643,7 +643,7 @@ if __name__ == '__main__':
                 qFunc.speech(id=main_id, speechs=speechs, lang='', )
 
         # アイドリング
-        if  (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
+        if  (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
             time.sleep(1.00)
         time.sleep(0.25)
 

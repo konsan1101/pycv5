@@ -204,14 +204,14 @@ def proc_playvoice(cn_r, cn_s, ):
 
                                     if (onece == True):
                                         onece = False
-                                        qFunc.busySet(qBusy_s_play, True)
+                                        qFunc.statusSet(qBusy_s_play, True)
 
-                                        #qFunc.busyCheck(qBusy_s_ctrl, 3)
-                                        #qFunc.busyCheck(qBusy_s_STT , 3)
-                                        #qFunc.busyCheck(qBusy_s_TTS , 3)
-                                        #qFunc.busyCheck(qBusy_s_play, 3)
+                                        #qFunc.statusCheck(qBusy_s_ctrl, 3)
+                                        #qFunc.statusCheck(qBusy_s_STT , 3)
+                                        #qFunc.statusCheck(qBusy_s_TTS , 3)
+                                        #qFunc.statusCheck(qBusy_s_play, 3)
                                         if (micType == 'bluetooth') or (micGuide == 'on' or micGuide == 'sound'):
-                                            qFunc.busyCheck(qBusy_s_inp, 3)
+                                            qFunc.statusCheck(qBusy_s_inp, 3)
 
                                     if (runMode == 'debug') or (not micDev.isdigit()):
                                         qFunc.logOutput('play_voice:' + fileId + u' → ' + wrkfile[:-4])
@@ -244,7 +244,7 @@ def proc_playvoice(cn_r, cn_s, ):
                     cn_s.put([result, ''])
 
         playvoice_busy = False
-        qFunc.busySet(qBusy_s_play, False)
+        qFunc.statusSet(qBusy_s_play, False)
 
         if (cn_r.qsize() == 0):
             time.sleep(0.25)
@@ -294,13 +294,13 @@ def main_init(micDev, ):
         qFunc.makeDirs(qPath_rec,  False)
         qFunc.makeDirs(qPath_work, False)
 
-    qFunc.busySet(qBusy_s_ctrl,  False )
-    qFunc.busySet(qBusy_s_inp,   False )
-    qFunc.busySet(qBusy_s_wav,   False )
-    qFunc.busySet(qBusy_s_STT,   False )
-    qFunc.busySet(qBusy_s_TTS,   False )
-    qFunc.busySet(qBusy_s_TRA,   False )
-    qFunc.busySet(qBusy_s_play,  False )
+    qFunc.statusSet(qBusy_s_ctrl,  False )
+    qFunc.statusSet(qBusy_s_inp,   False )
+    qFunc.statusSet(qBusy_s_wav,   False )
+    qFunc.statusSet(qBusy_s_STT,   False )
+    qFunc.statusSet(qBusy_s_TTS,   False )
+    qFunc.statusSet(qBusy_s_TRA,   False )
+    qFunc.statusSet(qBusy_s_play,  False )
 
 
 
@@ -459,7 +459,7 @@ if (__name__ == '__main__'):
     except:
         pass
 
-    qFunc.busySet(qBusy_s_play, False)
+    qFunc.statusSet(qBusy_s_play, False)
 
     qFunc.logOutput('play_main_:bye!')
 

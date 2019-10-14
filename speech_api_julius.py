@@ -116,9 +116,9 @@ class proc_julius:
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
         self.fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(self.fileRun)
-        qFunc.remove(self.fileRdy)
-        qFunc.remove(self.fileBsy)
+        qFunc.statusSet(self.fileRun, False)
+        qFunc.statusSet(self.fileRdy, False)
+        qFunc.statusSet(self.fileBsy, False)
 
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
@@ -163,7 +163,7 @@ class proc_julius:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
-        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
+        qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
         # 初期設定
@@ -241,8 +241,8 @@ class proc_julius:
                 qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディー設定
-            if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
+            if (qFunc.statusCheck(self.fileRdy) == False):
+                qFunc.statusSet(self.fileRdy, True)
                 qFunc.logOutput(self.proc_id + ':ready', display=self.logDisp,)
 
             # 処理
@@ -256,7 +256,7 @@ class proc_julius:
                 # qFunc.logOutput(self.proc_id + ':' + str(inp_name) + ' , ' + str(inp_value), display=self.logDisp, )
 
                 # ビジー設定
-                if (not os.path.exists(self.fileBsy)):
+                if (qFunc.statusCheck(self.fileBsy) == False):
                     qFunc.txtsWrite(self.fileBsy, txts=[inp_value], encoding='utf-8', exclusive=False, mode='a', )
 
                 # lst ファイル用意
@@ -321,11 +321,11 @@ class proc_julius:
                 qFunc.txtsWrite(fileTxt, txts=[jultxt], encoding='utf-8', exclusive=True, mode='w', )
 
             # ビジー解除
-            qFunc.remove(self.fileBsy)
+            qFunc.statusSet(self.fileBsy, False)
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \
-            or (qFunc.busyCheck(qBusy_dev_mic, 0) == '_busy_'):
+            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
+            or (qFunc.statusCheck(qBusy_dev_mic, 0) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.25)
@@ -339,10 +339,10 @@ class proc_julius:
             julius.terminate()
 
             # ビジー解除
-            qFunc.remove(self.fileBsy)
+            qFunc.statusSet(self.fileBsy, False)
 
             # レディー解除
-            qFunc.remove(self.fileRdy)
+            qFunc.statusSet(self.fileRdy, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):
@@ -354,7 +354,7 @@ class proc_julius:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
-            qFunc.remove(self.fileRun)
+            qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 

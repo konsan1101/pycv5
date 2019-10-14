@@ -139,7 +139,7 @@ if (__name__ == '__main__'):
             if (i == 4):
                 smart = 'clova'
 
-        qFunc.busyWait(idolSec=2, maxWait=15, )
+        qFunc.statusWait_speech(idolSec=2, maxWait=15, )
 
         now=datetime.datetime.now()
         stamp=now.strftime('%Y%m%d.%H%M%S')

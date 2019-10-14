@@ -904,11 +904,11 @@ def proc_speech(cn_r, cn_s, ):
     speech_start = time.time()
 
     wBusyChange = False
-    wBusyCtrl   = ''
-    wBusyInput  = ''
-    wBusySTT    = ''
-    wBusyTTS    = ''
-    wBusyPlay   = ''
+    wBusyCtrl   = None
+    wBusyInput  = None
+    wBusySTT    = None
+    wBusyTTS    = None
+    wBusyPlay   = None
 
     while (True):
         speech_beat = time.time()
@@ -973,23 +973,23 @@ def proc_speech(cn_r, cn_s, ):
 
                 # 実行状況確認
                 wBusyChange = False
-                check = qFunc.busyCheck(qBusy_s_ctrl, 0)
+                check = qFunc.statusCheck(qBusy_s_ctrl, 0)
                 if (check != wBusyCtrl):
                     wBusyCtrl   = check
                     wBusyChange = True
-                check = qFunc.busyCheck(qBusy_s_inp, 0)
+                check = qFunc.statusCheck(qBusy_s_inp, 0)
                 if (check != wBusyInput):
                     wBusyInput  = check
                     wBusyChange = True
-                check = qFunc.busyCheck(qBusy_s_STT, 0)
+                check = qFunc.statusCheck(qBusy_s_STT, 0)
                 if (check != wBusySTT):
                     wBusySTT    = check
                     wBusyChange = True
-                check = qFunc.busyCheck(qBusy_s_TTS, 0)
+                check = qFunc.statusCheck(qBusy_s_TTS, 0)
                 if (check != wBusyTTS):
                     wBusyTTS    = check
                     wBusyChange = True
-                check = qFunc.busyCheck(qBusy_s_play, 0)
+                check = qFunc.statusCheck(qBusy_s_play, 0)
                 if (check != wBusyPlay):
                     wBusyPlay   = check
                     wBusyChange = True
@@ -997,23 +997,23 @@ def proc_speech(cn_r, cn_s, ):
                 if (wBusyChange == True):
                     texts=[]
                     texts.append('[Speech Status]')
-                    if (wBusyCtrl == '_busy_'):
+                    if (wBusyCtrl == True):
                         texts.append(' Ctrl  : Busy!_')
                     else:
                         texts.append(' Ctrl  : ______')
-                    if (wBusyInput == '_busy_'):
+                    if (wBusyInput == True):
                         texts.append(' Input : Ready_')
                     else:
                         texts.append(' Input : ______')
-                    if (wBusySTT == '_busy_'):
+                    if (wBusySTT == True):
                         texts.append(' STT   : Busy!_')
                     else:
                         texts.append(' STT   : ______')
-                    if (wBusyTTS == '_busy_'):
+                    if (wBusyTTS == True):
                         texts.append(' TTS   : Busy!_')
                     else:
                         texts.append(' TTS   : ______')
-                    if (wBusyPlay == '_busy_'):
+                    if (wBusyPlay == True):
                         texts.append(' Play  : Busy!_')
                     else:
                         texts.append(' Play  : ______')

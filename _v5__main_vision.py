@@ -246,9 +246,9 @@ class main_vision:
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
         self.fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(self.fileRun)
-        qFunc.remove(self.fileRdy)
-        qFunc.remove(self.fileBsy)
+        qFunc.statusSet(self.fileRun, False)
+        qFunc.statusSet(self.fileRdy, False)
+        qFunc.statusSet(self.fileBsy, False)
 
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
@@ -293,7 +293,7 @@ class main_vision:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
-        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
+        qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
         # 初期設定
@@ -692,8 +692,8 @@ class main_vision:
                     qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # レディ設定
-            if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
+            if (qFunc.statusCheck(self.fileRdy) == False):
+                qFunc.statusSet(self.fileRdy, True)
 
             # ステータス応答
             if (inp_name.lower() == '_status_'):
@@ -873,7 +873,7 @@ class main_vision:
 
             # シャッター
             if (control == '_shutter_'):
-                if (qFunc.busyCheck(qBusy_dev_cam, 0) != '_busy_'):
+                if (qFunc.statusCheck(qBusy_dev_cam, 0) == False):
 
                     # 撮影ログ
                     logset = False
@@ -916,7 +916,7 @@ class main_vision:
                         if (res_name == '[img]'):
                             main_img = res_value.copy()
 
-                            if (qFunc.busyCheck(qBusy_dev_cam, 0) != '_busy_'):
+                            if (qFunc.statusCheck(qBusy_dev_cam, 0) == False):
 
                                 # 画像識別（ＱＲ）
                                 if ((time.time() - cvreader_last_put) >= 1):
@@ -1071,7 +1071,7 @@ class main_vision:
                 if (not txt2img_thread is None):
 
                     # ステータス状況
-                    if  (qFunc.busyCheck(qBusy_d_rec , 0) != '_busy_') \
+                    if  (qFunc.statusCheck(qBusy_d_rec , 0) == False) \
                     and ((self.runMode == 'debug') \
                      or  (self.runMode == 'handsfree') \
                      or  (self.runMode == 'hud')):
@@ -1144,8 +1144,8 @@ class main_vision:
                                 cn_s.put([out_name, out_value])
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \
-            or (qFunc.busyCheck(qBusy_dev_cam, 0) == '_busy_'):
+            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
+            or (qFunc.statusCheck(qBusy_dev_cam, 0) == True):
                 time.sleep(1.00)
             time.sleep(0.05)
 
@@ -1155,7 +1155,7 @@ class main_vision:
         if (True):
 
             # レディ解除
-            qFunc.remove(self.fileRdy)
+            qFunc.statusSet(self.fileRdy, False)
 
             # スレッド停止
             if (not controlv_thread is None):
@@ -1229,7 +1229,7 @@ class main_vision:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
-            qFunc.remove(self.fileRun)
+            qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
@@ -1571,11 +1571,11 @@ if __name__ == '__main__':
     qFunc.makeDirs(qPath_v_msg,    True )
     qFunc.makeDirs(qPath_d_prtscn, True )
 
-    qFunc.busyReset_vision(False)
+    qFunc.statusReset_vision(False)
 
     if (runMode == 'background'):
-        qFunc.busySet(qBusy_dev_cam, True)
-        qFunc.busySet(qBusy_dev_dsp, True)
+        qFunc.statusSet(qBusy_dev_cam, True)
+        qFunc.statusSet(qBusy_dev_dsp, True)
 
     display_img = None
     display = None
@@ -1617,7 +1617,8 @@ if __name__ == '__main__':
                 control = txt
 
         # ディスプレイ設定
-        if (display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) != '_busy_'): 
+        if  (display is None) \
+        and (qFunc.statusCheck(qBusy_dev_dsp, 0) == False): 
             cv2.namedWindow('Display', cv2.WINDOW_NORMAL)
             #cv2.namedWindow('Display', cv2.WINDOW_AUTOSIZE)
             cv2.moveWindow( 'Display', 0, 0)
@@ -1627,7 +1628,8 @@ if __name__ == '__main__':
             cv2.waitKey(1)
             display = True
             show_onece = True
-        if (not display is None) and (qFunc.busyCheck(qBusy_dev_dsp, 0) == '_busy_'): 
+        if  (not display is None) \
+        and (qFunc.statusCheck(qBusy_dev_dsp, 0) == True): 
             cv2.destroyWindow('Display')
             cv2.waitKey(1)
             display = None
@@ -1748,12 +1750,12 @@ if __name__ == '__main__':
             or (control == '_cancel_') \
             or (control == '_close_'):
                 qFunc.txtsWrite(qCtrl_result_screen, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
-                qFunc.busySet(qBusy_dev_cam, True)
-                qFunc.busySet(qBusy_dev_dsp, True)
+                qFunc.statusSet(qBusy_dev_cam, True)
+                qFunc.statusSet(qBusy_dev_dsp, True)
 
         # アイドリング
-        if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \
-        or (qFunc.busyCheck(qBusy_dev_cam, 0) == '_busy_'):
+        if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
+        or (qFunc.statusCheck(qBusy_dev_cam, 0) == True):
             time.sleep(1.00)
         time.sleep(0.02)
 

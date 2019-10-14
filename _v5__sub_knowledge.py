@@ -138,9 +138,9 @@ class main_class:
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
         self.fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(self.fileRun)
-        qFunc.remove(self.fileRdy)
-        qFunc.remove(self.fileBsy)
+        qFunc.statusSet(self.fileRun, False)
+        qFunc.statusSet(self.fileRdy, False)
+        qFunc.statusSet(self.fileBsy, False)
 
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
@@ -185,7 +185,7 @@ class main_class:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
-        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
+        qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
         # 初期設定
@@ -246,8 +246,8 @@ class main_class:
                 qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディー設定
-            if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
+            if (qFunc.statusCheck(self.fileRdy) == False):
+                qFunc.statusSet(self.fileRdy, True)
 
             # ステータス応答
             if (inp_name.lower() == '_status_'):
@@ -260,7 +260,7 @@ class main_class:
                 self.sub_proc(control, )
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
+            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)
@@ -271,10 +271,10 @@ class main_class:
         if (True):
 
             # レディー解除
-            qFunc.remove(self.fileRdy)
+            qFunc.statusSet(self.fileRdy, False)
 
             # ビジー解除
-            qFunc.remove(self.fileBsy)
+            qFunc.statusSet(self.fileBsy, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):
@@ -286,7 +286,7 @@ class main_class:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
-            qFunc.remove(self.fileRun)
+            qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
@@ -393,7 +393,7 @@ if __name__ == '__main__':
                 qFunc.txtsWrite(qCtrl_control_self ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # アイドリング
-        if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
+        if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
             time.sleep(1.00)
         time.sleep(0.50)
 

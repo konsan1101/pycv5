@@ -18,8 +18,6 @@ import time
 import codecs
 import glob
 
-import multiprocessing
-
 
 
 # インターフェース
@@ -439,9 +437,9 @@ class proc_recorder:
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
         self.fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(self.fileRun)
-        qFunc.remove(self.fileRdy)
-        qFunc.remove(self.fileBsy)
+        qFunc.statusSet(self.fileRun, False)
+        qFunc.statusSet(self.fileRdy, False)
+        qFunc.statusSet(self.fileBsy, False)
 
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
@@ -486,7 +484,7 @@ class proc_recorder:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
-        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
+        qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
         # 初期設定
@@ -518,8 +516,8 @@ class proc_recorder:
                 qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
-            if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
+            if (qFunc.statusCheck(self.fileRdy) == False):
+                qFunc.statusSet(self.fileRdy, True)
 
             # 制限時間、自動停止
             for i in range(1, self.rec_max+1):
@@ -557,7 +555,7 @@ class proc_recorder:
                 self.sub_proc(inp_value, )
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
+            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.25)
@@ -570,14 +568,14 @@ class proc_recorder:
         if (True):
 
             # レディ解除
-            qFunc.remove(self.fileRdy)
+            qFunc.statusSet(self.fileRdy, False)
 
             # 記録終了
             self.sub_proc(u'記録終了')
             time.sleep(15.0)
 
             # ビジー解除
-            qFunc.remove(self.fileBsy)
+            qFunc.statusSet(self.fileBsy, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):
@@ -589,7 +587,7 @@ class proc_recorder:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
-            qFunc.remove(self.fileRun)
+            qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
@@ -649,10 +647,10 @@ class proc_recorder:
         if (index != 0):
 
             # ビジー設定
-            if (not os.path.exists(self.fileBsy)):
-                qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
+            if (qFunc.statusCheck(self.fileBsy) == False):
+                qFunc.statusSet(self.fileBsy, True)
                 if (str(self.id) == '0'):
-                    qFunc.busySet(qBusy_d_rec, True)
+                    qFunc.statusSet(qBusy_d_rec, True)
 
             # メッセージ
             if (proc_text.lower() == '_rec_start_') \
@@ -921,9 +919,9 @@ class proc_recorder:
             qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # ビジー解除
-            qFunc.remove(self.fileBsy)
+            qFunc.statusSet(self.fileBsy, False)
             if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_d_rec, False)
+                qFunc.statusSet(qBusy_d_rec, False)
 
         # 後処理
         if (rec_filev != ''):
@@ -939,13 +937,6 @@ class proc_recorder:
                 ))
             self.batch_thread[self.batch_index].setDaemon(True)
             self.batch_thread[self.batch_index].start()
-
-            # multiprocessing
-            #self.batch_thread[self.batch_index] = multiprocessing.Process(target=movie_proc, args=(
-            #    self.proc_id, self.batch_index,
-            #    rec_filev, rec_namev, rec_filea, rec_namea,
-            #    ))
-            #self.batch_thread[self.batch_index].start()
 
             self.batch_index = (self.batch_index + 1) % self.batch_max
 
@@ -974,7 +965,7 @@ if __name__ == '__main__':
 
     # 初期設定
     qFunc.remove(qCtrl_control_desktop)
-    qFunc.busyReset_desktop(False)
+    qFunc.statusReset_desktop(False)
 
     # パラメータ
     runMode = 'debug'

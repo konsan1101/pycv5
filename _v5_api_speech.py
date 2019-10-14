@@ -18,8 +18,6 @@ import time
 import codecs
 import glob
 
-import multiprocessing
-
 
 
 # 出力インターフェース
@@ -703,7 +701,8 @@ def speech_batch(runMode, micDev,
 
 
 
-        if (qFunc.busyCheck(qBusy_dev_com,  0) == '_busy_') or (qApiInp == 'julius'):
+        if (qFunc.statusCheck(qBusy_dev_com,  0) == True) \
+        or (qApiInp == 'julius'):
 
             api = 'julius'
             waitfile = qPath_s_jul + fileId + '.txt'
@@ -721,7 +720,8 @@ def speech_batch(runMode, micDev,
 
 
 
-        if (qFunc.busyCheck(qBusy_dev_com,  0) != '_busy_') and (qApiInp != 'julius'):
+        if  (qFunc.statusCheck(qBusy_dev_com,  0) == False) \
+        and (qApiInp != 'julius'):
 
             soxMsg1  = ''
             soxMsg2  = ''
@@ -1564,17 +1564,6 @@ class api_speech_class:
                 ))
             self.speech_proc.setDaemon(True)
             self.speech_proc.start()
-
-        # multiprocessing
-        #if (sync != True):
-        #    self.speech_proc = multiprocessing.Process(target=speech_batch, args=(
-        #        runMode, micDev,
-        #        qApiInp, qApiTrn, qApiOut, qLangInp, qLangTrn, qLangTxt, qLangOut,
-        #        procId, fileId,
-        #        inpInput, inpOutput, trnInput, trnOutput, txtInput, txtOutput, outInput, outOutput,
-        #        inpPlay, txtPlay, outPlay,
-        #        ))
-        #    self.speech_proc.start()
 
         #if (sync == True):
         #    self.speech_proc.join()

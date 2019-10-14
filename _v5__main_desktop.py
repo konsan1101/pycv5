@@ -149,9 +149,9 @@ class main_desktop:
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
         self.fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(self.fileRun)
-        qFunc.remove(self.fileRdy)
-        qFunc.remove(self.fileBsy)
+        qFunc.statusSet(self.fileRun, False)
+        qFunc.statusSet(self.fileRdy, False)
+        qFunc.statusSet(self.fileBsy, False)
 
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
@@ -196,7 +196,7 @@ class main_desktop:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
-        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
+        qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
         # 初期設定
@@ -390,8 +390,8 @@ class main_desktop:
                     qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             # レディー設定
-            if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
+            if (qFunc.statusCheck(self.fileRdy) == False):
+                qFunc.statusSet(self.fileRdy, True)
 
             # ステータス応答
             if (inp_name.lower() == '_status_'):
@@ -469,10 +469,10 @@ class main_desktop:
                     res_data  = recorder_thread.get()
 
             # ビジー解除
-            qFunc.remove(self.fileBsy)
+            qFunc.statusSet(self.fileBsy, False)
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
+            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)
@@ -483,7 +483,7 @@ class main_desktop:
         if (True):
 
             # レディー解除
-            qFunc.remove(self.fileRdy)
+            qFunc.statusSet(self.fileRdy, False)
 
             # スレッド停止
             if (not controld_thread is None):
@@ -516,7 +516,7 @@ class main_desktop:
             qFunc.kill('ffplay')
 
             # ビジー解除
-            qFunc.remove(self.fileBsy)
+            qFunc.statusSet(self.fileBsy, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):
@@ -528,7 +528,7 @@ class main_desktop:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
-            qFunc.remove(self.fileRun)
+            qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
@@ -585,7 +585,7 @@ if __name__ == '__main__':
     qFunc.makeDirs(qPath_d_movie,  True )
     qFunc.makeDirs(qPath_d_upload, True )
 
-    qFunc.busyReset_desktop(False)
+    qFunc.statusReset_desktop(False)
 
     # 起動
 
@@ -631,7 +631,7 @@ if __name__ == '__main__':
                 break
 
         # アイドリング
-        if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_'):
+        if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
             time.sleep(1.00)
         time.sleep(0.25)
 

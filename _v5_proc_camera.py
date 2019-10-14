@@ -141,9 +141,9 @@ class proc_camera:
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
         self.fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(self.fileRun)
-        qFunc.remove(self.fileRdy)
-        qFunc.remove(self.fileBsy)
+        qFunc.statusSet(self.fileRun, False)
+        qFunc.statusSet(self.fileRdy, False)
+        qFunc.statusSet(self.fileBsy, False)
 
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
@@ -188,7 +188,7 @@ class proc_camera:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
-        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
+        qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
         # 初期設定
@@ -230,7 +230,8 @@ class proc_camera:
 
             # デバイス設定
             if (self.camDev.isdigit()):
-                if (capture is None) and (qFunc.busyCheck(qBusy_dev_cam, 0) != '_busy_'): 
+                if  (capture is None) \
+                and (qFunc.statusCheck(qBusy_dev_cam, 0) == False): 
 
                     if (os.name != 'nt'):
                         capture = cv2.VideoCapture(int(self.camDev))
@@ -247,25 +248,26 @@ class proc_camera:
                         pass
 
                     # ビジー設定 (ready)
-                    if (not os.path.exists(self.fileBsy)):
-                        qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
+                    if (qFunc.statusCheck(self.fileBsy) == False):
+                        qFunc.statusSet(self.fileBsy, True)
                         if (str(self.id) == '0'):
-                            qFunc.busySet(qBusy_v_inp, True)
+                            qFunc.statusSet(qBusy_v_inp, True)
 
-                if (not capture is None) and (qFunc.busyCheck(qBusy_dev_cam, 0) == '_busy_'): 
+                if  (not capture is None) \
+                and (qFunc.statusCheck(qBusy_dev_cam, 0) == True): 
                     capture.release()
                     capture = None
 
                     # ビジー解除 (!ready)
-                    qFunc.remove(self.fileBsy)
+                    qFunc.statusSet(self.fileBsy, False)
                     if (str(self.id) == '0'):
-                        qFunc.busySet(qBusy_v_inp, False)
+                        qFunc.statusSet(qBusy_v_inp, False)
 
             # レディ設定
             if (not capture is None) and (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
+                qFunc.statusSet(self.fileRdy, True)
             if (capture is None) and (os.path.exists(self.fileRdy)):
-                qFunc.remove(self.fileRdy)
+                qFunc.statusSet(self.fileRdy, False)
 
             # ステータス応答
             if (inp_name.lower() == '_status_'):
@@ -359,7 +361,7 @@ class proc_camera:
                     if (float(self.camSquare) != 0):
                         if (self.runMode == 'debug') \
                         or (self.runMode == 'camera'):
-                            if  (qFunc.busyCheck(qBusy_d_rec , 0) != '_busy_'):
+                            if  (qFunc.statusCheck(qBusy_d_rec , 0) == False):
 
                                 square_contours = []
                                 gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
@@ -482,8 +484,8 @@ class proc_camera:
 
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \
-            or (qFunc.busyCheck(qBusy_dev_cam, 0) == '_busy_'):
+            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
+            or (qFunc.statusCheck(qBusy_dev_cam, 0) == True):
                 time.sleep(1.00)
             time.sleep((1/int(self.camFps))/2)
 
@@ -493,7 +495,7 @@ class proc_camera:
         if (True):
 
             # レディ解除
-            qFunc.remove(self.fileRdy)
+            qFunc.statusSet(self.fileRdy, False)
 
             # デバイス開放
             if (not capture is None): 
@@ -501,9 +503,9 @@ class proc_camera:
                 capture = None
 
             # ビジー解除 (!ready)
-            qFunc.remove(self.fileBsy)
+            qFunc.statusSet(self.fileBsy, False)
             if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_v_inp, False)
+                qFunc.statusSet(qBusy_v_inp, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):
@@ -515,7 +517,7 @@ class proc_camera:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
-            qFunc.remove(self.fileRun)
+            qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 

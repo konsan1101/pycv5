@@ -129,9 +129,9 @@ class proc_adintool:
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
         self.fileBsy = qPath_work + self.proc_id + '.bsy'
-        qFunc.remove(self.fileRun)
-        qFunc.remove(self.fileRdy)
-        qFunc.remove(self.fileBsy)
+        qFunc.statusSet(self.fileRun, False)
+        qFunc.statusSet(self.fileRdy, False)
+        qFunc.statusSet(self.fileBsy, False)
 
         self.proc_s = queue.Queue()
         self.proc_r = queue.Queue()
@@ -176,7 +176,7 @@ class proc_adintool:
     def main_proc(self, cn_r, cn_s, ):
         # ログ
         qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
-        qFunc.txtsWrite(self.fileRun, txts=['run'], encoding='utf-8', exclusive=False, mode='a', )
+        qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
         # 初期設定
@@ -222,8 +222,8 @@ class proc_adintool:
                 qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
-            if (not os.path.exists(self.fileRdy)):
-                qFunc.txtsWrite(self.fileRdy, txts=['_ready_'], encoding='utf-8', exclusive=False, mode='a', )
+            if (qFunc.statusCheck(self.fileRdy) == False):
+                qFunc.statusSet(self.fileRdy, True)
 
             # ステータス応答
             if (inp_name.lower() == '_status_'):
@@ -245,17 +245,17 @@ class proc_adintool:
 
             # on ?
             sw = 'off'
-            if  (qFunc.busyCheck(qBusy_dev_mic, 1) != '_busy_'):
+            if  (qFunc.statusCheck(qBusy_dev_mic, 1) == False):
                 if (self.micDev.isdigit()):
                     if (self.micType == 'usb'):
                             sw = 'on'
                     else:
-                        if  (qFunc.busyCheck(qBusy_s_ctrl,  1) != '_busy_') \
-                        and (qFunc.busyCheck(qBusy_s_wav,   1) != '_busy_') \
-                        and (qFunc.busyCheck(qBusy_s_STT,   1) != '_busy_') \
-                        and (qFunc.busyCheck(qBusy_s_TTS,   1) != '_busy_') \
-                        and (qFunc.busyCheck(qBusy_s_TRA,   1) != '_busy_') \
-                        and (qFunc.busyCheck(qBusy_s_play,  1) != '_busy_'):
+                        if  (qFunc.statusCheck(qBusy_s_ctrl,  1) == False) \
+                        and (qFunc.statusCheck(qBusy_s_wav,   1) == False) \
+                        and (qFunc.statusCheck(qBusy_s_STT,   1) == False) \
+                        and (qFunc.statusCheck(qBusy_s_TTS,   1) == False) \
+                        and (qFunc.statusCheck(qBusy_s_TRA,   1) == False) \
+                        and (qFunc.statusCheck(qBusy_s_play,  1) == False):
                             sw = 'on'
 
             # off -> on
@@ -269,10 +269,10 @@ class proc_adintool:
                         self.proc_seq = 1
 
                     # ビジー設定 (ready)
-                    if (not os.path.exists(self.fileBsy)):
-                        qFunc.txtsWrite(self.fileBsy, txts=['_busy_'], encoding='utf-8', exclusive=False, mode='a', )
+                    if (qFunc.statusCheck(self.fileBsy) == False):
+                        qFunc.statusSet(self.fileBsy, True)
                     if (str(self.id) == '0'):
-                        qFunc.busySet(qBusy_s_inp, True)
+                        qFunc.statusSet(qBusy_s_inp, True)
 
                     # ガイド音
                     if (self.micGuide == 'on' or self.micGuide == 'sound'):
@@ -296,21 +296,21 @@ class proc_adintool:
 
             # off, accept ?
             sw = 'on'
-            if (qFunc.busyCheck(qBusy_dev_mic, 0) == '_busy_'):
+            if (qFunc.statusCheck(qBusy_dev_mic, 0) == True):
                     sw = 'off'
             if (self.micType == 'bluetooth'):
                 #if ((self.runMode == 'debug') \
                 # or (self.runMode == 'handsfree') \
                 # or (self.runMode == 'translator')) \                
-                    # if ((qFunc.busyCheck(qBusy_s_wav,   0) == '_busy_') \
-                    #  or (qFunc.busyCheck(qBusy_s_STT,   0) == '_busy_') \
-                    #  or (qFunc.busyCheck(qBusy_s_TTS,   0) == '_busy_') \
-                    #  or (qFunc.busyCheck(qBusy_s_TRA,   0) == '_busy_')):
+                    # if ((qFunc.statusCheck(qBusy_s_wav,   0) == True) \
+                    #  or (qFunc.statusCheck(qBusy_s_STT,   0) == True) \
+                    #  or (qFunc.statusCheck(qBusy_s_TTS,   0) == True) \
+                    #  or (qFunc.statusCheck(qBusy_s_TRA,   0) == True)):
                     #     sw = 'off'
-                #if  (qFunc.busyCheck(qBusy_s_wav,   0) == '_busy_') \
-                # or (qFunc.busyCheck(qBusy_s_play,  0) == '_busy_'):
+                #if  (qFunc.statusCheck(qBusy_s_wav,   0) == True) \
+                # or (qFunc.statusCheck(qBusy_s_play,  0) == True):
                 #    sw = 'off'
-                if  (qFunc.busyCheck(qBusy_s_play,  0) == '_busy_'):
+                if  (qFunc.statusCheck(qBusy_s_play,  0) == True):
                     sw = 'off'
             if (not adintool_exe is None):
                 files = glob.glob(self.path + '*')
@@ -338,9 +338,9 @@ class proc_adintool:
                         adintool_exe = None
 
                     # ビジー解除 (!ready)
-                    qFunc.remove(self.fileBsy)
+                    qFunc.statusSet(self.fileBsy, False)
                     if (str(self.id) == '0'):
-                        qFunc.busySet(qBusy_s_inp, False)
+                        qFunc.statusSet(qBusy_s_inp, False)
 
                 # ガイド音
                 time.sleep(0.50)
@@ -353,8 +353,8 @@ class proc_adintool:
 
 
             # アイドリング
-            if (qFunc.busyCheck(qBusy_dev_cpu, 0) == '_busy_') \
-            or (qFunc.busyCheck(qBusy_dev_mic, 0) == '_busy_'):
+            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
+            or (qFunc.statusCheck(qBusy_dev_mic, 0) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.25)
@@ -367,7 +367,7 @@ class proc_adintool:
         if (True):
 
             # レディ解除
-            qFunc.remove(self.fileRdy)
+            qFunc.statusSet(self.fileRdy, False)
 
             # adintool 終了
             if (not adintool_gui is None):
@@ -379,9 +379,9 @@ class proc_adintool:
                 adintool_exe = None
 
             # ビジー解除 (!ready)
-            qFunc.remove(self.fileBsy)
+            qFunc.statusSet(self.fileBsy, False)
             if (str(self.id) == '0'):
-                qFunc.busySet(qBusy_s_inp, False)
+                qFunc.statusSet(qBusy_s_inp, False)
 
             # ガイド音
             if (self.micGuide != 'off'):
@@ -397,7 +397,7 @@ class proc_adintool:
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
-            qFunc.remove(self.fileRun)
+            qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
@@ -414,7 +414,7 @@ if __name__ == '__main__':
 
     # 初期設定
     qFunc.remove(qCtrl_control_speech)
-    qFunc.busyReset_speech(False)
+    qFunc.statusReset_speech(False)
 
     qFunc.kill('adintool')
     qFunc.kill('adintool-gui')
