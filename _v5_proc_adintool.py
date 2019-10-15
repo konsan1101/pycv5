@@ -123,7 +123,7 @@ class proc_adintool:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -144,7 +144,7 @@ class proc_adintool:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -415,7 +415,7 @@ if __name__ == '__main__':
 
     # 開始
     adintool_thread = proc_adintool('adintool', '0', runMode, )
-    adintool_thread.start()
+    adintool_thread.begin()
 
 
 
@@ -467,7 +467,7 @@ if __name__ == '__main__':
 
 
     # 終了
-    adintool_thread.stop()
+    adintool_thread.abort()
     del adintool_thread
 
     qFunc.kill('adintool')

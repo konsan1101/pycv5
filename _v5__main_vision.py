@@ -240,7 +240,7 @@ class main_vision:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -261,7 +261,7 @@ class main_vision:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=20, ):
+    def abort(self, waitMax=20, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -471,14 +471,14 @@ class main_vision:
                                     runMode=self.runMode,
                                     camDev=self.cam1Dev,
                                     )
-                controlv_thread.start()
+                controlv_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「カメラ制御」の機能が有効になりました。', 'wait':0, })
 
             if (not controlv_thread is None) and (controlv_switch != 'on'):
-                controlv_thread.stop()
+                controlv_thread.abort()
                 del controlv_thread
                 controlv_thread = None
 
@@ -488,7 +488,7 @@ class main_vision:
                                     runMode=self.runMode,
                                     dspMode=self.dspMode, dspStretch=self.dspStretch, dspRotate=self.dspRotate, dspZoom=self.dspZoom,
                                     )
-                overlay_thread.start()
+                overlay_thread.begin()
 
                 overlay_thread.put(['_flag_camzoom_'   , flag_camzoom    ])
                 overlay_thread.put(['_flag_dspzoom_'   , flag_dspzoom    ])
@@ -502,7 +502,7 @@ class main_vision:
                     speechs.append({ 'text':u'「画面表示」の機能が有効になりました。', 'wait':0, })
 
             if (not overlay_thread is None) and (overlay_switch != 'on'):
-                overlay_thread.stop()
+                overlay_thread.abort()
                 del overlay_thread
                 overlay_thread = None
 
@@ -512,14 +512,14 @@ class main_vision:
                                     runMode=self.runMode,
                                     camDev=self.cam1Dev, camMode=self.cam1Mode, camStretch=self.cam1Stretch, camRotate=self.cam1Rotate, camZoom=self.cam1Zoom, camFps='5',
                                     )
-                camera_thread1.start()
+                camera_thread1.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「カメラ１入力」の機能が有効になりました。', 'wait':0, })
 
             if (not camera_thread1 is None) and (camera_switch1 != 'on'):
-                camera_thread1.stop()
+                camera_thread1.abort()
                 del camera_thread1
                 camera_thread1 = None
 
@@ -529,14 +529,14 @@ class main_vision:
                                     runMode=self.runMode,
                                     camDev=self.cam2Dev, camMode=self.cam2Mode, camStretch=self.cam2Stretch, camRotate=self.cam2Rotate, camZoom=self.cam2Zoom, camFps='2',
                                     )
-                camera_thread2.start()
+                camera_thread2.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「カメラ２入力」の機能が有効になりました。', 'wait':0, })
 
             if (not camera_thread2 is None) and (camera_switch2 != 'on'):
-                camera_thread2.stop()
+                camera_thread2.abort()
                 del camera_thread2
                 camera_thread2 = None
 
@@ -545,7 +545,7 @@ class main_vision:
                                     name='txt2img', id='0',
                                     runMode=self.runMode,
                                     )
-                txt2img_thread.start()
+                txt2img_thread.begin()
 
                 txt2img_thread.put(['_flag_background_', flag_background ])
                 txt2img_thread.put(['_flag_blackwhite_', flag_blackwhite ])
@@ -555,7 +555,7 @@ class main_vision:
                     speechs.append({ 'text':u'「認識文字の表示」の機能が有効になりました。', 'wait':0, })
 
             if (not txt2img_thread is None) and (txt2img_switch != 'on'):
-                txt2img_thread.stop()
+                txt2img_thread.abort()
                 del txt2img_thread
                 txt2img_thread = None
 
@@ -565,14 +565,14 @@ class main_vision:
                                     runMode=self.runMode, 
                                     reader=self.codeRead,
                                     )
-                cvreader_thread.start()
+                cvreader_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「ＱＲコード認識」の機能が有効になりました。', 'wait':0, })
 
             if (not cvreader_thread is None) and (cvreader_switch != 'on'):
-                cvreader_thread.stop()
+                cvreader_thread.abort()
                 del cvreader_thread
                 cvreader_thread = None
 
@@ -582,14 +582,14 @@ class main_vision:
                                     runMode=self.runMode, 
                                     casName=self.casName1, procMode='640x480',
                                     )
-                cvdetect_thread1.start()
+                cvdetect_thread1.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「オープンＣＶ画像認識」の機能が有効になりました。', 'wait':0, })
 
             if (not cvdetect_thread1 is None) and (cvdetect_switch1 != 'on'):
-                cvdetect_thread1.stop()
+                cvdetect_thread1.abort()
                 del cvdetect_thread1
                 cvdetect_thread1 = None
 
@@ -599,10 +599,10 @@ class main_vision:
                                     runMode=self.runMode, 
                                     casName=self.casName2, procMode='640x480',
                                     )
-                cvdetect_thread2.start()
+                cvdetect_thread2.begin()
 
             if (not cvdetect_thread2 is None) and (cvdetect_switch2 != 'on'):
-                cvdetect_thread2.stop()
+                cvdetect_thread2.abort()
                 del cvdetect_thread2
                 cvdetect_thread2 = None
 
@@ -612,14 +612,14 @@ class main_vision:
                                     runMode=self.runMode, 
                                     procMode='320x240',
                                     )
-                cv2dnn_yolo_thread.start()
+                cv2dnn_yolo_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「画像認識（ｙｏｌｏ）」の機能が有効になりました。', 'wait':0, })
 
             if (not cv2dnn_yolo_thread is None) and (cv2dnn_yolo_switch != 'on'):
-                cv2dnn_yolo_thread.stop()
+                cv2dnn_yolo_thread.abort()
                 del cv2dnn_yolo_thread
                 cv2dnn_yolo_thread = None
 
@@ -630,7 +630,7 @@ class main_vision:
                                         runMode=self.runMode, 
                                         procMode='320x240',
                                         )
-                    cv2dnn_ssd_thread[i].start()
+                    cv2dnn_ssd_thread[i].begin()
 
                     if (i == 0):
                         if (self.runMode == 'debug') \
@@ -639,7 +639,7 @@ class main_vision:
 
             for i in range(cv2dnn_ssd_max):
                 if (not cv2dnn_ssd_thread[i] is None) and (cv2dnn_ssd_switch != 'on'):
-                    cv2dnn_ssd_thread[i].stop()
+                    cv2dnn_ssd_thread[i].abort()
                     del cv2dnn_ssd_thread[i]
                     cv2dnn_ssd_thread[i] = None
 
@@ -649,14 +649,14 @@ class main_vision:
                                     runMode=self.runMode,
                                     camDev=self.cam1Dev,
                                     )
-                vin2jpg_thread.start()
+                vin2jpg_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「写真認識」の機能が有効になりました。', 'wait':0, })
 
             if (not vin2jpg_thread is None) and (vin2jpg_switch != 'on'):
-                vin2jpg_thread.stop()
+                vin2jpg_thread.abort()
                 del vin2jpg_thread
                 vin2jpg_thread = None
 
@@ -666,14 +666,14 @@ class main_vision:
                                     runMode=self.runMode,
                                     camDev=self.cam1Dev,
                                     )
-                coreCV_thread.start()
+                coreCV_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「ＡＩ画像認識」の機能が有効になりました。', 'wait':0, })
 
             if (not coreCV_thread is None) and (coreCV_switch != 'on'):
-                coreCV_thread.stop()
+                coreCV_thread.abort()
                 del coreCV_thread
                 coreCV_thread = None
 
@@ -1159,63 +1159,63 @@ class main_vision:
 
             # スレッド停止
             if (not controlv_thread is None):
-                controlv_thread.stop()
+                controlv_thread.abort()
                 del controlv_thread
                 controlv_thread = None
 
             if (not overlay_thread is None):
-                overlay_thread.stop()
+                overlay_thread.abort()
                 del overlay_thread
                 overlay_thread = None
 
             if (not camera_thread1 is None):
-                camera_thread1.stop()
+                camera_thread1.abort()
                 del camera_thread1
                 camera_thread1 = None
 
             if (not camera_thread2 is None):
-                camera_thread2.stop()
+                camera_thread2.abort()
                 del camera_thread2
                 camera_thread2 = None
 
             if (not txt2img_thread is None):
-                txt2img_thread.stop()
+                txt2img_thread.abort()
                 del txt2img_thread
                 txt2img_thread = None
 
             if (not cvreader_thread is None):
-                cvreader_thread.stop()
+                cvreader_thread.abort()
                 del cvreader_thread
                 cvreader_thread = None
 
             if (not cvdetect_thread1 is None):
-                cvdetect_thread1.stop()
+                cvdetect_thread1.abort()
                 del cvdetect_thread1
                 cvdetect_thread1 = None
 
             if (not cvdetect_thread2 is None):
-                cvdetect_thread2.stop()
+                cvdetect_thread2.abort()
                 del cvdetect_thread2
                 cvdetect_thread2 = None
 
             if (not cv2dnn_yolo_thread is None):
-                cv2dnn_yolo_thread.stop()
+                cv2dnn_yolo_thread.abort()
                 del cv2dnn_yolo_thread
                 cv2dnn_yolo_thread = None
 
             for i in range(cv2dnn_ssd_max):
                 if (not cv2dnn_ssd_thread[i] is None):
-                    cv2dnn_ssd_thread[i].stop()
+                    cv2dnn_ssd_thread[i].abort()
                     del cv2dnn_ssd_thread[i]
                     cv2dnn_ssd_thread[i] = None
 
             if (not vin2jpg_thread is None):
-                vin2jpg_thread.stop()
+                vin2jpg_thread.abort()
                 del vin2jpg_thread
                 vin2jpg_thread = None
 
             if (not coreCV_thread is None):
-                coreCV_thread.stop()
+                coreCV_thread.abort()
                 del coreCV_thread
                 coreCV_thread = None
 
@@ -1596,7 +1596,7 @@ if __name__ == '__main__':
                                 qLangCV=qLangCV, qLangOCR=qLangOCR, qLangTrn=qLangTrn,
                                 )
 
-        main_vision.start()
+        main_vision.begin()
 
     # 待機ループ
 
@@ -1618,7 +1618,9 @@ if __name__ == '__main__':
 
         # ディスプレイ設定
         if  (display is None) \
-        and (qFunc.statusCheck(qBusy_dev_dsp) == False): 
+        and (    (qFunc.statusCheck(qBusy_dev_dsp  ) == False) \
+             and (qFunc.statusCheck(qBusy_d_play   ) == False) \
+             and (qFunc.statusCheck(qBusy_d_browser) == False)):
             cv2.namedWindow('Display', cv2.WINDOW_NORMAL)
             #cv2.namedWindow('Display', cv2.WINDOW_AUTOSIZE)
             cv2.moveWindow( 'Display', 0, 0)
@@ -1629,7 +1631,9 @@ if __name__ == '__main__':
             display = True
             show_onece = True
         if  (not display is None) \
-        and (qFunc.statusCheck(qBusy_dev_dsp) == True): 
+        and (   (qFunc.statusCheck(qBusy_dev_dsp  ) == True) \
+             or (qFunc.statusCheck(qBusy_d_play   ) == True) \
+             or (qFunc.statusCheck(qBusy_d_browser) == True)):
             cv2.destroyWindow('Display')
             cv2.waitKey(1)
             display = None
@@ -1771,7 +1775,7 @@ if __name__ == '__main__':
             cv2.destroyWindow('Display')
             cv2.waitKey(1)
 
-        main_vision.stop()
+        main_vision.abort()
         del main_vision
 
         qFunc.logOutput(main_id + ':bye!')

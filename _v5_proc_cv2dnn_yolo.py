@@ -118,7 +118,7 @@ class proc_cv2dnn_yolo:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -139,7 +139,7 @@ class proc_cv2dnn_yolo:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -458,7 +458,7 @@ if __name__ == '__main__':
 
 
     cv2dnn_yolo_thread = proc_cv2dnn_yolo('dnn_yolo', '0', )
-    cv2dnn_yolo_thread.start()
+    cv2dnn_yolo_thread.begin()
 
     inp = cv2.imread('cv2dnn/dog.jpg')
 
@@ -492,7 +492,7 @@ if __name__ == '__main__':
 
     #cv2.waitKey(0)
     time.sleep(1.00)
-    cv2dnn_yolo_thread.stop()
+    cv2dnn_yolo_thread.abort()
     del cv2dnn_yolo_thread
 
 

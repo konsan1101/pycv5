@@ -431,7 +431,7 @@ class proc_recorder:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -452,7 +452,7 @@ class proc_recorder:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=20, ):
+    def abort(self, waitMax=20, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -974,7 +974,7 @@ if __name__ == '__main__':
 
     # 開始
     recorder_thread = proc_recorder('recorder', '0', runMode, )
-    recorder_thread.start()
+    recorder_thread.begin()
 
 
 
@@ -1027,7 +1027,7 @@ if __name__ == '__main__':
 
 
     # 終了
-    recorder_thread.stop()
+    recorder_thread.abort()
     del recorder_thread
 
 

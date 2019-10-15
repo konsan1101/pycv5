@@ -127,7 +127,7 @@ class proc_txt2img:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -148,7 +148,7 @@ class proc_txt2img:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -270,20 +270,19 @@ class proc_txt2img:
                 maxlen = 0
                 for i in range(0, len(texts)):
                     if (texts[i][2:3] != ','):
-                            lenstr = len(texts[i]) * 2
-                            if (maxlen < lenstr):
-                                maxlen = lenstr
+                            if (qFunc.in_japanese(texts[i]) == True):
+                                lenstr = len(texts[i]) * 2
+                            else:
+                                lenstr = len(texts[i])
                     else:
                         if  (texts[i][:3] == 'ja,') \
                         or  (texts[i][:3] == 'zh,') \
                         or  (texts[i][:3] == 'ko,'):
                             lenstr = len(texts[i]) * 2
-                            if (maxlen < lenstr):
-                                maxlen = lenstr
                         else:
                             lenstr = len(texts[i])
-                            if (maxlen < lenstr):
-                                maxlen = lenstr
+                    if (maxlen < lenstr):
+                        maxlen = lenstr
 
                 # 描写キャンバス作成
                 if (inp_name.lower() == '[status]'):
@@ -418,7 +417,7 @@ if __name__ == '__main__':
 
 
     txt2img_thread = proc_txt2img('txt2img', '0', )
-    txt2img_thread.start()
+    txt2img_thread.begin()
 
     txt2img_thread.put(['[txts]', [u'おはようございます']])
     resdata = txt2img_thread.checkGet()
@@ -441,7 +440,7 @@ if __name__ == '__main__':
         time.sleep(5)
 
     time.sleep(1)
-    txt2img_thread.stop()
+    txt2img_thread.abort()
     del txt2img_thread
 
 

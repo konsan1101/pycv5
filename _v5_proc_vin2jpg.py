@@ -115,7 +115,7 @@ class proc_vin2jpg:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -136,7 +136,7 @@ class proc_vin2jpg:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -364,7 +364,7 @@ if __name__ == '__main__':
 
 
     vin2jpg_thread = proc_vin2jpg('vin2jpg', '0', )
-    vin2jpg_thread.start()
+    vin2jpg_thread.begin()
 
     qFunc.copy('_photos/_photo_qrcode.jpg', qPath_v_inp + '_photo_qrcode.jpg')
     qFunc.copy('_photos/_photo_ocr_meter.jpg', qPath_v_inp + '_photo_ocr_meter.jpg')
@@ -384,7 +384,7 @@ if __name__ == '__main__':
         time.sleep(0.05)
 
     time.sleep(1.00)
-    vin2jpg_thread.stop()
+    vin2jpg_thread.abort()
     del vin2jpg_thread
 
 

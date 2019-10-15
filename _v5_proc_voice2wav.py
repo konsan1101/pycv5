@@ -126,7 +126,7 @@ class proc_voice2wav:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -147,7 +147,7 @@ class proc_voice2wav:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -531,7 +531,7 @@ if __name__ == '__main__':
 
     # 開始
     voice2wav_thread = proc_voice2wav('voice2wav', '0', runMode, )
-    voice2wav_thread.start()
+    voice2wav_thread.begin()
 
 
 
@@ -583,7 +583,7 @@ if __name__ == '__main__':
 
 
     # 終了
-    voice2wav_thread.stop()
+    voice2wav_thread.abort()
     del voice2wav_thread
 
 

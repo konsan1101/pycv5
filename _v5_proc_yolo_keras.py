@@ -202,7 +202,7 @@ class proc_yolo_keras:
                 score_threshold=self.score, iou_threshold=self.iou)
         return boxes, scores, classes
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -223,7 +223,7 @@ class proc_yolo_keras:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -513,7 +513,7 @@ if __name__ == '__main__':
 
 
     yolo_keras_thread = proc_yolo_keras('yolokeras', '0', )
-    yolo_keras_thread.start()
+    yolo_keras_thread.begin()
 
     inp = cv2.imread('cv2dnn/dog.jpg')
     inp = cv2.resize(inp, (960, 540))
@@ -548,7 +548,7 @@ if __name__ == '__main__':
 
     #cv2.waitKey(0)
     time.sleep(1.00)
-    yolo_keras_thread.stop()
+    yolo_keras_thread.abort()
     del yolo_keras_thread
 
 

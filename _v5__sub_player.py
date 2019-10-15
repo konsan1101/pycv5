@@ -98,17 +98,27 @@ qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
 
 
 
+# フォント
+qFONT_default = {'file':qPath_fonts + '_vision_font_ipaexg.ttf','offset':8}
+
+
+
 runMode = 'debug'
 
 
 
-def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, width=320, height=240,):
+def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, width=320, height=240, fps=5, overText=''):
 
     #ffplay -i test_input.flv -volume 100 -window_title "test_input.flv" -noborder -autoexit -x 320 -y 240
     #ffplay -i test_input.flv -volume 100 -window_title "test_input.flv" -noborder -autoexit -fs
 
+    vf = 'fps=' + str(fps)
+    if (overText != ''):
+        vf += ',drawtext=fontfile=' + qFONT_default['file'] + ':fontsize=256:fontcolor=white:text=' + overText
+
     if (width != 0) or (height != 0):
         ffplay = subprocess.Popen(['ffplay', '-i', file, \
+                                    '-vf', vf, \
                                     '-volume', str(vol), \
                                     '-window_title', str(id), \
                                     '-noborder', '-autoexit', \
@@ -119,6 +129,7 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
     else:
         w, h = pyautogui.size()
         ffplay = subprocess.Popen(['ffplay', '-i', file, \
+                                    '-vf', vf, \
                                     '-volume', str(vol), \
                                     '-window_title', str(id), \
                                     '-noborder', '-autoexit', \
@@ -135,7 +146,7 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
     if (os.name == 'nt'):
         hwnd = 0
         chktime = time.time()
-        while (hwnd == 0) and ((time.time() - chktime) < 5):
+        while (hwnd == 0) and ((time.time() - chktime) < 8):
             hwnd = ctypes.windll.user32.FindWindowW(None, str(id))
             time.sleep(0.10)
 
@@ -151,7 +162,7 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
 
 
 
-def panelPlay(panel, path, vol, order, loop,):
+def panelPlay(panel, path, vol, order, loop, overtext):
     #left, top, width, height = getPanelPos(panel,)
 
     count = 0
@@ -160,9 +171,21 @@ def panelPlay(panel, path, vol, order, loop,):
         if (os.path.isfile(path)):
             p = panel
 
+            fps = 15
+            if (vol == 0):
+                if (p=='0') or (p=='0-') or (p=='5'):
+                    fps = 5
+                else:
+                    fps = 2
+
             left, top, width, height = getPanelPos(p,)
-            res = qFFplay(p, path, vol, order, left, top, width, height, )
+            res = qFFplay(p, path, vol, order, left, top, width, height, fps, overtext)
             count += 1
+
+            txts, txt = qFunc.txtsRead(qCtrl_control_self)
+            if (txts != False):
+                if (txt == '_end_') or (txt == '_stop_'):
+                    loop = 0
 
         if (os.path.isdir(path)):
             files = glob.glob(path + '/*.*')
@@ -180,9 +203,22 @@ def panelPlay(panel, path, vol, order, loop,):
                 if (panel == '46'):
                     p = '64'[(count % 2):(count % 2)+1] + '-'
 
+                fps = 15
+                if (vol == 0):
+                    if (p=='0') or (p=='0-') or (p=='5'):
+                        fps = 5
+                    else:
+                        fps = 2
+
                 left, top, width, height = getPanelPos(p,)
-                res = qFFplay(p, fn, vol, order, left, top, width, height, )
+                res = qFFplay(p, fn, vol, order, left, top, width, height, fps, overtext)
                 count += 1
+
+                txts, txt = qFunc.txtsRead(qCtrl_control_self)
+                if (txts != False):
+                    if (txt == '_end_') or (txt == '_stop_'):
+                        loop = 0
+                        break
 
         if (loop < 9):
             loop -= 1
@@ -277,7 +313,7 @@ class main_class:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -298,7 +334,7 @@ class main_class:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -359,9 +395,13 @@ class main_class:
                 qFunc.logOutput(self.proc_id + ':' + str(txt))
                 if (txt == '_end_'):
                     break
-                else:
-                    qFunc.remove(qCtrl_control_self)
-                    control = txt
+
+                if (txt == '_stop_'):
+                    self.sub_proc('_stop_', )
+                    time.sleep(2.00)
+
+                qFunc.remove(qCtrl_control_self)
+                control = txt
 
             # 停止要求確認
             if (self.breakFlag.is_set()):
@@ -439,6 +479,8 @@ class main_class:
 
             # ビジー解除
             qFunc.statusSet(self.fileBsy, False)
+            if (str(self.id) == '0'):
+                qFunc.statusSet(qBusy_d_play, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):
@@ -465,9 +507,9 @@ class main_class:
         path['04'] = u'C:/Users/Public/_m4v__Clip/きゃりーぱみゅぱみゅ'
         path['05'] = u'C:/Users/Public/_m4v__Clip/etc'
         path['06'] = u'C:/Users/Public/_m4v__Clip/SekaiNoOwari'
-        path['07'] = u'C:/Users/Public/_m4v__Clip/GB'
-        path['08'] = path['01']
-        path['09'] = path['02']
+        path['07'] = path['03']
+        path['08'] = path['02']
+        path['09'] = path['01']
 
         if (proc_text.find(u'リセット') >=0):
             #self.sub_stop(proc_text, )
@@ -481,17 +523,17 @@ class main_class:
             pass
 
         elif (proc_text.lower() == '_demo0-'):
-            self.sub_stop('_stop_', )
+            #self.sub_stop('_stop_', )
             self.sub_start(path['01'], panel='0' , vol=0  , order='normal', loop=1, )
             self.sub_start(path['01'], panel='0-', vol=100, order='top'   , loop=1, )
 
         elif (proc_text.lower() == '_demo1397'):
-            self.sub_stop('_stop_', )
+            #self.sub_stop('_stop_', )
             self.sub_start(path['00'], panel='0'   , vol=0  , order='normal', loop=99, )
             self.sub_start(path['01'], panel='1397', vol=100, order='top'   , loop=99, )
 
         elif (proc_text.lower() == '_demo1234'):
-            self.sub_stop('_stop_', )
+            #self.sub_stop('_stop_', )
             self.sub_start(path['05'], panel='0' , vol=100, order='normal', loop=99, )
             self.sub_start(path['01'], panel='19', vol=0  , order='normal', loop=99, )
             self.sub_start(path['02'], panel='28', vol=0  , order='normal', loop=99, )
@@ -499,29 +541,29 @@ class main_class:
             self.sub_start(path['04'], panel='46', vol=0  , order='normal', loop=99, )
 
         elif (proc_text.find(u'メニュー') >=0) or (proc_text.lower() == '_test_'):
-            self.sub_stop('_stop_', )
-            self.sub_start(path['00'], panel='0' , vol=0  , order='normal', loop=99, )
-            self.sub_start(path['01'], panel='1-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path['02'], panel='2-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path['03'], panel='3-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path['04'], panel='4-', vol=0  , order='normal', loop=99, )
+            #self.sub_stop('_stop_', )
+            self.sub_start(path['00'], panel='0' , vol=0  , order='normal', loop=99, overtext='', )
+            self.sub_start(path['01'], panel='1-', vol=0  , order='normal', loop=99, overtext='01', )
+            self.sub_start(path['02'], panel='2-', vol=0  , order='normal', loop=99, overtext='02', )
+            self.sub_start(path['03'], panel='3-', vol=0  , order='normal', loop=99, overtext='03', )
+            self.sub_start(path['04'], panel='4-', vol=0  , order='normal', loop=99, overtext='04', )
             if (proc_text.find(u'メニュー') >=0):
-                self.sub_start(path['05'], panel='5-', vol=0  , order='normal', loop=99, )
+                self.sub_start(path['05'], panel='5-', vol=0  , order='normal', loop=99, overtext='05', )
             if (proc_text.lower() == '_test_'):
-                self.sub_start(path['05'], panel='5-', vol=100, order='top'   , loop=99, )
-            self.sub_start(path['06'], panel='6-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path['07'], panel='7-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path['08'], panel='8-', vol=0  , order='normal', loop=99, )
-            self.sub_start(path['09'], panel='9-', vol=0  , order='normal', loop=99, )
+                self.sub_start(path['05'], panel='5-', vol=100, order='top'   , loop=99, overtext='05', )
+            self.sub_start(path['06'], panel='6-', vol=0  , order='normal', loop=99, overtext='06', )
+            self.sub_start(path['07'], panel='7-', vol=0  , order='normal', loop=99, overtext='07', )
+            self.sub_start(path['08'], panel='8-', vol=0  , order='normal', loop=99, overtext='08', )
+            self.sub_start(path['09'], panel='9-', vol=0  , order='normal', loop=99, overtext='09', )
 
         elif (proc_text.lower() >= '01') and (proc_text.lower() <= '09'):
-            self.sub_stop('_stop_', )
+            #self.sub_stop('_stop_', )
             self.sub_start(path[proc_text], panel='0-', vol=100, order='top' , loop=99, )
 
         else:
             if (os.path.isfile(proc_text)) \
             or (os.path.isdir(proc_text)):
-                self.sub_stop('_stop_', )
+                #self.sub_stop('_stop_', )
                 self.sub_start(proc_text, panel='0-', vol=100, order='top', loop=1, )
 
 
@@ -533,7 +575,7 @@ class main_class:
             if (not self.play_proc[i] is None):
                 #try:
                     if (not self.play_proc[i].is_alive()):
-                        self.play_proc[i].terminate()
+                        #self.play_proc[i].terminate()
                         del self.play_proc[i]
                         self.play_proc[i] = None
                         self.play_id[i]   = ''
@@ -548,15 +590,19 @@ class main_class:
         if (hit == -1):
             # ビジー解除
             qFunc.statusSet(self.fileBsy, False)
+            if (str(self.id) == '0'):
+                qFunc.statusSet(qBusy_d_play, False)
             return False
         else:
             # ビジー設定
             if (qFunc.statusCheck(self.fileBsy) == False):
                 qFunc.statusSet(self.fileBsy, True)
+                if (str(self.id) == '0'):
+                    qFunc.statusSet(qBusy_d_play, True)
             return True
 
     # 開始
-    def sub_start(self, proc_text, panel='0-', vol=100, order='normal', loop=1, ):
+    def sub_start(self, proc_text, panel='0-', vol=100, order='normal', loop=1, overtext='', ):
 
         # ログ
         qFunc.logOutput(self.proc_id + ':open ' + proc_text, display=True,)
@@ -567,7 +613,7 @@ class main_class:
             if (not self.play_proc[i] is None):
                 #try:
                     if (not self.play_proc[i].is_alive()):
-                        self.play_proc[i].terminate()
+                        #self.play_proc[i].terminate()
                         del self.play_proc[i]
                         self.play_proc[i] = None
                         self.play_id[i]   = ''
@@ -586,14 +632,16 @@ class main_class:
             # ビジー設定
             if (qFunc.statusCheck(self.fileBsy) == False):
                 qFunc.statusSet(self.fileBsy, True)
+                if (str(self.id) == '0'):
+                    qFunc.statusSet(qBusy_d_play, True)
 
             i = hit
             self.play_id[i]   = panel
             self.play_path[i] = proc_text
             self.play_proc[i] = threading.Thread(target=panelPlay, args=(
-                self.play_id[i], self.play_path[i], vol, order, loop,
+                self.play_id[i], self.play_path[i], vol, order, loop, overtext,
                 ))
-            self.play_proc[i].setDaemon(True)
+            #self.play_proc[i].setDaemon(True)
             self.play_proc[i].start()
 
             if (os.name == 'nt'):
@@ -602,11 +650,14 @@ class main_class:
     # 停止
     def sub_stop(self, proc_text, ):
 
+        # リセット
+        qFunc.kill('ffplay', )
+
         # 全Ｑリセット
         for i in range(1, self.play_max+1):
             if (not self.play_proc[i] is None):
                 #try:
-                    self.play_proc[i].terminate()
+                    #self.play_proc[i].terminate()
                     del self.play_proc[i]
                     self.play_proc[i] = None
                     self.play_id[i]   = ''
@@ -653,6 +704,15 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, ')
 
+    # 初期設定
+
+    txts, txt = qFunc.txtsRead(qCtrl_control_self)
+    if (txts != False):
+        if (txt == '_end_'):
+            qFunc.remove(qCtrl_control_self)
+
+    qFunc.kill('ffplay')
+
     # パラメータ
 
     if (True):
@@ -662,13 +722,6 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':runMode  =' + str(runMode  ))
 
-    # 初期設定
-
-    txts, txt = qFunc.txtsRead(qCtrl_control_self)
-    if (txts != False):
-        if (txt == '_end_'):
-            qFunc.remove(qCtrl_control_self)
-
     # 起動
 
     if (True):
@@ -676,7 +729,7 @@ if __name__ == '__main__':
         qFunc.logOutput(main_id + ':start')
 
         main_class = main_class(main_name, '0', runMode=runMode, )
-        main_class.start()
+        main_class.begin()
 
         main_start = time.time()
         onece      = True
@@ -701,15 +754,18 @@ if __name__ == '__main__':
                 #t = u'_demo1397' # base + 1,3,9,7
                 #t = u'_demo1234' # base + 1234,6789
                 t = u'_test_'      # base + 1-9
+                print(t)
                 qFunc.txtsWrite(qCtrl_control_self ,txts=[t], encoding='utf-8', exclusive=True, mode='w', )
 
         # デバッグ
         if (runMode == 'debug'):
 
             # テスト終了
-            if  ((time.time() - main_start) > 120):
+            if  ((time.time() - main_start) > 30):
+                    print('_stop_')
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
                     time.sleep(5.00)
+                    print('_end_')
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # アイドリング
@@ -725,9 +781,10 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':terminate')
 
-        main_class.stop()
-        time.sleep(5.00)
+        main_class.abort()
         del main_class
+
+        qFunc.kill('ffplay', )
 
         qFunc.logOutput(main_id + ':bye!')
 

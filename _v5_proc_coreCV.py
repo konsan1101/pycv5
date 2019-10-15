@@ -127,7 +127,7 @@ class proc_coreCV:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -148,7 +148,7 @@ class proc_coreCV:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -419,7 +419,7 @@ if __name__ == '__main__':
     coreCV_thread = proc_coreCV('coreCV', '0',
         'debug', '0',
         qApiCV, qApiOCR, qApiTrn, qLangCV, qLangOCR, qLangTrn, )
-    coreCV_thread.start()
+    coreCV_thread.begin()
 
     qFunc.makeDirs(qPath_v_jpg,  True )
     qFunc.copy('_photos/_photo_qrcode.jpg', qPath_v_jpg + '_photo_qrcode.jpg')
@@ -441,7 +441,7 @@ if __name__ == '__main__':
         time.sleep(0.05)
 
     time.sleep(1.00)
-    coreCV_thread.stop()
+    coreCV_thread.abort()
     del coreCV_thread
 
 

@@ -115,7 +115,7 @@ class proc_cvreader:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -136,7 +136,7 @@ class proc_cvreader:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -434,7 +434,7 @@ if __name__ == '__main__':
 
 
     cvreader_thread = proc_cvreader('reader', '0', )
-    cvreader_thread.start()
+    cvreader_thread.begin()
 
     inp = cv2.imread('_photos/_photo_qrcode.jpg')
     cvreader_thread.put(['[img]', inp.copy()])
@@ -455,7 +455,7 @@ if __name__ == '__main__':
         time.sleep(0.05)
 
     time.sleep(1.00)
-    cvreader_thread.stop()
+    cvreader_thread.abort()
     del cvreader_thread
 
 

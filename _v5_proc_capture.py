@@ -128,7 +128,7 @@ class proc_capture:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -149,7 +149,7 @@ class proc_capture:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -383,7 +383,7 @@ if __name__ == '__main__':
 
 
     capture_thread = proc_capture('capture', '0', )
-    capture_thread.start()
+    capture_thread.begin()
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):
@@ -404,7 +404,7 @@ if __name__ == '__main__':
         time.sleep(0.02)
 
     time.sleep(1.00)
-    capture_thread.stop()
+    capture_thread.abort()
     del capture_thread
 
 

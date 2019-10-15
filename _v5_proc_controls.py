@@ -129,6 +129,9 @@ class proc_controls:
         self.proc_seq  = 0
 
         # 変数
+        self.last_text     = ''
+        self.last_time     = time.time()
+
         self.run_vision    = True
         self.run_desktop   = True
         self.run_bgm       = True
@@ -140,7 +143,7 @@ class proc_controls:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -161,7 +164,7 @@ class proc_controls:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -373,6 +376,12 @@ class proc_controls:
     def sub_proc(self, seq4, proc_file, work_file, proc_name, proc_text, cn_s, ):
 
         jp_true = qFunc.in_japanese(proc_text)
+        if (proc_text == self.last_text) and ((time.time() - self.last_time) < 15):
+            word_true = False
+        else:
+            word_true = True
+            self.last_text = proc_text
+            self.last_time = time.time()
 
         # インターフェース
         #if (self.run_vision    == True):
@@ -384,8 +393,8 @@ class proc_controls:
         if (self.run_browser   == True):
             if (jp_true == True):
                 qFunc.txtsWrite(qCtrl_control_browser   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
-        if (self.run_player    == True):
-                qFunc.txtsWrite(qCtrl_control_player    ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+        #if (self.run_player    == True):
+        #        qFunc.txtsWrite(qCtrl_control_player    ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
         if (self.run_chatting  == True):
             if (jp_true == True):
                 qFunc.txtsWrite(qCtrl_control_chatting  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
@@ -424,18 +433,14 @@ class proc_controls:
             elif ((proc_text.find(u'画面') >= 0) and (proc_text.find(u'開始') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = True
-                chktime = time.time()
-                while (os.path.exists(qCtrl_control_main)) and ((time.time() - chktime) < 5):
-                    time.sleep(0.50)
+                qFunc.statusWait_false(qCtrl_control_main, 5)
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_vision  = True
 
             elif ((proc_text.find(u'画面') >= 0) and (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_desktop_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = False
-                chktime = time.time()
-                while (os.path.exists(qCtrl_control_main)) and ((time.time() - chktime) < 5):
-                    time.sleep(0.50)
+                qFunc.statusWait_false(qCtrl_control_main, 5)
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_vision_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_vision  = False
 
@@ -478,12 +483,35 @@ class proc_controls:
             elif ((proc_text.find(u'動画') >= 0) and (proc_text.find(u'開始') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_player = True
-                time.sleep(5)
+                qFunc.statusWait_false(qCtrl_control_player, 5)
+                time.sleep(5.00)
+                qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.statusWait_false(qCtrl_control_player, 5)
+                time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=[u'メニュー'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif ((proc_text.find(u'動画') >= 0) and (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_player_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_player = False
+
+            elif (self.run_player == True) \
+            and  (proc_text.find(u'メニュー') >=0):
+                qFunc.statusWait_false(qCtrl_control_player, 5)
+                time.sleep(5.00)
+                qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.statusWait_false(qCtrl_control_player, 5)
+                time.sleep(5.00)
+                qFunc.txtsWrite(qCtrl_control_player ,txts=[u'メニュー'], encoding='utf-8', exclusive=True, mode='w', )
+
+            elif (self.run_player == True) \
+            and  (word_true == True) \
+            and  (proc_text.lower() >= '01') and (proc_text.lower() <= '09'):
+                qFunc.statusWait_false(qCtrl_control_player, 5)
+                time.sleep(5.00)
+                qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.statusWait_false(qCtrl_control_player, 5)
+                time.sleep(5.00)
+                qFunc.txtsWrite(qCtrl_control_player ,txts=[proc_text.lower()], encoding='utf-8', exclusive=True, mode='w', )
 
             elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
             and (proc_text.find(u'開始') >= 0):
@@ -503,6 +531,9 @@ class proc_controls:
                 qFunc.txtsWrite(qCtrl_control_main ,txts=['_knowledge_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_knowledge = False
 
+        self.last_text = proc_text
+        self.last_time = time.time()
+
 
 
 if __name__ == '__main__':
@@ -518,7 +549,7 @@ if __name__ == '__main__':
 
 
     controls_thread = proc_controls('controls', '0', )
-    controls_thread.start()
+    controls_thread.begin()
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):
@@ -535,7 +566,7 @@ if __name__ == '__main__':
         time.sleep(0.05)
 
     time.sleep(1.00)
-    controls_thread.stop()
+    controls_thread.abort()
     del controls_thread
 
 

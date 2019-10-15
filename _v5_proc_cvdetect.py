@@ -138,7 +138,7 @@ class proc_cvdetect:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -159,7 +159,7 @@ class proc_cvdetect:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -405,7 +405,7 @@ if __name__ == '__main__':
 
 
     cvdetect_thread = proc_cvdetect('detect', '0', )
-    cvdetect_thread.start()
+    cvdetect_thread.begin()
 
     inp = cv2.imread('_photos/_photo_face.jpg')
     cvdetect_thread.put(['[img]', inp.copy()])
@@ -438,7 +438,7 @@ if __name__ == '__main__':
         time.sleep(0.05)
 
     time.sleep(1.00)
-    cvdetect_thread.stop()
+    cvdetect_thread.abort()
     del cvdetect_thread
 
 

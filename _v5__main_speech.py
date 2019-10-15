@@ -189,7 +189,7 @@ class main_speech:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -210,7 +210,7 @@ class main_speech:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=20, ):
+    def abort(self, waitMax=20, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -365,14 +365,14 @@ class main_speech:
                                     runMode=self.runMode,
                                     micDev=self.micDev, micType=self.micType, micGuide=self.micGuide, micLevel=self.micLevel,
                                     )
-                controls_thread.start()
+                controls_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「音声制御」の機能が有効になりました。', 'wait':0, })
 
             if (not controls_thread is None) and (controls_switch != 'on'):
-                controls_thread.stop()
+                controls_thread.abort()
                 del controls_thread
                 controls_thread = None
 
@@ -382,14 +382,14 @@ class main_speech:
                                     runMode=self.runMode,
                                     micDev=self.micDev, micType=self.micType, micGuide=self.micGuide, micLevel=self.micLevel,
                                     )
-                adintool_thread.start()
+                adintool_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「マイク入力」の機能が有効になりました。', 'wait':0, })
 
             if (not adintool_thread is None) and (adintool_switch != 'on'):
-                adintool_thread.stop()
+                adintool_thread.abort()
                 del adintool_thread
                 adintool_thread = None
 
@@ -399,14 +399,14 @@ class main_speech:
                                     runMode=self.runMode,
                                     micDev=self.micDev, micType=self.micType, micGuide=self.micGuide, micLevel=self.micLevel,
                                     )
-                voice2wav_thread.start()
+                voice2wav_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「音響補正」の機能が有効になりました。', 'wait':0, })
 
             if (not voice2wav_thread is None) and (voice2wav_switch != 'on'):
-                voice2wav_thread.stop()
+                voice2wav_thread.abort()
                 del voice2wav_thread
                 voice2wav_thread = None
 
@@ -418,7 +418,7 @@ class main_speech:
                                     qApiInp=self.qApiInp, qApiTrn=self.qApiTrn, qApiOut=self.qApiOut,
                                     qLangInp=self.qLangInp, qLangTrn=self.qLangTrn, qLangTxt=self.qLangTxt, qLangOut=self.qLangOut,
                                     )
-                coreSTT_thread.start()
+                coreSTT_thread.begin()
 
                 speechs = []
                 if (self.runMode == 'debug') \
@@ -427,7 +427,7 @@ class main_speech:
                     speechs.append({ 'text':u'「ＡＩ機械翻訳」の機能が有効になりました。', 'wait':0, })
 
             if (not coreSTT_thread is None) and (coreSTT_switch != 'on'):
-                coreSTT_thread.stop()
+                coreSTT_thread.abort()
                 del coreSTT_thread
                 coreSTT_thread = None
 
@@ -439,14 +439,14 @@ class main_speech:
                                     qApiInp=self.qApiInp, qApiTrn=self.qApiTrn, qApiOut=self.qApiOut,
                                     qLangInp=self.qLangInp, qLangTrn=self.qLangTrn, qLangTxt=self.qLangTxt, qLangOut=self.qLangOut,
                                     )
-                coreTTS_thread.start()
+                coreTTS_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「ＡＩ音声合成」の機能が有効になりました。', 'wait':0, })
 
             if (not coreTTS_thread is None) and (coreTTS_switch != 'on'):
-                coreTTS_thread.stop()
+                coreTTS_thread.abort()
                 del coreTTS_thread
                 coreTTS_thread = None
 
@@ -456,14 +456,14 @@ class main_speech:
                                     runMode=self.runMode,
                                     micDev=self.micDev, micType=self.micType, micGuide=self.micGuide, micLevel=self.micLevel,
                                     )
-                playvoice_thread.start()
+                playvoice_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「スピーカー出力」の機能が有効になりました。', 'wait':0, })
 
             if (not playvoice_thread is None) and (playvoice_switch != 'on'):
-                playvoice_thread.stop()
+                playvoice_thread.abort()
                 del playvoice_thread
                 playvoice_thread = None
 
@@ -472,14 +472,14 @@ class main_speech:
                                     name='julius', id='0', 
                                     runMode=self.runMode,
                                     )
-                julius_thread.start()
+                julius_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「ＪＵＬＩＵＳローカル音声認識」の機能が有効になりました。', 'wait':0, })
 
             if (not julius_thread is None) and (julius_switch != 'on'):
-                julius_thread.stop()
+                julius_thread.abort()
                 del julius_thread
                 julius_thread = None
 
@@ -489,14 +489,14 @@ class main_speech:
                                     runMode=self.runMode,
                                     micDev=self.micDev, path='qPath_s_STT',
                                     )
-                sttreader_thread.start()
+                sttreader_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「音声認識結果のテキスト連携」の機能が有効になりました。', 'wait':0, })
 
             if (not sttreader_thread is None) and (sttreader_switch != 'on'):
-                sttreader_thread.stop()
+                sttreader_thread.abort()
                 del sttreader_thread
                 sttreader_thread = None
 
@@ -506,14 +506,14 @@ class main_speech:
                                     runMode=runMode,
                                     micDev=self.micDev, path='qPath_s_TRA',
                                     )
-                trareader_thread.start()
+                trareader_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「機械翻訳結果のテキスト連携」の機能が有効になりました。', 'wait':0, })
 
             if (not trareader_thread is None) and (trareader_switch != 'on'):
-                trareader_thread.stop()
+                trareader_thread.abort()
                 del trareader_thread
                 trareader_thread = None
 
@@ -574,17 +574,17 @@ class main_speech:
 
                 if (control == '_reset_mic_'):
                     if (adintool_switch == 'on'):
-                        adintool_thread.stop()
+                        adintool_thread.abort()
                     if (voice2wav_switch == 'on'):
-                        voice2wav_thread.stop()
+                        voice2wav_thread.abort()
                     if (julius_switch == 'on'):
-                        julius_thread.stop()
+                        julius_thread.abort()
                     if (adintool_switch == 'on'):
-                        adintool_thread.start()
+                        adintool_thread.begin()
                     if (voice2wav_switch == 'on'):
-                        voice2wav_thread.start()
+                        voice2wav_thread.begin()
                     if (julius_switch == 'on'):
-                        julius_thread.start()
+                        julius_thread.begin()
 
                 # 音声入力（マイク入力）
                 if (not adintool_thread is None):
@@ -664,47 +664,47 @@ class main_speech:
 
             # スレッド停止
             if (not controls_thread is None):
-                controls_thread.stop()
+                controls_thread.abort()
                 del controls_thread
                 controls_thread = None
 
             if (not adintool_thread is None):
-                adintool_thread.stop()
+                adintool_thread.abort()
                 del adintool_thread
                 adintool_thread = None
 
             if (not voice2wav_thread is None):
-                voice2wav_thread.stop()
+                voice2wav_thread.abort()
                 del voice2wav_thread
                 voice2wav_thread = None
 
             if (not coreSTT_thread is None):
-                coreSTT_thread.stop()
+                coreSTT_thread.abort()
                 del coreSTT_thread
                 coreSTT_thread = None
 
             if (not coreTTS_thread is None):
-                coreTTS_thread.stop()
+                coreTTS_thread.abort()
                 del coreTTS_thread
                 coreTTS_thread = None
 
             if (not playvoice_thread is None):
-                playvoice_thread.stop()
+                playvoice_thread.abort()
                 del playvoice_thread
                 playvoice_thread = None
 
             if (not julius_thread is None):
-                julius_thread.stop()
+                julius_thread.abort()
                 del julius_thread
                 julius_thread = None
 
             if (not sttreader_thread is None):
-                sttreader_thread.stop()
+                sttreader_thread.abort()
                 del sttreader_thread
                 sttreader_thread = None
 
             if (not trareader_thread is None):
-                trareader_thread.stop()
+                trareader_thread.abort()
                 del trareader_thread
                 trareader_thread = None
 
@@ -900,7 +900,7 @@ if __name__ == '__main__':
                                 qApiInp=qApiInp, qApiTrn=qApiTrn, qApiOut=qApiOut,
                                 qLangInp=qLangInp, qLangTrn=qLangTrn, qLangTxt=qLangTxt, qLangOut=qLangOut, )
 
-        main_speech.start()
+        main_speech.begin()
 
     # 待機ループ
 
@@ -945,7 +945,7 @@ if __name__ == '__main__':
         qFunc.kill('adintool')
         qFunc.kill('julius')
 
-        main_speech.stop()
+        main_speech.abort()
         del main_speech
 
         qFunc.logOutput(main_id + ':bye!')

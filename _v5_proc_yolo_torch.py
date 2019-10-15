@@ -129,7 +129,7 @@ class proc_yolo_torch:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -150,7 +150,7 @@ class proc_yolo_torch:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -426,7 +426,7 @@ if __name__ == '__main__':
 
 
     yolo_torch_thread = proc_yolo_torch('yolotorch', '0', )
-    yolo_torch_thread.start()
+    yolo_torch_thread.begin()
 
     inp = cv2.imread('cv2dnn/dog.jpg')
     inp = cv2.resize(inp, (960, 540))
@@ -461,7 +461,7 @@ if __name__ == '__main__':
 
     #cv2.waitKey(0)
     time.sleep(1.00)
-    yolo_torch_thread.stop()
+    yolo_torch_thread.abort()
     del yolo_torch_thread
 
 

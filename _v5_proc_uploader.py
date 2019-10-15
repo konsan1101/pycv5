@@ -126,7 +126,7 @@ class proc_uploader:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -147,7 +147,7 @@ class proc_uploader:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -377,7 +377,7 @@ if __name__ == '__main__':
 
     # 開始
     uploader_thread = proc_uploader('uploader', '0', runMode, path=qPath_d_upload, )
-    uploader_thread.start()
+    uploader_thread.begin()
 
 
 
@@ -429,7 +429,7 @@ if __name__ == '__main__':
 
 
     # 終了
-    uploader_thread.stop()
+    uploader_thread.abort()
     del uploader_thread
 
 

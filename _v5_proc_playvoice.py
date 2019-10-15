@@ -123,7 +123,7 @@ class proc_playvoice:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -144,7 +144,7 @@ class proc_playvoice:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -410,7 +410,7 @@ if __name__ == '__main__':
 
     # 開始
     playvoice_thread = proc_playvoice('playvoice', '0', runMode, )
-    playvoice_thread.start()
+    playvoice_thread.begin()
 
 
 
@@ -464,7 +464,7 @@ if __name__ == '__main__':
 
 
     # 終了
-    playvoice_thread.stop()
+    playvoice_thread.abort()
     del playvoice_thread
 
 

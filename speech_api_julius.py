@@ -110,7 +110,7 @@ class proc_julius:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -131,7 +131,7 @@ class proc_julius:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -375,7 +375,7 @@ if __name__ == '__main__':
 
 
     julius_thread = proc_julius('julius', '00', )
-    julius_thread.start()
+    julius_thread.begin()
     time.sleep(3.00)
 
     for _ in range(3):
@@ -383,7 +383,7 @@ if __name__ == '__main__':
         res_data  = julius_thread.checkGet()
 
     time.sleep(1.00)
-    julius_thread.stop()
+    julius_thread.abort()
     del julius_thread
 
 

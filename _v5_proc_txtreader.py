@@ -123,7 +123,7 @@ class proc_txtreader:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -144,7 +144,7 @@ class proc_txtreader:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -366,9 +366,9 @@ if __name__ == '__main__':
 
     # 開始
     sttreader_thread = proc_txtreader('sttreader', '0', runMode, path=qPath_s_STT, )
-    sttreader_thread.start()
+    sttreader_thread.begin()
     trareader_thread = proc_txtreader('trareader', '0', runMode, path=qPath_s_TRA, )
-    trareader_thread.start()
+    trareader_thread.begin()
 
 
 
@@ -435,8 +435,8 @@ if __name__ == '__main__':
 
 
     # 終了
-    sttreader_thread.stop()
-    trareader_thread.stop()
+    sttreader_thread.abort()
+    trareader_thread.abort()
     del sttreader_thread
     del trareader_thread
 

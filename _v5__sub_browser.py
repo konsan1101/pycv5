@@ -134,7 +134,7 @@ class main_class:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -155,7 +155,7 @@ class main_class:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -276,6 +276,8 @@ class main_class:
 
             # ビジー解除
             qFunc.statusSet(self.fileBsy, False)
+            if (str(self.id) == '0'):
+                qFunc.statusSet(qBusy_d_browser, False)
 
             # キュー削除
             while (cn_r.qsize() > 0):
@@ -343,6 +345,8 @@ class main_class:
             # ビジー設定
             if (qFunc.statusCheck(self.fileBsy) == False):
                 qFunc.statusSet(self.fileBsy, True)
+                if (str(self.id) == '0'):
+                    qFunc.statusSet(qBusy_d_browser, True)
 
             # ヘッドレスモードオプション
             options = FirefoxOptions()
@@ -393,6 +397,8 @@ class main_class:
 
         # ビジー解除
         qFunc.statusSet(self.fileBsy, False)
+        if (str(self.id) == '0'):
+            qFunc.statusSet(qBusy_d_browser, False)
 
 
 
@@ -448,7 +454,7 @@ if __name__ == '__main__':
         qFunc.logOutput(main_id + ':start')
 
         main_class = main_class(main_name, '0', runMode=runMode, )
-        main_class.start()
+        main_class.begin()
 
         main_start = time.time()
         onece      = True
@@ -495,7 +501,7 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':terminate')
 
-        main_class.stop()
+        main_class.abort()
         del main_class
 
         qFunc.logOutput(main_id + ':bye!')

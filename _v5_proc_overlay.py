@@ -142,7 +142,7 @@ class proc_overlay:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -163,7 +163,7 @@ class proc_overlay:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -980,8 +980,10 @@ class proc_overlay:
 
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
-            or (qFunc.statusCheck(qBusy_dev_dsp) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu  ) == True) \
+            or (qFunc.statusCheck(qBusy_dev_dsp  ) == True) \
+            or (qFunc.statusCheck(qBusy_d_play   ) == True) \
+            or (qFunc.statusCheck(qBusy_d_browser) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.10)
@@ -1083,7 +1085,7 @@ if __name__ == '__main__':
 
 
     overlay_thread = proc_overlay('overlay', '00', )
-    overlay_thread.start()
+    overlay_thread.begin()
 
     cam1   = cv2.imread('_photos/_photo_cv.jpg')
     cam2   = cv2.imread('_photos/_photo_ocr_meter.jpg')
@@ -1176,7 +1178,7 @@ if __name__ == '__main__':
         time.sleep(0.01)
 
     time.sleep(1.00)
-    overlay_thread.stop()
+    overlay_thread.abort()
     del overlay_thread
 
 

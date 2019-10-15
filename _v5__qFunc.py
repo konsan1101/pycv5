@@ -634,13 +634,13 @@ class qFunc_class:
         print('getResolution error ' + reso + ', -> 640,480')
         return 640,480
 
-    def statusSet(self, file, Flag=True):
+    def statusSet(self, file, Flag=True, txt='_on_'):
         if (Flag == True):
             chktime = time.time()
             while (not os.path.exists(file)) and ((time.time() - chktime) < 1):
                 try:
                     w = open(file, 'w')
-                    w.write('_on_')
+                    w.write(txt)
                     w.close()
                     w = None
                     return True

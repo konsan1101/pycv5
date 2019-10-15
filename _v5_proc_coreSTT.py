@@ -137,7 +137,7 @@ class proc_coreSTT:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -158,7 +158,7 @@ class proc_coreSTT:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=5, ):
+    def abort(self, waitMax=5, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -498,7 +498,7 @@ if __name__ == '__main__':
 
     # 開始
     coreSTT_thread = proc_coreSTT('coreSTT', '0', runMode, qApiInp=api)
-    coreSTT_thread.start()
+    coreSTT_thread.begin()
 
 
 
@@ -552,7 +552,7 @@ if __name__ == '__main__':
 
 
     # 終了
-    coreSTT_thread.stop()
+    coreSTT_thread.abort()
     del coreSTT_thread
 
 

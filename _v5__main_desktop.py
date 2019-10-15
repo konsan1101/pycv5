@@ -143,7 +143,7 @@ class main_desktop:
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
 
-    def start(self, ):
+    def begin(self, ):
         #qFunc.logOutput(self.proc_id + ':start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
@@ -164,7 +164,7 @@ class main_desktop:
         self.proc_main.setDaemon(True)
         self.proc_main.start()
 
-    def stop(self, waitMax=20, ):
+    def abort(self, waitMax=20, ):
         qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
 
         self.breakFlag.set()
@@ -300,14 +300,14 @@ class main_desktop:
                                     name='controld', id='0',
                                     runMode=self.runMode,
                                     )
-                controld_thread.start()
+                controld_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「デスクトップ制御」の機能が有効になりました。', 'wait':0, })
 
             if (not controld_thread is None) and (controld_switch != 'on'):
-                controld_thread.stop()
+                controld_thread.abort()
                 del controld_thread
                 controld_thread = None
 
@@ -317,14 +317,14 @@ class main_desktop:
                                     runMode=self.runMode,
                                     capStretch=self.capStretch, capRotate=self.capRotate, capZoom=self.capZoom, capFps='5',
                                     )
-                capture_thread.start()
+                capture_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「デスクトップ入力」の機能が有効になりました。', 'wait':0, })
 
             if (not capture_thread is None) and (capture_switch != 'on'):
-                capture_thread.stop()
+                capture_thread.abort()
                 del capture_thread
                 capture_thread = None
 
@@ -334,14 +334,14 @@ class main_desktop:
                                     runMode=self.runMode, 
                                     reader=self.codeRead,
                                     )
-                cvreader_thread.start()
+                cvreader_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「画面ＱＲコード認識」の機能が有効になりました。', 'wait':0, })
 
             if (not cvreader_thread is None) and (cvreader_switch != 'on'):
-                cvreader_thread.stop()
+                cvreader_thread.abort()
                 del cvreader_thread
                 cvreader_thread = None
 
@@ -350,14 +350,14 @@ class main_desktop:
                                     name='recorder', id='0',
                                     runMode=self.runMode,
                                     )
-                recorder_thread.start()
+                recorder_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「デスクトップ記録」の機能が有効になりました。', 'wait':0, })
 
             if (not recorder_thread is None) and (recorder_switch != 'on'):
-                recorder_thread.stop()
+                recorder_thread.abort()
                 del recorder_thread
                 recorder_thread = None
 
@@ -366,14 +366,14 @@ class main_desktop:
                                     name='uploader', id='0',
                                     runMode=self.runMode,
                                     )
-                uploader_thread.start()
+                uploader_thread.begin()
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'handsfree'):
                     speechs.append({ 'text':u'「ブロブ連携」の機能が有効になりました。', 'wait':0, })
 
             if (not uploader_thread is None) and (uploader_switch != 'on'):
-                uploader_thread.stop()
+                uploader_thread.abort()
                 del uploader_thread
                 uploader_thread = None
 
@@ -487,27 +487,27 @@ class main_desktop:
 
             # スレッド停止
             if (not controld_thread is None):
-                controld_thread.stop()
+                controld_thread.abort()
                 del controld_thread
                 controld_thread = None
 
             if (not capture_thread is None):
-                capture_thread.stop()
+                capture_thread.abort()
                 del capture_thread
                 capture_thread = None
 
             if (not cvreader_thread is None):
-                cvreader_thread.stop()
+                cvreader_thread.abort()
                 del cvreader_thread
                 cvreader_thread = None
 
             if (not recorder_thread is None):
-                recorder_thread.stop()
+                recorder_thread.abort()
                 del recorder_thread
                 recorder_thread = None
 
             if (not uploader_thread is None):
-                uploader_thread.stop()
+                uploader_thread.abort()
                 del uploader_thread
                 uploader_thread = None
 
@@ -595,7 +595,7 @@ if __name__ == '__main__':
 
         main_desktop = main_desktop(main_id, '0', runMode=runMode, )
 
-        main_desktop.start()
+        main_desktop.begin()
 
     # 待機ループ
 
@@ -647,7 +647,7 @@ if __name__ == '__main__':
         qFunc.kill('ffmpeg')
         qFunc.kill('ffplay')
 
-        main_desktop.stop()
+        main_desktop.abort()
         del main_desktop
 
         qFunc.logOutput(main_id + ':bye!')
