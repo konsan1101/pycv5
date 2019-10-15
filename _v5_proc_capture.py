@@ -335,7 +335,7 @@ class proc_capture:
 
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
                 time.sleep(1.00)
             time.sleep((1/int(self.capFps))/2)
 

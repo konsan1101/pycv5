@@ -973,23 +973,23 @@ def proc_speech(cn_r, cn_s, ):
 
                 # 実行状況確認
                 wBusyChange = False
-                check = qFunc.statusCheck(qBusy_s_ctrl, 0)
+                check = qFunc.statusCheck(qBusy_s_ctrl)
                 if (check != wBusyCtrl):
                     wBusyCtrl   = check
                     wBusyChange = True
-                check = qFunc.statusCheck(qBusy_s_inp, 0)
+                check = qFunc.statusCheck(qBusy_s_inp )
                 if (check != wBusyInput):
                     wBusyInput  = check
                     wBusyChange = True
-                check = qFunc.statusCheck(qBusy_s_STT, 0)
+                check = qFunc.statusCheck(qBusy_s_STT )
                 if (check != wBusySTT):
                     wBusySTT    = check
                     wBusyChange = True
-                check = qFunc.statusCheck(qBusy_s_TTS, 0)
+                check = qFunc.statusCheck(qBusy_s_TTS )
                 if (check != wBusyTTS):
                     wBusyTTS    = check
                     wBusyChange = True
-                check = qFunc.statusCheck(qBusy_s_play, 0)
+                check = qFunc.statusCheck(qBusy_s_play)
                 if (check != wBusyPlay):
                     wBusyPlay   = check
                     wBusyChange = True

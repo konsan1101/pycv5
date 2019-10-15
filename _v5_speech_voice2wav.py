@@ -230,10 +230,10 @@ def proc_audio(cn_r, cn_s, ):
                     if (micType == 'usb'):
                         sw = 'on'
                     else:
-                        if  (qFunc.statusCheck(qBusy_s_ctrl, 1) == False) \
-                        and (qFunc.statusCheck(qBusy_s_STT,  1) == False) \
-                        and (qFunc.statusCheck(qBusy_s_TTS,  1) == False) \
-                        and (qFunc.statusCheck(qBusy_s_play, 1) == False):
+                        if  (qFunc.statusWait_false(qBusy_s_ctrl, 1) == False) \
+                        and (qFunc.statusWait_false(qBusy_s_STT,  1) == False) \
+                        and (qFunc.statusWait_false(qBusy_s_TTS,  1) == False) \
+                        and (qFunc.statusWait_false(qBusy_s_play, 1) == False):
                             sw = 'on'
 
                 if (sw == 'on'):
@@ -292,10 +292,10 @@ def proc_audio(cn_r, cn_s, ):
 
                 sw = 'on'
                 if (micType == 'bluetooth'):
-                    if (qFunc.statusCheck(qBusy_s_ctrl, 0) == True) \
-                    or (qFunc.statusCheck(qBusy_s_STT,  0) == True) \
-                    or (qFunc.statusCheck(qBusy_s_TTS,  0) == True) \
-                    or (qFunc.statusCheck(qBusy_s_play, 0) == True):
+                    if (qFunc.statusCheck(qBusy_s_ctrl) == True) \
+                    or (qFunc.statusCheck(qBusy_s_STT ) == True) \
+                    or (qFunc.statusCheck(qBusy_s_TTS ) == True) \
+                    or (qFunc.statusCheck(qBusy_s_play) == True):
                         sw = 'off'
                 if (adinexe_run == True):
                     files = glob.glob(qPath_s_inp + '*')
@@ -869,10 +869,10 @@ if (__name__ == '__main__'):
                 break
 
         if (micDev.isdigit()):
-            if (qFunc.statusCheck(qBusy_s_ctrl, 0) == True) \
-            or (qFunc.statusCheck(qBusy_s_STT,  0) == True) \
-            or (qFunc.statusCheck(qBusy_s_TTS,  0) == True) \
-            or (qFunc.statusCheck(qBusy_s_play, 0) == True):
+            if (qFunc.statusCheck(qBusy_s_ctrl) == True) \
+            or (qFunc.statusCheck(qBusy_s_STT ) == True) \
+            or (qFunc.statusCheck(qBusy_s_TTS ) == True) \
+            or (qFunc.statusCheck(qBusy_s_play) == True):
                 v2w_wave_last = 0
             if (v2w_wave_last == 0):
                 v2w_wave_last = time.time()

@@ -260,7 +260,7 @@ class main_class:
                 self.sub_proc(control, )
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)
@@ -393,7 +393,7 @@ if __name__ == '__main__':
                 qFunc.txtsWrite(qCtrl_control_self ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # アイドリング
-        if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
+        if (qFunc.statusCheck(qBusy_dev_cpu) == True):
             time.sleep(1.00)
         time.sleep(0.50)
 

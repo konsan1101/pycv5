@@ -556,7 +556,7 @@ class qFunc_class:
         return 1
 
     def guide(self, filename=None, sync=True):
-        if (self.statusCheck(qBusy_dev_spk, 0) == True):
+        if (self.statusCheck(qBusy_dev_spk) == True):
             #self.logOutput('spk_busy!_:' + filename, )
             return False
 
@@ -697,15 +697,25 @@ class qFunc_class:
         self.statusSet(qBusy_d_upload,  Flag)
         return True
 
-    def statusCheck(self, file, maxWait=0, ):
-        if (maxWait != 0):
-            chktime = time.time()
-            while (os.path.exists(file)) and ((time.time() - chktime) < maxWait):
-                time.sleep(0.10)
+    def statusCheck(self, file, ):
         if (os.path.exists(file)):
             return True
         else:
             return False
+
+    def statusWait_false(self, file, falseWait=1, ):
+        if (falseWait != 0):
+            chktime = time.time()
+            while (os.path.exists(file)) and ((time.time() - chktime) < falseWait):
+                time.sleep(0.10)
+        return self.statusCheck(file)
+
+    def statusWait_true(self, file, trueWait=1, ):
+        if (trueWait != 0):
+            chktime = time.time()
+            while (not os.path.exists(file)) and ((time.time() - chktime) < trueWait):
+                time.sleep(0.10)
+        return self.statusCheck(file)
 
     def statusWait_speech(self, idolSec=2, maxWait=15, ):
         busy_flag = True
@@ -714,11 +724,11 @@ class qFunc_class:
             busy_flag = False
             chktime2 = time.time()
             while ((time.time() - chktime2) < idolSec):
-                if (self.statusCheck(qBusy_s_wav , 0) == True) \
-                or (self.statusCheck(qBusy_s_STT , 0) == True) \
-                or (self.statusCheck(qBusy_s_TTS , 0) == True) \
-                or (self.statusCheck(qBusy_s_TRA , 0) == True) \
-                or (self.statusCheck(qBusy_s_play, 0) == True):
+                if (self.statusCheck(qBusy_s_wav ) == True) \
+                or (self.statusCheck(qBusy_s_STT ) == True) \
+                or (self.statusCheck(qBusy_s_TTS ) == True) \
+                or (self.statusCheck(qBusy_s_TRA ) == True) \
+                or (self.statusCheck(qBusy_s_play) == True):
                     busy_flag = True
                     time.sleep(0.10)
                     break
@@ -791,11 +801,7 @@ class qBusy_status_txts_class(object):
         self.d_browser = False
         self.d_upload  = False
 
-    def statusCheck(self, file, maxWait=0, ):
-        if (maxWait != 0):
-            chktime = time.time()
-            while (os.path.exists(file)) and ((time.time() - chktime) < maxWait):
-                time.sleep(0.10)
+    def statusCheck(self, file, ):
         if (os.path.exists(file)):
             return True
         else:
@@ -809,106 +815,106 @@ class qBusy_status_txts_class(object):
         self.check = 'all'
 
         # ステータス取得
-        check = self.statusCheck(qBusy_dev_cpu, 0)
+        check = self.statusCheck(qBusy_dev_cpu)
         if (check != self.dev_cpu):
             change = True
         self.dev_cpu = check
-        check = self.statusCheck(qBusy_dev_com, 0)
+        check = self.statusCheck(qBusy_dev_com)
         if (check != self.dev_com):
             change = True
         self.dev_com = check
-        check = self.statusCheck(qBusy_dev_mic, 0)
+        check = self.statusCheck(qBusy_dev_mic)
         if (check != self.dev_mic):
             change = True
         self.dev_mic = check
-        check = self.statusCheck(qBusy_dev_spk, 0)
+        check = self.statusCheck(qBusy_dev_spk)
         if (check != self.dev_spk):
             change = True
         self.dev_spk = check
-        check = self.statusCheck(qBusy_dev_cam, 0)
+        check = self.statusCheck(qBusy_dev_cam)
         if (check != self.dev_cam):
             change = True
         self.dev_cam = check
-        check = self.statusCheck(qBusy_dev_dsp, 0)
+        check = self.statusCheck(qBusy_dev_dsp)
         if (check != self.dev_dsp):
             change = True
         self.dev_dsp = check
 
-        check = self.statusCheck(qBusy_s_ctrl, 0)
+        check = self.statusCheck(qBusy_s_ctrl)
         if (check != self.a_ctrl):
             change = True
         self.a_ctrl = check
-        check = self.statusCheck(qBusy_s_inp, 0)
+        check = self.statusCheck(qBusy_s_inp )
         if (check != self.a_inp):
             change = True
         self.a_inp = check
-        check = self.statusCheck(qBusy_s_wav, 0)
+        check = self.statusCheck(qBusy_s_wav )
         if (check != self.a_wav):
             change = True
         self.a_wav = check
-        check = self.statusCheck(qBusy_s_STT, 0)
+        check = self.statusCheck(qBusy_s_STT )
         if (check != self.a_STT):
             change = True
         self.a_STT = check
-        check = self.statusCheck(qBusy_s_TTS, 0)
+        check = self.statusCheck(qBusy_s_TTS )
         if (check != self.a_TTS):
             change = True
         self.a_TTS = check
-        check = self.statusCheck(qBusy_s_TRA, 0)
+        check = self.statusCheck(qBusy_s_TRA )
         if (check != self.a_TRA):
             change = True
         self.a_TRA = check
-        check = self.statusCheck(qBusy_s_play, 0)
+        check = self.statusCheck(qBusy_s_play)
         if (check != self.a_play):
             change = True
         self.a_play = check
 
-        check = self.statusCheck(qBusy_v_ctrl, 0)
+        check = self.statusCheck(qBusy_v_ctrl)
         if (check != self.v_ctrl):
             change = True
         self.v_ctrl = check
-        check = self.statusCheck(qBusy_v_inp, 0)
+        check = self.statusCheck(qBusy_v_inp )
         if (check != self.v_inp):
             change = True
         self.v_inp = check
-        check = self.statusCheck(qBusy_v_QR, 0)
+        check = self.statusCheck(qBusy_v_QR  )
         if (check != self.v_QR):
             change = True
         self.v_QR = check
-        check = self.statusCheck(qBusy_v_jpg, 0)
+        check = self.statusCheck(qBusy_v_jpg )
         if (check != self.v_jpg):
             change = True
         self.v_jpg = check
-        check = self.statusCheck(qBusy_v_CV, 0)
+        check = self.statusCheck(qBusy_v_CV  )
         if (check != self.v_CV):
             change = True
         self.v_CV = check
 
-        check = self.statusCheck(qBusy_d_ctrl, 0)
+        check = self.statusCheck(qBusy_d_ctrl)
         if (check != self.d_ctrl):
             change = True
         self.d_ctrl = check
-        check = self.statusCheck(qBusy_d_inp, 0)
+        check = self.statusCheck(qBusy_d_inp )
         if (check != self.d_inp):
             change = True
         self.d_inp = check
-        check = self.statusCheck(qBusy_d_QR, 0)
+        check = self.statusCheck(qBusy_d_QR  )
         if (check != self.d_QR):
             change = True
         self.d_QR = check
-        check = self.statusCheck(qBusy_d_rec, 0)
+        check = self.statusCheck(qBusy_d_rec )
         if (check != self.d_rec):
             change = True
         self.d_rec = check
-        check = self.statusCheck(qBusy_d_play, 0)
+        check = self.statusCheck(qBusy_d_play)
         if (check != self.d_play):
             change = True
         self.d_play = check
-        check = self.statusCheck(qBusy_d_browser, 0)
+        check = self.statusCheck(qBusy_d_browser)
         if (check != self.d_browser):
             change = True
         self.d_browser = check
-        check = self.statusCheck(qBusy_d_upload, 0)
+        check = self.statusCheck(qBusy_d_upload )
         if (check != self.d_upload):
             change = True
         self.d_upload = check
@@ -1041,11 +1047,11 @@ class qBusy_status_txts_class(object):
         self.check = 'recorder'
 
         # ステータス取得
-        check = self.statusCheck(qBusy_s_inp, 0)
+        check = self.statusCheck(qBusy_s_inp )
         if (check != self.a_inp):
             change = True
         self.a_inp = check
-        check = self.statusCheck(qBusy_d_rec, 0)
+        check = self.statusCheck(qBusy_d_rec )
         if (check != self.d_rec):
             change = True
         self.d_rec = check

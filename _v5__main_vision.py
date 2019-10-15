@@ -873,7 +873,7 @@ class main_vision:
 
             # シャッター
             if (control == '_shutter_'):
-                if (qFunc.statusCheck(qBusy_dev_cam, 0) == False):
+                if (qFunc.statusCheck(qBusy_dev_cam) == False):
 
                     # 撮影ログ
                     logset = False
@@ -916,7 +916,7 @@ class main_vision:
                         if (res_name == '[img]'):
                             main_img = res_value.copy()
 
-                            if (qFunc.statusCheck(qBusy_dev_cam, 0) == False):
+                            if (qFunc.statusCheck(qBusy_dev_cam) == False):
 
                                 # 画像識別（ＱＲ）
                                 if ((time.time() - cvreader_last_put) >= 1):
@@ -1071,7 +1071,7 @@ class main_vision:
                 if (not txt2img_thread is None):
 
                     # ステータス状況
-                    if  (qFunc.statusCheck(qBusy_d_rec , 0) == False) \
+                    if  (qFunc.statusCheck(qBusy_d_rec) == False) \
                     and ((self.runMode == 'debug') \
                      or  (self.runMode == 'handsfree') \
                      or  (self.runMode == 'hud')):
@@ -1144,8 +1144,8 @@ class main_vision:
                                 cn_s.put([out_name, out_value])
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
-            or (qFunc.statusCheck(qBusy_dev_cam, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
+            or (qFunc.statusCheck(qBusy_dev_cam) == True):
                 time.sleep(1.00)
             time.sleep(0.05)
 
@@ -1618,7 +1618,7 @@ if __name__ == '__main__':
 
         # ディスプレイ設定
         if  (display is None) \
-        and (qFunc.statusCheck(qBusy_dev_dsp, 0) == False): 
+        and (qFunc.statusCheck(qBusy_dev_dsp) == False): 
             cv2.namedWindow('Display', cv2.WINDOW_NORMAL)
             #cv2.namedWindow('Display', cv2.WINDOW_AUTOSIZE)
             cv2.moveWindow( 'Display', 0, 0)
@@ -1629,7 +1629,7 @@ if __name__ == '__main__':
             display = True
             show_onece = True
         if  (not display is None) \
-        and (qFunc.statusCheck(qBusy_dev_dsp, 0) == True): 
+        and (qFunc.statusCheck(qBusy_dev_dsp) == True): 
             cv2.destroyWindow('Display')
             cv2.waitKey(1)
             display = None
@@ -1754,8 +1754,8 @@ if __name__ == '__main__':
                 qFunc.statusSet(qBusy_dev_dsp, True)
 
         # アイドリング
-        if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
-        or (qFunc.statusCheck(qBusy_dev_cam, 0) == True):
+        if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
+        or (qFunc.statusCheck(qBusy_dev_cam) == True):
             time.sleep(1.00)
         time.sleep(0.02)
 

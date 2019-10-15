@@ -701,7 +701,7 @@ def speech_batch(runMode, micDev,
 
 
 
-        if (qFunc.statusCheck(qBusy_dev_com,  0) == True) \
+        if (qFunc.statusCheck(qBusy_dev_com) == True) \
         or (qApiInp == 'julius'):
 
             api = 'julius'
@@ -720,7 +720,7 @@ def speech_batch(runMode, micDev,
 
 
 
-        if  (qFunc.statusCheck(qBusy_dev_com,  0) == False) \
+        if  (qFunc.statusCheck(qBusy_dev_com) == False) \
         and (qApiInp != 'julius'):
 
             soxMsg1  = ''

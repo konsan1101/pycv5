@@ -245,17 +245,17 @@ class proc_adintool:
 
             # on ?
             sw = 'off'
-            if  (qFunc.statusCheck(qBusy_dev_mic, 1) == False):
+            if  (qFunc.statusCheck(qBusy_dev_mic) == False):
                 if (self.micDev.isdigit()):
                     if (self.micType == 'usb'):
                             sw = 'on'
                     else:
-                        if  (qFunc.statusCheck(qBusy_s_ctrl,  1) == False) \
-                        and (qFunc.statusCheck(qBusy_s_wav,   1) == False) \
-                        and (qFunc.statusCheck(qBusy_s_STT,   1) == False) \
-                        and (qFunc.statusCheck(qBusy_s_TTS,   1) == False) \
-                        and (qFunc.statusCheck(qBusy_s_TRA,   1) == False) \
-                        and (qFunc.statusCheck(qBusy_s_play,  1) == False):
+                        if  (qFunc.statusWait_false(qBusy_s_ctrl,  1) == False) \
+                        and (qFunc.statusWait_false(qBusy_s_wav,   1) == False) \
+                        and (qFunc.statusWait_false(qBusy_s_STT,   1) == False) \
+                        and (qFunc.statusWait_false(qBusy_s_TTS,   1) == False) \
+                        and (qFunc.statusWait_false(qBusy_s_TRA,   1) == False) \
+                        and (qFunc.statusWait_false(qBusy_s_play,  1) == False):
                             sw = 'on'
 
             # off -> on
@@ -296,21 +296,10 @@ class proc_adintool:
 
             # off, accept ?
             sw = 'on'
-            if (qFunc.statusCheck(qBusy_dev_mic, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_mic) == True):
                     sw = 'off'
             if (self.micType == 'bluetooth'):
-                #if ((self.runMode == 'debug') \
-                # or (self.runMode == 'handsfree') \
-                # or (self.runMode == 'translator')) \                
-                    # if ((qFunc.statusCheck(qBusy_s_wav,   0) == True) \
-                    #  or (qFunc.statusCheck(qBusy_s_STT,   0) == True) \
-                    #  or (qFunc.statusCheck(qBusy_s_TTS,   0) == True) \
-                    #  or (qFunc.statusCheck(qBusy_s_TRA,   0) == True)):
-                    #     sw = 'off'
-                #if  (qFunc.statusCheck(qBusy_s_wav,   0) == True) \
-                # or (qFunc.statusCheck(qBusy_s_play,  0) == True):
-                #    sw = 'off'
-                if  (qFunc.statusCheck(qBusy_s_play,  0) == True):
+                if  (qFunc.statusCheck(qBusy_s_play) == True):
                     sw = 'off'
             if (not adintool_exe is None):
                 files = glob.glob(self.path + '*')
@@ -353,8 +342,8 @@ class proc_adintool:
 
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
-            or (qFunc.statusCheck(qBusy_dev_mic, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
+            or (qFunc.statusCheck(qBusy_dev_mic) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.25)

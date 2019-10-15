@@ -231,7 +231,7 @@ class proc_playvoice:
                     if (self.micType == 'bluetooth'):
 
                         if (len(glob.glob(qPath_s_inp + '*')) == 0):
-                            qFunc.statusCheck(qBusy_s_inp, 2)
+                            qFunc.statusWait_false(qBusy_s_inp, 3)
 
                         chktime = time.time()
                         while (len(glob.glob(qPath_s_inp + '*')) > 0) and ((time.time() - chktime) < 3):
@@ -317,11 +317,12 @@ class proc_playvoice:
                                     if (str(self.id) == '0'):
                                         qFunc.statusSet(qBusy_s_play, True)
 
-                                    if (self.micType == 'bluetooth') or (self.micGuide == 'on' or self.micGuide == 'sound'):
-                                        qFunc.statusCheck(qBusy_s_inp, 3)
+                                    if (self.micType == 'bluetooth') \
+                                    or (self.micGuide == 'on' or self.micGuide == 'sound'):
+                                        qFunc.statusWait_false(qBusy_s_inp, 3)
 
                                 # 音声再生
-                                if (qFunc.statusCheck(qBusy_dev_spk, 0) == True):
+                                if (qFunc.statusCheck(qBusy_dev_spk) == True):
                                     qFunc.logOutput('spk_busy!_:' + work_name, )
                                 else:
                                     
@@ -352,8 +353,8 @@ class proc_playvoice:
                 break
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
-            or (qFunc.statusCheck(qBusy_dev_spk, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
+            or (qFunc.statusCheck(qBusy_dev_spk) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.25)

@@ -315,12 +315,8 @@ class proc_controls:
                                     if (str(self.id) == '0'):
                                         qFunc.statusSet(qBusy_s_ctrl, True)
 
-                                    #qFunc.statusCheck(qBusy_s_ctrl , 3)
-                                    #qFunc.statusCheck(qBusy_s_STT  , 3)
-                                    #qFunc.statusCheck(qBusy_s_TTS  , 3)
-                                    #qFunc.statusCheck(qBusy_s_play , 3)
                                     if (self.micType == 'bluetooth') or (self.micGuide == 'on' or self.micGuide == 'sound'):
-                                        qFunc.statusCheck(qBusy_s_inp , 3)
+                                        qFunc.statusWait_false(qBusy_s_inp , 3)
 
                                 # 処理
                                 self.proc_last = time.time()
@@ -339,7 +335,7 @@ class proc_controls:
                 qFunc.statusSet(qBusy_s_ctrl, False)
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)

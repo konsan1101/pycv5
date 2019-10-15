@@ -307,7 +307,7 @@ class proc_controlv:
                 qFunc.statusSet(qBusy_v_ctrl, False)
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)

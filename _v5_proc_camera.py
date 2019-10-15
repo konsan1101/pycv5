@@ -231,7 +231,7 @@ class proc_camera:
             # デバイス設定
             if (self.camDev.isdigit()):
                 if  (capture is None) \
-                and (qFunc.statusCheck(qBusy_dev_cam, 0) == False): 
+                and (qFunc.statusCheck(qBusy_dev_cam) == False): 
 
                     if (os.name != 'nt'):
                         capture = cv2.VideoCapture(int(self.camDev))
@@ -254,7 +254,7 @@ class proc_camera:
                             qFunc.statusSet(qBusy_v_inp, True)
 
                 if  (not capture is None) \
-                and (qFunc.statusCheck(qBusy_dev_cam, 0) == True): 
+                and (qFunc.statusCheck(qBusy_dev_cam) == True): 
                     capture.release()
                     capture = None
 
@@ -361,7 +361,7 @@ class proc_camera:
                     if (float(self.camSquare) != 0):
                         if (self.runMode == 'debug') \
                         or (self.runMode == 'camera'):
-                            if  (qFunc.statusCheck(qBusy_d_rec , 0) == False):
+                            if  (qFunc.statusCheck(qBusy_d_rec) == False):
 
                                 square_contours = []
                                 gray = cv2.cvtColor(input_img, cv2.COLOR_BGR2GRAY)
@@ -484,8 +484,8 @@ class proc_camera:
 
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
-            or (qFunc.statusCheck(qBusy_dev_cam, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
+            or (qFunc.statusCheck(qBusy_dev_cam) == True):
                 time.sleep(1.00)
             time.sleep((1/int(self.camFps))/2)
 

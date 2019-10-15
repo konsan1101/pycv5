@@ -466,8 +466,8 @@ class proc_yolo_keras:
             qFunc.statusSet(self.fileBsy, False)
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
-            or (qFunc.statusCheck(qBusy_dev_cam, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
+            or (qFunc.statusCheck(qBusy_dev_cam) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)

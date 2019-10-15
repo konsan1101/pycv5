@@ -580,7 +580,7 @@ class proc_overlay:
                     display_mode = 'live'
                 elif (self.runMode == 'hud'):
                     display_mode = 'hud'
-                if  (qFunc.statusCheck(qBusy_d_rec , 0) == True):
+                if  (qFunc.statusCheck(qBusy_d_rec) == True):
                     display_mode = 'rec'
 
                 base_base    = None
@@ -980,8 +980,8 @@ class proc_overlay:
 
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu, 0) == True) \
-            or (qFunc.statusCheck(qBusy_dev_dsp, 0) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
+            or (qFunc.statusCheck(qBusy_dev_dsp) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.10)
