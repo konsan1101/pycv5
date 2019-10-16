@@ -366,6 +366,7 @@ class proc_controld:
 
             # 画面キャプチャ
             elif (proc_text.find(u'キャプチャ') >= 0) or (proc_text.find(u'ハードコピー') >= 0):
+                print('_capture_')
                 out_name  = 'control'
                 out_value = '_capture_'
                 cn_s.put([out_name, out_value])

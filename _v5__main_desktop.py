@@ -36,6 +36,9 @@ qCtrl_control_self       = qCtrl_control_desktop
 qCtrl_control_browser    = 'temp/control_browser.txt'
 qCtrl_control_player     = 'temp/control_player.txt'
 
+# 出力インターフェース
+qCtrl_result_screen      = 'temp/result_screen.jpg'
+
 
 
 # qFunc 共通ルーチン
@@ -472,15 +475,14 @@ class main_desktop:
 
             # キャプチャ
             if (control == '_capture_'):
-                if (qFunc.statusCheck(qBusy_dev_cam) == False):
 
-                    # シャッター音
-                    qFunc.guide('_shutter', sync=False)
+                # シャッター音
+                qFunc.guide('_shutter', sync=False)
 
-                    # キャプチャ保存
-                    nowTime = datetime.datetime.now()
-                    stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
-                    self.save_capture(stamp, )
+                # キャプチャ保存
+                nowTime = datetime.datetime.now()
+                stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
+                self.save_capture(stamp, )
 
             # ビジー解除
             qFunc.statusSet(self.fileBsy, False)
@@ -553,7 +555,7 @@ class main_desktop:
 
         # 画面キャプチャ
         img = pyautogui.screenshot()
-        s.save(capture_file)
+        img.save(capture_file)
 
         # コピー保存
         filename_s1 = qPath_d_prtscn + stamp + '.capture.jpg'
