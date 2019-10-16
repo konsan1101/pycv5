@@ -474,6 +474,9 @@ class main_desktop:
             if (control == '_capture_'):
                 if (qFunc.statusCheck(qBusy_dev_cam) == False):
 
+                    # シャッター音
+                    qFunc.guide('_shutter', sync=False)
+
                     # キャプチャ保存
                     nowTime = datetime.datetime.now()
                     stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
