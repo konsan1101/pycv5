@@ -385,7 +385,7 @@ class proc_controlv:
                 out_value = '_close_'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text == u'シャッター') or (proc_text.find(u'撮影') >= 0):
+            elif (proc_text.find(u'シャッタ') >= 0) or (proc_text.find(u'撮影') >= 0):
                 out_name  = 'control'
                 out_value = '_shutter_'
                 cn_s.put([out_name, out_value])

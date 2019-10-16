@@ -18,6 +18,8 @@ import time
 import codecs
 import glob
 
+import pyautogui
+
 #print(os.path.dirname(__file__))
 #print(os.path.basename(__file__))
 #print(sys.version_info)
@@ -468,6 +470,15 @@ class main_desktop:
                 if (not recorder_thread is None):
                     res_data  = recorder_thread.get()
 
+            # キャプチャ
+            if (control == '_capture_'):
+                if (qFunc.statusCheck(qBusy_dev_cam) == False):
+
+                    # キャプチャ保存
+                    nowTime = datetime.datetime.now()
+                    stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
+                    self.save_capture(stamp, )
+
             # ビジー解除
             qFunc.statusSet(self.fileBsy, False)
 
@@ -530,6 +541,22 @@ class main_desktop:
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
+
+
+
+    def save_capture(self, stamp, ):
+
+        capture_file = qPath_rec + stamp + '.capture.jpg'
+
+        # 画面キャプチャ
+        img = pyautogui.screenshot()
+        s.save(capture_file)
+
+        # コピー保存
+        filename_s1 = qPath_d_prtscn + stamp + '.capture.jpg'
+        filename_s2 = qCtrl_result_screen
+        qFunc.copy(capture_file, filename_s1)
+        qFunc.copy(capture_file, filename_s2)
 
 
 

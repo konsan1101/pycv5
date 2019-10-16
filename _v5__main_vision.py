@@ -1240,14 +1240,14 @@ class main_vision:
         main_file = ''
         try:
             if (not main_img is None):
-                main_file = qPath_rec + 'photo.' + stamp + '.jpg'
+                main_file = qPath_rec + stamp + '.photo.jpg'
                 cv2.imwrite(main_file, main_img)
         except:
             main_file = ''
         screen_file = ''
         try:
             if (not display_img is None):
-                screen_file = qPath_rec + 'screen.' + stamp + '.jpg'
+                screen_file = qPath_rec + stamp + '.screen.jpg'
                 cv2.imwrite(screen_file, display_img)
         except:
             screen_file = ''
@@ -1269,9 +1269,9 @@ class main_vision:
             main_file = ''
 
         # 写真コピー保存
-        filename_p1 = qPath_v_photo  + 'photo.' + stamp + '.jpg'
+        filename_p1 = qPath_v_photo  + stamp + '.photo.jpg'
         filename_p2 = qCtrl_result_photo
-        filename_s1 = qPath_d_prtscn + 'screen.' + stamp + '.jpg'
+        filename_s1 = qPath_d_prtscn + stamp + '.capture.jpg'
         filename_s2 = qCtrl_result_screen
         filename_m1 = qPath_rec      + stamp + photo_txt + '.jpg'
         filename_m2 = qPath_v_msg    + stamp + photo_txt + '.jpg'
