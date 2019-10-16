@@ -37,7 +37,6 @@ qCtrl_recognize          = 'temp/result_recognize.txt'
 qCtrl_translate          = 'temp/result_translate.txt'
 
 # 出力インターフェース
-qCtrl_result_screen      = 'temp/result_screen.txt'
 qCtrl_result_photo       = 'temp/result_photo.jpg'
 qCtrl_result_screen      = 'temp/result_screen.jpg'
 qCtrl_result_vision      = 'temp/result_vision.txt'
@@ -109,6 +108,8 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
+qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
+qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
 
 # thread ルーチン群
 import _v5_proc_controlv
@@ -874,31 +875,26 @@ class main_vision:
             # シャッター
             if (control == '_shutter_'):
                 if (qFunc.statusCheck(qBusy_dev_cam) == False):
+                    if (not main_img is None):
 
-                    # 撮影ログ
-                    logset = False
-                    if (not photo_img is None):
+                        # 撮影ログ
+                        logset = False
                         if ((time.time() - photo_time) < 5.00):
                             overlay_thread.put(['[shutter]', photo_img ])
                             overlay_thread.put(['[array]',   photo_img ])
                             logset = True
-                    if (logset == False):
-                        if (not main_img is None):
+                        if (logset == False):
                             overlay_thread.put(['[shutter]', main_img ])
                             overlay_thread.put(['[array]',   main_img ])
 
-                    # ＡＩ画像認識処理へ
-                    nowTime = datetime.datetime.now()
-                    stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
-                    filename0 = qPath_v_inp   + stamp + '.photo.jpg'
-                    #try:
-                    if (not main_img is None):
+                        # ＡＩ画像認識処理へ
+                        nowTime = datetime.datetime.now()
+                        stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
+                        filename0 = qPath_v_inp + stamp + '.photo.jpg'
                         cv2.imwrite(filename0, main_img)
-                    #except:
-                    #    pass
 
-                    # 写真保存
-                    self.save_photo(stamp, main_img, display_img, message_txts, message_time, photo_img, photo_time, )
+                        # 写真保存
+                        self.save_photo(stamp, main_img, display_img, message_txts, message_time, photo_img, photo_time, )
 
             if  (cn_s.qsize() == 0) \
             and (overlay_thread.proc_s.qsize() == 0):
@@ -990,6 +986,11 @@ class main_vision:
                         if (res_name == '[img]'):
                             reader_img = res_value.copy()
                             overlay_thread.put(['[reader]', reader_img ])
+                        if (res_name == '[txts]'):
+                            for txt in res_value:
+                                qFunc.notePad(txt)
+                                if (qFunc.statusCheck(qRdy__v_sendkey) == True):
+                                    qFunc.sendKey(txt)
 
                 # 画像合成（顔等　識別結果）
                 if (not cvdetect_thread1 is None):
@@ -1244,6 +1245,7 @@ class main_vision:
                 cv2.imwrite(main_file, main_img)
         except:
             main_file = ''
+
         screen_file = ''
         try:
             if (not display_img is None):
@@ -1251,6 +1253,7 @@ class main_vision:
                 cv2.imwrite(screen_file, display_img)
         except:
             screen_file = ''
+
         photo_file = ''
         photo_txt  = ''
         try:
@@ -1271,7 +1274,7 @@ class main_vision:
         # 写真コピー保存
         filename_p1 = qPath_v_photo  + stamp + '.photo.jpg'
         filename_p2 = qCtrl_result_photo
-        filename_s1 = qPath_d_prtscn + stamp + '.capture.jpg'
+        filename_s1 = qPath_d_prtscn + stamp + '.screen.jpg'
         filename_s2 = qCtrl_result_screen
         filename_m1 = qPath_rec      + stamp + photo_txt + '.jpg'
         filename_m2 = qPath_v_msg    + stamp + photo_txt + '.jpg'
@@ -1551,7 +1554,6 @@ if __name__ == '__main__':
 
     qFunc.remove(qCtrl_control_vision     )
 
-    qFunc.remove(qCtrl_result_screen      )
     qFunc.remove(qCtrl_result_photo       )
     qFunc.remove(qCtrl_result_screen      )
     qFunc.remove(qCtrl_result_vision      )
@@ -1744,7 +1746,7 @@ if __name__ == '__main__':
             if (control == '_enter_') \
             or (control == '_cancel_') \
             or (control == '_close_'):
-                qFunc.txtsWrite(qCtrl_result_screen, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_result_vision, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
@@ -1753,7 +1755,7 @@ if __name__ == '__main__':
             if (control == '_enter_') \
             or (control == '_cancel_') \
             or (control == '_close_'):
-                qFunc.txtsWrite(qCtrl_result_screen, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_result_vision, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.statusSet(qBusy_dev_cam, True)
                 qFunc.statusSet(qBusy_dev_dsp, True)
 

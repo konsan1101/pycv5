@@ -82,6 +82,8 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
+qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
+qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
 
 
 
@@ -148,7 +150,7 @@ class proc_cvreader:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -160,8 +162,8 @@ class proc_cvreader:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -175,8 +177,7 @@ class proc_cvreader:
         self.proc_step = '1'
 
         # ２重読取防止
-        read_last = ''
-        read_time = time.time()
+        read_time = {}
 
         # リーダー
         qrdetector = cv2.QRCodeDetector()
@@ -247,120 +248,161 @@ class proc_cvreader:
 
                 proc_img = image_img.copy()
                 proc_height, proc_width = proc_img.shape[:2]
-
-                #proc_width  = int(image_width/4)
-                #proc_height = int(proc_width * image_height / image_width)
-                #proc_img = cv2.resize(image_img, (proc_width, proc_height))
                 
-                gray1 = cv2.cvtColor(proc_img, cv2.COLOR_BGR2GRAY)
-                #gray2 = cv2.equalizeHist(gray1)
+                gray_img = cv2.cvtColor(proc_img, cv2.COLOR_BGR2GRAY)
+                #gray_img = cv2.equalizeHist(gray_img)
 
                 hit_count = 0
+                res_count = 0
 
                 if (self.reader == 'qr'):
 
-                    #try:
-                    if (True):
+                    rerun = True
+                    while (rerun == True):
+                        rerun = False
 
-                        #qr, p, qrx = qrdetector.detectAndDecode(proc_img)
-                        qr, p, qrx = qrdetector.detectAndDecode(gray1)
-                        #qr, p, qrx = qrdetector.detectAndDecode(gray2)
+                        qr, p, qrx = qrdetector.detectAndDecode(gray_img)
 
-                        # 読取状況確認 qr -> code
-                        code = ''
+                        read_text = ''
+                        read_img  = None
                         if (qr):
-                            code = qr
-                            if   (code == 'http://localhost/v5/mic_on.py'):
-                                code = '_mic_on_'
-                            elif (code == 'http://localhost/v5/mic_off.py'):
-                                code = '_mic_off_'
+                            rerun = True
 
-                        # 新規有効、２重読取無視 code -> read
-                        read = ''
-                        if (code != '') and (code != read_last):
-                            read = code
-                            read_last = read
-                            read_time = time.time()
+                            # 読取状況確認 qr -> read
+                            read_text = qr
+                            if (read_text == 'http://localhost/v5/sendkey_on.py'):
+                                read_text = '_sendkey_on_'
 
-                        elif (code != '') and (code == read_last):
-                            read_time = time.time()
-
-                        # 一定時間経過確認 -> read
-                        if (code == '') and (read_last != ''):
-                            if (read_last == '_mic_on_') and ((time.time() - read_time) > 3):
-                                read = '_mic_off_'
-                                read_last = ''
-                            elif ((time.time() - read_time) > 3):
-                                read_last = ''
-
-                        # 読取値表示
-                        if (qr) and (read != ''):
-                            qFunc.logOutput(self.proc_id + ':qrcode [' + qr + ']')
-                            qFunc.logOutput(self.proc_id + ':version ' + str(((qrx.shape[0] - 21) / 4) + 1))
-
-                        if (read != ''):
-                            qFunc.logOutput(self.proc_id + ':reader [' + read + ']')
-
-                            # 結果出力
-                            out_name  = 'qrcode'
-                            out_value = read
-                            cn_s.put([out_name, out_value])
-
-                        # 読取画像表示
-                        if (qr) and (read != ''):
- 
-                            # 透過変換
-                            perspective1 = np.float32([p[0][0],p[1][0],p[2][0],p[3][0]])
+                            # 透過変換 p -> matrix_img
+                            perspective0 = np.float32([p[0][0],p[1][0],p[2][0],p[3][0]])
+                            perspective1 = perspective0
                             sz = int(image_width/4)
                             perspective2 = np.float32([[0, 0],[sz, 0],[sz, sz],[0, sz]])
+
+                            max_x = 0
+                            min_x = proc_width
+                            max_y = 0
+                            min_y = proc_height
                             i = 0
                             for xy in p:
-                                #print(xy[0,0],xy[0,1])
-                                x  = int(xy[0,0] * image_width  / proc_width )
-                                y  = int(xy[0,1] * image_height / proc_height)
-                                if (x < 0):
-                                    x = 0
-                                if (y < 0):
-                                    y = 0
-                                perspective1[i, 0] = x
-                                perspective1[i, 1] = y
+                                if (xy[0,0] > max_x):
+                                    max_x = xy[0,0]
+                                if (xy[0,0] < min_x):
+                                    min_x = xy[0,0]
+                                if (xy[0,1] > max_y):
+                                    max_y = xy[0,1]
+                                if (xy[0,1] < min_y):
+                                    min_y = xy[0,1]
+
+                                image_x  = int(xy[0,0] * image_width  / proc_width )
+                                image_y  = int(xy[0,1] * image_height / proc_height)
+                                if (image_x < 0):
+                                    image_x = 0
+                                if (image_y < 0):
+                                    image_y = 0
+                                perspective1[i, 0] = image_x
+                                perspective1[i, 1] = image_y
                                 i += 1
+
                             transform_matrix = cv2.getPerspectiveTransform(perspective1,perspective2)
-                            matrix_img = cv2.warpPerspective(image_img, transform_matrix, (sz,sz))
-                            
+                            read_img = cv2.warpPerspective(image_img, transform_matrix, (sz,sz))
+
+                            # 読取位置の塗りつぶし
+                            #gray_img = cv2.fillPoly(gray_img, pts=perspective0, color=(0,0,0), )
+                            gray_img = cv2.rectangle(gray_img, (min_x,min_y), (max_x,max_y), 255, thickness=-1, )
+
+                            # 経過時間計算
+                            try:
+                                sec = time.time() - read_time[read_text]
+                            except:
+                                sec = 999
+
+                            # 新規
+                            if (sec == 999):
+                                read_time[read_text] = time.time()
+                            # on 指令は最初だけ、あとは継続
+                            elif (read_text[-4:] == '_on_'):
+                                read_time[read_text] = time.time()
+                                read_text = ''
+                                read_img  = None
+                            # ３秒経過は新規とみなす
+                            elif (sec > 3):
+                                read_time[read_text] = time.time()
+                            # ３秒以内は無視
+                            else:
+                                read_text = ''
+                                read_img  = None
+
+                        # 読取ＯＫ
+                        if (qr) and (read_text != ''):
                             hit_count += 1
+                            qFunc.logOutput(self.proc_id + ':qrcode [' + qr + ']')
+                            #qFunc.logOutput(self.proc_id + ':version ' + str(((qrx.shape[0] - 21) / 4) + 1))
+
+                            # 読取文字
+                            if (read_text != ''):
+                                qFunc.logOutput(self.proc_id + ':reader [' + read_text + ']')
+
+                                # 結果出力
+                                out_name  = '[txts]'
+                                out_value = [read_text]
+                                cn_s.put([out_name, out_value])
+                                res_count += 1
+
+                            # 読取画像
+                            if (not read_img is None):
+
+                                # 結果出力
+                                out_name  = '[img]'
+                                out_value = read_img.copy()
+                                #out_value = cv2.resize(gray_img, (640,480))
+                                cn_s.put([out_name, out_value])
+                                res_count += 1
+
+                                # ファイル出力
+                                nowTime = datetime.datetime.now()
+                                stamp = nowTime.strftime('%Y%m%d.%H%M%S')
+
+                                fn1 = qPath_rec      + stamp + '.qrcode.jpg'
+                                fn2 = qPath_v_detect + stamp + '.qrcode.jpg'
+                                if (not os.path.exists(fn1)) and (not os.path.exists(fn2)):
+                                    try:
+                                        cv2.imwrite(fn1, read_img)
+                                        cv2.imwrite(fn2, read_img)
+                                    except:
+                                        pass
+
+                # 読取記録
+                if (hit_count > 0):
+
+                    fn3 = qPath_rec     + stamp + '.reader.jpg'
+                    fn4 = qPath_v_photo + stamp + '.reader.jpg'
+                    if (not os.path.exists(fn3)) and (not os.path.exists(fn4)):
+                        try:
+                            cv2.imwrite(fn3, image_img)
+                            cv2.imwrite(fn4, image_img)
+                        except:
+                            pass
+
+                # on 指令の自動解除
+                for key in list(read_time):
+                    if ((time.time() - read_time[key]) > 3):
+
+                        # 自動解除
+                        read_time.pop(key)
+                        k=key[-4:]
+                        if (key[-4:] == '_on_'):
+                            read_text = key[:-4] + '_off_'
+                            qFunc.logOutput(self.proc_id + ':reader [' + read_text + ']')
 
                             # 結果出力
-                            out_name  = '[img]'
-                            out_value = matrix_img.copy()
+                            out_name  = '[txts]'
+                            out_value = [read_text]
                             cn_s.put([out_name, out_value])
+                            res_count += 1
 
-                            # ファイル出力
-                            nowTime = datetime.datetime.now()
-                            stamp = nowTime.strftime('%Y%m%d.%H%M%S')
-
-                            fn1 = qPath_rec      + stamp + '.qrcode.jpg'
-                            fn2 = qPath_v_detect + stamp + '.qrcode.jpg'
-                            if (not os.path.exists(fn1)) and (not os.path.exists(fn2)):
-                                try:
-                                    cv2.imwrite(fn1, matrix_img)
-                                    cv2.imwrite(fn2, matrix_img)
-                                except:
-                                    pass
-
-                            fn3 = qPath_rec     + stamp + '.reader.jpg'
-                            fn4 = qPath_v_photo + stamp + '.reader.jpg'
-                            if (not os.path.exists(fn3)) and (not os.path.exists(fn4)):
-                                try:
-                                    cv2.imwrite(fn3, image_img)
-                                    cv2.imwrite(fn4, image_img)
-                                except:
-                                    pass
-
-                    #except:
-                    #    pass
-
-                if (hit_count == 0):
+                # 無応答防止
+                if (res_count == 0):
 
                     # 結果出力
                     out_name  = ''
@@ -368,7 +410,6 @@ class proc_cvreader:
                     cn_s.put([out_name, out_value])
 
                 time.sleep(0.50)
-
 
 
 
@@ -381,7 +422,8 @@ class proc_cvreader:
 
             # アイドリング
             if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
-            or (qFunc.statusCheck(qBusy_dev_cam) == True):
+            or ((str(self.id) == '0') or (str(self.id) == 'v') \
+            and (qFunc.statusCheck(qBusy_dev_cam) == True)):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)
@@ -449,8 +491,8 @@ if __name__ == '__main__':
                 cv2.imshow('Display', res_value.copy() )
                 cv2.waitKey(1)
                 time.sleep(2.00)
-            else:
-                print(res_name, res_value, )
+            elif (res_name == '[txts]'):
+                print(res_name, res_value[0], )
 
         time.sleep(0.05)
 

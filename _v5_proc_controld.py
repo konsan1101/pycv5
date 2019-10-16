@@ -79,6 +79,8 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
+qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
+qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
 
 
 
@@ -366,10 +368,17 @@ class proc_controld:
 
             # 画面キャプチャ
             elif (proc_text.find(u'キャプチャ') >= 0) or (proc_text.find(u'ハードコピー') >= 0):
-                print('_capture_')
                 out_name  = 'control'
                 out_value = '_capture_'
                 cn_s.put([out_name, out_value])
+
+            # sendkey on/off
+            elif (proc_text.lower() == '_sendkey_on_'):
+                qFunc.statusSet(qRdy__s_sendkey, True)
+                qFunc.statusSet(qRdy__v_sendkey, True)
+            elif (proc_text.lower() == '_sendkey_off_'):
+                qFunc.statusSet(qRdy__s_sendkey, False)
+                qFunc.statusSet(qRdy__v_sendkey, False)
 
 
 

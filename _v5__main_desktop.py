@@ -18,7 +18,7 @@ import time
 import codecs
 import glob
 
-import pyautogui
+import cv2
 
 #print(os.path.dirname(__file__))
 #print(os.path.basename(__file__))
@@ -37,7 +37,7 @@ qCtrl_control_browser    = 'temp/control_browser.txt'
 qCtrl_control_player     = 'temp/control_player.txt'
 
 # 出力インターフェース
-qCtrl_result_screen      = 'temp/result_screen.jpg'
+qCtrl_result_capture      = 'temp/result_capture.jpg'
 
 
 
@@ -100,6 +100,8 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
+qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
+qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
 
 # thread ルーチン群
 import _v5_proc_controld
@@ -256,6 +258,8 @@ class main_desktop:
 
         # 待機ループ
         self.proc_step = '5'
+
+        main_img        = None
 
         cvreader_last_put  = time.time()
         cvreader_last_code = ''
@@ -461,13 +465,18 @@ class main_desktop:
                         res_value = res_data[1]
                         if (res_name == '[img]'):
                             pass
-                        if (res_name == 'qrcode'):
-                            if (res_value != cvreader_last_code):
-                                cvreader_last_code = res_value
+                        if (res_name == '[txts]'):
 
-                                # 画面表示
-                                qFunc.txtsWrite(qCtrl_control_browser, txts=[res_value], encoding='utf-8', exclusive=True, mode='w', )
-                                qFunc.txtsWrite(qCtrl_control_player, txts=[res_value], encoding='utf-8', exclusive=True, mode='w', )
+                            # コントロール出力
+                            if (res_value[0][:1] == '_'):
+                                nowTime = datetime.datetime.now()
+                                stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
+                                controld_file = qPath_d_ctrl + stamp + '.txt'
+                                qFunc.txtsWrite(controld_file, txts=res_value, encoding='utf-8', exclusive=True, mode='w', )
+
+                            # 画面表示
+                            #qFunc.txtsWrite(qCtrl_control_browser, txts=res_value, encoding='utf-8', exclusive=True, mode='w', )
+                            #qFunc.txtsWrite(qCtrl_control_player, txts=res_value, encoding='utf-8', exclusive=True, mode='w', )
 
                 # 記録機能
                 if (not recorder_thread is None):
@@ -475,14 +484,15 @@ class main_desktop:
 
             # キャプチャ
             if (control == '_capture_'):
+                if (not main_img is None):
 
-                # シャッター音
-                qFunc.guide('_shutter', sync=False)
+                    # シャッター音
+                    qFunc.guide('_shutter', sync=False)
 
-                # キャプチャ保存
-                nowTime = datetime.datetime.now()
-                stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
-                self.save_capture(stamp, )
+                    # キャプチャ保存
+                    nowTime = datetime.datetime.now()
+                    stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
+                    self.save_capture(stamp, main_img)
 
             # ビジー解除
             qFunc.statusSet(self.fileBsy, False)
@@ -549,19 +559,25 @@ class main_desktop:
 
 
 
-    def save_capture(self, stamp, ):
+    def save_capture(self, stamp, main_img):
 
-        capture_file = qPath_rec + stamp + '.capture.jpg'
-
-        # 画面キャプチャ
-        img = pyautogui.screenshot()
-        img.save(capture_file)
+        # キャプチャ保存
+        main_file = ''
+        main_file = qPath_rec + stamp + '.capture.jpg'
+        cv2.imwrite(main_file, main_img)
+        #try:
+        #    if (not main_img is None):
+        #        main_file = qPath_rec + stamp + '.capture.jpg'
+        #        cv2.imwrite(main_file, main_img)
+        #except:
+        #    main_file = ''
 
         # コピー保存
         filename_s1 = qPath_d_prtscn + stamp + '.capture.jpg'
-        filename_s2 = qCtrl_result_screen
-        qFunc.copy(capture_file, filename_s1)
-        qFunc.copy(capture_file, filename_s2)
+        filename_s2 = qCtrl_result_capture
+        if (main_file != ''):
+            qFunc.copy(main_file,   filename_s1)
+            qFunc.copy(main_file,   filename_s2)
 
 
 

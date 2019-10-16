@@ -89,6 +89,8 @@ qBusy_d_rec     = qPath_work + 'busy_d_5rec.txt'
 qBusy_d_play    = qPath_work + 'busy_d_7play.txt'
 qBusy_d_browser = qPath_work + 'busy_d_8web.txt'
 qBusy_d_upload  = qPath_work + 'busy_d_9blob.txt'
+qRdy__s_sendkey = qPath_work + 'ready_s_sendkey.txt'
+qRdy__v_sendkey = qPath_work + 'ready_v_sendkey.txt'
 
 
 
@@ -194,6 +196,8 @@ class qFunc_class:
         if (field == 'qBusy_d_play'    ): return qBusy_d_play
         if (field == 'qBusy_d_browser' ): return qBusy_d_browser
         if (field == 'qBusy_d_upload'  ): return qBusy_d_upload
+        if (field == 'qRdy__s_sendkey' ): return qRdy__s_sendkey
+        if (field == 'qRdy__v_sendkey' ): return qRdy__v_sendkey
 
         print('check program !' + field)
         return None
@@ -489,33 +493,21 @@ class qFunc_class:
             pass
         return False
 
-    def sendKey(self, txt='', cr=False, lf=True, ):
-        copipe = True
-        try:
-            if (self.in_japanese(out_txt)==False):
-                copipe = False
-        except:
-            pass
-
+    def sendKey(self, txt='', cr=True, lf=False ):
         out_txt = txt
         if (cr==True) or (lf==True):
-            copipe = True
             out_txt = out_txt.replace('\r', '')
             out_txt = out_txt.replace('\n', '')
-        if (cr==True):
-            out_txt += '\r'
-        if (lf==True):
-            out_txt += '\n'
 
-        if (copipe == True):
-            pyperclip.copy(out_txt)
-            pyautogui.hotkey('ctrl', 'v')
-        else:
-            pyautogui.typewrite(out_txt)
+        pyperclip.copy(out_txt)
+        pyautogui.hotkey('ctrl', 'v')
+
+        if (cr==True) or (lf==True):
+            pyautogui.typewrite(['enter',])
 
         return True
 
-    def notePad(self, txt='', cr=False, lf=True, ):
+    def notePad(self, txt='', cr=True, lf=False, ):
         winTitle  = u'無題 - メモ帳'
         if (os.name != 'nt'):
             return False
@@ -670,6 +662,7 @@ class qFunc_class:
         self.statusSet(qBusy_s_TTS,     Flag)
         self.statusSet(qBusy_s_TRA,     Flag)
         self.statusSet(qBusy_s_play,    Flag)
+        self.statusSet(qRdy__s_sendkey, Flag)
         return True
 
     def statusReset_vision(self, Flag=False):
@@ -682,6 +675,7 @@ class qFunc_class:
         self.statusSet(qBusy_v_QR,      Flag)
         self.statusSet(qBusy_v_jpg,     Flag)
         self.statusSet(qBusy_v_CV,      Flag)
+        self.statusSet(qRdy__v_sendkey, Flag)
         return True
 
     def statusReset_desktop(self, Flag=False):
@@ -695,6 +689,8 @@ class qFunc_class:
         self.statusSet(qBusy_d_play,    Flag)
         self.statusSet(qBusy_d_browser, Flag)
         self.statusSet(qBusy_d_upload,  Flag)
+        self.statusSet(qRdy__s_sendkey, Flag)
+        self.statusSet(qRdy__v_sendkey, Flag)
         return True
 
     def statusCheck(self, file, ):
@@ -781,18 +777,20 @@ class qBusy_status_txts_class(object):
         self.dev_spk   = False
         self.dev_cam   = False
         self.dev_dsp   = False
-        self.a_ctrl    = False
-        self.a_inp     = False
-        self.a_wav     = False
-        self.a_STT     = False
-        self.a_TTS     = False
-        self.a_TRA     = False
-        self.a_play    = False
+        self.s_ctrl    = False
+        self.s_inp     = False
+        self.s_wav     = False
+        self.s_STT     = False
+        self.s_TTS     = False
+        self.s_TRA     = False
+        self.s_play    = False
+        self.s_sendkey = False
         self.v_ctrl    = False
         self.v_inp     = False
         self.v_QR      = False
         self.v_jpg     = False
         self.v_CV      = False
+        self.v_sendkey = False
         self.d_ctrl    = False
         self.d_inp     = False
         self.d_QR      = False
@@ -841,33 +839,37 @@ class qBusy_status_txts_class(object):
         self.dev_dsp = check
 
         check = self.statusCheck(qBusy_s_ctrl)
-        if (check != self.a_ctrl):
+        if (check != self.s_ctrl):
             change = True
-        self.a_ctrl = check
+        self.s_ctrl = check
         check = self.statusCheck(qBusy_s_inp )
-        if (check != self.a_inp):
+        if (check != self.s_inp):
             change = True
-        self.a_inp = check
+        self.s_inp = check
         check = self.statusCheck(qBusy_s_wav )
-        if (check != self.a_wav):
+        if (check != self.s_wav):
             change = True
-        self.a_wav = check
+        self.s_wav = check
         check = self.statusCheck(qBusy_s_STT )
-        if (check != self.a_STT):
+        if (check != self.s_STT):
             change = True
-        self.a_STT = check
+        self.s_STT = check
         check = self.statusCheck(qBusy_s_TTS )
-        if (check != self.a_TTS):
+        if (check != self.s_TTS):
             change = True
-        self.a_TTS = check
+        self.s_TTS = check
         check = self.statusCheck(qBusy_s_TRA )
-        if (check != self.a_TRA):
+        if (check != self.s_TRA):
             change = True
-        self.a_TRA = check
+        self.s_TRA = check
         check = self.statusCheck(qBusy_s_play)
-        if (check != self.a_play):
+        if (check != self.s_play):
             change = True
-        self.a_play = check
+        self.s_play = check
+        check = self.statusCheck(qRdy__s_sendkey)
+        if (check != self.s_sendkey):
+            change = True
+        self.s_sendkey = check
 
         check = self.statusCheck(qBusy_v_ctrl)
         if (check != self.v_ctrl):
@@ -889,6 +891,10 @@ class qBusy_status_txts_class(object):
         if (check != self.v_CV):
             change = True
         self.v_CV = check
+        check = self.statusCheck(qRdy__v_sendkey)
+        if (check != self.v_sendkey):
+            change = True
+        self.v_sendkey = check
 
         check = self.statusCheck(qBusy_d_ctrl)
         if (check != self.d_ctrl):
@@ -952,35 +958,38 @@ class qBusy_status_txts_class(object):
 
         txts.append('')
         txts.append('[Speech status]')
-        if (self.a_ctrl == True):
+        if (self.s_ctrl == True):
             txts.append(' Ctrl   : active__')
         else:
             txts.append(' Ctrl   : ________')
-        if (self.a_inp == True):
+        if (self.s_inp == True):
             txts.append(' Input  : ready___')
         else:
             txts.append(' Input  : ________')
-        if (self.a_wav == True):
+        if (self.s_wav == True):
             txts.append(' Wave   : busy!___')
         else:
             txts.append(' Wave   : ________')
-        if (self.a_STT == True):
+        if (self.s_STT == True):
             txts.append(' STT    : busy!___')
         else:
             txts.append(' STT    : ________')
-        if (self.a_TTS == True):
+        if (self.s_TTS == True):
             txts.append(' TTS    : busy!___')
         else:
             txts.append(' TTS    : ________')
-        if (self.a_TRA == True):
+        if (self.s_TRA == True):
             txts.append(' TRA    : busy!___')
         else:
             txts.append(' TRA    : ________')
-
-        if (self.a_play == True):
+        if (self.s_play == True):
             txts.append(' Play   : busy!___')
         else:
             txts.append(' Play   : ________')
+        if (self.s_sendkey == True):
+            txts.append(' SendKey: active__')
+        else:
+            txts.append(' SendKey: ________')
 
         txts.append('')
         txts.append('[Vision status]')
@@ -1004,6 +1013,10 @@ class qBusy_status_txts_class(object):
             txts.append(' CV     : busy!___')
         else:
             txts.append(' CV     : ________')
+        if (self.v_sendkey == True):
+            txts.append(' SendKey: active__')
+        else:
+            txts.append(' SendKey: ________')
 
         txts.append('')
         txts.append('[Desktop status]')
@@ -1048,9 +1061,9 @@ class qBusy_status_txts_class(object):
 
         # ステータス取得
         check = self.statusCheck(qBusy_s_inp )
-        if (check != self.a_inp):
+        if (check != self.s_inp):
             change = True
-        self.a_inp = check
+        self.s_inp = check
         check = self.statusCheck(qBusy_d_rec )
         if (check != self.d_rec):
             change = True
@@ -1061,7 +1074,7 @@ class qBusy_status_txts_class(object):
 
         # 文字列生成
         txts=[]
-        if (self.a_inp == True):
+        if (self.s_inp == True):
             txts.append(' Speech   : ready__')
         else:
             txts.append(' Speech   : _______')

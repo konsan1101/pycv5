@@ -100,6 +100,8 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
+qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
+qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
 
 # thread ルーチン群
 import _v5_proc_controls
@@ -634,7 +636,10 @@ class main_speech:
                     res_name  = res_data[0]
                     res_value = res_data[1]
                     if (res_name == '[txts]'):
-                        qFunc.notePad(txt=res_value[0])
+                        for txt in res_value:
+                            qFunc.notePad(txt)
+                            if (qFunc.statusCheck(qRdy__s_sendkey) == True):
+                                qFunc.sendKey(txt)
 
                 # 機械翻訳 外部インターフェース用
                 if (not trareader_thread is None):
@@ -642,7 +647,10 @@ class main_speech:
                     res_name  = res_data[0]
                     res_value = res_data[1]
                     if (res_name == '[txts]'):
-                        qFunc.notePad(txt=res_value[0])
+                        for txt in res_value:
+                            qFunc.notePad(txt)
+                            if (qFunc.statusCheck(qRdy__s_sendkey) == True):
+                                qFunc.sendKey(txt)
 
             # ビジー解除
             qFunc.statusSet(self.fileBsy, False)
