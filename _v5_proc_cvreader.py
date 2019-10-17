@@ -273,6 +273,10 @@ class proc_cvreader:
                             if (read_text == 'http://localhost/v5/sendkey_on.py'):
                                 read_text = '_sendkey_on_'
 
+                            read_text = read_text.replace('\r\n', '[cr]')
+                            read_text = read_text.replace('\r', '[cr]')
+                            read_text = read_text.replace('\n', '[cr]')
+
                             # 透過変換 p -> matrix_img
                             perspective0 = np.float32([p[0][0],p[1][0],p[2][0],p[3][0]])
                             perspective1 = perspective0
@@ -310,6 +314,8 @@ class proc_cvreader:
                             # 読取位置の塗りつぶし
                             #gray_img = cv2.fillPoly(gray_img, pts=perspective0, color=(0,0,0), )
                             gray_img = cv2.rectangle(gray_img, (min_x,min_y), (max_x,max_y), 255, thickness=-1, )
+                            #cv2.imshow('Debug', cv2.resize(gray_img, (640,480)) )
+                            #cv2.waitKey(1)
 
                             # 経過時間計算
                             try:
@@ -345,7 +351,7 @@ class proc_cvreader:
 
                                 # 結果出力
                                 out_name  = '[txts]'
-                                out_value = [read_text]
+                                out_value = read_text.split('[cr]')
                                 cn_s.put([out_name, out_value])
                                 res_count += 1
 

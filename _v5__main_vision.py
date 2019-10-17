@@ -912,7 +912,8 @@ class main_vision:
                         if (res_name == '[img]'):
                             main_img = res_value.copy()
 
-                            if (qFunc.statusCheck(qBusy_dev_cam) == False):
+                            if ((qFunc.statusCheck(qBusy_dev_cam) == False) \
+                            or  (qFunc.statusCheck(qRdy__v_sendkey) == True)):
 
                                 # 画像識別（ＱＲ）
                                 if ((time.time() - cvreader_last_put) >= 1):
