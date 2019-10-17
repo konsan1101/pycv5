@@ -322,8 +322,13 @@ class proc_coreCV:
                 qFunc.statusSet(qBusy_v_CV, False)
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
-            or (qFunc.statusCheck(qBusy_dev_cam) == True):
+            slow = False
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
+                slow = True
+            if (qFunc.statusCheck(qBusy_dev_cam) == True) \
+            or (qFunc.statusCheck(qBusy_dev_dsp) == True):
+                slow = True
+            if (slow == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)

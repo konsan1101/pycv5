@@ -173,7 +173,7 @@ class proc_cvdetect:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -185,8 +185,8 @@ class proc_cvdetect:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -357,8 +357,13 @@ class proc_cvdetect:
             qFunc.statusSet(self.fileBsy, False)
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
-            or (qFunc.statusCheck(qBusy_dev_cam) == True):
+            slow = False
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
+                slow = True
+            if (qFunc.statusCheck(qBusy_dev_cam) == True) \
+            or (qFunc.statusCheck(qBusy_dev_dsp) == True):
+                slow = True
+            if (slow == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)

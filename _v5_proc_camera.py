@@ -233,7 +233,8 @@ class proc_camera:
             # デバイス設定
             if (self.camDev.isdigit()):
                 if  (capture is None) \
-                and (qFunc.statusCheck(qBusy_dev_cam) == False): 
+                and ((qFunc.statusCheck(qBusy_dev_cam) == False) \
+                or   (qFunc.statusCheck(qRdy__v_sendkey) == True)):
 
                     if (os.name != 'nt'):
                         capture = cv2.VideoCapture(int(self.camDev))
@@ -256,7 +257,8 @@ class proc_camera:
                             qFunc.statusSet(qBusy_v_inp, True)
 
                 if  (not capture is None) \
-                and (qFunc.statusCheck(qBusy_dev_cam) == True): 
+                and ((qFunc.statusCheck(qBusy_dev_cam) == True) \
+                and  (qFunc.statusCheck(qRdy__v_sendkey) == False)):
                     capture.release()
                     capture = None
 
@@ -486,8 +488,14 @@ class proc_camera:
 
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
-            or (qFunc.statusCheck(qBusy_dev_cam) == True):
+            slow = False
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
+                slow = True
+            if ((qFunc.statusCheck(qBusy_dev_cam) == True) \
+            or  (qFunc.statusCheck(qBusy_dev_dsp) == True)) \
+            and (qFunc.statusCheck(qRdy__v_sendkey) == False):
+                slow = True
+            if (slow == True):
                 time.sleep(1.00)
             time.sleep((1/int(self.camFps))/2)
 

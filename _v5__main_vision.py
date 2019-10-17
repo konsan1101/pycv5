@@ -1145,8 +1145,14 @@ class main_vision:
                                 cn_s.put([out_name, out_value])
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
-            or (qFunc.statusCheck(qBusy_dev_cam) == True):
+            slow = False
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
+                slow = True
+            if ((qFunc.statusCheck(qBusy_dev_cam) == True) \
+            or  (qFunc.statusCheck(qBusy_dev_dsp) == True)) \
+            and (qFunc.statusCheck(qRdy__v_sendkey) == False):
+                slow = True
+            if (slow == True):
                 time.sleep(1.00)
             time.sleep(0.05)
 

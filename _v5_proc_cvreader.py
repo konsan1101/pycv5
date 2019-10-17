@@ -421,9 +421,15 @@ class proc_cvreader:
                 qFunc.statusSet(qBusy_d_QR, False)
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
-            or ((str(self.id) == '0') or (str(self.id) == 'v') \
-            and (qFunc.statusCheck(qBusy_dev_cam) == True)):
+            slow = False
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
+                slow = True
+            if (str(self.id) == '0') or (str(self.id) == 'v'):
+                if ((qFunc.statusCheck(qBusy_dev_cam) == True) \
+                or  (qFunc.statusCheck(qBusy_dev_dsp) == True)) \
+                and (qFunc.statusCheck(qRdy__v_sendkey) == False):
+                    slow = True
+            if (slow == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.50)

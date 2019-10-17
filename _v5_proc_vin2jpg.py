@@ -299,8 +299,7 @@ class proc_vin2jpg:
                 qFunc.statusSet(qBusy_v_jpg, False)
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
-            or (qFunc.statusCheck(qBusy_dev_cam) == True):
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
                 time.sleep(1.00)
             if (cn_r.qsize() == 0):
                 time.sleep(0.25)
