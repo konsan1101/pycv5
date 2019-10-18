@@ -239,15 +239,15 @@ class main_desktop:
             capture_switch   = 'off'
             cvreader_switch  = 'off'
             recorder_switch  = 'on'
-            uploader_switch  = 'on'
+            uploader_switch  = 'off'
         elif (self.runMode == 'handsfree'):
             capture_switch   = 'off'
-            cvreader_switch  = 'off'
+            cvreader_switch  = 'on'
             recorder_switch  = 'on'
-            uploader_switch  = 'on'
+            uploader_switch  = 'off'
         elif (self.runMode == 'camera'):
             capture_switch   = 'off'
-            cvreader_switch  = 'off'
+            cvreader_switch  = 'on'
             recorder_switch  = 'on'
             uploader_switch  = 'on'
         elif (self.runMode == 'background'):
