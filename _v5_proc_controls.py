@@ -73,6 +73,7 @@ qBusy_dev_mic   = qFunc.getValue('qBusy_dev_mic'  )
 qBusy_dev_spk   = qFunc.getValue('qBusy_dev_spk'  )
 qBusy_dev_cam   = qFunc.getValue('qBusy_dev_cam'  )
 qBusy_dev_dsp   = qFunc.getValue('qBusy_dev_dsp'  )
+qBusy_dev_scn   = qFunc.getValue('qBusy_dev_scn'  )
 qBusy_s_ctrl    = qFunc.getValue('qBusy_s_ctrl'   )
 qBusy_s_inp     = qFunc.getValue('qBusy_s_inp'    )
 qBusy_s_wav     = qFunc.getValue('qBusy_s_wav'    )
@@ -92,8 +93,12 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
+qRdy__s_riki    = qFunc.getValue('qRdy__s_riki'   )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
+qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
+qRdy__d_reader  = qFunc.getValue('qRdy__d_reader' )
+qRdy__d_sendkey = qFunc.getValue('qRdy__d_sendkey')
 
 
 
@@ -340,14 +345,17 @@ class proc_controls:
                 qFunc.statusSet(qBusy_s_ctrl, False)
 
             # アイドリング
+            slow = False
             if (qFunc.statusCheck(qBusy_dev_cpu) == True):
+                slow = True
+
+            if (slow == True):
                 time.sleep(1.00)
-            if (cn_r.qsize() == 0):
-                time.sleep(0.50)
             else:
-                time.sleep(0.25)
-
-
+                if (cn_r.qsize() == 0):
+                    time.sleep(0.50)
+                else:
+                    time.sleep(0.25)
 
         # 終了処理
         if (True):

@@ -63,6 +63,7 @@ qBusy_dev_mic   = qFunc.getValue('qBusy_dev_mic'  )
 qBusy_dev_spk   = qFunc.getValue('qBusy_dev_spk'  )
 qBusy_dev_cam   = qFunc.getValue('qBusy_dev_cam'  )
 qBusy_dev_dsp   = qFunc.getValue('qBusy_dev_dsp'  )
+qBusy_dev_scn   = qFunc.getValue('qBusy_dev_scn'  )
 qBusy_s_ctrl    = qFunc.getValue('qBusy_s_ctrl'   )
 qBusy_s_inp     = qFunc.getValue('qBusy_s_inp'    )
 qBusy_s_wav     = qFunc.getValue('qBusy_s_wav'    )
@@ -82,8 +83,12 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
+qRdy__s_riki    = qFunc.getValue('qRdy__s_riki'   )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
+qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
+qRdy__d_reader  = qFunc.getValue('qRdy__d_reader' )
+qRdy__d_sendkey = qFunc.getValue('qRdy__d_sendkey')
 
 
 
@@ -232,40 +237,40 @@ class proc_camera:
 
             # デバイス設定
             if (self.camDev.isdigit()):
-                if  (capture is None) \
-                and ((qFunc.statusCheck(qBusy_dev_cam) == False) \
-                or   (qFunc.statusCheck(qRdy__v_sendkey) == True)):
+                if (capture is None):
+                    if ((qFunc.statusCheck(qBusy_dev_cam) == False) \
+                    or  (qFunc.statusCheck(qRdy__v_sendkey) == True)):
 
-                    if (os.name != 'nt'):
-                        capture = cv2.VideoCapture(int(self.camDev))
-                    else:
-                        capture = cv2.VideoCapture(int(self.camDev), cv2.CAP_DSHOW)
-                    try:
-                        if (int(self.camWidth ) != 0):
-                            capture.set(cv2.CAP_PROP_FRAME_WIDTH,  int(self.camWidth ))
-                        if (int(self.camHeight) != 0):
-                            capture.set(cv2.CAP_PROP_FRAME_HEIGHT, int(self.camHeight))
-                        if (int(self.camFps) != 0):
-                            capture.set(cv2.CAP_PROP_FPS,          int(self.camFps   ))
-                    except:
-                        pass
+                        if (os.name != 'nt'):
+                            capture = cv2.VideoCapture(int(self.camDev))
+                        else:
+                            capture = cv2.VideoCapture(int(self.camDev), cv2.CAP_DSHOW)
+                        try:
+                            if (int(self.camWidth ) != 0):
+                                capture.set(cv2.CAP_PROP_FRAME_WIDTH,  int(self.camWidth ))
+                            if (int(self.camHeight) != 0):
+                                capture.set(cv2.CAP_PROP_FRAME_HEIGHT, int(self.camHeight))
+                            if (int(self.camFps) != 0):
+                                capture.set(cv2.CAP_PROP_FPS,          int(self.camFps   ))
+                        except:
+                            pass
 
-                    # ビジー設定 (ready)
-                    if (qFunc.statusCheck(self.fileBsy) == False):
-                        qFunc.statusSet(self.fileBsy, True)
+                        # ビジー設定 (ready)
+                        if (qFunc.statusCheck(self.fileBsy) == False):
+                            qFunc.statusSet(self.fileBsy, True)
+                            if (str(self.id) == '0'):
+                                qFunc.statusSet(qBusy_v_inp, True)
+
+                if  (not capture is None):
+                    if ((qFunc.statusCheck(qBusy_dev_cam) == True) \
+                    and (qFunc.statusCheck(qRdy__v_sendkey) == False)):
+                        capture.release()
+                        capture = None
+
+                        # ビジー解除 (!ready)
+                        qFunc.statusSet(self.fileBsy, False)
                         if (str(self.id) == '0'):
-                            qFunc.statusSet(qBusy_v_inp, True)
-
-                if  (not capture is None) \
-                and ((qFunc.statusCheck(qBusy_dev_cam) == True) \
-                and  (qFunc.statusCheck(qRdy__v_sendkey) == False)):
-                    capture.release()
-                    capture = None
-
-                    # ビジー解除 (!ready)
-                    qFunc.statusSet(self.fileBsy, False)
-                    if (str(self.id) == '0'):
-                        qFunc.statusSet(qBusy_v_inp, False)
+                            qFunc.statusSet(qBusy_v_inp, False)
 
             # レディ設定
             if (not capture is None) and (not os.path.exists(self.fileRdy)):
@@ -489,17 +494,18 @@ class proc_camera:
 
             # アイドリング
             slow = False
-            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
+            if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
                 slow = True
-            if ((qFunc.statusCheck(qBusy_dev_cam) == True) \
-            or  (qFunc.statusCheck(qBusy_dev_dsp) == True)) \
-            and (qFunc.statusCheck(qRdy__v_sendkey) == False):
+            elif ((qFunc.statusCheck(qBusy_dev_cam) == True) \
+               or (qFunc.statusCheck(qBusy_dev_dsp) == True)) \
+            and   (qFunc.statusCheck(qRdy__v_reader)  == False) \
+            and   (qFunc.statusCheck(qRdy__v_sendkey) == False):
                 slow = True
+
             if (slow == True):
                 time.sleep(1.00)
-            time.sleep((1/int(self.camFps))/2)
-
-
+            else:
+                time.sleep((1/int(self.camFps))/2)
 
         # 終了処理
         if (True):

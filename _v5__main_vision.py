@@ -89,6 +89,7 @@ qBusy_dev_mic   = qFunc.getValue('qBusy_dev_mic'  )
 qBusy_dev_spk   = qFunc.getValue('qBusy_dev_spk'  )
 qBusy_dev_cam   = qFunc.getValue('qBusy_dev_cam'  )
 qBusy_dev_dsp   = qFunc.getValue('qBusy_dev_dsp'  )
+qBusy_dev_scn   = qFunc.getValue('qBusy_dev_scn'  )
 qBusy_s_ctrl    = qFunc.getValue('qBusy_s_ctrl'   )
 qBusy_s_inp     = qFunc.getValue('qBusy_s_inp'    )
 qBusy_s_wav     = qFunc.getValue('qBusy_s_wav'    )
@@ -108,8 +109,12 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
+qRdy__s_riki    = qFunc.getValue('qRdy__s_riki'   )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
+qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
+qRdy__d_reader  = qFunc.getValue('qRdy__d_reader' )
+qRdy__d_sendkey = qFunc.getValue('qRdy__d_sendkey')
 
 # thread ルーチン群
 import _v5_proc_controlv
@@ -916,39 +921,36 @@ class main_vision:
                             or  (qFunc.statusCheck(qRdy__v_sendkey) == True)):
 
                                 # 画像識別（ＱＲ）
-                                if ((time.time() - cvreader_last_put) >= 1):
-                                    if (not cvreader_thread is None):
+                                if (not cvreader_thread is None):
+                                    if ((time.time() - cvreader_last_put) >= 1):
                                         if (cvreader_thread.proc_s.qsize() == 0):
                                             cvreader_thread.put(['[img]', main_img ])
                                             cvreader_last_put = time.time()
 
                                 # 画像識別（顔等）
-                                if  ((time.time() - cvdetect1_last_put) >= 1):
-                                    if (not cvdetect_thread1 is None):
+                                if (not cvdetect_thread1 is None):
+                                    if  ((time.time() - cvdetect1_last_put) >= 1):
                                         if (cvdetect_thread1.proc_s.qsize() == 0):
                                             cvdetect_thread1.put(['[img]', main_img ])
                                             cvdetect1_last_put = time.time()
                                 
                                 # 画像識別（自動車等）
-                                if  ((time.time() - cvdetect2_last_put) >= 1):
-                                    if (not cvdetect_thread2 is None):
+                                if (not cvdetect_thread2 is None):
+                                    if  ((time.time() - cvdetect2_last_put) >= 1):
                                         if (cvdetect_thread2.proc_s.qsize() == 0):
                                             cvdetect_thread2.put(['[img]', main_img ])
                                             cvdetect2_last_put = time.time()
 
                                 # 画像識別（cv2dnn）yolo
-                                #if ((time.time() - cv2dnn_last_put) >= 1):
-                                if (True):
-                                    if (not cv2dnn_yolo_thread is None):
-                                        if (cv2dnn_yolo_thread.proc_s.qsize() == 0):
-                                            cv2dnn_yolo_thread.put(['[img]', main_img ])
-                                            cv2dnn_last_put = time.time()
+                                if (not cv2dnn_yolo_thread is None):
+                                    if (cv2dnn_yolo_thread.proc_s.qsize() == 0):
+                                        cv2dnn_yolo_thread.put(['[img]', main_img ])
+                                        cv2dnn_last_put = time.time()
 
                                 # 画像識別（cv2dnn）ssd
-                                if ((time.time() - cv2dnn_last_put) >= (0.5/cv2dnn_ssd_max)):
-                                #if (True):
-                                    i = cv2dnn_ssd_seq
-                                    if (not cv2dnn_ssd_thread[i] is None):
+                                i = cv2dnn_ssd_seq
+                                if (not cv2dnn_ssd_thread[i] is None):
+                                    if ((time.time() - cv2dnn_last_put) >= (0.5/cv2dnn_ssd_max)):
                                         if (cv2dnn_ssd_thread[i].proc_s.qsize() == 0):
                                             cv2dnn_ssd_thread[i].put(['[img]', main_img ])
                                             cv2dnn_last_put = time.time()
@@ -990,6 +992,7 @@ class main_vision:
                         if (res_name == '[txts]'):
                             for txt in res_value:
                                 qFunc.notePad(txt)
+                                txt = qFunc.sendControl(txt)
                                 if (qFunc.statusCheck(qRdy__v_sendkey) == True):
                                     qFunc.sendKey(txt)
 
@@ -1147,17 +1150,18 @@ class main_vision:
 
             # アイドリング
             slow = False
-            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
+            if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
                 slow = True
-            if ((qFunc.statusCheck(qBusy_dev_cam) == True) \
-            or  (qFunc.statusCheck(qBusy_dev_dsp) == True)) \
-            and (qFunc.statusCheck(qRdy__v_sendkey) == False):
+            elif ((qFunc.statusCheck(qBusy_dev_cam) == True) \
+               or (qFunc.statusCheck(qBusy_dev_dsp) == True)) \
+            and   (qFunc.statusCheck(qRdy__v_reader)  == False) \
+            and   (qFunc.statusCheck(qRdy__v_sendkey) == False):
                 slow = True
+
             if (slow == True):
                 time.sleep(1.00)
-            time.sleep(0.05)
-
-
+            else:
+                time.sleep(0.05)
 
         # 終了処理
         if (True):
@@ -1767,12 +1771,19 @@ if __name__ == '__main__':
                 qFunc.statusSet(qBusy_dev_dsp, True)
 
         # アイドリング
-        if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
-        or (qFunc.statusCheck(qBusy_dev_cam) == True):
+        slow = False
+        if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
+            slow = True
+        elif ((qFunc.statusCheck(qBusy_dev_cam) == True) \
+           or (qFunc.statusCheck(qBusy_dev_dsp) == True)) \
+        and   (qFunc.statusCheck(qRdy__v_reader)  == False) \
+        and   (qFunc.statusCheck(qRdy__v_sendkey) == False):
+            slow = True
+
+        if (slow == True):
             time.sleep(1.00)
-        time.sleep(0.02)
-
-
+        else:
+            time.sleep(0.02)
 
     # 終了
 
