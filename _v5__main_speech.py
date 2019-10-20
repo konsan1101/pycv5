@@ -101,7 +101,7 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
-qRdy__s_riki    = qFunc.getValue('qRdy__s_riki'   )
+qRdy__s_force   = qFunc.getValue('qRdy__s_force'  )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
 qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
@@ -630,6 +630,12 @@ class main_speech:
                             for proc_text in res_value:
                                 print('julius:', proc_text)
 
+                                # フォース 覚醒
+                                if (proc_text == u'力') or (proc_text.lower() == 'power') \
+                                or (proc_text == u'フォース') or (proc_text.lower() == 'force'):
+                                    if (qFunc.statusCheck(qRdy__s_force) == False):
+                                        qFunc.statusSet(qRdy__s_force, True)
+
                                 # 終了操作
                                 if ((proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0)) \
                                 or  (proc_text == u'バルス'):
@@ -675,7 +681,7 @@ class main_speech:
             if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
                 slow = True
             elif (qFunc.statusCheck(qBusy_dev_mic) == True) \
-            and  (qFunc.statusCheck(qRdy__s_riki)    == False) \
+            and  (qFunc.statusCheck(qRdy__s_force)   == False) \
             and  (qFunc.statusCheck(qRdy__s_sendkey) == False):
                 slow = True
 
@@ -962,7 +968,7 @@ if __name__ == '__main__':
         if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
             slow = True
         elif (qFunc.statusCheck(qBusy_dev_mic) == True) \
-         and (qFunc.statusCheck(qRdy__s_riki)    == False) \
+         and (qFunc.statusCheck(qRdy__s_force)   == False) \
          and (qFunc.statusCheck(qRdy__s_sendkey) == False):
             slow = True
 

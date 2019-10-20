@@ -85,7 +85,7 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
-qRdy__s_riki    = qFunc.getValue('qRdy__s_riki'   )
+qRdy__s_force   = qFunc.getValue('qRdy__s_force'  )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
 qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
@@ -381,7 +381,7 @@ class proc_voice2wav:
             if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
                 slow = True
             elif (qFunc.statusCheck(qBusy_dev_mic) == True) \
-            and  (qFunc.statusCheck(qRdy__s_riki)    == False) \
+            and  (qFunc.statusCheck(qRdy__s_force)   == False) \
             and  (qFunc.statusCheck(qRdy__s_sendkey) == False):
                 slow = True
 

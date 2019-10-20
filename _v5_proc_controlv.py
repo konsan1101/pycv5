@@ -80,7 +80,7 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
-qRdy__s_riki    = qFunc.getValue('qRdy__s_riki'   )
+qRdy__s_force   = qFunc.getValue('qRdy__s_force'  )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
 qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
@@ -371,7 +371,8 @@ class proc_controlv:
                 qFunc.statusSet(qBusy_dev_cam, False)
                 qFunc.statusSet(qBusy_dev_dsp, False)
             elif (self.runMode == 'background') \
-            and  ((proc_text.find(u'カメラ') >= 0) and (proc_text.find(u'開始') >= 0)):
+            and  (proc_text.find(u'カメラ') >= 0) \
+            and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
                 qFunc.statusSet(qBusy_dev_cam, False)
                 qFunc.statusSet(qBusy_dev_dsp, False)
             elif (self.runMode == 'background') \

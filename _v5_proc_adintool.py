@@ -85,7 +85,7 @@ qBusy_d_rec     = qFunc.getValue('qBusy_d_rec'    )
 qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
-qRdy__s_riki    = qFunc.getValue('qRdy__s_riki'   )
+qRdy__s_force   = qFunc.getValue('qRdy__s_force'  )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
 qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
@@ -295,11 +295,19 @@ class proc_adintool:
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                 if (adintool_gui is None) and (os.name == 'nt'):
-                    if (self.micGuide == 'on' or self.micGuide == 'display'):
+                    if (self.micGuide == 'on') or (self.micGuide == 'display') \
+                    or (qFunc.statusCheck(qRdy__s_force) == True):
                         adintool_gui = subprocess.Popen(['adintool-gui', '-in', 'mic', \
                                         '-rewind', adin_rewind, '-headmargin', adin_headmg, '-tailmargin', adin_tailmg, \
                                         '-lv', self.micLevel,] , \
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+            # フォース 終了
+            if (not adintool_gui is None):
+                if (self.micGuide != 'on') and (self.micGuide != 'display') \
+                and (qFunc.statusCheck(qRdy__s_force) != True):
+                    adintool_gui.terminate()
+                    adintool_gui = None
 
             # off, accept ?
             sw = 'on'
@@ -317,6 +325,10 @@ class proc_adintool:
                         files = glob.glob(self.path + '*')
                     if (len(files) == 0):
                         sw = 'accept'
+
+                        # フォース 終了
+                        if (qFunc.statusCheck(qRdy__s_force) == True):
+                            qFunc.statusSet(qRdy__s_force, False)
 
             # on -> off, accept
             if (sw == 'off') or (sw == 'accept'):
@@ -347,13 +359,12 @@ class proc_adintool:
 
 
 
-
             # アイドリング
             slow = False
             if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
                 slow = True
             elif (qFunc.statusCheck(qBusy_dev_mic) == True) \
-            and  (qFunc.statusCheck(qRdy__s_riki)    == False) \
+            and  (qFunc.statusCheck(qRdy__s_force)   == False) \
             and  (qFunc.statusCheck(qRdy__s_sendkey) == False):
                 slow = True
 

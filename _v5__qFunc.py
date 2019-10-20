@@ -90,7 +90,7 @@ qBusy_d_rec     = qPath_work + 'busy_d_5rec.txt'
 qBusy_d_play    = qPath_work + 'busy_d_7play.txt'
 qBusy_d_browser = qPath_work + 'busy_d_8web.txt'
 qBusy_d_upload  = qPath_work + 'busy_d_9blob.txt'
-qRdy__s_riki    = qPath_work + 'ready_s_riki.txt'
+qRdy__s_force   = qPath_work + 'ready_s_force.txt'
 qRdy__s_sendkey = qPath_work + 'ready_s_sendkey.txt'
 qRdy__v_reader  = qPath_work + 'ready_v_reder.txt'
 qRdy__v_sendkey = qPath_work + 'ready_v_sendkey.txt'
@@ -202,7 +202,7 @@ class qFunc_class:
         if (field == 'qBusy_d_play'    ): return qBusy_d_play
         if (field == 'qBusy_d_browser' ): return qBusy_d_browser
         if (field == 'qBusy_d_upload'  ): return qBusy_d_upload
-        if (field == 'qRdy__s_riki'    ): return qRdy__s_riki
+        if (field == 'qRdy__s_force'   ): return qRdy__s_force
         if (field == 'qRdy__s_sendkey' ): return qRdy__s_sendkey
         if (field == 'qRdy__v_reader'  ): return qRdy__v_reader
         if (field == 'qRdy__v_sendkey' ): return qRdy__v_sendkey
@@ -717,7 +717,7 @@ class qFunc_class:
         self.statusSet(qBusy_s_TTS,     Flag)
         self.statusSet(qBusy_s_TRA,     Flag)
         self.statusSet(qBusy_s_play,    Flag)
-        self.statusSet(qRdy__s_riki,    Flag)
+        self.statusSet(qRdy__s_force,   Flag)
         self.statusSet(qRdy__s_sendkey, Flag)
         return True
 
@@ -842,7 +842,7 @@ class qBusy_status_txts_class(object):
         self.s_TTS     = False
         self.s_TRA     = False
         self.s_play    = False
-        self.s_riki    = False
+        self.s_force   = False
         self.s_sendkey = False
         self.v_ctrl    = False
         self.v_inp     = False
@@ -932,10 +932,10 @@ class qBusy_status_txts_class(object):
         if (check != self.s_play):
             change = True
         self.s_play = check
-        check = self.statusCheck(qRdy__s_riki)
-        if (check != self.s_riki):
+        check = self.statusCheck(qRdy__s_force)
+        if (check != self.s_force):
             change = True
-        self.s_riki = check
+        self.s_force = check
         check = self.statusCheck(qRdy__s_sendkey)
         if (check != self.s_sendkey):
             change = True
@@ -1072,7 +1072,7 @@ class qBusy_status_txts_class(object):
             txts.append(' Play   : busy!___')
         else:
             txts.append(' Play   : ________')
-        if (self.s_riki == True):
+        if (self.s_force == True):
             txts.append(' RIKI   : active__')
         else:
             txts.append(' RIKI   : ________')
