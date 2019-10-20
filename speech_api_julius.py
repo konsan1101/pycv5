@@ -82,8 +82,10 @@ qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
 qRdy__s_riki    = qFunc.getValue('qRdy__s_riki'   )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
-qRdy__v_reader  = qFunc.getValue('qRdy__v_reder'  )
+qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
+qRdy__d_reader  = qFunc.getValue('qRdy__d_reader' )
+qRdy__d_sendkey = qFunc.getValue('qRdy__d_sendkey')
 
 
 
@@ -148,7 +150,7 @@ class proc_julius:
             time.sleep(0.25)
 
     def put(self, data, ):
-        self.proc_s.put(data)        
+        self.proc_s.put(data)
         return True
 
     def checkGet(self, waitMax=5, ):
@@ -160,8 +162,8 @@ class proc_julius:
 
     def get(self, ):
         if (self.proc_r.qsize() == 0):
-            return ['', '']        
-        data = self.proc_r.get()        
+            return ['', '']
+        data = self.proc_r.get()
         self.proc_r.task_done()
         return data
 
@@ -307,8 +309,8 @@ class proc_julius:
                 if (jultxt == ''):
                     jultxt = '!'
                 out_name  = '[txts]'
-                out_value = jultxt
-                cn_s.put([out_name, [out_value]])
+                out_value = [jultxt]
+                cn_s.put([out_name, out_value])
 
                 if (self.runMode=='debug'):
                     qFunc.logOutput(self.proc_id + ':' + str(out_name) + ', ' + str(out_value), display=self.logDisp, )

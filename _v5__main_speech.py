@@ -290,7 +290,7 @@ class main_speech:
             sttreader_switch = 'on'
             trareader_switch = 'on'
         elif (self.runMode == 'hud'):
-            julius_switch    = 'on'
+            julius_switch    = 'off'
             sttreader_switch = 'off'
             trareader_switch = 'off'
         elif (self.runMode == 'handsfree'):
@@ -314,7 +314,7 @@ class main_speech:
             sttreader_switch = 'off'
             trareader_switch = 'off'
         elif (self.runMode == 'background'):
-            julius_switch    = 'off'
+            julius_switch    = 'on'
             sttreader_switch = 'on'
             trareader_switch = 'off'
 
@@ -622,42 +622,50 @@ class main_speech:
 
                 # julius 音声認識 外部インターフェース用
                 if (not julius_thread is None):
-                    res_data  = julius_thread.get()
-                    res_name  = res_data[0]
-                    res_value = res_data[1]
-                    if (res_name == '[txts]'):
+                    while (julius_thread.proc_r.qsize() != 0):
+                        res_data  = julius_thread.get()
+                        res_name  = res_data[0]
+                        res_value = res_data[1]
+                        if (res_name == '[txts]'):
+                            for proc_text in res_value:
+                                print('julius:', proc_text)
 
-                        # 終了操作
-                        proc_text = res_value[0]
-                        if ((proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0)) \
-                        or  (proc_text == u'バルス'):
-                            qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
-                            qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
-                            break
+                                # 終了操作
+                                if ((proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0)) \
+                                or  (proc_text == u'バルス'):
+                                    qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                                    qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                                    break
 
                 # 音声認識 外部インターフェース用
                 if (not sttreader_thread is None):
-                    res_data  = sttreader_thread.get()
-                    res_name  = res_data[0]
-                    res_value = res_data[1]
-                    if (res_name == '[txts]'):
-                        for txt in res_value:
-                            qFunc.notePad(txt)
-                            txt = qFunc.sendControl(txt)
-                            if (qFunc.statusCheck(qRdy__s_sendkey) == True):
-                                qFunc.sendKey(txt)
+                    while (sttreader_thread.proc_r.qsize() != 0):
+                        res_data  = sttreader_thread.get()
+                        res_name  = res_data[0]
+                        res_value = res_data[1]
+                        if (res_name == '[txts]'):
+                            for proc_text in res_value:
+
+                                # 文字送信
+                                qFunc.notePad(proc_text)
+                                proc_text = qFunc.sendControl(proc_text)
+                                if (qFunc.statusCheck(qRdy__s_sendkey) == True):
+                                    qFunc.sendKey(proc_text)
 
                 # 機械翻訳 外部インターフェース用
                 if (not trareader_thread is None):
-                    res_data  = trareader_thread.get()
-                    res_name  = res_data[0]
-                    res_value = res_data[1]
-                    if (res_name == '[txts]'):
-                        for txt in res_value:
-                            qFunc.notePad(txt)
-                            txt = qFunc.sendControl(txt)
-                            if (qFunc.statusCheck(qRdy__s_sendkey) == True):
-                                qFunc.sendKey(txt)
+                    while (trareader_thread.proc_r.qsize() != 0):
+                        res_data  = trareader_thread.get()
+                        res_name  = res_data[0]
+                        res_value = res_data[1]
+                        if (res_name == '[txts]'):
+                            for proc_text in res_value:
+
+                                # 文字送信
+                                qFunc.notePad(proc_text)
+                                proc_text = qFunc.sendControl(proc_text)
+                                if (qFunc.statusCheck(qRdy__s_sendkey) == True):
+                                    qFunc.sendKey(proc_text)
 
             # ビジー解除
             qFunc.statusSet(self.fileBsy, False)
