@@ -56,7 +56,7 @@ class VisionAPI:
 
 
 
-    def convert(self, inpImage, outImage, bw=True, maxWidth=640, maxHeight=480, ):
+    def convert(self, inpImage, outImage, bw=True, bitwise=False, maxWidth=640, maxHeight=480, ):
         try:
             if (os.path.exists(outImage)):
                 os.remove(outImage)
@@ -78,6 +78,9 @@ class VisionAPI:
                 #proc_img = cv2.equalizeHist(proc_img)
                 #proc_img = cv2.blur(proc_img, (3,3), 0)
                 #_, proc_img = cv2.threshold(proc_img, 140, 255, cv2.THRESH_BINARY)
+
+                if (bitwise == True):
+                    proc_img = cv2.bitwise_not(proc_img.copy())
 
             if (maxWidth != 0):
                 if (proc_width > maxWidth):
@@ -269,5 +272,12 @@ if __name__ == '__main__':
                     for text in res:
                         print('ocr:', text, '(' + api + ')' )
 
+            res = azureAPI.convert(inpImage=file, outImage=temp, bw=True, bitwise=True, )
+            if (res == True):
+                res, api = azureAPI.ocr(inpImage=temp, inpLang='ja', )
+                if (not res is None):
+                    print('ocr3')
+                    for text in res:
+                        print('ocr:', text, '(' + api + ')' )
 
 
