@@ -90,6 +90,7 @@ qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
 qRdy__s_force   = qFunc.getValue('qRdy__s_force'  )
+qRdy__s_fproc   = qFunc.getValue('qRdy__s_fproc'  )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
 qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
@@ -698,6 +699,9 @@ def speech_batch(runMode, micDev,
     trnText = ''
     outRun  = False
 
+ 
+ 
+    # STT 処理
     if (inpInput != '' and os.path.exists(inpInput)):
         nowTime = datetime.datetime.now()
         stamp   = nowTime.strftime('%Y%m%d')
@@ -1100,6 +1104,7 @@ def speech_batch(runMode, micDev,
 
 
 
+    # STT 結果出力
     if (inpOutput != '' and inpText != ''):
         qFunc.txtsWrite(inpOutput, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
 
@@ -1133,6 +1138,7 @@ def speech_batch(runMode, micDev,
 
 
 
+    # TRA 処理
     if (trnInput != ''):
         trnRun   = True
         trnIn    = ''
@@ -1209,6 +1215,7 @@ def speech_batch(runMode, micDev,
 
 
 
+    # TRA 結果出力
     if (trnOutput != '' and trnText != ''):
         qFunc.txtsWrite(trnOutput, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
 
@@ -1264,6 +1271,7 @@ def speech_batch(runMode, micDev,
 
 
 
+    # TTS 処理
     if (txtInput != ''):
         txtRun  = True
         txtText = ''
@@ -1361,6 +1369,7 @@ def speech_batch(runMode, micDev,
 
 
 
+    # TTS 結果出力
     if (txtOutput != '' and txtWork != '!'):
 
         nowTime = datetime.datetime.now()

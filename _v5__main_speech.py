@@ -102,6 +102,7 @@ qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
 qRdy__s_force   = qFunc.getValue('qRdy__s_force'  )
+qRdy__s_fproc   = qFunc.getValue('qRdy__s_fproc'  )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
 qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
@@ -635,6 +636,7 @@ class main_speech:
                                 or (proc_text == u'フォース') or (proc_text.lower() == 'force'):
                                     if (qFunc.statusCheck(qRdy__s_force) == False):
                                         qFunc.statusSet(qRdy__s_force, True)
+                                        qFunc.statusSet(qRdy__s_fproc, True)
 
                                 # 終了操作
                                 if ((proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0)) \
@@ -654,7 +656,6 @@ class main_speech:
 
                                 # 文字送信
                                 qFunc.notePad(proc_text)
-                                proc_text = qFunc.sendControl(proc_text)
                                 if (qFunc.statusCheck(qRdy__s_sendkey) == True):
                                     qFunc.sendKey(proc_text)
 
@@ -669,7 +670,6 @@ class main_speech:
 
                                 # 文字送信
                                 qFunc.notePad(proc_text)
-                                proc_text = qFunc.sendControl(proc_text)
                                 if (qFunc.statusCheck(qRdy__s_sendkey) == True):
                                     qFunc.sendKey(proc_text)
 

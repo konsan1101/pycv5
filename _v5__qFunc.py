@@ -91,6 +91,7 @@ qBusy_d_play    = qPath_work + 'busy_d_7play.txt'
 qBusy_d_browser = qPath_work + 'busy_d_8web.txt'
 qBusy_d_upload  = qPath_work + 'busy_d_9blob.txt'
 qRdy__s_force   = qPath_work + 'ready_s_force.txt'
+qRdy__s_fproc   = qPath_work + 'ready_s_fproc.txt'
 qRdy__s_sendkey = qPath_work + 'ready_s_sendkey.txt'
 qRdy__v_reader  = qPath_work + 'ready_v_reder.txt'
 qRdy__v_sendkey = qPath_work + 'ready_v_sendkey.txt'
@@ -203,6 +204,7 @@ class qFunc_class:
         if (field == 'qBusy_d_browser' ): return qBusy_d_browser
         if (field == 'qBusy_d_upload'  ): return qBusy_d_upload
         if (field == 'qRdy__s_force'   ): return qRdy__s_force
+        if (field == 'qRdy__s_fproc'   ): return qRdy__s_fproc
         if (field == 'qRdy__s_sendkey' ): return qRdy__s_sendkey
         if (field == 'qRdy__v_reader'  ): return qRdy__v_reader
         if (field == 'qRdy__v_sendkey' ): return qRdy__v_sendkey
@@ -503,51 +505,6 @@ class qFunc_class:
             pass
         return False
 
-    def sendControl(self, txt='', ):
-        res = txt
-
-        riki = ''
-        if (txt[:1] == u'力') and (txt[:2] != u'力石'):
-            riki = u'力'
-            res = txt[2:]
-        if (txt[:2] == u'りき') and (txt[:4] != u'りきいし'):
-            riki = u'りき'
-            res = txt[3:]
-        if (txt[:4].lower() == u'riki') and (txt[:8] != u'rikiishi'):
-            riki = u'riki'
-            res = txt[5:]
-        if (txt[:4].lower() == u'wiki'):
-            riki = u'wiki'
-            res = txt[5:]
-
-        control = False
-        if (res.find(u'画面') >= 0) and (res.find(u'メイン') >= 0):
-            control = True
-            pyautogui.keyDown('ctrlleft')
-            pyautogui.keyDown('winleft')
-            pyautogui.keyDown('left')
-            pyautogui.keyUp('left')
-            pyautogui.keyDown('left')
-            pyautogui.keyUp('left')
-            pyautogui.keyDown('left')
-            pyautogui.keyUp('left')
-            pyautogui.keyUp('winleft')
-            pyautogui.keyUp('ctrlleft')
-
-        if (res.find(u'画面') >= 0) and (res.find(u'サブ') >= 0):
-            control = True
-            pyautogui.keyDown('ctrlleft')
-            pyautogui.keyDown('winleft')
-            pyautogui.keyDown('right')
-            pyautogui.keyUp('right')
-            pyautogui.keyUp('winleft')
-            pyautogui.keyUp('ctrlleft')
-
-        if (control == False):
-            res = riki + res
-
-        return res
-
     def sendKey(self, txt='', cr=True, lf=False ):
         out_txt = txt
         if (cr==True) or (lf==True):
@@ -718,6 +675,7 @@ class qFunc_class:
         self.statusSet(qBusy_s_TRA,     Flag)
         self.statusSet(qBusy_s_play,    Flag)
         self.statusSet(qRdy__s_force,   Flag)
+        self.statusSet(qRdy__s_fproc,   Flag)
         self.statusSet(qRdy__s_sendkey, Flag)
         return True
 

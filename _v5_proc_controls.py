@@ -18,6 +18,8 @@ import time
 import codecs
 import glob
 
+import pyautogui
+
 
 
 # インターフェース
@@ -94,6 +96,7 @@ qBusy_d_play    = qFunc.getValue('qBusy_d_play'   )
 qBusy_d_browser = qFunc.getValue('qBusy_d_browser')
 qBusy_d_upload  = qFunc.getValue('qBusy_d_upload' )
 qRdy__s_force   = qFunc.getValue('qRdy__s_force'  )
+qRdy__s_fproc   = qFunc.getValue('qRdy__s_fproc'  )
 qRdy__s_sendkey = qFunc.getValue('qRdy__s_sendkey')
 qRdy__v_reader  = qFunc.getValue('qRdy__v_reader' )
 qRdy__v_sendkey = qFunc.getValue('qRdy__v_sendkey')
@@ -149,7 +152,6 @@ class proc_controls:
 
         # フォース
         self.force_last    = 0
-        self.force_onece   = False
 
     def __del__(self, ):
         qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
@@ -252,18 +254,16 @@ class proc_controls:
             if (qFunc.statusCheck(qRdy__s_force) == False):
                 if (self.force_last != 0):
                     self.force_last  = 0
-                    self.force_onece = True
             else:
                 if (self.force_last == 0):
                     self.force_last  = time.time()
-                    self.force_onece = False
 
             # フォース 自動終了（有効１０秒）
             if (qFunc.statusCheck(qRdy__s_force) == True):
                 if ((time.time() - self.force_last) > 10):
                     qFunc.statusSet(qRdy__s_force, False)
+                    qFunc.statusSet(qRdy__s_fproc, False)
                     self.force_last  = 0
-                    self.force_onece = True
 
             # 処理
             path = self.path
@@ -348,27 +348,33 @@ class proc_controls:
                                         qFunc.statusWait_false(qBusy_s_inp , 3)
 
                                 # フォース 覚醒
+                                force = False
                                 if (proc_text == u'力') or (proc_text.lower() == 'power') \
                                 or (proc_text == u'フォース') or (proc_text.lower() == 'force'):
                                     if (qFunc.statusCheck(qRdy__s_force) == False):
                                         qFunc.statusSet(qRdy__s_force, True)
+                                        qFunc.statusSet(qRdy__s_fproc, True)
 
                                 # フォース リセット
                                 if (qFunc.statusCheck(qRdy__s_force) == False):
                                     if (self.force_last != 0):
                                         self.force_last  = 0
-                                        self.force_onece = True
                                 else:
                                     if (self.force_last == 0):
                                         self.force_last  = time.time()
-                                        self.force_onece = False
+
+                                # フォース 状態
+                                if  (qFunc.statusCheck(qRdy__s_force) == False) \
+                                and (qFunc.statusCheck(qRdy__s_fproc) == True):
+                                    force = True
 
                                 # 処理
                                 self.proc_last = time.time()
-                                self.sub_proc(seq4, proc_file, work_file, proc_name, proc_text, cn_s, )
+                                self.sub_proc(seq4, proc_file, work_file, proc_name, proc_text, force, cn_s, )
 
                                 # フォース 終了
-                                self.force_onece = False
+                                if  (qFunc.statusCheck(qRdy__s_force) == False):
+                                    qFunc.statusSet(qRdy__s_fproc, False)
 
                 #except:
                 #    pass
@@ -421,7 +427,7 @@ class proc_controls:
 
 
 
-    def sub_proc(self, seq4, proc_file, work_file, proc_name, proc_text, cn_s, ):
+    def sub_proc(self, seq4, proc_file, work_file, proc_name, proc_text, force, cn_s, ):
 
         jp_true = qFunc.in_japanese(proc_text)
         if (proc_text == self.last_text) and ((time.time() - self.last_time) < 15):
@@ -449,6 +455,28 @@ class proc_controls:
         if (self.run_knowledge == True):
             if (jp_true == True):
                 qFunc.txtsWrite(qCtrl_control_knowledge ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+
+        print('controls:force',force)
+
+        if (proc_text.find(u'画面') >= 0) and (proc_text.find(u'メイン') >= 0):
+            pyautogui.keyDown('ctrlleft')
+            pyautogui.keyDown('winleft')
+            pyautogui.keyDown('left')
+            pyautogui.keyUp('left')
+            pyautogui.keyDown('left')
+            pyautogui.keyUp('left')
+            pyautogui.keyDown('left')
+            pyautogui.keyUp('left')
+            pyautogui.keyUp('winleft')
+            pyautogui.keyUp('ctrlleft')
+
+        if (proc_text.find(u'画面') >= 0) and (proc_text.find(u'サブ') >= 0):
+            pyautogui.keyDown('ctrlleft')
+            pyautogui.keyDown('winleft')
+            pyautogui.keyDown('right')
+            pyautogui.keyUp('right')
+            pyautogui.keyUp('winleft')
+            pyautogui.keyUp('ctrlleft')
 
         if (cn_s.qsize() < 99):
 
