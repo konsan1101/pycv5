@@ -518,7 +518,7 @@ class qFunc_class:
             out_txt = out_txt.replace('\r', '')
             out_txt = out_txt.replace('\n', '')
 
-        if (self.checkWakeUpWord == True):
+        if (self.checkWakeUpWord(out_txt) == True):
             return False
 
         pyperclip.copy(out_txt)

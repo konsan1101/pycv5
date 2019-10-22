@@ -461,22 +461,65 @@ class proc_controls:
         if (proc_text.find(u'画面') >= 0) and (proc_text.find(u'メイン') >= 0):
             pyautogui.keyDown('ctrlleft')
             pyautogui.keyDown('winleft')
-            pyautogui.keyDown('left')
-            pyautogui.keyUp('left')
-            pyautogui.keyDown('left')
-            pyautogui.keyUp('left')
-            pyautogui.keyDown('left')
-            pyautogui.keyUp('left')
+            pyautogui.press('left')
+            pyautogui.press('left')
+            pyautogui.press('left')
+            pyautogui.press('left')
+            pyautogui.press('left')
             pyautogui.keyUp('winleft')
             pyautogui.keyUp('ctrlleft')
 
         if (proc_text.find(u'画面') >= 0) and (proc_text.find(u'サブ') >= 0):
             pyautogui.keyDown('ctrlleft')
             pyautogui.keyDown('winleft')
-            pyautogui.keyDown('right')
-            pyautogui.keyUp('right')
+            pyautogui.press('right')
             pyautogui.keyUp('winleft')
             pyautogui.keyUp('ctrlleft')
+
+        if (proc_text.find(u'スクリーン') >= 0) and (proc_text.find(u'キーボード') >= 0):
+            pyautogui.keyDown('ctrlleft')
+            pyautogui.keyDown('winleft')
+            pyautogui.press('o')
+            pyautogui.keyUp('winleft')
+            pyautogui.keyUp('ctrlleft')
+
+        if (proc_text == u'エンター') or (proc_text.lower() == 'enter'):
+            pyautogui.press('enter')
+
+        if (proc_text.lower() == 'f1') or (proc_text.lower() == 'f 1'):
+            pyautogui.press('f1')
+        if (proc_text.lower() == 'f2') or (proc_text.lower() == 'f 2'):
+            pyautogui.press('f2')
+        if (proc_text.lower() == 'f3') or (proc_text.lower() == 'f 3'):
+            pyautogui.press('f3')
+        if (proc_text.lower() == 'f4') or (proc_text.lower() == 'f 4'):
+            pyautogui.press('f4')
+        if (proc_text.lower() == 'f5') or (proc_text.lower() == 'f 5'):
+            pyautogui.press('f5')
+        if (proc_text.lower() == 'f6') or (proc_text.lower() == 'f 6'):
+            pyautogui.press('f6')
+        if (proc_text.lower() == 'f7') or (proc_text.lower() == 'f 7'):
+            pyautogui.press('f7')
+        if (proc_text.lower() == 'f8') or (proc_text.lower() == 'f 8'):
+            pyautogui.press('f8')
+        if (proc_text.lower() == 'f9') or (proc_text.lower() == 'f 9'):
+            pyautogui.press('f9')
+        if (proc_text.lower() == 'f10') or (proc_text.lower() == 'f 10'):
+            pyautogui.press('f10')
+        if (proc_text.lower() == 'f11') or (proc_text.lower() == 'f 11'):
+            pyautogui.press('f11')
+        if (proc_text.lower() == 'f12') or (proc_text.lower() == 'f 12'):
+            pyautogui.press('f12')
+
+
+        if (proc_text[-3:] == u'を検索'):
+            qFunc.sendKey(proc_text[:-3],cr=False, lf=False)
+            pyautogui.press('f9')
+
+        if (proc_text[-3:] == u'を入力'):
+            qFunc.sendKey(proc_text[:-3],cr=True, lf=False)
+        elif (proc_text[-2:] == u'入力'):
+            qFunc.sendKey(proc_text[:-2],cr=True, lf=False)
 
         if (cn_s.qsize() < 99):
 
