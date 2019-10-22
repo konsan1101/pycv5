@@ -349,11 +349,16 @@ class proc_controls:
 
                                 # フォース 覚醒
                                 force = False
-                                if (proc_text == u'力') or (proc_text.lower() == 'power') \
-                                or (proc_text == u'フォース') or (proc_text.lower() == 'force'):
+                                if (qFunc.checkWakeUpWord(proc_text) == True):
                                     if (qFunc.statusCheck(qRdy__s_force) == False):
                                         qFunc.statusSet(qRdy__s_force, True)
                                         qFunc.statusSet(qRdy__s_fproc, True)
+                                        force = True
+
+                                # フォース 状態
+                                if  (qFunc.statusCheck(qRdy__s_force) == False) \
+                                and (qFunc.statusCheck(qRdy__s_fproc) == True):
+                                    force = True
 
                                 # フォース リセット
                                 if (qFunc.statusCheck(qRdy__s_force) == False):
@@ -362,11 +367,6 @@ class proc_controls:
                                 else:
                                     if (self.force_last == 0):
                                         self.force_last  = time.time()
-
-                                # フォース 状態
-                                if  (qFunc.statusCheck(qRdy__s_force) == False) \
-                                and (qFunc.statusCheck(qRdy__s_fproc) == True):
-                                    force = True
 
                                 # 処理
                                 self.proc_last = time.time()

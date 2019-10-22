@@ -505,11 +505,21 @@ class qFunc_class:
             pass
         return False
 
+    def checkWakeUpWord(self, txt='', ):
+        if (txt == u'力') or (txt.lower() == 'power') \
+        or (txt == u'フォース') or (txt.lower() == 'force'):
+            return True
+        else:
+            return False
+
     def sendKey(self, txt='', cr=True, lf=False ):
         out_txt = txt
         if (cr==True) or (lf==True):
             out_txt = out_txt.replace('\r', '')
             out_txt = out_txt.replace('\n', '')
+
+        if (self.checkWakeUpWord == True):
+            return False
 
         pyperclip.copy(out_txt)
         pyautogui.hotkey('ctrl', 'v')

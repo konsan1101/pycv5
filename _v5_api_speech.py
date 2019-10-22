@@ -1106,25 +1106,27 @@ def speech_batch(runMode, micDev,
 
     # STT 結果出力
     if (inpOutput != '' and inpText != ''):
-        qFunc.txtsWrite(inpOutput, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
 
-        if (True):
-            if (inpText != '' and inpText != '!'):
-                txt = qLangInp + ', [' + inpText + ']'
-                qFunc.txtsWrite(qCtrl_recognize     , txts=[txt], encoding='utf-8', exclusive=True, mode='w', )
-                qFunc.txtsWrite(qCtrl_recognize_sjis, txts=[txt], encoding='shift_jis', exclusive=True, mode='w', )
+        if  (qFunc.statusCheck(qRdy__s_force) != True) \
+        and (qFunc.statusCheck(qRdy__s_fproc) != True):
+            qFunc.txtsWrite(inpOutput, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
 
-                filename = inpOutput.replace(qPath_s_STT, '')
-                filename = filename.replace(qPath_s_TRA, '')
-                filename = filename.replace(qPath_s_TTS, '')
-                filename = filename.replace(qPath_work, '')
+        if (inpText != '' and inpText != '!'):
+            txt = qLangInp + ', [' + inpText + ']'
+            qFunc.txtsWrite(qCtrl_recognize     , txts=[txt], encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_recognize_sjis, txts=[txt], encoding='shift_jis', exclusive=True, mode='w', )
 
-                filename1 = qPath_s_ctrl + filename
-                qFunc.txtsWrite(filename1, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
-                filename2 = qPath_v_ctrl + filename
-                qFunc.txtsWrite(filename2, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
-                filename3 = qPath_d_ctrl + filename
-                qFunc.txtsWrite(filename3, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
+            filename = inpOutput.replace(qPath_s_STT, '')
+            filename = filename.replace(qPath_s_TRA, '')
+            filename = filename.replace(qPath_s_TTS, '')
+            filename = filename.replace(qPath_work, '')
+
+            filename1 = qPath_s_ctrl + filename
+            qFunc.txtsWrite(filename1, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
+            filename2 = qPath_v_ctrl + filename
+            qFunc.txtsWrite(filename2, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
+            filename3 = qPath_d_ctrl + filename
+            qFunc.txtsWrite(filename3, txts=[inpText], encoding='utf-8', exclusive=False, mode='w', )
 
         nowTime = datetime.datetime.now()
         stamp   = nowTime.strftime('%Y%m%d')
@@ -1219,44 +1221,45 @@ def speech_batch(runMode, micDev,
     if (trnOutput != '' and trnText != ''):
         qFunc.txtsWrite(trnOutput, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
 
-        for trnRes in trnMulti:
-            filename = trnOutput
-            filename = filename.replace('.'+qLangTrn[:2]+'.', '.'+trnRes['lang']+'.')
-            if (filename != trnOutput):
-                txt = trnRes['text']
-                qFunc.txtsWrite(filename, txts=[txt], encoding='utf-8', exclusive=False, mode='w', )
+        if  (qFunc.statusCheck(qRdy__s_force) != True) \
+        and (qFunc.statusCheck(qRdy__s_fproc) != True):
+            for trnRes in trnMulti:
+                filename = trnOutput
+                filename = filename.replace('.'+qLangTrn[:2]+'.', '.'+trnRes['lang']+'.')
+                if (filename != trnOutput):
+                    txt = trnRes['text']
+                    qFunc.txtsWrite(filename, txts=[txt], encoding='utf-8', exclusive=False, mode='w', )
 
-        if (True):
-            if (trnText != '' and trnText != '!'):
-                #txt = qLangTrn[:2] + ', [' + trnText + ']'
-                #qFunc.txtsWrite(qCtrl_translate,      txts=[txt], encoding='utf-8', exclusive=True, mode='w', )
-                #qFunc.txtsWrite(qCtrl_translate_sjis, txts=[txt], encoding='shift_jis', exclusive=True, mode='w', )
+        if (trnText != '' and trnText != '!'):
+            #txt = qLangTrn[:2] + ', [' + trnText + ']'
+            #qFunc.txtsWrite(qCtrl_translate,      txts=[txt], encoding='utf-8', exclusive=True, mode='w', )
+            #qFunc.txtsWrite(qCtrl_translate_sjis, txts=[txt], encoding='shift_jis', exclusive=True, mode='w', )
 
-                txts = []
-                for trnRes in trnMulti:
-                    txts.append(trnRes['lang'] + ', [' + trnRes['text'] + ']')
+            txts = []
+            for trnRes in trnMulti:
+                txts.append(trnRes['lang'] + ', [' + trnRes['text'] + ']')
 
-                qFunc.txtsWrite(qCtrl_translate,      txts=txts, encoding='utf-8', exclusive=True, mode='w', )
-                qFunc.txtsWrite(qCtrl_translate_sjis, txts=txts, encoding='shift_jis', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_translate,      txts=txts, encoding='utf-8', exclusive=True, mode='w', )
+            qFunc.txtsWrite(qCtrl_translate_sjis, txts=txts, encoding='shift_jis', exclusive=True, mode='w', )
 
-                for trnRes in trnMulti:
-                    filename = trnOutput
-                    filename = filename.replace('.'+qLangTrn[:2]+'.', '.'+trnRes['lang']+'.')
-                    if (filename != trnOutput):
-                        txt = trnRes['text']
-                        qFunc.txtsWrite(filename, txts=[txt], encoding='utf-8', exclusive=False, mode='w', )
+            for trnRes in trnMulti:
+                filename = trnOutput
+                filename = filename.replace('.'+qLangTrn[:2]+'.', '.'+trnRes['lang']+'.')
+                if (filename != trnOutput):
+                    txt = trnRes['text']
+                    qFunc.txtsWrite(filename, txts=[txt], encoding='utf-8', exclusive=False, mode='w', )
 
-                filename = trnOutput.replace(qPath_s_STT, '')
-                filename = filename.replace(qPath_s_TRA, '')
-                filename = filename.replace(qPath_s_TTS, '')
-                filename = filename.replace(qPath_work, '')
+            filename = trnOutput.replace(qPath_s_STT, '')
+            filename = filename.replace(qPath_s_TRA, '')
+            filename = filename.replace(qPath_s_TTS, '')
+            filename = filename.replace(qPath_work, '')
 
-                filename1 = qPath_s_ctrl + filename
-                qFunc.txtsWrite(filename1, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
-                filename2 = qPath_v_ctrl + filename
-                qFunc.txtsWrite(filename2, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
-                filename3 = qPath_d_ctrl + filename
-                qFunc.txtsWrite(filename3, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
+            filename1 = qPath_s_ctrl + filename
+            qFunc.txtsWrite(filename1, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
+            filename2 = qPath_v_ctrl + filename
+            qFunc.txtsWrite(filename2, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
+            filename3 = qPath_d_ctrl + filename
+            qFunc.txtsWrite(filename3, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
 
         if (inpInput != ''):
             nowTime = datetime.datetime.now()

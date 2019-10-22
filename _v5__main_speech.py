@@ -632,8 +632,7 @@ class main_speech:
                                 print('julius:', proc_text)
 
                                 # フォース 覚醒
-                                if (proc_text == u'力') or (proc_text.lower() == 'power') \
-                                or (proc_text == u'フォース') or (proc_text.lower() == 'force'):
+                                if (qFunc.checkWakeUpWord(proc_text) == True):
                                     if (qFunc.statusCheck(qRdy__s_force) == False):
                                         qFunc.statusSet(qRdy__s_force, True)
                                         qFunc.statusSet(qRdy__s_fproc, True)
