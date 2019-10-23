@@ -458,7 +458,7 @@ class proc_controls:
 
         print('controls:force',force)
 
-        if (proc_text.find(u'画面') >= 0) and (proc_text.find(u'メイン') >= 0):
+        if (proc_text.find(u'スクリーン') >= 0) and (proc_text.find(u'メイン') >= 0):
             pyautogui.keyDown('ctrlleft')
             pyautogui.keyDown('winleft')
             pyautogui.press('left')
@@ -469,7 +469,7 @@ class proc_controls:
             pyautogui.keyUp('winleft')
             pyautogui.keyUp('ctrlleft')
 
-        if (proc_text.find(u'画面') >= 0) and (proc_text.find(u'サブ') >= 0):
+        if (proc_text.find(u'スクリーン') >= 0) and (proc_text.find(u'サブ') >= 0):
             pyautogui.keyDown('ctrlleft')
             pyautogui.keyDown('winleft')
             pyautogui.press('right')
@@ -482,6 +482,10 @@ class proc_controls:
             pyautogui.press('o')
             pyautogui.keyUp('winleft')
             pyautogui.keyUp('ctrlleft')
+
+        if (proc_text == u'サープ起動') or (proc_text == u'プログラム起動'):
+            sample = subprocess.Popen(['C:\snkApps\SAAP_r545_20191018\__start.bat' ], )
+                                #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
         if (proc_text == u'エンター') or (proc_text.lower() == 'enter'):
             pyautogui.press('enter')
