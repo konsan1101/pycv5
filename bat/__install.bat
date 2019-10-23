@@ -65,6 +65,7 @@ ECHO ------
     python -m pip  install --upgrade pep8
     python -m pip  install --upgrade matplotlib
     python -m pip  install --upgrade pyautogui
+    python -m pip  install --upgrade pyzbar
 
 ECHO;
 ECHO -----------
