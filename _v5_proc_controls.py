@@ -41,6 +41,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qUSERNAME       = qFunc.getValue('qUSERNAME'      )
+qPath_pictures  = qFunc.getValue('qPath_pictures' )
+qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
@@ -379,8 +382,6 @@ class proc_controls:
                 #except:
                 #    pass
 
-                time.sleep(0.50)
-
 
 
             # ビジー解除
@@ -397,9 +398,9 @@ class proc_controls:
                 time.sleep(1.00)
             else:
                 if (cn_r.qsize() == 0):
-                    time.sleep(0.50)
-                else:
                     time.sleep(0.25)
+                else:
+                    time.sleep(0.10)
 
         # 終了処理
         if (True):
@@ -458,7 +459,7 @@ class proc_controls:
 
         print('controls:force',force)
 
-        if (proc_text.find(u'スクリーン') >= 0) and (proc_text.find(u'メイン') >= 0):
+        if (proc_text.find(u'メイン') >= 0) and (proc_text.find(u'スクリーン') >= 0):
             pyautogui.keyDown('ctrlleft')
             pyautogui.keyDown('winleft')
             pyautogui.press('left')
@@ -469,7 +470,7 @@ class proc_controls:
             pyautogui.keyUp('winleft')
             pyautogui.keyUp('ctrlleft')
 
-        if (proc_text.find(u'スクリーン') >= 0) and (proc_text.find(u'サブ') >= 0):
+        if (proc_text.find(u'サブ') >= 0) and (proc_text.find(u'スクリーン') >= 0):
             pyautogui.keyDown('ctrlleft')
             pyautogui.keyDown('winleft')
             pyautogui.press('right')
@@ -483,9 +484,19 @@ class proc_controls:
             pyautogui.keyUp('winleft')
             pyautogui.keyUp('ctrlleft')
 
-        if (proc_text == u'サープ起動') or (proc_text == u'プログラム起動'):
+        if ((proc_text.find(u'サープ') >= 0) \
+        and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))) \
+        or ((proc_text.find(u'システム') >= 0) \
+        and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))) \
+        or ((proc_text.find(u'プログラム') >= 0) \
+        and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))):
             sample = subprocess.Popen(['C:\snkApps\SAAP_r545_20191018\__start.bat' ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+        if (proc_text[-3:] == u'を入力'):
+            qFunc.sendKey(proc_text[:-3],cr=True, lf=False)
+        elif (proc_text[-2:] == u'入力'):
+            qFunc.sendKey(proc_text[:-2],cr=True, lf=False)
 
         if (proc_text == u'エンター') or (proc_text.lower() == 'enter'):
             pyautogui.press('enter')
@@ -514,16 +525,12 @@ class proc_controls:
             pyautogui.press('f11')
         if (proc_text.lower() == 'f12') or (proc_text.lower() == 'f 12'):
             pyautogui.press('f12')
-
+        if (proc_text == u'閉じる') or (proc_text == u'ポーズ'):
+            pyautogui.press('pause')
 
         if (proc_text[-3:] == u'を検索'):
             qFunc.sendKey(proc_text[:-3],cr=False, lf=False)
             pyautogui.press('f9')
-
-        if (proc_text[-3:] == u'を入力'):
-            qFunc.sendKey(proc_text[:-3],cr=True, lf=False)
-        elif (proc_text[-2:] == u'入力'):
-            qFunc.sendKey(proc_text[:-2],cr=True, lf=False)
 
         if (cn_s.qsize() < 99):
 
@@ -622,7 +629,7 @@ class proc_controls:
                 self.run_player = False
 
             elif (self.run_player == True) \
-            and  (proc_text.find(u'メニュー') >=0):
+            and  (proc_text.find(u'動画') >=0) and (proc_text.find(u'メニュー') >=0):
                 qFunc.statusWait_false(qCtrl_control_player, 5)
                 time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )

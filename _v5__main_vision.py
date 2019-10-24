@@ -55,6 +55,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qUSERNAME       = qFunc.getValue('qUSERNAME'      )
+qPath_pictures  = qFunc.getValue('qPath_pictures' )
+qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
@@ -993,7 +996,6 @@ class main_vision:
                         if (res_name == '[txts]'):
                             for txt in res_value:
                                 qFunc.notePad(txt)
-                                txt = qFunc.sendControl(txt)
                                 if (qFunc.statusCheck(qRdy__v_sendkey) == True):
                                     qFunc.sendKey(txt)
 
@@ -1280,25 +1282,35 @@ class main_vision:
         except:
             photo_file = ''
             photo_txt  = ''
-        if (photo_file == ''):
-            main_file = ''
+        #if (photo_file == ''):
+        #    main_file = ''
 
         # 写真コピー保存
         filename_p1 = qPath_v_photo  + stamp + '.photo.jpg'
-        filename_p2 = qCtrl_result_photo
+        filename_p2 = qPath_d_upload + stamp + '.photo.jpg'
+        filename_p3 = qCtrl_result_photo
+        filename_p4 = qPath_pictures + stamp + '.photo.jpg'
         filename_s1 = qPath_d_prtscn + stamp + '.screen.jpg'
         filename_s2 = qCtrl_result_screen
         filename_m1 = qPath_rec      + stamp + photo_txt + '.jpg'
-        filename_m2 = qPath_v_msg    + stamp + photo_txt + '.jpg'
+        filename_m2 = qPath_d_upload + stamp + photo_txt + '.jpg'
+        filename_m3 = qPath_v_msg    + stamp + photo_txt + '.jpg'
+        filename_m4 = qPath_pictures + stamp + photo_txt + '.jpg'
         if (main_file != ''):
             qFunc.copy(main_file,   filename_p1)
             qFunc.copy(main_file,   filename_p2)
+            qFunc.copy(main_file,   filename_p3)
+            if (qPath_pictures != ''):
+                qFunc.copy(main_file,   filename_p4)
         if (screen_file != ''):
             qFunc.copy(screen_file, filename_s1)
             qFunc.copy(screen_file, filename_s2)
         if (photo_file != ''):
             qFunc.copy(photo_file,  filename_m1)
             qFunc.copy(photo_file,  filename_m2)
+            qFunc.copy(photo_file,  filename_m3)
+            if (qPath_pictures != ''):
+                qFunc.copy(photo_file,  filename_m4)
 
 
 
@@ -1758,7 +1770,7 @@ if __name__ == '__main__':
             if (control == '_enter_') \
             or (control == '_cancel_') \
             or (control == '_close_'):
-                qFunc.txtsWrite(qCtrl_result_vision, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_result_vision, txts=[control], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
@@ -1767,7 +1779,7 @@ if __name__ == '__main__':
             if (control == '_enter_') \
             or (control == '_cancel_') \
             or (control == '_close_'):
-                qFunc.txtsWrite(qCtrl_result_vision, txts=[mouse2], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_result_vision, txts=[control], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.statusSet(qBusy_dev_cam, True)
                 qFunc.statusSet(qBusy_dev_dsp, True)
 

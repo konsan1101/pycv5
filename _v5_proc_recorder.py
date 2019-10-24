@@ -31,6 +31,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qUSERNAME       = qFunc.getValue('qUSERNAME'      )
+qPath_pictures  = qFunc.getValue('qPath_pictures' )
+qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
@@ -201,11 +204,11 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath='', sfps=1, scene=0.1,
         f0 =  wrkPath + seq4 + '.jpg'
         if (os.path.exists(f0)):
             if (inpText == ''):
-                f1 =  wrkPath + '_' + stamp[:-3] + '.jpg'
-                f2 =  outPath + '_' + stamp[:-3] + '.jpg'
+                f1 =  wrkPath + stamp[:-3] + '.jpg'
+                f2 =  outPath + stamp[:-3] + '.jpg'
             else:
-                f1 =  wrkPath + stamp[:-3] + inpText + '.jpg'
-                f2 =  outPath + stamp[:-3] + inpText + '.jpg'
+                f1 =  wrkPath + '_' + stamp[:-3] + inpText + '.jpg'
+                f2 =  outPath + '_' + stamp[:-3] + inpText + '.jpg'
             os.rename(f0, f1)
             qFunc.copy(f1, f2)
             os.remove(f1)
@@ -280,11 +283,11 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath='', sfps=1, scene=0.1,
                     f0 =  wrkPath + seq4 + '.jpg'
                     if (os.path.exists(f0)):
                         if (inpText == ''):
-                            f1 =  wrkPath + '_' + stamp[:-3] + '.jpg'
-                            f2 =  outPath + '_' + stamp[:-3] + '.jpg'
+                            f1 =  wrkPath + stamp[:-3] + '.jpg'
+                            f2 =  outPath + stamp[:-3] + '.jpg'
                         else:
-                            f1 =  wrkPath + stamp[:-3] + inpText + '.jpg'
-                            f2 =  outPath + stamp[:-3] + inpText + '.jpg'
+                            f1 =  wrkPath + '_' + stamp[:-3] + inpText + '.jpg'
+                            f2 =  outPath + '_' + stamp[:-3] + inpText + '.jpg'
                         os.rename(f0, f1)
                         qFunc.copy(f1, f2)
                         os.remove(f1)
@@ -310,9 +313,9 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
     inpTime = inpNamev[:15]
     inpText = inpNamev[15:-4]
     if (inpText == ''):
-        outFile = outPath + '_' + inpTime + '.___' + '.mp4'
+        outFile = outPath + inpTime + '.___' + '.mp4'
     else:
-        outFile = outPath + inpTime + '.___' + inpText + '.mp4'
+        outFile = outPath + '_' + inpTime + '.___' + inpText + '.mp4'
 
     result = False
 
@@ -364,6 +367,8 @@ def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
             outFile = f.replace(qPath_rec, '')
             qFunc.copy(f, qPath_d_movie  + outFile)
             qFunc.copy(f, qPath_d_upload + outFile)
+            if (qPath_videos != ''):
+                qFunc.copy(f, qPath_videos + outFile)
 
             # ログ
             print(proc_id + ':thread ' + str(index) + ':' + rec_namev + u' → ' + outFile)
@@ -375,6 +380,8 @@ def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
             outFile = f.replace(qPath_rec, '')
             qFunc.copy(f, qPath_d_movie  + outFile)
             qFunc.copy(f, qPath_d_upload + outFile)
+            if (qPath_videos != ''):
+                qFunc.copy(f, qPath_videos + outFile)
 
             # ログ
             print(proc_id + ':thread ' + str(index) + ':' + rec_namev + u' → ' + outFile)

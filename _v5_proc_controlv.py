@@ -26,6 +26,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qUSERNAME       = qFunc.getValue('qUSERNAME'      )
+qPath_pictures  = qFunc.getValue('qPath_pictures' )
+qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
@@ -305,8 +308,6 @@ class proc_controlv:
                 #except:
                 #    pass
 
-                time.sleep(0.50)
-
 
 
             # ビジー解除
@@ -323,9 +324,9 @@ class proc_controlv:
                 time.sleep(1.00)
             else:
                 if (cn_r.qsize() == 0):
-                    time.sleep(0.50)
-                else:
                     time.sleep(0.25)
+                else:
+                    time.sleep(0.10)
 
         # 終了処理
         if (True):

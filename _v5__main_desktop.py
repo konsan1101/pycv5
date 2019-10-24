@@ -47,6 +47,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qUSERNAME       = qFunc.getValue('qUSERNAME'      )
+qPath_pictures  = qFunc.getValue('qPath_pictures' )
+qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
@@ -591,10 +594,15 @@ class main_desktop:
 
         # コピー保存
         filename_s1 = qPath_d_prtscn + stamp + '.capture.jpg'
-        filename_s2 = qCtrl_result_capture
+        filename_s2 = qPath_d_upload + stamp + '.capture.jpg'
+        filename_s3 = qCtrl_result_capture
+        filename_s4 = qPath_pictures + stamp + '.capture.jpg'
         if (main_file != ''):
             qFunc.copy(main_file,   filename_s1)
             qFunc.copy(main_file,   filename_s2)
+            qFunc.copy(main_file,   filename_s3)
+            if (qPath_pictures != ''):
+                qFunc.copy(main_file,   filename_s4)
 
 
 

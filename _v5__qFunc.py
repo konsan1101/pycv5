@@ -24,6 +24,10 @@ import platform
 qOS = platform.system().lower() #windows,darwin,linux
 import socket
 qHOSTNAME = socket.gethostname().lower()
+if (os.name == 'nt'):
+    qUSERNAME = os.environ["USERNAME"]
+else:
+    qUSERNAME = os.environ["USER"]
 
 import ctypes
 import array
@@ -34,6 +38,12 @@ import pyperclip
 import cv2
 
 
+
+qPath_pictures  = ''
+qPath_videos    = ''
+if (os.name == 'nt'):
+    qPath_pictures  = 'C:/Users/' + qUSERNAME + '/Pictures/'
+    qPath_videos    = 'C:/Users/' + qUSERNAME + '/Videos/'
 
 qPath_cache     = '_cache/'
 qPath_sounds    = '_sounds/'
@@ -147,7 +157,9 @@ class qFunc_class:
     def getValue(self, field):
         if (field == 'qOS'             ): return qOS
         if (field == 'qHOSTNAME'       ): return qHOSTNAME
-
+        if (field == 'qUSERNAME'       ): return qUSERNAME
+        if (field == 'qPath_pictures'  ): return qPath_pictures
+        if (field == 'qPath_videos'    ): return qPath_videos
         if (field == 'qPath_cache'     ): return qPath_cache
         if (field == 'qPath_sounds'    ): return qPath_sounds
         if (field == 'qPath_fonts'     ): return qPath_fonts
@@ -507,7 +519,9 @@ class qFunc_class:
 
     def checkWakeUpWord(self, txt='', ):
         if (txt == u'力') or (txt.lower() == 'power') \
-        or (txt == u'フォース') or (txt.lower() == 'force'):
+        or (txt.lower() == 'wiki') \
+        or (txt == u'フォース') or (txt.lower() == 'force') \
+        or (txt[:6] == u'コンピュータ') or (txt.lower() == 'computer'):
             return True
         else:
             return False

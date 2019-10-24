@@ -29,6 +29,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qUSERNAME       = qFunc.getValue('qUSERNAME'      )
+qPath_pictures  = qFunc.getValue('qPath_pictures' )
+qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
@@ -770,7 +773,7 @@ class proc_overlay:
                             cv2.rectangle(display_img,(over_x,over_y),(over_x+over_width,over_y+over_height),(0,0,0),1)
                             over_y += over_height + 10
                             over_x2 = over_x - 10
-                        over_x += over_width                        
+                        over_x += over_width
 
                     # ワイプ画像４ overlay
                     if ((time.time() - wipe_time4) <= 5) and (not wipe_mini4 is None):

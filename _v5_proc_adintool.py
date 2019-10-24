@@ -31,6 +31,9 @@ qFunc = _v5__qFunc.qFunc_class()
 
 qOS             = qFunc.getValue('qOS'            )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
+qUSERNAME       = qFunc.getValue('qUSERNAME'      )
+qPath_pictures  = qFunc.getValue('qPath_pictures' )
+qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
@@ -283,7 +286,8 @@ class proc_adintool:
                         qFunc.statusSet(qBusy_s_inp, True)
 
                     # ガイド音
-                    if (self.micGuide == 'on' or self.micGuide == 'sound'):
+                    if (self.micGuide == 'on' or self.micGuide == 'sound') \
+                    or (qFunc.statusCheck(qRdy__s_force) == True):
                         qFunc.guide('_ready')
 
                     if (True):
@@ -327,10 +331,6 @@ class proc_adintool:
                     if (len(files) == 0):
                         sw = 'accept'
 
-                        # フォース 終了
-                        if (qFunc.statusCheck(qRdy__s_force) == True):
-                            qFunc.statusSet(qRdy__s_force, False)
-
             # on -> off, accept
             if (sw == 'off') or (sw == 'accept'):
 
@@ -354,8 +354,14 @@ class proc_adintool:
                 # ガイド音
                 time.sleep(0.50)
                 if (sw == 'accept'):
-                    if (self.micGuide == 'on') or (self.micGuide == 'sound'):
+                    if (self.micGuide == 'on') or (self.micGuide == 'sound') \
+                    or (qFunc.statusCheck(qRdy__s_force) == True):
                         qFunc.guide('_accept')
+
+                # フォース 終了
+                if (qFunc.statusCheck(qRdy__s_force) == True):
+                    qFunc.statusSet(qRdy__s_force, False)
+
                 time.sleep(0.50)
 
 
