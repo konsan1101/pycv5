@@ -45,7 +45,8 @@ qFONT_ko = {'file':'C:/Windows/Fonts/batang.ttc', 'offset':10}
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
-qOS             = qFunc.getValue('qOS'            )
+qPLATFORM       = qFunc.getValue('qPLATFORM'      )
+qRUNATTR        = qFunc.getValue('qRUNATTR'       )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
 qUSERNAME       = qFunc.getValue('qUSERNAME'      )
 qPath_pictures  = qFunc.getValue('qPath_pictures' )
@@ -128,18 +129,18 @@ qLangTrn   = 'en'
 def qGetResolution(reso='full'):
 
     if   (reso=='full'):
-        if (qOS != 'darwin'):
+        if (qPLATFORM != 'darwin'):
             return 1920,1080
         else:
             return 2560,1600
     if   (reso=='full+'):
-        if (qOS != 'darwin'):
+        if (qPLATFORM != 'darwin'):
             #return 1920+40,1080+40
             return 1280+40,720+40
         else:
             return 2560+40,1600+40
     elif (reso=='half'):
-        if (qOS != 'darwin'):
+        if (qPLATFORM != 'darwin'):
             return 960,540
         else:
             return 1280,800

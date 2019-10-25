@@ -51,7 +51,8 @@ qCtrl_translate    = 'temp/control_translate.txt'
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
-qOS             = qFunc.getValue('qOS'            )
+qPLATFORM       = qFunc.getValue('qPLATFORM'      )
+qRUNATTR        = qFunc.getValue('qRUNATTR'       )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
 qUSERNAME       = qFunc.getValue('qUSERNAME'      )
 qPath_pictures  = qFunc.getValue('qPath_pictures' )
@@ -121,9 +122,9 @@ qRdy__d_sendkey = qFunc.getValue('qRdy__d_sendkey')
 qApiInp    = 'free'
 qApiTrn    = 'free'
 qApiOut    = 'free'
-if (qOS == 'windows'):
+if (qPLATFORM == 'windows'):
     qApiOut = 'winos'
-if (qOS == 'darwin'):
+if (qPLATFORM == 'darwin'):
     qApiOut = 'macos'
 qLangInp   = 'ja'
 qLangTrn   = 'en'
@@ -921,9 +922,9 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             qApiInp = 'free'
             qApiTrn = 'free'
             qApiOut = 'free'
-            if (qOS == 'windows'):
+            if (qPLATFORM == 'windows'):
                 qApiOut = 'winos'
-            if (qOS == 'darwin'):
+            if (qPLATFORM == 'darwin'):
                 qApiOut = 'macos'
 
             useApi = qApiInp
@@ -1100,9 +1101,9 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
             qApiInp = 'google'
             qApiTrn = 'nict'
             qApiOut = 'watson'
-            if (qOS == 'windows'):
+            if (qPLATFORM == 'windows'):
                 qApiOut = 'winos'
-            if (qOS == 'darwin'):
+            if (qPLATFORM == 'darwin'):
                 qApiOut = 'macos'
 
             speechtext = u'こんにちは。私は国立法人の情報通信研究機構「ＮＩＣＴ」のクラウドAIです。'
@@ -1163,9 +1164,9 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
             qApiInp = 'docomo'
             qApiOut = 'free'
-            if (qOS == 'windows'):
+            if (qPLATFORM == 'windows'):
                 qApiOut = 'winos'
-            if (qOS == 'darwin'):
+            if (qPLATFORM == 'darwin'):
                 qApiOut = 'macos'
 
             speechtext = u'こんにちは。私は「ドコモ」のクラウドAIです。'
@@ -1177,7 +1178,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
 
 
-    if ((procText == 'winos') or (procText == 'windows')) and (qOS == 'windows') and (locked_ai == False):
+    if ((procText == 'winos') or (procText == 'windows')) and (qPLATFORM == 'windows') and (locked_ai == False):
         if  (qApiOut == 'winos'):
             speechtext = u'ja,hoya,既にWINDOWSのOSの音声合成機能で処理中です。'
             control_speech('00', fileId, runMode, micDev, qApiTrn, qApiOut, qLangInp, qLangOut, speechtext, )
@@ -1199,7 +1200,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
 
 
 
-    if ((procText == 'macos') or (procText == 'osx')) and (qOS == 'darwin') and (locked_ai == False):
+    if ((procText == 'macos') or (procText == 'osx')) and (qPLATFORM == 'darwin') and (locked_ai == False):
         if  (qApiOut == 'macos'):
             speechtext = u'ja,hoya,既にMACのOSの音声合成機能で処理中です。'
             control_speech('00', fileId, runMode, micDev, qApiTrn, qApiOut, qLangInp, qLangOut, speechtext, )

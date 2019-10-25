@@ -53,7 +53,8 @@ qCtrl_result_ocrTrn_sjis = 'temp/result_ocr_translate_sjis.txt'
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
-qOS             = qFunc.getValue('qOS'            )
+qPLATFORM       = qFunc.getValue('qPLATFORM'      )
+qRUNATTR        = qFunc.getValue('qRUNATTR'       )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
 qUSERNAME       = qFunc.getValue('qUSERNAME'      )
 qPath_pictures  = qFunc.getValue('qPath_pictures' )
@@ -134,23 +135,11 @@ import _v5_proc_coreCV
 
 
 
-if getattr(sys, 'frozen', False):
-    #print('exe')
-    google = False
-else:
-    #print('python')
-    google = True
-
 runMode    = 'hud'
 
-if (google == True):
-    qApiCV     = 'google'
-    qApiOCR    = qApiCV
-    qApiTrn    = 'free'
-else:
-    qApiCV     = 'azure'
-    qApiOCR    = qApiCV
-    qApiTrn    = 'azure'
+qApiCV     = 'google'
+qApiOCR    = qApiCV
+qApiTrn    = 'free'
 qLangCV    = 'ja'
 qLangOCR   = qLangCV
 qLangTrn   = 'en'

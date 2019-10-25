@@ -21,9 +21,15 @@ import codecs
 import glob
 
 import platform
-qOS = platform.system().lower() #windows,darwin,linux
+qPLATFORM = platform.system().lower() #windows,darwin,linux
+
+qRUNATTR  = 'python'
+if getattr(sys, 'frozen', False):
+    qRUNATTR = 'exe'
+
 import socket
 qHOSTNAME = socket.gethostname().lower()
+
 if (os.name == 'nt'):
     qUSERNAME = os.environ["USERNAME"]
 else:
@@ -155,7 +161,8 @@ class qFunc_class:
         return True
 
     def getValue(self, field):
-        if (field == 'qOS'             ): return qOS
+        if (field == 'qPLATFORM'       ): return qPLATFORM
+        if (field == 'qRUNATTR'        ): return qRUNATTR
         if (field == 'qHOSTNAME'       ): return qHOSTNAME
         if (field == 'qUSERNAME'       ): return qUSERNAME
         if (field == 'qPath_pictures'  ): return qPath_pictures
@@ -791,10 +798,10 @@ class qFunc_class:
 
         outLang = lang
         if (outLang == 'auto'):
-            if   (qOS == 'windows'):
+            if   (qPLATFORM == 'windows'):
                 #outLang = 'ja,winos,'
                 outLang = 'ja,hoya,'
-            elif (qOS == 'darwin'):
+            elif (qPLATFORM == 'darwin'):
                 outLang = 'ja,macos,'
             else:
                 outLang = 'ja,free,'

@@ -14,11 +14,10 @@ import time
 import codecs
 import subprocess
 
+import pythoncom
 import platform    # platform.system().lower() #windows,darwin,linux
 if (platform.system().lower() == 'windows'):
-    import win32com.client as wincl
-    #import win32com.client
-    import win32api
+    import win32com.client
 
 
 
@@ -92,11 +91,12 @@ class SpeechAPI:
                     stml += outText
                     stml += '</voice></speak>'
 
+                    pythoncom.CoInitialize()
+
                     engine = None
                     if (True):
                         try:
-                            engine = wincl.Dispatch('SAPI.SpVoice')
-                            #engine = win32com.client.Dispatch('SAPI.SpVoice')
+                            engine = win32com.client.Dispatch('SAPI.SpVoice')
                             #engine.Speak(stml)
                         except:
                             print('win32com.client.Dispatch(SAPI.SpVoice) is error !', lang, outGender.lower(), )
@@ -104,8 +104,7 @@ class SpeechAPI:
                     stream = None
                     if (not engine is None):
                         try:
-                            stream = wincl.Dispatch('SAPI.SpFileStream')
-                            #stream = win32com.client.Dispatch('SAPI.SpFileStream')
+                            stream = win32com.client.Dispatch('SAPI.SpFileStream')
 
                             stream.open(outFile, 3, False)
                             #for speaker in engine.GetAudioOutputs():
@@ -116,6 +115,8 @@ class SpeechAPI:
 
                         except:
                             print('win32com.client.Dispatch(SAPI.SpFileStream) is error !')
+
+                    pythoncom.CoUninitialize()
 
                     engine = None
                     stream = None

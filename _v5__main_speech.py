@@ -45,7 +45,8 @@ qCtrl_translate_sjis     = 'temp/result_translate_sjis.txt'
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
-qOS             = qFunc.getValue('qOS'            )
+qPLATFORM       = qFunc.getValue('qPLATFORM'      )
+qRUNATTR        = qFunc.getValue('qRUNATTR'       )
 qHOSTNAME       = qFunc.getValue('qHOSTNAME'      )
 qUSERNAME       = qFunc.getValue('qUSERNAME'      )
 qPath_pictures  = qFunc.getValue('qPath_pictures' )
@@ -126,27 +127,15 @@ import speech_api_julius
 
 
 
-if getattr(sys, 'frozen', False):
-    #print('exe')
-    google = False
-else:
-    #print('python')
-    google = True
-
 # debug
 runMode     = 'hud'
 
-if (google == True):
-    qApiInp     = 'free'
-    qApiTrn     = 'free'
-    qApiOut     = qApiTrn
-    if (qOS == 'windows'):
-        qApiOut = 'winos'
-else:
-    qApiInp     = 'azure'
-    qApiTrn     = 'azure'
-    qApiOut     = qApiTrn
-if (qOS == 'darwin'):
+qApiInp     = 'free'
+qApiTrn     = 'free'
+qApiOut     = qApiTrn
+if (qPLATFORM == 'windows'):
+    qApiOut = 'winos'
+if (qPLATFORM == 'darwin'):
     qApiOut = 'macos'
 qLangInp    = 'ja'
 #qLangTrn    = 'en,fr,'
