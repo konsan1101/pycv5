@@ -27,7 +27,7 @@ import cv2
 
 
 # インターフェース
-qCtrl_control_main       = 'temp/control_main.txt'
+qCtrl_control_kernel     = 'temp/control_kernel.txt'
 qCtrl_control_speech     = 'temp/control_speech.txt'
 qCtrl_control_vision     = 'temp/control_vision.txt'
 qCtrl_control_desktop    = 'temp/control_desktop.txt'
@@ -1772,7 +1772,7 @@ if __name__ == '__main__':
             or (control == '_cancel_') \
             or (control == '_close_'):
                 qFunc.txtsWrite(qCtrl_result_vision, txts=[control], encoding='utf-8', exclusive=True, mode='w', )
-                qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_kernel, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # バックグラウンドクリック操作

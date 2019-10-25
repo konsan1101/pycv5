@@ -27,7 +27,7 @@ import cv2
 
 
 # インターフェース
-qCtrl_control_main       = 'temp/control_main.txt'
+qCtrl_control_kernel     = 'temp/control_kernel.txt'
 qCtrl_control_speech     = 'temp/control_speech.txt'
 qCtrl_control_vision     = 'temp/control_vision.txt'
 qCtrl_control_desktop    = 'temp/control_desktop.txt'

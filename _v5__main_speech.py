@@ -25,7 +25,7 @@ import glob
 
 
 # インターフェース
-qCtrl_control_main       = 'temp/control_main.txt'
+qCtrl_control_kernel     = 'temp/control_kernel.txt'
 qCtrl_control_speech     = 'temp/control_speech.txt'
 qCtrl_control_vision     = 'temp/control_vision.txt'
 qCtrl_control_desktop    = 'temp/control_desktop.txt'
@@ -643,7 +643,7 @@ class main_speech:
                                 # 終了操作
                                 if ((proc_text.find(u'システム') >=0) and (proc_text.find(u'終了') >=0)) \
                                 or  (proc_text == u'バルス'):
-                                    qFunc.txtsWrite(qCtrl_control_main, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                                    qFunc.txtsWrite(qCtrl_control_kernel, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                                     qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
                                     break
 
