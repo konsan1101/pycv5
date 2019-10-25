@@ -475,33 +475,39 @@ class qFunc_class:
 
 
 
-    #def winBoarder(self, winTitle='Display', boarder=False, ):
-    #    if (os.name != 'nt'):
-    #        return False
-    #    parent_handle = ctypes.windll.user32.FindWindowW(0, winTitle)
-    #    if (parent_handle == 0):
-    #        return False
-    #    else:
-    #        if (boarder == False):
-    #            #GCL_HBRBACKGROUND = -10
-    #            #ctypes.windll.user32.SetClassLongA(parent_handle, GCL_HBRBACKGROUND, 0x00000000)
-    #            pass
-    #        else:
-    #            #GCL_HBRBACKGROUND = -10
-    #            #ctypes.windll.user32.SetClassLongA(parent_handle, GCL_HBRBACKGROUND, 0x00FFFFFF)
-    #            pass
-
-    def moveWindowSize(self, winTitle='Display', posX=0, posY=0, dspMode='full+', ):
+    def findWindow(self, winTitle='Display', ):
         if (os.name != 'nt'):
             return False
         parent_handle = ctypes.windll.user32.FindWindowW(0, winTitle)
         if (parent_handle == 0):
             return False
         else:
+            return parent_handle
+
+    def moveWindowSize(self, winTitle='Display', posX=0, posY=0, dspMode='full+', ):
+        if (os.name != 'nt'):
+            return False
+        parent_handle = self.findWindow(winTitle)
+        if (parent_handle == False):
+            return False
+        else:
             dspWidth, dspHeight = self.getResolution(dspMode)
             HWND_TOP = 0
             SWP_SHOWWINDOW = 0x0040
             ctypes.windll.user32.SetWindowPos(parent_handle, HWND_TOP, posX, posY, dspWidth, dspHeight, SWP_SHOWWINDOW)
+            return True
+
+    def setForegroundWindow(self, winTitle='Display', ):
+        if (os.name != 'nt'):
+            return False
+        parent_handle = self.findWindow(winTitle)
+        if (parent_handle == False):
+            return False
+        else:
+            ctypes.windll.user32.SetForegroundWindow(parent_handle)
+            return True
+
+
 
     def in_japanese(self, txt=''):
         t = txt.replace('\r', '')

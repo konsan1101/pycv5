@@ -1685,6 +1685,7 @@ if __name__ == '__main__':
                             qFunc.moveWindowSize(winTitle='Display', posX=-20, posY=-50, dspMode=dspMode, )
                         else:
                             cv2.moveWindow( 'Display',   0,   0)
+                        qFunc.setForegroundWindow(winTitle='Display', )
                         show_onece = False
 
                     # キーボード操作検査(1)
