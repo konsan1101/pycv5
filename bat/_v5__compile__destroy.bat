@@ -8,7 +8,7 @@ pause
 set pyname=_v5__destroy
     echo;
     echo %pyname%.py
-    pyinstaller %pyname%.py  --onefile
+    pyinstaller %pyname%.py  --onefile --icon="_icon/RiKi_stop.ico"
     copy "C:\Users\kondou\Documents\GitHub\pycv5\dist\%pyname%.exe"   "%pyname%.exe"
     del  "%pyname%.spec"
 
