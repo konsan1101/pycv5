@@ -385,11 +385,23 @@ class proc_controld:
 
             # sendkey on/off
             elif (proc_text.lower() == '_sendkey_on_'):
-                qFunc.statusSet(qRdy__s_sendkey, True)
-                qFunc.statusSet(qRdy__v_sendkey, True)
+                qFunc.statusSet(qRdy__s_sendkey, True )
+                qFunc.statusSet(qRdy__v_sendkey, True )
             elif (proc_text.lower() == '_sendkey_off_'):
                 qFunc.statusSet(qRdy__s_sendkey, False)
                 qFunc.statusSet(qRdy__v_sendkey, False)
+
+            # mic off/on
+            elif (proc_text.lower() == '_mic_off_'):
+                qFunc.statusSet(qBusy_dev_mic, True )
+            elif (proc_text.lower() == '_mic_on_'):
+                qFunc.statusSet(qBusy_dev_mic, False)
+
+            # cpu off/on
+            elif (proc_text.lower() == '_cpu_off_'):
+                qFunc.statusSet(qBusy_dev_cpu, True )
+            elif (proc_text.lower() == '_cpu_on_'):
+                qFunc.statusSet(qBusy_dev_cpu, False)
 
 
 

@@ -54,15 +54,15 @@ ECHO;
 ECHO ------
 ECHO vision
 ECHO ------
-    python -m pip  install --upgrade pygame
-    python -m pip  install --upgrade pyqtgraph
-    python -m pip  install --upgrade pyqt5
+rem python -m pip  install --upgrade pygame
+rem python -m pip  install --upgrade pyqtgraph
+rem python -m pip  install --upgrade pyqt5
     python -m pip  install --upgrade pillow
     python -m pip  install --upgrade numpy
     python -m pip  install --upgrade opencv-python
-    python -m pip  install --upgrade pyflakes
-    python -m pip  install --upgrade pylint
-    python -m pip  install --upgrade pep8
+rem python -m pip  install --upgrade pyflakes
+rem python -m pip  install --upgrade pylint
+rem python -m pip  install --upgrade pep8
     python -m pip  install --upgrade matplotlib
     python -m pip  install --upgrade pyautogui
     python -m pip  install --upgrade pyzbar
@@ -71,17 +71,16 @@ ECHO;
 ECHO -----------
 ECHO yolo3 keras
 ECHO -----------
-rem python -m pip  install --upgrade tensorflow==1.5.0
-    python -m pip  install --upgrade tensorflow
-    python -m pip  install --upgrade keras
+rem    python -m pip  install --upgrade tensorflow
+rem    python -m pip  install --upgrade keras
 
 ECHO;
 ECHO -------------
 ECHO yolo3 pytorch
 ECHO -------------
-    python -m pip  install --upgrade torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
-    python -m pip  install --upgrade torchvision
-    python -m pip  install --upgrade pandas
+rem python -m pip  install --upgrade torch==1.2.0+cpu torchvision==0.4.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+rem python -m pip  install --upgrade torchvision
+rem python -m pip  install --upgrade pandas
 
 ECHO;
 ECHO ------------

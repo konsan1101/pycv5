@@ -282,6 +282,14 @@ class proc_cvreader:
                     read_text = code_text
                     if (read_text == 'http://localhost/v5/sendkey_on.py'):
                         read_text = '_sendkey_on_'
+                    if (read_text == 'http://localhost/v5/mic_off.py'):
+                        read_text = '_mic_off_'
+                    if (read_text == 'http://localhost/v5/mic_on.py'):
+                        read_text = '_mic_on_'
+                    if (read_text == 'http://localhost/v5/cpu_off.py'):
+                        read_text = '_cpu_off_'
+                    if (read_text == 'http://localhost/v5/cpu_on.py'):
+                        read_text = '_cpu_on_'
 
                     read_text = read_text.replace('\r\n', '[cr]')
                     read_text = read_text.replace('\r', '[cr]')
@@ -339,7 +347,7 @@ class proc_cvreader:
                     if (sec == 999):
                         read_time[read_text] = time.time()
                     # on 指令は最初だけ、あとは継続
-                    elif (read_text[-4:] == '_on_'):
+                    elif (read_text[-4:] == '_on_') or (read_text[-5:] == '_off_'):
                         read_time[read_text] = time.time()
                         read_text = ''
                         code_img  = None
@@ -404,17 +412,23 @@ class proc_cvreader:
                 # on 指令の自動解除
                 for key in list(read_time):
                     if ((time.time() - read_time[key]) > 3):
-
-                        # 自動解除
                         read_time.pop(key)
-                        k=key[-4:]
-                        if (key[-4:] == '_on_'):
-                            read_text = key[:-4] + '_off_'
-                            qFunc.logOutput(self.proc_id + ':reader [' + read_text + ']')
+                        read_text2 = ''
 
-                            # 結果出力
+                        # 自動解除 on -> off
+                        if (key[-4:] == '_on_'):
+                            read_text2 = key[:-4] + '_off_'
+                            qFunc.logOutput(self.proc_id + ':reader [' + read_text2 + ']')
+
+                        # 自動解除 off -> on
+                        if (key[-5:] == '_off_'):
+                            read_text2 = key[:-5] + '_on_'
+                            qFunc.logOutput(self.proc_id + ':reader [' + read_text2 + ']')
+
+                        # 結果出力
+                        if (read_text2 != ''):
                             out_name  = '[txts]'
-                            out_value = [read_text]
+                            out_value = [read_text2]
                             cn_s.put([out_name, out_value])
                             res_count += 1
 

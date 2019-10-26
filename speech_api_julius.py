@@ -336,13 +336,21 @@ class proc_julius:
             qFunc.statusSet(self.fileBsy, False)
 
             # アイドリング
-            if (qFunc.statusCheck(qBusy_dev_cpu) == True) \
-            or (qFunc.statusCheck(qBusy_dev_mic) == True):
+            slow = False
+            if (qFunc.statusCheck(qBusy_dev_cpu) == True):
+                slow = True
+            elif (qFunc.statusCheck(qBusy_dev_mic) == True) \
+            and  (qFunc.statusCheck(qRdy__s_force)   == False) \
+            and  (qFunc.statusCheck(qRdy__s_sendkey) == False):
+                slow = True
+
+            if (slow == True):
                 time.sleep(1.00)
-            if (cn_r.qsize() == 0):
-                time.sleep(0.25)
             else:
-                time.sleep(0.05)
+                if (cn_r.qsize() == 0):
+                    time.sleep(0.25)
+                else:
+                    time.sleep(0.05)
 
         # 終了処理
         if (True):

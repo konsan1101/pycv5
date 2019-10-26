@@ -158,7 +158,7 @@ signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 if __name__ == '__main__':
-    main_name = 'main'
+    main_name = 'kernel'
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
