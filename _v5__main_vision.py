@@ -224,14 +224,14 @@ class main_vision:
             self.flag_cancel     = 'on'
         elif (self.runMode == 'hud'):
             self.flag_blackwhite = 'white'
-        elif (self.runMode == 'handsfree'):
+        elif (self.runMode == 'live'):
             self.flag_camzoom    = 'on'
             self.flag_dspzoom    = 'on'
         elif (self.runMode == 'camera'):
             self.flag_camzoom    = 'on'
             self.flag_enter      = 'on'
             self.flag_cancel     = 'on'
-        elif (self.runMode == 'background'):
+        elif (self.runMode == 'assistant'):
             self.flag_camzoom    = 'on'
             self.flag_enter      = 'on'
             self.flag_cancel     = 'on'
@@ -353,7 +353,7 @@ class main_vision:
             cv2dnn_ssd_switch  = 'off'
             vin2jpg_switch     = 'off'
             coreCV_switch      = 'off'
-        elif (self.runMode == 'handsfree'):
+        elif (self.runMode == 'live'):
             camera_switch2     = 'on'
             txt2img_switch     = 'on'
             cvreader_switch    = 'on'
@@ -376,7 +376,7 @@ class main_vision:
             cv2dnn_ssd_switch  = 'off'
             vin2jpg_switch     = 'off'
             coreCV_switch      = 'off'
-        elif (self.runMode == 'background'):
+        elif (self.runMode == 'assistant'):
             camera_switch2     = 'off'
             txt2img_switch     = 'on'
             cvreader_switch    = 'on'
@@ -473,7 +473,7 @@ class main_vision:
                 controlv_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「カメラ制御」の機能が有効になりました。', 'wait':0, })
 
             if (not controlv_thread is None) and (controlv_switch != 'on'):
@@ -497,7 +497,7 @@ class main_vision:
                 overlay_thread.put(['_flag_blackwhite_', flag_blackwhite ])
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「画面表示」の機能が有効になりました。', 'wait':0, })
 
             if (not overlay_thread is None) and (overlay_switch != 'on'):
@@ -514,7 +514,7 @@ class main_vision:
                 camera_thread1.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「カメラ１入力」の機能が有効になりました。', 'wait':0, })
 
             if (not camera_thread1 is None) and (camera_switch1 != 'on'):
@@ -531,7 +531,7 @@ class main_vision:
                 camera_thread2.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「カメラ２入力」の機能が有効になりました。', 'wait':0, })
 
             if (not camera_thread2 is None) and (camera_switch2 != 'on'):
@@ -550,7 +550,7 @@ class main_vision:
                 txt2img_thread.put(['_flag_blackwhite_', flag_blackwhite ])
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「認識文字の表示」の機能が有効になりました。', 'wait':0, })
 
             if (not txt2img_thread is None) and (txt2img_switch != 'on'):
@@ -567,7 +567,7 @@ class main_vision:
                 cvreader_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「ＱＲコード認識」の機能が有効になりました。', 'wait':0, })
 
             if (not cvreader_thread is None) and (cvreader_switch != 'on'):
@@ -584,7 +584,7 @@ class main_vision:
                 cvdetect_thread1.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「オープンＣＶ画像認識」の機能が有効になりました。', 'wait':0, })
 
             if (not cvdetect_thread1 is None) and (cvdetect_switch1 != 'on'):
@@ -614,7 +614,7 @@ class main_vision:
                 cv2dnn_yolo_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「画像認識（ｙｏｌｏ）」の機能が有効になりました。', 'wait':0, })
 
             if (not cv2dnn_yolo_thread is None) and (cv2dnn_yolo_switch != 'on'):
@@ -633,7 +633,7 @@ class main_vision:
 
                     if (i == 0):
                         if (self.runMode == 'debug') \
-                        or (self.runMode == 'handsfree'):
+                        or (self.runMode == 'live'):
                             speechs.append({ 'text':u'「画像認識（ｓｓｄ）」の機能が有効になりました。', 'wait':0, })
 
             for i in range(cv2dnn_ssd_max):
@@ -651,7 +651,7 @@ class main_vision:
                 vin2jpg_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「写真認識」の機能が有効になりました。', 'wait':0, })
 
             if (not vin2jpg_thread is None) and (vin2jpg_switch != 'on'):
@@ -668,7 +668,7 @@ class main_vision:
                 coreCV_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「ＡＩ画像認識」の機能が有効になりました。', 'wait':0, })
 
             if (not coreCV_thread is None) and (coreCV_switch != 'on'):
@@ -683,7 +683,7 @@ class main_vision:
                 onece = False
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree') \
+                or (self.runMode == 'live') \
                 or (self.runMode == 'hud') \
                 or (self.runMode == 'camera'):
                     speechs = []
@@ -848,7 +848,7 @@ class main_vision:
                     overlay_thread.put(['_dspzoom_', dspZoom ])
 
             # 背景操作
-            if (control == '_background_'):
+            if (control == '_assistant_'):
                 if   (flag_background == 'on'):
                     flag_background = 'off'
                 elif (flag_background == 'off'):
@@ -1070,7 +1070,7 @@ class main_vision:
                     # ステータス状況
                     if  (qFunc.statusCheck(qBusy_d_rec) == False) \
                     and ((self.runMode == 'debug') \
-                     or  (self.runMode == 'handsfree') \
+                     or  (self.runMode == 'live') \
                      or  (self.runMode == 'hud')):
                         res_txts = busy_status_txts.getAll()
                         if (res_txts != False):
@@ -1094,14 +1094,14 @@ class main_vision:
                         txt2img_thread.put(['[txts]', res_txts ])
                     # ＡＩ音声認識結果Ｉ／Ｆ
                     if (self.runMode == 'debug') \
-                    or (self.runMode == 'handsfree') \
+                    or (self.runMode == 'live') \
                     or (self.runMode == 'hud'):
                         res_txts, txt = qFunc.txtsRead(qCtrl_recognize, encoding='utf-8', exclusive=True, )
                         if (res_txts != False):
                             txt2img_thread.put(['[txts]', res_txts ])
                     # ＡＩ機械翻訳結果Ｉ／Ｆ
                     if (self.runMode == 'debug') \
-                    or (self.runMode == 'handsfree') \
+                    or (self.runMode == 'live') \
                     or (self.runMode == 'hud'):
                         res_txts, txt = qFunc.txtsRead(qCtrl_translate, encoding='utf-8', exclusive=True, )
                         if (res_txts != False):
@@ -1388,7 +1388,7 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, cam... ')
 
-    #runMode  debug, handsfree, hud, camera,
+    #runMode  debug, live, hud, camera,
     #cam1Dev  num or file
 
     # 最終カメラ番号
@@ -1588,7 +1588,7 @@ if __name__ == '__main__':
 
     qFunc.statusReset_vision(False)
 
-    if (runMode == 'background'):
+    if (runMode == 'assistant'):
         qFunc.statusSet(qBusy_dev_cam, True)
         qFunc.statusSet(qBusy_dev_dsp, True)
 
@@ -1765,7 +1765,7 @@ if __name__ == '__main__':
                 qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # バックグラウンドクリック操作
-        if (runMode == 'background'):
+        if (runMode == 'assistant'):
             if (control == '_enter_') \
             or (control == '_cancel_') \
             or (control == '_close_'):

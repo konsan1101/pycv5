@@ -159,7 +159,7 @@ if (__name__ == '__main__'):
 
             speechtext = 'ja,hoya,' + city + u'の天気？'
             smart = 'auto'
-            smtspk= subprocess.Popen(['python', '_handsfree_smart_speaker.py', runMode, speechtext, smart, ], )
+            smtspk= subprocess.Popen(['python', '_v4_sub_smart_speaker.py', runMode, speechtext, smart, ], )
                     #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
             smtspk.wait()
             smtspk.terminate()

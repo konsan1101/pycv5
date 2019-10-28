@@ -286,7 +286,7 @@ class main_speech:
             julius_switch    = 'off'
             sttreader_switch = 'off'
             trareader_switch = 'off'
-        elif (self.runMode == 'handsfree'):
+        elif (self.runMode == 'live'):
             julius_switch    = 'off'
             sttreader_switch = 'off'
             trareader_switch = 'off'
@@ -306,7 +306,7 @@ class main_speech:
             julius_switch    = 'on'
             sttreader_switch = 'off'
             trareader_switch = 'off'
-        elif (self.runMode == 'background'):
+        elif (self.runMode == 'assistant'):
             julius_switch    = 'on'
             sttreader_switch = 'on'
             trareader_switch = 'off'
@@ -368,7 +368,7 @@ class main_speech:
                 controls_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「音声制御」の機能が有効になりました。', 'wait':0, })
 
             if (not controls_thread is None) and (controls_switch != 'on'):
@@ -385,7 +385,7 @@ class main_speech:
                 adintool_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「マイク入力」の機能が有効になりました。', 'wait':0, })
 
             if (not adintool_thread is None) and (adintool_switch != 'on'):
@@ -402,7 +402,7 @@ class main_speech:
                 voice2wav_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「音響補正」の機能が有効になりました。', 'wait':0, })
 
             if (not voice2wav_thread is None) and (voice2wav_switch != 'on'):
@@ -422,7 +422,7 @@ class main_speech:
 
                 speechs = []
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「ＡＩ音声認識」の機能が有効になりました。', 'wait':0, })
                     speechs.append({ 'text':u'「ＡＩ機械翻訳」の機能が有効になりました。', 'wait':0, })
 
@@ -442,7 +442,7 @@ class main_speech:
                 coreTTS_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「ＡＩ音声合成」の機能が有効になりました。', 'wait':0, })
 
             if (not coreTTS_thread is None) and (coreTTS_switch != 'on'):
@@ -459,7 +459,7 @@ class main_speech:
                 playvoice_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「スピーカー出力」の機能が有効になりました。', 'wait':0, })
 
             if (not playvoice_thread is None) and (playvoice_switch != 'on'):
@@ -475,7 +475,7 @@ class main_speech:
                 julius_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「ＪＵＬＩＵＳローカル音声認識」の機能が有効になりました。', 'wait':0, })
 
             if (not julius_thread is None) and (julius_switch != 'on'):
@@ -492,7 +492,7 @@ class main_speech:
                 sttreader_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「音声認識結果のテキスト連携」の機能が有効になりました。', 'wait':0, })
 
             if (not sttreader_thread is None) and (sttreader_switch != 'on'):
@@ -509,7 +509,7 @@ class main_speech:
                 trareader_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「機械翻訳結果のテキスト連携」の機能が有効になりました。', 'wait':0, })
 
             if (not trareader_thread is None) and (trareader_switch != 'on'):
@@ -524,7 +524,7 @@ class main_speech:
                 onece = False
 
                 if   (self.runMode == 'debug') \
-                or   (self.runMode == 'handsfree') \
+                or   (self.runMode == 'live') \
                 or   (self.runMode == 'hud') \
                 or   (self.runMode == 'camera'):
                     speechs = []
@@ -788,7 +788,7 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, mic..., ')
 
-    #runMode  debug, hud, handsfree, translator, speech, number, camera, background,
+    #runMode  debug, hud, live, translator, speech, number, camera, assistant,
     #micDev   num or file
     #micType  usb or bluetooth
     #micGuide off, on, display, sound
@@ -799,7 +799,7 @@ if __name__ == '__main__':
 
     if (True):
 
-        #runMode     = 'handsfree'
+        #runMode     = 'live'
         micDev      = '0'
         micType     = 'bluetooth'
         micGuide    = 'on'
@@ -814,7 +814,7 @@ if __name__ == '__main__':
         elif (runMode == 'hud'):
             micType   = 'bluetooth'
             micGuide  = 'off'
-        elif (runMode == 'handsfree'):
+        elif (runMode == 'live'):
             micType   = 'bluetooth'
             micGuide  = 'off'
         elif (runMode == 'translator'):
@@ -829,7 +829,7 @@ if __name__ == '__main__':
         elif (runMode == 'camera'):
             micType   = 'bluetooth'
             micGuide  = 'off'
-        elif (runMode == 'background'):
+        elif (runMode == 'assistant'):
             micType   = 'bluetooth'
             micGuide  = 'off'
 
@@ -912,7 +912,7 @@ if __name__ == '__main__':
 
     qFunc.statusReset_speech(False)
 
-    #if (runMode == 'background'):
+    #if (runMode == 'assistant'):
     #    qFunc.statusSet(qBusy_dev_mic, True)
     #    qFunc.statusSet(qBusy_dev_spk, True)
 

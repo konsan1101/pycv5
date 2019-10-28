@@ -267,7 +267,7 @@ class main_class:
                         onece = False
 
                         if (self.runMode == 'debug') \
-                        or (self.runMode == 'handsfree'):
+                        or (self.runMode == 'live'):
                             speechs = []
                             speechs.append({ 'text':u'プレイリストの再生はいかがですか？', 'wait':0, })
                             qFunc.speech(id='speech', speechs=speechs, lang='', )

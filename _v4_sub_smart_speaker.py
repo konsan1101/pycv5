@@ -161,7 +161,7 @@ if (__name__ == '__main__'):
             #qFunc.tts(id, txt, )
 
             id  = 'smartspeaker.01'
-            mp3 = u'_sounds/_sound_handsfree_ヘイSiri.mp3'
+            mp3 = u'_sounds/_sound_smart_siri.mp3'
             print(mp3)
             wrkFile = qPath_s_play + stamp + '.' + id + '.mp3'
             qFunc.copy(mp3, wrkFile)
@@ -176,7 +176,7 @@ if (__name__ == '__main__'):
             #qFunc.tts('smartspeaker.01', txt, )
 
             id  = 'smartspeaker.01'
-            mp3 = u'_sounds/_sound_handsfree_ねぇグーグル.mp3'
+            mp3 = u'_sounds/_sound_smart_google.mp3'
             print(mp3)
             wrkFile = qPath_s_play + stamp + '.' + id + '.mp3'
             qFunc.copy(mp3, wrkFile)
@@ -189,7 +189,7 @@ if (__name__ == '__main__'):
             #qFunc.tts('smartspeaker.01', txt, )
 
             id  = 'smartspeaker.01'
-            mp3 = u'_sounds/_sound_handsfree_アレクサ.mp3'
+            mp3 = u'_sounds/_sound_smart_alexa.mp3'
             print(mp3)
             wrkFile = qPath_s_play + stamp + '.' + id + '.mp3'
             qFunc.copy(mp3, wrkFile)
@@ -202,7 +202,7 @@ if (__name__ == '__main__'):
             #qFunc.tts('smartspeaker.01', txt, )
 
             id  = 'smartspeaker.01'
-            mp3 = u'_sounds/_sound_handsfree_ねぇクローバ.mp3'
+            mp3 = u'_sounds/_sound_smart_clova.mp3'
             print(mp3)
             wrkFile = qPath_s_play + stamp + '.' + id + '.mp3'
             qFunc.copy(mp3, wrkFile)

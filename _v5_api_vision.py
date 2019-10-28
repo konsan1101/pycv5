@@ -130,6 +130,10 @@ import vision_api_azure_key as azure_key
 import speech_api_azure     as a_azure_api
 import speech_api_azure_key as a_azure_key
 
+# watson 画像認識
+import vision_api_watson     as watson_api
+import vision_api_watson_key as watson_key
+
 
 
 def qVisionCV(useApi='google', inpLang='ja', inpFile='vision__cv_photo.jpg', tmpFile='temp_cv_photo.jpg', apiRecovery=False,):
@@ -140,7 +144,8 @@ def qVisionCV(useApi='google', inpLang='ja', inpFile='vision__cv_photo.jpg', tmp
 
     api   = useApi
     if  (api != 'free') and (api != 'google') \
-    and (api != 'azure'):
+    and (api != 'azure') \
+    and (api != 'watson'):
         api = 'google'
 
     if (resText == '') and (api == 'azure'):
@@ -172,6 +177,29 @@ def qVisionCV(useApi='google', inpLang='ja', inpFile='vision__cv_photo.jpg', tmp
                     if (res['description'] != ''):
                         resAry.append('[description] ' + inpLang + ' (' + api + ')')
                         resAry.append(' ' + res['description'])
+                        resAry.append('')
+
+        if (resText == '') and (apiRecovery == True):
+            api   = 'free'
+
+    if (resText == '') and (api == 'watson'):
+        watsonAPI = watson_api.VisionAPI()
+        res = watsonAPI.authenticate('cv' ,
+                   watson_key.getkey('cv' ,'url'),
+                   watson_key.getkey('cv' ,'key'), )
+        if (res == True):
+            res = watsonAPI.convert(inpImage=inpFile, outImage=tmpFile, bw=False, )
+            if (res == True):
+                res, api = watsonAPI.cv(inpImage=tmpFile, inpLang=inpLang, )
+                if (not res is None):
+                    #print(res)
+                    if (res['classes'] != ''):
+                        resText = res['classes']
+                    resApi  = api
+                    resAry  = []
+                    if (res['classes'] != ''):
+                        resAry.append('[classes] ' + inpLang + ' (' + api + ')')
+                        resAry.append(' ' + res['classes'])
                         resAry.append('')
 
         if (resText == '') and (apiRecovery == True):

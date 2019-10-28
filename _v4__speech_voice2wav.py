@@ -809,7 +809,7 @@ if (__name__ == '__main__'):
     qFunc.logOutput('')
     qFunc.logOutput('v2w_main__:init')
     qFunc.logOutput('v2w_main__:exsample.py runMode, mic..., ')
-    #runMode  handsfree, translator, speech, ...,
+    #runMode  live, translator, speech, ...,
     #micDev   num or file
     #micType  usb or bluetooth
     #micGuide off, on, display, sound

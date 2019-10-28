@@ -435,7 +435,7 @@ if (__name__ == '__main__'):
         speechtext  = u'ja,hoya,調子はどうですか？'
 
         smart = 'siri'
-        smtspk= subprocess.Popen(['python', '_handsfree_smart_speaker.py', runMode, speechtext, smart, ], )
+        smtspk= subprocess.Popen(['python', '_v4_sub_smart_speaker.py', runMode, speechtext, smart, ], )
                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
         smtspk.wait()
         smtspk.terminate()
@@ -448,7 +448,7 @@ if (__name__ == '__main__'):
         speechtext  = u'ja,hoya,調子はどうですか？'
 
         smart = 'clova'
-        smtspk= subprocess.Popen(['python', '_handsfree_smart_speaker.py', runMode, speechtext, smart, ], )
+        smtspk= subprocess.Popen(['python', '_v4_sub_smart_speaker.py', runMode, speechtext, smart, ], )
                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
         smtspk.wait()
         smtspk.terminate()
@@ -457,7 +457,7 @@ if (__name__ == '__main__'):
         qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         smart = 'google'
-        smtspk= subprocess.Popen(['python', '_handsfree_smart_speaker.py', runMode, speechtext, smart, ], )
+        smtspk= subprocess.Popen(['python', '_v4_sub_smart_speaker.py', runMode, speechtext, smart, ], )
                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
         smtspk.wait()
         smtspk.terminate()
@@ -466,7 +466,7 @@ if (__name__ == '__main__'):
         qFunc.statusWait_speech(idolSec=5, maxWait=30, )
 
         smart = 'alexa'
-        smtspk= subprocess.Popen(['python', '_handsfree_smart_speaker.py', runMode, speechtext, smart, ], )
+        smtspk= subprocess.Popen(['python', '_v4_sub_smart_speaker.py', runMode, speechtext, smart, ], )
                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
         smtspk.wait()
         smtspk.terminate()

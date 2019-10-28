@@ -1719,7 +1719,7 @@ if (__name__ == '__main__'):
     #runMode  debug,
     #cam1Dev num or file
 
-    runMode  = 'handsfree'
+    runMode  = 'live'
 
     cam1Dev  = '9'
     cam1Rote = '0'

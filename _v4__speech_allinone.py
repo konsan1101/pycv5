@@ -242,7 +242,7 @@ def control_sub(seq, fileId, runMode, micDev, cmdtxt, cmdLang, ):
     if (runMode=='knowledge'):
         procText = ''
 
-    #if (runMode=='debug') or (runMode=='handsfree'):
+    #if (runMode=='debug') or (runMode=='live'):
     if (procText != ''):
 
         if (cmdLang == 'ja'):
@@ -1299,7 +1299,7 @@ def proc_control(cn_r, cn_s, ):
         speechtext = u'こんにちは。' + runMode + u'機能を起動しました。'
         control_speech('00', 'control', runMode, micDev, qApiTrn, qApiOut, qLangInp, qLangOut, speechtext, )
 
-    if (micDev.isdigit()) and (runMode=='handsfree'):
+    if (micDev.isdigit()) and (runMode=='live'):
         speechtext = '翻訳機能を起動しました。'
         control_speech('01', 'control', runMode, micDev, qApiTrn, qApiOut, qLangInp, qLangOut, speechtext, )
 
@@ -1441,7 +1441,7 @@ def proc_control(cn_r, cn_s, ):
 
                                         qFunc.notePad(txt=txt)
 
-                                        if (runMode=='debug') or (runMode=='handsfree'):
+                                        if (runMode=='debug') or (runMode=='live'):
                                             if (txt == u'デモ紹介') or (txt == u'デモンストレーション'):
                                                 speechtext = u'_reset_'
                                                 control_sub(   '00', 'control', runMode, micDev, speechtext, 'en', )
@@ -1449,7 +1449,7 @@ def proc_control(cn_r, cn_s, ):
                                                 control_sub(   '01', 'control', runMode, micDev, speechtext, 'en', )
                                                 time.sleep( 3.00)
 
-                                        if (runMode=='debug') or (runMode=='handsfree'):
+                                        if (runMode=='debug') or (runMode=='live'):
                                             if (txt == u'システム終了' or txt == u'バルス'):
                                                 speechtext = u'システム終了プロセスを開始しました。'
                                                 control_speech('90', 'control', runMode, micDev, qApiTrn, qApiOut, qLangInp, qLangOut, speechtext, )
@@ -1457,7 +1457,7 @@ def proc_control(cn_r, cn_s, ):
 
                                         control_sub(seq4, fileId, runMode, micDev, txt, lang, )
 
-                                        if (runMode=='debug') or (runMode=='handsfree'):
+                                        if (runMode=='debug') or (runMode=='live'):
                                             if (txt == u'システム終了' or txt == u'バルス'):
                                                 speechtext = runMode + u'機能を終了しました。'
                                                 control_speech('91', 'control', runMode, micDev, qApiTrn, qApiOut, qLangInp, qLangOut, speechtext, )
@@ -1516,7 +1516,7 @@ def stt_sub(seq, fileId, runMode, micDev, file, ):
     global qLangTxt
     global qLangOut
 
-    if (runMode == 'handsfree') or (runMode == 'translator'):
+    if (runMode == 'live') or (runMode == 'translator'):
         inpInput = file
         inpOutput= qPath_s_STT  + fileId + '.' + qLangInp + '.txt'
         trnInput = inpOutput
@@ -2098,7 +2098,7 @@ if (__name__ == '__main__'):
     qFunc.logOutput('')
     qFunc.logOutput('___main___:init')
     qFunc.logOutput('___main___:exsample.py runMode, api..., lang..., micDev, micType, micGuide, micLevel, path..., ')
-    #runMode  handsfree, translator, speech, ...,
+    #runMode  live, translator, speech, ...,
     #         knowledge, learning, number,
     #api      free, google, watson, azure, nict, winos, macos, docomo,
     #lang     ja, en, fr, kr...
@@ -2106,7 +2106,7 @@ if (__name__ == '__main__'):
     #micType  usb or bluetooth
     #micGuide off, on, display, sound
 
-    runMode  = 'handsfree'
+    runMode  = 'live'
 
     micDev   = '0'
     micType  = 'bluetooth'

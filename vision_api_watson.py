@@ -23,6 +23,7 @@ import json
 # watson 画像認識、OCR認識
 #import watson_developer_cloud as watson
 import ibm_watson as watson
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import vision_api_watson_key as watson_key
 
 
@@ -30,11 +31,13 @@ import vision_api_watson_key as watson_key
 class VisionAPI:
 
     def __init__(self, ):
-        self.timeOut = 10
-        self.cv_url  = None
-        self.cv_key  = None
-        self.ocr_url = None
-        self.ocr_key = None
+        self.timeOut  = 10
+        self.cv_url   = None
+        self.cv_key   = None
+        self.cv_auth  = None
+        self.ocr_url  = None
+        self.ocr_key  = None
+        self.ocr_auth = None
 
     def setTimeOut(self, timeOut=10, ):
         self.timeOut = timeOut
@@ -42,17 +45,25 @@ class VisionAPI:
     def authenticate(self, api, url, key, ):
         # watson 画像認識
         if (api == 'cv'):
-            self.cv_url = url
-            self.cv_key = key
-            if (not self.cv_key is None):
-                return True
+            self.cv_url  = url
+            self.cv_key  = key
+            try:
+                self.cv_auth = IAMAuthenticator(key)
+                if (not self.cv_auth is None):
+                    return True
+            except:
+                pass
 
         # watson OCR認識
         if (api == 'ocr'):
-            self.ocr_url = url
-            self.ocr_key = key
-            if (not self.ocr_key is None):
-                return True
+            self.ocr_url  = url
+            self.ocr_key  = key
+            try:
+               self.ocr_auth = IAMAuthenticator(key)
+                if (not self.ocr_auth is None):
+                    return True
+            except:
+                pass
 
         return False
 
@@ -123,17 +134,19 @@ class VisionAPI:
             lang = inpLang
 
             if (True):
-                try:
+                #try:
                     visual_recognition = watson.VisualRecognitionV3(
-                        version = '2018-03-19', 
-                        iam_apikey = self.cv_key,)
+                        version = '2018-03-19',
+                        authenticator = self.cv_auth,)
+                    #visual_recognition.set_disable_ssl_verification(True)
 
                     with open(inpImage, 'rb') as images_file:
                         res = visual_recognition.classify(
-                            images_file,
+                            images_file = images_file,
                             threshold = '0.6',
-                            owners = ["IBM"],
-                            accept_language=lang,
+                            owners = ['IBM'],
+                            classifier_ids = ['default'],
+                            accept_language = lang,
                             ).get_result()
 
                     #print(json.dumps(res, indent=2))
@@ -150,8 +163,8 @@ class VisionAPI:
 
                     res_text = {}
                     res_text['classes'] = classes
-                except:
-                    pass
+                #except:
+                #    pass
 
             return res_text, 'watson'
 
@@ -171,12 +184,13 @@ class VisionAPI:
                 #try:
                     visual_recognition = watson.VisualRecognitionV3(
                         version = '2018-03-19', 
-                        iam_apikey = self.cv_key,)
+                        authenticator = self.ocr_auth,)
+                    #visual_recognition.set_disable_ssl_verification(True)
 
                     with open(inpImage, 'rb') as images_file:
                         res = visual_recognition.recognize_text(
-                            images_file,
-                            accept_language=lang,
+                            images_file = images_file,
+                            accept_language = lang,
                             ).get_result()
 
                     #print(json.dumps(res, indent=2))

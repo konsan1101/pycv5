@@ -129,7 +129,7 @@ qRdy__d_sendkey = qFunc.getValue('qRdy__d_sendkey')
 
 
 # debug
-runMode     = 'handsfree'
+runMode     = 'live'
 
 qApiInp     = 'free'
 qApiTrn     = 'free'
@@ -175,13 +175,13 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, ..., ')
 
-    #runMode  debug, hud, handsfree, translator, speech, number, camera, background,
+    #runMode  debug, hud, live, translator, speech, number, camera, assistant,
 
     # パラメータ
 
     if (True):
 
-        #runMode     = 'handsfree'
+        #runMode     = 'live'
         micDev      = '0'
         micType     = 'bluetooth'
         micGuide    = 'on'
@@ -196,7 +196,7 @@ if __name__ == '__main__':
         elif (runMode == 'hud'):
             micType   = 'bluetooth'
             micGuide  = 'off'
-        elif (runMode == 'handsfree'):
+        elif (runMode == 'live'):
             micType   = 'bluetooth'
             micGuide  = 'off'
         elif (runMode == 'translator'):
@@ -211,7 +211,7 @@ if __name__ == '__main__':
         elif (runMode == 'camera'):
             micType   = 'usb'
             micGuide  = 'off'
-        elif (runMode == 'background'):
+        elif (runMode == 'assistant'):
             micType   = 'bluetooth'
             micGuide  = 'off'
 
@@ -321,7 +321,7 @@ if __name__ == '__main__':
             bgm_switch           = 'on'
             browser_switch       = 'on'
             player_switch        = 'on'
-        elif (runMode == 'handsfree'):
+        elif (runMode == 'live'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'on'
@@ -351,7 +351,7 @@ if __name__ == '__main__':
             bgm_switch           = 'off'
             browser_switch       = 'off'
             player_switch        = 'off'
-        elif (runMode == 'background'):
+        elif (runMode == 'assistant'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'off'
@@ -475,7 +475,7 @@ if __name__ == '__main__':
 
             if   (runMode == 'debug'):
                 speechs.append({ 'text':u'ハンズフリーコントロールシステムをデバッグモードで、起動しました。', 'wait':0, })
-            elif (runMode == 'handsfree'):
+            elif (runMode == 'live'):
                 speechs.append({ 'text':u'ハンズフリー翻訳機能を、起動しました。', 'wait':0, })
             elif (runMode == 'hud'):
                 speechs.append({ 'text':u'ヘッドアップディスプレイ機能を、起動しました。', 'wait':0, })
@@ -632,7 +632,7 @@ if __name__ == '__main__':
             onece = False
 
             if   (runMode == 'debug') \
-            or   (runMode == 'handsfree'):
+            or   (runMode == 'live'):
                 time.sleep(40)
                 speechs = []
                 speechs.append({ 'text':u'全ての準備が整いました。スタンバイしています。', 'wait':0, })

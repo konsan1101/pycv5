@@ -588,7 +588,7 @@ class proc_overlay:
                 #if (self.runMode == 'debug'):
                 if (self.runMode == 'debug'):
                     display_mode = 'dbg'
-                if (self.runMode == 'handsfree'):
+                if (self.runMode == 'live'):
                     display_mode = 'live'
                 elif (self.runMode == 'hud'):
                     display_mode = 'hud'

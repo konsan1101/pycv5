@@ -252,7 +252,7 @@ class main_desktop:
             cvreader_switch  = 'off'
             recorder_switch  = 'on'
             uploader_switch  = 'off'
-        elif (self.runMode == 'handsfree'):
+        elif (self.runMode == 'live'):
             capture_switch   = 'off'
             cvreader_switch  = 'on'
             recorder_switch  = 'on'
@@ -262,7 +262,7 @@ class main_desktop:
             cvreader_switch  = 'on'
             recorder_switch  = 'on'
             uploader_switch  = 'on'
-        elif (self.runMode == 'background'):
+        elif (self.runMode == 'assistant'):
             capture_switch   = 'on'
             cvreader_switch  = 'on'
             recorder_switch  = 'on'
@@ -324,7 +324,7 @@ class main_desktop:
                 controld_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「デスクトップ制御」の機能が有効になりました。', 'wait':0, })
 
             if (not controld_thread is None) and (controld_switch != 'on'):
@@ -341,7 +341,7 @@ class main_desktop:
                 capture_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「デスクトップ入力」の機能が有効になりました。', 'wait':0, })
 
             if (not capture_thread is None) and (capture_switch != 'on'):
@@ -358,7 +358,7 @@ class main_desktop:
                 cvreader_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「画面ＱＲコード認識」の機能が有効になりました。', 'wait':0, })
 
             if (not cvreader_thread is None) and (cvreader_switch != 'on'):
@@ -374,7 +374,7 @@ class main_desktop:
                 recorder_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「デスクトップ記録」の機能が有効になりました。', 'wait':0, })
 
             if (not recorder_thread is None) and (recorder_switch != 'on'):
@@ -390,7 +390,7 @@ class main_desktop:
                 uploader_thread.begin()
 
                 if (self.runMode == 'debug') \
-                or (self.runMode == 'handsfree'):
+                or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「ブロブ連携」の機能が有効になりました。', 'wait':0, })
 
             if (not uploader_thread is None) and (uploader_switch != 'on'):
@@ -405,7 +405,7 @@ class main_desktop:
                 onece = False
 
                 if   (self.runMode == 'debug') \
-                or   (self.runMode == 'handsfree'):
+                or   (self.runMode == 'live'):
                     speechs = []
                     speechs.append({ 'text':u'「デスクトップ制御」の準備が完了しました。', 'wait':0, })
                     qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
@@ -636,7 +636,7 @@ if __name__ == '__main__':
     qFunc.logOutput(main_id + ':init')
     qFunc.logOutput(main_id + ':exsample.py runMode, mic..., ')
 
-    #runMode  debug, hud, handsfree, translator, speech, number, camera, background,
+    #runMode  debug, hud, live, translator, speech, number, camera, assistant,
 
     # パラメータ
 

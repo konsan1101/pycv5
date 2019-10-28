@@ -100,6 +100,7 @@ ECHO ----------
 rem python -m pip  install --upgrade watson-developer-cloud==1.0.2
 rem python -m pip  install --upgrade watson-developer-cloud
     python -m pip  install --upgrade ibm-watson
+    python -m pip  install --upgrade ibm_cloud_sdk_core
 
 ECHO;
 ECHO ---------------

@@ -234,7 +234,7 @@ def proc_playvoice(cn_r, cn_s, ):
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                                     #if (not micDev.isdigit()):
-                                    if (runMode=='debug' or runMode=='handsfree'):
+                                    if (runMode=='debug' or runMode=='live'):
                                         sox.wait()
                                         sox.terminate()
                                         sox = None
@@ -333,7 +333,7 @@ if (__name__ == '__main__'):
     qFunc.logOutput('')
     qFunc.logOutput('play_main_:init')
     qFunc.logOutput('play_main_:exsample.py runMode, mic..., ')
-    #runMode  handsfree, translator, speech, ...,
+    #runMode  live, translator, speech, ...,
     #micDev   num or file
     #micType  usb or bluetooth
     #micGuide off, on, display, sound

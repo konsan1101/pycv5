@@ -342,7 +342,7 @@ class proc_playvoice:
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
                                     if (self.runMode=='debug') \
-                                    or (self.runMode=='handsfree') \
+                                    or (self.runMode=='live') \
                                     or (self.runMode=='translator'):
                                         sox.wait()
                                         sox.terminate()

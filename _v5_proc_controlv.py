@@ -370,30 +370,30 @@ class proc_controlv:
                 out_value = '_end_'
                 cn_s.put([out_name, out_value])
 
-            elif (self.runMode == 'background') and (proc_text == u'カメラ'):
+            elif (self.runMode == 'assistant') and (proc_text == u'カメラ'):
                 qFunc.statusSet(qBusy_dev_cam, False)
                 qFunc.statusSet(qBusy_dev_dsp, False)
-            elif (self.runMode == 'background') \
+            elif (self.runMode == 'assistant') \
             and  (proc_text.find(u'カメラ') >= 0) \
             and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
                 qFunc.statusSet(qBusy_dev_cam, False)
                 qFunc.statusSet(qBusy_dev_dsp, False)
-            elif (self.runMode == 'background') \
+            elif (self.runMode == 'assistant') \
             and  ((proc_text.find(u'カメラ') >= 0) and (proc_text.find(u'終了') >= 0)):
                 qFunc.statusSet(qBusy_dev_cam, True)
                 qFunc.statusSet(qBusy_dev_dsp, True)
 
-            elif ((self.runMode == 'camera') or (self.runMode == 'background')) \
+            elif ((self.runMode == 'camera') or (self.runMode == 'assistant')) \
             and  (proc_text == u'エンター'):
                 out_name  = 'control'
                 out_value = '_enter_'
                 cn_s.put([out_name, out_value])
-            elif ((self.runMode == 'camera') or (self.runMode == 'background')) \
+            elif ((self.runMode == 'camera') or (self.runMode == 'assistant')) \
             and  (proc_text == u'キャンセル'):
                 out_name  = 'control'
                 out_value = '_cancel_'
                 cn_s.put([out_name, out_value])
-            elif ((self.runMode == 'camera') or (self.runMode == 'background')) \
+            elif ((self.runMode == 'camera') or (self.runMode == 'assistant')) \
             and  (proc_text == u'クローズ'):
                 out_name  = 'control'
                 out_value = '_close_'
@@ -426,7 +426,7 @@ class proc_controlv:
             
             elif (proc_text.find(u'背景') >= 0):
                 out_name  = 'control'
-                out_value = '_background_'
+                out_value = '_assistant_'
                 cn_s.put([out_name, out_value])
             
             elif (proc_text.find(u'ブラック') >= 0):
@@ -473,7 +473,7 @@ class proc_controlv:
             or   (proc_text.find(u'伝票')   >= 0) \
             or   (proc_text.find(u'計測')   >= 0) \
             or   (proc_text.find(u'測定')   >= 0):
-                if (self.runMode == 'handsfree') \
+                if (self.runMode == 'live') \
                 or (self.runMode == 'hud') \
                 or (self.runMode == 'camera'):
                     out_name  = '[message_txts]'

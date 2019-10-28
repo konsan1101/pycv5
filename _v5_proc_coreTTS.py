@@ -441,7 +441,7 @@ class proc_coreTTS:
             else:
                 if ((self.micType == 'bluetooth') \
                 and ((self.runMode == 'debug') \
-                or (self.runMode == 'handsfree') \
+                or (self.runMode == 'live') \
                 or (self.runMode == 'translator'))):
                     sync = True
 

@@ -416,7 +416,7 @@ class proc_coreSTT:
             txtPlay  = 'off'
             outPlay  = 'off'
 
-        elif (self.runMode == 'handsfree') \
+        elif (self.runMode == 'live') \
         or   (self.runMode == 'translator'):
             inpInput = work_file
             inpOutput= qPath_s_STT  + proc_name + '.' + inpLang + '.txt'
@@ -459,7 +459,7 @@ class proc_coreSTT:
             else:
                 if ((self.micType == 'bluetooth') \
                 and ((self.runMode == 'debug') \
-                  or (self.runMode == 'handsfree') \
+                  or (self.runMode == 'live') \
                   or (self.runMode == 'translator'))):
                     #sync = True
                     pass

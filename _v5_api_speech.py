@@ -104,11 +104,11 @@ qRdy__d_sendkey = qFunc.getValue('qRdy__d_sendkey')
 
 
 qApiInp    = 'free'
-qApiTrn    = 'free'
-qApiOut    = 'free'
-if (qPLATFORM == 'windows'):
+qApiTrn    = qApiInp
+qApiOut    = qApiInp
+if (qApiOut == 'free') and (qPLATFORM == 'windows'):
     qApiOut = 'winos'
-if (qPLATFORM == 'darwin'):
+if (qApiOut == 'free') and (qPLATFORM == 'darwin'):
     qApiOut = 'macos'
 qLangInp   = 'ja'
 qLangTrn   = 'en,fr,'
@@ -163,8 +163,8 @@ def qVoiceInput(useApi='free', inpLang='auto', inpFile='_sounds/_sound_hallo.wav
     if (resText == '') and (api == 'watson'):
         watsonAPI = watson_api.SpeechAPI()
         res = watsonAPI.authenticate('stt',
-                   watson_key.getkey('stt','username'),
-                   watson_key.getkey('stt','password'), )
+                   watson_key.getkey('stt','url'),
+                   watson_key.getkey('stt','key'), )
         if (res == True):
             resText, resApi = watsonAPI.recognize(inpWave=inpFile, inpLang=inpLang)
         if (resText == '') and (apiRecovery == True):
@@ -306,8 +306,8 @@ def qTranslator(useApi='free', inpLang='ja', outLang='en', inpText=u'こんに�
         if (resText == '') and (api == 'watson'):
             watsonAPI = watson_api.SpeechAPI()
             res = watsonAPI.authenticate('tra',
-                       watson_key.getkey('tra','username'),
-                       watson_key.getkey('tra','password'), )
+                       watson_key.getkey('tra','url'),
+                       watson_key.getkey('tra','key'), )
             if (res == True):
                 if (inpLang == 'en' or outLang == 'en'):
                     resText , resApi = watsonAPI.translate(inpText=inpText, inpLang=inpLang, outLang=outLang, )
@@ -494,8 +494,8 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
         if (resText == '') and (api == 'watson'):
             watsonAPI = watson_api.SpeechAPI()
             res = watsonAPI.authenticate('tts',
-                       watson_key.getkey('tts','username'),
-                       watson_key.getkey('tts','password'), )
+                       watson_key.getkey('tts','url'),
+                       watson_key.getkey('tts','key'), )
             if (res == True):
                 resText, resApi = watsonAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileMp3, )
                 if (resText != ''):
@@ -1464,7 +1464,7 @@ def speech_batch(runMode, micDev,
 
     def loopback(text, lang='ja,hoya,', idolSec=2, maxWait=15, ):
 
-        xrunMode = 'handsfree'
+        xrunMode = 'live'
         xmicDev  = '0'
         xApiInp  = 'free'
         xApiTrn  = 'free'
@@ -1583,7 +1583,7 @@ if (__name__ == '__main__'):
 
     qFunc.logOutput('___main___:init')
     qFunc.logOutput('___main___:exsample.py runMode, api..., lang..., ')
-    #runMode  handsfree, translator, speech, ...,
+    #runMode  live, translator, speech, ...,
     #api      free, google, watson, azure, nict, winos, macos, docomo,
     #lang     ja, en, fr, kr...
 

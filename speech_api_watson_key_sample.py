@@ -14,33 +14,27 @@ def getkey(api, key):
     if (api == 'stt'):
         print('speech_api_watson_key.py')
         print('set your key!')
-        if (key == 'username'):
-            #return 'your name'
-            return 'your name'
-        if (key == 'password'):
-            #return 'your key'
+        if (key == 'url'):
+            return 'your url'
+        if (key == 'key'):
             return 'your key'
 
     # Watson 翻訳機能
     if (api == 'tra'):
         print('speech_api_watson_key.py')
         print('set your key!')
-        if (key == 'username'):
-            #return 'your name'
-            return 'your name'
-        if (key == 'password'):
-            #return 'your key'
+        if (key == 'url'):
+            return 'your url'
+        if (key == 'key'):
             return 'your key'
 
     # Watson 音声合成
     if (api == 'tts'):
         print('speech_api_watson_key.py')
         print('set your key!')
-        if (key == 'username'):
-            #return 'your name'
-            return 'your name'
-        if (key == 'password'):
-            #return 'your key'
+        if (key == 'url'):
+            return 'your url'
+        if (key == 'key'):
             return 'your key'
 
     return False
