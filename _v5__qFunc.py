@@ -48,8 +48,8 @@ import cv2
 qPath_pictures  = ''
 qPath_videos    = ''
 if (os.name == 'nt'):
-    qPath_pictures  = 'C:/Users/' + qUSERNAME + '/Pictures/'
-    qPath_videos    = 'C:/Users/' + qUSERNAME + '/Videos/'
+    qPath_pictures  = 'C:/Users/' + qUSERNAME + '/Pictures/RiKi/'
+    qPath_videos    = 'C:/Users/' + qUSERNAME + '/Videos/RiKi/'
 
 qPath_cache     = '_cache/'
 qPath_sounds    = '_sounds/'
@@ -157,6 +157,11 @@ class qFunc_class:
         self.makeDirs(qPath_d_prtscn, False)
         self.makeDirs(qPath_d_movie,  False)
         self.makeDirs(qPath_d_upload, False)
+
+        if (qPath_pictures != ''):
+            self.makeDirs(qPath_pictures, 14)
+        if (qPath_videos != ''):
+            self.makeDirs(qPath_videos,   14)
 
         return True
 
@@ -310,13 +315,15 @@ class qFunc_class:
                 if (not os.path.isdir(path[:-1])):
                     os.makedirs(path[:-1])
                 else:
-                    if (remove == True):
+                    if (remove != False):
                         files = glob.glob(path + '*')
                         for f in files:
-                            try:
-                                self.remove(f)
-                            except:
-                                pass
+                            if (remove == True):
+                                try:
+                                    self.remove(f)
+                                except:
+                                    pass
+
         except:
             pass
         return True
