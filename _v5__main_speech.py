@@ -899,6 +899,10 @@ if __name__ == '__main__':
     qFunc.remove(qCtrl_translate          )
     qFunc.remove(qCtrl_translate_sjis     )
 
+    qFunc.makeDirs(qPath_log,      15 )
+    qFunc.makeDirs(qPath_work,     15 )
+    qFunc.makeDirs(qPath_rec,      15 )
+
     qFunc.makeDirs(qPath_s_ctrl, True )
     if (micDev.isdigit()):
         qFunc.makeDirs(qPath_s_inp,  True )

@@ -43,6 +43,11 @@ import pyautogui
 import pyperclip
 import cv2
 
+import PIL
+import io
+if (os.name == 'nt'):
+    import win32clipboard
+
 
 
 qPath_pictures  = ''
@@ -159,9 +164,9 @@ class qFunc_class:
         self.makeDirs(qPath_d_upload, False)
 
         if (qPath_pictures != ''):
-            self.makeDirs(qPath_pictures, 14)
+            self.makeDirs(qPath_pictures, False)
         if (qPath_videos != ''):
-            self.makeDirs(qPath_videos,   14)
+            self.makeDirs(qPath_videos,   False)
 
         return True
 
@@ -321,6 +326,16 @@ class qFunc_class:
                             if (remove == True):
                                 try:
                                     self.remove(f)
+                                except:
+                                    pass
+                            if (str(remove).isdigit()):
+                                try:
+                                    nowTime   = datetime.datetime.now()
+                                    fileStamp = os.path.getmtime(f)
+                                    fileTime  = datetime.datetime.fromtimestamp(fileStamp)
+                                    td = nowTime - fileTime
+                                    if (td.days >= int(remove)):
+                                        self.remove(f)
                                 except:
                                     pass
 
@@ -523,6 +538,26 @@ class qFunc_class:
 
 
 
+    def img2clip(self, file):
+        if (os.name == 'nt'):
+            #try:
+                img = PIL.Image.open(file)
+                output = io.BytesIO()
+                img.convert('RGB').save(output, 'BMP')
+                data = output.getvalue()[14:]
+                output.close()
+
+                win32clipboard.OpenClipboard()
+                win32clipboard.EmptyClipboard()
+                win32clipboard.SetClipboardData(win32clipboard.CF_DIB, data)
+                win32clipboard.CloseClipboard()
+                return True
+            #except:
+            #    pass
+        return False
+
+
+
     def in_japanese(self, txt=''):
         t = txt.replace('\r', '')
         t = t.replace('\n', '')
@@ -538,7 +573,10 @@ class qFunc_class:
         return False
 
     def checkWakeUpWord(self, txt='', ):
-        if (txt == u'力') or (txt.lower() == 'power') \
+        if (txt == u'力') or (txt == u'三木') \
+        or (txt == u'ミッキー') \
+        or (txt.lower() == 'riki') \
+        or (txt.lower() == 'miki') \
         or (txt.lower() == 'wiki') \
         or (txt == u'フォース') or (txt.lower() == 'force') \
         or (txt[:6] == u'コンピュータ') or (txt.lower() == 'computer'):
@@ -1232,6 +1270,8 @@ if (__name__ == '__main__'):
 
     x,y = qFunc.getResolution('full')
     print('getResolution x,y = ', x, y, )
+
+    qFunc.img2clip('cv2dnn\dog.jpg')
 
     qFunc.statusReset_speech(True)
     qFunc.statusReset_vision(True)

@@ -1274,6 +1274,10 @@ class main_vision:
         #if (photo_file == ''):
         #    main_file = ''
 
+        # クリップボードへ
+        if (main_file != ''):
+            qFunc.img2clip(main_file)
+
         # 写真コピー保存
         filename_p1 = qPath_v_photo  + stamp + '.photo.jpg'
         filename_p2 = qPath_d_upload + stamp + '.photo.jpg'
@@ -1577,14 +1581,21 @@ if __name__ == '__main__':
     qFunc.remove(qCtrl_result_ocrTrn      )
     qFunc.remove(qCtrl_result_ocrTrn_sjis )
 
-    qFunc.makeDirs(qPath_v_ctrl,   True )
-    qFunc.makeDirs(qPath_v_inp,    True )
-    qFunc.makeDirs(qPath_v_jpg,    True )
-    qFunc.makeDirs(qPath_v_detect, True )
-    qFunc.makeDirs(qPath_v_cv,     True )
-    qFunc.makeDirs(qPath_v_photo,  True )
-    qFunc.makeDirs(qPath_v_msg,    True )
-    qFunc.makeDirs(qPath_d_prtscn, True )
+    qFunc.makeDirs(qPath_log,          15 )
+    qFunc.makeDirs(qPath_work,         15 )
+    qFunc.makeDirs(qPath_rec,          15 )
+
+    qFunc.makeDirs(qPath_v_ctrl,   True   )
+    qFunc.makeDirs(qPath_v_inp,    True   )
+    qFunc.makeDirs(qPath_v_jpg,    True   )
+    qFunc.makeDirs(qPath_v_detect, True   )
+    qFunc.makeDirs(qPath_v_cv,     True   )
+    qFunc.makeDirs(qPath_v_photo,  True   )
+    qFunc.makeDirs(qPath_v_msg,    True   )
+    qFunc.makeDirs(qPath_d_prtscn, True   )
+
+    if (qPath_pictures != ''):
+        qFunc.makeDirs(qPath_pictures, 15 )
 
     qFunc.statusReset_vision(False)
 

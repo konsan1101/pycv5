@@ -593,6 +593,10 @@ class main_desktop:
         #except:
         #    main_file = ''
 
+        # クリップボードへ
+        if (main_file != ''):
+            qFunc.img2clip(main_file)
+
         # コピー保存
         filename_s1 = qPath_d_prtscn + stamp + '.capture.jpg'
         filename_s2 = qPath_d_upload + stamp + '.capture.jpg'
@@ -653,11 +657,18 @@ if __name__ == '__main__':
 
     qFunc.remove(qCtrl_control_desktop  )
 
+    qFunc.makeDirs(qPath_log,        15 )
+    qFunc.makeDirs(qPath_work,       15 )
+    qFunc.makeDirs(qPath_rec,        15 )
+
     qFunc.makeDirs(qPath_d_ctrl,   True )
     qFunc.makeDirs(qPath_d_play,   True )
     qFunc.makeDirs(qPath_d_prtscn, True )
     qFunc.makeDirs(qPath_d_movie,  True )
     qFunc.makeDirs(qPath_d_upload, True )
+
+    if (qPath_videos != ''):
+        qFunc.makeDirs(qPath_videos, 15 )
 
     qFunc.statusReset_desktop(False)
 
