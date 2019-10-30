@@ -573,10 +573,11 @@ class qFunc_class:
         return False
 
     def checkWakeUpWord(self, txt='', ):
-        if (txt == u'力') or (txt == u'三木') \
-        or (txt == u'ミッキー') \
+        if (txt == u'力') or (txt == u'りき') \
+        or (txt == u'三木') or (txt == u'ミキ') or (txt == u'ミッキー') \
+        or (txt == u'ウィキ') \
         or (txt.lower() == 'riki') \
-        or (txt.lower() == 'miki') \
+        or (txt.lower() == 'miki') or (txt.lower() == 'mickey') \
         or (txt.lower() == 'wiki') \
         or (txt == u'フォース') or (txt.lower() == 'force') \
         or (txt[:6] == u'コンピュータ') or (txt.lower() == 'computer'):
