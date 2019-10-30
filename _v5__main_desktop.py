@@ -37,7 +37,10 @@ qCtrl_control_browser    = 'temp/control_browser.txt'
 qCtrl_control_player     = 'temp/control_player.txt'
 
 # 出力インターフェース
+qCtrl_result_desktop      = 'temp/result_desktop.txt'
 qCtrl_result_capture      = 'temp/result_capture.jpg'
+qCtrl_result_movie        = 'temp/result_movie.mp4'
+qCtrl_result_recorder     = 'temp/result_recorder.txt'
 
 
 
@@ -125,7 +128,7 @@ import _v5_proc_uploader
 
 
 # debug
-runMode     = 'debug'
+runMode     = 'recorder'
 
 
 
@@ -259,12 +262,17 @@ class main_desktop:
             uploader_switch  = 'off'
         elif (self.runMode == 'camera'):
             capture_switch   = 'off'
-            cvreader_switch  = 'on'
+            cvreader_switch  = 'off'
             recorder_switch  = 'on'
             uploader_switch  = 'on'
         elif (self.runMode == 'assistant'):
             capture_switch   = 'on'
             cvreader_switch  = 'on'
+            recorder_switch  = 'on'
+            uploader_switch  = 'on'
+        elif (self.runMode == 'recorder'):
+            capture_switch   = 'off'
+            cvreader_switch  = 'off'
             recorder_switch  = 'on'
             uploader_switch  = 'on'
 
@@ -376,6 +384,10 @@ class main_desktop:
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
                     speechs.append({ 'text':u'「デスクトップ記録」の機能が有効になりました。', 'wait':0, })
+
+                # 記録開始
+                if (self.runMode == 'recorder'):
+                    recorder_thread.put(['control', '_rec_start_'])
 
             if (not recorder_thread is None) and (recorder_switch != 'on'):
                 recorder_thread.abort()
@@ -656,6 +668,11 @@ if __name__ == '__main__':
     # 初期設定
 
     qFunc.remove(qCtrl_control_desktop  )
+
+    qFunc.remove(qCtrl_result_desktop   )
+    qFunc.remove(qCtrl_result_capture   )
+    qFunc.remove(qCtrl_result_movie     )
+    qFunc.remove(qCtrl_result_recorder  )
 
     qFunc.makeDirs(qPath_log,        15 )
     qFunc.makeDirs(qPath_work,       15 )

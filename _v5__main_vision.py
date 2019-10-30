@@ -37,9 +37,9 @@ qCtrl_recognize          = 'temp/result_recognize.txt'
 qCtrl_translate          = 'temp/result_translate.txt'
 
 # 出力インターフェース
+qCtrl_result_vision      = 'temp/result_vision.txt'
 qCtrl_result_photo       = 'temp/result_photo.jpg'
 qCtrl_result_screen      = 'temp/result_screen.jpg'
-qCtrl_result_vision      = 'temp/result_vision.txt'
 qCtrl_result_cv          = 'temp/result_cv.txt'
 qCtrl_result_cv_sjis     = 'temp/result_cv_sjis.txt'
 qCtrl_result_ocr         = 'temp/result_ocr.txt'
@@ -1571,9 +1571,9 @@ if __name__ == '__main__':
 
     qFunc.remove(qCtrl_control_vision     )
 
+    qFunc.remove(qCtrl_result_vision      )
     qFunc.remove(qCtrl_result_photo       )
     qFunc.remove(qCtrl_result_screen      )
-    qFunc.remove(qCtrl_result_vision      )
     qFunc.remove(qCtrl_result_cv          )
     qFunc.remove(qCtrl_result_cv_sjis     )
     qFunc.remove(qCtrl_result_ocr         )

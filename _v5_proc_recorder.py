@@ -23,6 +23,10 @@ import glob
 # インターフェース
 qCtrl_control_desktop    = 'temp/control_desktop.txt'
 
+# 出力インターフェース
+qCtrl_result_movie        = 'temp/result_movie.mp4'
+qCtrl_result_recorder     = 'temp/result_recorder.txt'
+
 
 
 # qFunc 共通ルーチン
@@ -381,8 +385,11 @@ def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
             outFile = f.replace(qPath_rec, '')
             qFunc.copy(f, qPath_d_movie  + outFile)
             qFunc.copy(f, qPath_d_upload + outFile)
+            qFunc.copy(f, qCtrl_result_movie)
             if (qPath_videos != ''):
                 qFunc.copy(f, qPath_videos + outFile)
+
+            qFunc.txtsWrite(qCtrl_result_recorder, txts=['_ok_'], encoding='utf-8', exclusive=True, mode='w', )
 
             # ログ
             print(proc_id + ':thread ' + str(index) + ':' + rec_namev + u' → ' + outFile)
@@ -647,6 +654,10 @@ class proc_recorder:
 
     # 記録開始
     def sub_start(self, index, proc_text, ):
+
+        # インターフェース
+        qFunc.remove(qCtrl_result_movie     )
+        qFunc.remove(qCtrl_result_recorder  )
 
         # index
         if (index == 0):
