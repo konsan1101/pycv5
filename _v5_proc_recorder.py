@@ -381,6 +381,7 @@ def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
     # 動画変換
     res = movie2mp4(inpPath=qPath_work, inpNamev=rec_namev, inpNamea=rec_namea, outPath = qPath_rec, )
     if (res != False):
+        mp4file = ''
         for f in res:
             outFile = f.replace(qPath_rec, '')
             qFunc.copy(f, qPath_d_movie  + outFile)
@@ -388,11 +389,16 @@ def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
             qFunc.copy(f, qCtrl_result_movie)
             if (qPath_videos != ''):
                 qFunc.copy(f, qPath_videos + outFile)
-
-            qFunc.txtsWrite(qCtrl_result_recorder, txts=['_ok_'], encoding='utf-8', exclusive=True, mode='w', )
+            if (outFile[-4:] == '.mp4'):
+                mp4file = outFile
 
             # ログ
             print(proc_id + ':thread ' + str(index) + ':' + rec_namev + u' → ' + outFile)
+
+        if (mp4file != ''):
+            qFunc.txtsWrite(qCtrl_result_recorder, txts=[mp4file], encoding='utf-8', exclusive=True, mode='w', )
+        else:
+            qFunc.txtsWrite(qCtrl_result_recorder, txts=['_mp4?_'], encoding='utf-8', exclusive=True, mode='w', )
 
     # ワーク削除
     if (rec_filev != ''):

@@ -491,7 +491,7 @@ class proc_controls:
         and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))) \
         or ((proc_text.find(u'プログラム') >= 0) \
         and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))):
-            sample = subprocess.Popen(['C:\snkApps\SAAP_r545_20191018\__start.bat' ], )
+            sample = subprocess.Popen(['C:\snkApps\SAAP_r545\__start.bat' ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
         if (proc_text[-3:] == u'を入力'):

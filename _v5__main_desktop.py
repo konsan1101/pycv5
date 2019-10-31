@@ -38,7 +38,8 @@ qCtrl_control_player     = 'temp/control_player.txt'
 
 # 出力インターフェース
 qCtrl_result_desktop      = 'temp/result_desktop.txt'
-qCtrl_result_capture      = 'temp/result_capture.jpg'
+qCtrl_result_prtscn       = 'temp/result_prtscn.jpg'
+qCtrl_result_capture      = 'temp/result_capture.txt'
 qCtrl_result_movie        = 'temp/result_movie.mp4'
 qCtrl_result_recorder     = 'temp/result_recorder.txt'
 
@@ -612,7 +613,7 @@ class main_desktop:
         # コピー保存
         filename_s1 = qPath_d_prtscn + stamp + '.capture.jpg'
         filename_s2 = qPath_d_upload + stamp + '.capture.jpg'
-        filename_s3 = qCtrl_result_capture
+        filename_s3 = qCtrl_result_prtscn
         filename_s4 = qPath_pictures + stamp + '.capture.jpg'
         if (main_file != ''):
             qFunc.copy(main_file,   filename_s1)
@@ -620,6 +621,8 @@ class main_desktop:
             qFunc.copy(main_file,   filename_s3)
             if (qPath_pictures != ''):
                 qFunc.copy(main_file,   filename_s4)
+
+            qFunc.txtsWrite(qCtrl_result_capture, txts=[stamp + '.capture.jpg'], encoding='utf-8', exclusive=True, mode='w', )
 
 
 
@@ -670,6 +673,7 @@ if __name__ == '__main__':
     qFunc.remove(qCtrl_control_desktop  )
 
     qFunc.remove(qCtrl_result_desktop   )
+    qFunc.remove(qCtrl_result_prtscn    )
     qFunc.remove(qCtrl_result_capture   )
     qFunc.remove(qCtrl_result_movie     )
     qFunc.remove(qCtrl_result_recorder  )

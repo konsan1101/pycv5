@@ -980,7 +980,7 @@ class proc_overlay:
                     cv2.putText(display_img, stamp[:-3], ( 20, self.dspHeight-20), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,0))
 
                 # シャッターイメージ
-                if ((time.time() - shutter_time) <= 5) and (not shutter_img is None):
+                if ((time.time() - shutter_time) <= 3) and (not shutter_img is None):
                     display_img = shutter_img.copy()
 
                 # 結果出力

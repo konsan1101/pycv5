@@ -263,6 +263,7 @@ class proc_capture:
                 try:
                     frm = pyautogui.screenshot()
                     frame = np.asarray(frm)
+                    frame = cv2.cvtColor(frame,cv2.COLOR_RGB2BGR)
                 except:
                     pass
 
