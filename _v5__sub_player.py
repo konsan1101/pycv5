@@ -128,28 +128,38 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
     if (overText != ''):
         vf += ',drawtext=fontfile=' + qFONT_default['file'] + ':fontsize=256:fontcolor=white:text=' + overText
 
-    if (width != 0) or (height != 0):
-        ffplay = subprocess.Popen(['ffplay', '-i', file, \
-                                    '-vf', vf, \
-                                    '-volume', str(vol), \
-                                    '-window_title', str(id), \
-                                    '-noborder', '-autoexit', \
-                                    '-x', str(width), '-y', str(height), \
-                                    '-loglevel', 'warning', \
-                    ], )
-                    #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+    if (file[-4:].lower() == '.mp3') or (file[-4:].lower() == '.wav'):
+            ffplay = subprocess.Popen(['ffplay', '-i', file, \
+                                        '-volume', str(vol), \
+                                        '-window_title', str(id), \
+                                        '-noborder', '-autoexit', \
+                                        '-x', str(width), '-y', str(height), \
+                                        '-loglevel', 'warning', \
+                        ], )
+                        #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
     else:
-        w, h = pyautogui.size()
-        ffplay = subprocess.Popen(['ffplay', '-i', file, \
-                                    '-vf', vf, \
-                                    '-volume', str(vol), \
-                                    '-window_title', str(id), \
-                                    '-noborder', '-autoexit', \
-                                    #'-fs', \
-                                    '-x', str(w), '-y', str(h), \
-                                    '-loglevel', 'warning', \
-                    ], )
-                    #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+        if (width != 0) or (height != 0):
+            ffplay = subprocess.Popen(['ffplay', '-i', file, \
+                                        '-vf', vf, \
+                                        '-volume', str(vol), \
+                                        '-window_title', str(id), \
+                                        '-noborder', '-autoexit', \
+                                        '-x', str(width), '-y', str(height), \
+                                        '-loglevel', 'warning', \
+                        ], )
+                        #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+        else:
+            w, h = pyautogui.size()
+            ffplay = subprocess.Popen(['ffplay', '-i', file, \
+                                        '-vf', vf, \
+                                        '-volume', str(vol), \
+                                        '-window_title', str(id), \
+                                        '-noborder', '-autoexit', \
+                                        #'-fs', \
+                                        '-x', str(w), '-y', str(h), \
+                                        '-loglevel', 'warning', \
+                        ], )
+                        #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
     z_order = 0
     if (order == 'top'):
@@ -181,7 +191,8 @@ def panelPlay(panel, path, vol, order, loop, overtext):
     while (loop > 0):
 
         if (os.path.isfile(path)):
-            p = panel
+            fn = path
+            p  = panel
 
             fps = 15
             if (vol == 0):
@@ -190,8 +201,12 @@ def panelPlay(panel, path, vol, order, loop, overtext):
                 else:
                     fps = 2
 
+            if (fn[-4:].lower() == '.mp3') or (fn[-4:].lower() == '.wav'):
+                if (p=='0') or (p=='0-'):
+                    p = '5'
+
             left, top, width, height = getPanelPos(p,)
-            res = qFFplay(p, path, vol, order, left, top, width, height, fps, overtext)
+            res = qFFplay(p, fn, vol, order, left, top, width, height, fps, overtext)
             count += 1
 
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
@@ -221,6 +236,10 @@ def panelPlay(panel, path, vol, order, loop, overtext):
                         fps = 5
                     else:
                         fps = 2
+
+                if (fn[-4:].lower() == '.mp3') or (fn[-4:].lower() == '.wav'):
+                    if (p=='0') or (p=='0-'):
+                        p = '5'
 
                 left, top, width, height = getPanelPos(p,)
                 res = qFFplay(p, fn, vol, order, left, top, width, height, fps, overtext)
@@ -454,7 +473,7 @@ class main_class:
                 self.sub_alive()
 
             # 選択アナウンス
-            if (control.find(u'メニュー') >=0):
+            if (control.find(u'動画') >=0) and (control.find(u'メニュー') >=0):
                 last_menu = time.time()
             if (control.lower() >= '01') and (control.lower() <= '09'):
                 last_menu = 0
@@ -559,14 +578,14 @@ class main_class:
             self.sub_start(path['03'], panel='37', vol=0  , order='normal', loop=99, )
             self.sub_start(path['04'], panel='46', vol=0  , order='normal', loop=99, )
 
-        elif (proc_text.find(u'メニュー') >=0) or (proc_text.lower() == '_test_'):
+        elif ((proc_text.find(u'動画') >=0) and (proc_text.find(u'メニュー') >=0)) or (proc_text.lower() == '_test_'):
             #self.sub_stop('_stop_', )
             self.sub_start(path['00'], panel='0' , vol=0  , order='normal', loop=99, overtext='', )
             self.sub_start(path['01'], panel='1-', vol=0  , order='normal', loop=99, overtext='01', )
             self.sub_start(path['02'], panel='2-', vol=0  , order='normal', loop=99, overtext='02', )
             self.sub_start(path['03'], panel='3-', vol=0  , order='normal', loop=99, overtext='03', )
             self.sub_start(path['04'], panel='4-', vol=0  , order='normal', loop=99, overtext='04', )
-            if (proc_text.find(u'メニュー') >=0):
+            if (proc_text.find(u'動画') >=0) and (proc_text.find(u'メニュー') >=0):
                 self.sub_start(path['05'], panel='5-', vol=0  , order='normal', loop=99, overtext='05', )
             if (proc_text.lower() == '_test_'):
                 self.sub_start(path['05'], panel='5-', vol=100, order='top'   , loop=99, overtext='05', )

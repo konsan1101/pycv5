@@ -600,6 +600,10 @@ class proc_controls:
                 self.run_bgm = True
 
             elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
+            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_bgm ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+
+            elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
             and (proc_text.find(u'終了') >= 0):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_bgm_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = False
@@ -608,6 +612,10 @@ class proc_controls:
             and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_browser_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_browser = True
+
+            elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
+            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_browser ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
             and (proc_text.find(u'終了') >= 0):
@@ -623,7 +631,11 @@ class proc_controls:
                 qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.statusWait_false(qCtrl_control_player, 5)
                 time.sleep(5.00)
-                qFunc.txtsWrite(qCtrl_control_player ,txts=[u'メニュー'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_player ,txts=[u'動画メニュー'], encoding='utf-8', exclusive=True, mode='w', )
+
+            elif (proc_text.find(u'動画') >= 0) \
+            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif (proc_text.find(u'動画') >= 0) and (proc_text.find(u'終了') >= 0):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_player_end_'], encoding='utf-8', exclusive=True, mode='w', )
@@ -636,7 +648,7 @@ class proc_controls:
                 qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.statusWait_false(qCtrl_control_player, 5)
                 time.sleep(5.00)
-                qFunc.txtsWrite(qCtrl_control_player ,txts=[u'メニュー'], encoding='utf-8', exclusive=True, mode='w', )
+                qFunc.txtsWrite(qCtrl_control_player ,txts=[u'動画メニュー'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif (self.run_player == True) \
             and  (word_true == True) \
@@ -654,7 +666,7 @@ class proc_controls:
                 self.run_chatting = True
 
             elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
-            and (proc_text.find(u'終了') >= 0):
+            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_chatting_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_chatting = False
 
@@ -663,7 +675,8 @@ class proc_controls:
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_knowledge_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_knowledge = True
 
-            elif ((proc_text.find(u'知識') >= 0) and (proc_text.find(u'終了') >= 0)):
+            elif (proc_text.find(u'知識') >= 0) \
+            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_knowledge_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_knowledge = False
 
