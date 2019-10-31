@@ -355,8 +355,8 @@ if __name__ == '__main__':
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
             bgm_switch           = 'off'
-            browser_switch       = 'off'
-            player_switch        = 'off'
+            browser_switch       = 'on'
+            player_switch        = 'on'
 
     # 起動
 
