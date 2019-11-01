@@ -136,6 +136,7 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
                                         '-volume', str(vol), \
                                         '-window_title', str(id), \
                                         '-noborder', '-autoexit', \
+                                        '-left', str(left), '-top', str(top), \
                                         '-x', str(width), '-y', str(height), \
                                         '-loglevel', 'warning', \
                         ], )
@@ -147,6 +148,7 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
                                         '-volume', str(vol), \
                                         '-window_title', str(id), \
                                         '-noborder', '-autoexit', \
+                                        '-left', str(left), '-top', str(top), \
                                         '-x', str(width), '-y', str(height), \
                                         '-loglevel', 'warning', \
                         ], )
@@ -159,6 +161,7 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
                                         '-window_title', str(id), \
                                         '-noborder', '-autoexit', \
                                         #'-fs', \
+                                        '-left', str(left), '-top', str(top), \
                                         '-x', str(w), '-y', str(h), \
                                         '-loglevel', 'warning', \
                         ], )
@@ -242,7 +245,7 @@ def panelPlay(panel, path, vol, order, loop, overtext):
 
                 if (fn[-4:].lower() == '.mp3') or (fn[-4:].lower() == '.wav'):
                     if (p=='0') or (p=='0-'):
-                        p = '5'
+                        p = '5+'
 
                 left, top, width, height = getPanelPos(p,)
                 res = qFFplay(p, fn, vol, order, left, top, width, height, fps, overtext)
@@ -289,6 +292,8 @@ def getPanelPos(id='0-', ):
         return int(w/3), int(h/3), int(w/3), int(h/3)
     elif (id == '5-'):
         return int(w/3)+wa, int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+    elif (id == '5+'):
+        return int(w/4), int(h/4), int(w/2), int(h/2)
     elif (id == '6'):
         return w-int(w/3), int(h/3), int(w/3), int(h/3)
     elif (id == '6-'):
@@ -602,10 +607,10 @@ class main_class:
             self.sub_start(path[proc_text], panel='0-', vol=100, order='top' , loop=99, )
 
         else:
-            if (os.path.isfile(proc_text)) \
-            or (os.path.isdir(proc_text)):
+            proc_path = qFunc.txtFilePath(proc_text)
+            if (proc_path != False):
                 #self.sub_stop('_stop_', )
-                self.sub_start(proc_text, panel='0-', vol=100, order='top', loop=1, )
+                self.sub_start(proc_path, panel='0-', vol=100, order='top', loop=1, )
 
 
 

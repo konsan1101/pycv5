@@ -310,17 +310,21 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
 
     # パラメータ
     inpFilev = inpPath + inpNamev
-    inpFilea = ''
-    if (inpNamea != ''):
-        inpFilea = inpPath + inpNamea
+    inpFilea = inpPath + inpNamea
+    if (inpNamea == ''):
+        inpFilea = ''
     if (outPath == ''):
         outPath = qPath_rec
     inpTime = inpNamev[:15]
     inpText = inpNamev[15:-4]
     if (inpText == ''):
-        outFile = outPath + inpTime + '.___' + '.mp4'
+        outFilev = outPath + inpTime + '.___' + '.mp4'
+        outFilea = outPath + inpTime + '.___' + '.mp3'
     else:
-        outFile = outPath + '_' + inpTime + '.___' + inpText + '.mp4'
+        outFilev = outPath + '_' + inpTime + '.___' + inpText + '.mp4'
+        outFilea = outPath + '_' + inpTime + '.___' + inpText + '.mp3'
+    if (inpNamea == ''):
+        outFilea = ''
 
     result = False
 
@@ -332,27 +336,41 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
             ffmpeg = subprocess.Popen(['ffmpeg', \
                 '-i', inpFilev, \
                 '-vcodec', 'libx264', '-r', '2', \
-                outFile, \
+                outFilev, \
                 '-loglevel', 'warning', \
                 ], )
                 #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            #logb, errb = ffmpeg.communicate()
+            ffmpeg.wait()
+            ffmpeg.terminate()
+            ffmpeg = None
         else:
             ffmpeg = subprocess.Popen(['ffmpeg', \
                 '-i', inpFilev, '-i', inpFilea, \
                 '-vcodec', 'libx264', '-r', '2', \
                 '-acodec', 'aac', '-ab', '96k', '-ac', '1', '-ar', '44100', \
-                outFile, \
+                outFilev, \
                 '-loglevel', 'warning', \
                 ], )
                 #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            #logb, errb = ffmpeg.communicate()
+            ffmpeg.wait()
+            ffmpeg.terminate()
+            ffmpeg = None
 
-        #logb, errb = ffmpeg.communicate()
-        ffmpeg.wait()
-        ffmpeg.terminate()
-        ffmpeg = None
+        # 音声処理
+        if (inpFilea != ''):
+            sox = subprocess.Popen(['sox', '-q', inpFilea, outFilea, ], \
+                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+            sox.wait()
+            sox.terminate()
+            sox = None
 
         # 戻り値
-        return [outFile]
+        if (outFilea == ''):
+            return [outFilev]
+        else:
+            return [outFilev, outFilea]
 
     #except:
     #    pass
@@ -393,7 +411,10 @@ def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
                 mp4file = outFile
 
             # ログ
-            print(proc_id + ':thread ' + str(index) + ':' + rec_namev + u' → ' + outFile)
+            if (outFile[-4:] == '.mp4'):
+                print(proc_id + ':thread ' + str(index) + ':' + rec_namev + u' → ' + outFile)
+            if (outFile[-4:] == '.mp3'):
+                print(proc_id + ':thread ' + str(index) + ':' + rec_namea + u' → ' + outFile)
 
         if (mp4file != ''):
             qFunc.txtsWrite(qCtrl_result_recorder, txts=[mp4file], encoding='utf-8', exclusive=True, mode='w', )

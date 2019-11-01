@@ -438,15 +438,19 @@ class qFunc_class:
                         w = None
                         return False
 
-    def txtsRead(self, filename, encoding='utf-8-sig', exclusive=False, ):
+    def txtsRead(self, filename, encoding='utf-8', exclusive=False, ):
         if (not os.path.exists(filename)):
             return False, ''
+
+        encoding2 = encoding
+        if (encoding2 == 'utf-8'):
+            encoding2 =  'utf-8-sig'
 
         if (exclusive == False):
             try:
                 txts = []
                 txt  = ''
-                r = codecs.open(filename, 'r', encoding)
+                r = codecs.open(filename, 'r', encoding2)
                 for t in r:
                     t = t.replace('\n', '')
                     t = t.replace('\r', '')
@@ -468,7 +472,7 @@ class qFunc_class:
                     os.rename(filename, f2)
                     txts = []
                     txt  = ''
-                    r = codecs.open(f2, 'r', encoding)
+                    r = codecs.open(f2, 'r', encoding2)
                     for t in r:
                         t = t.replace('\n', '')
                         t = t.replace('\r', '')
@@ -481,6 +485,15 @@ class qFunc_class:
                 except:
                     r = None
                     return False, ''
+
+    def txtFilePath(self, txt='',):
+        if (txt == ''):
+            return False
+        chk = txt.replace('\\','/')
+        if (os.path.isfile(chk)) \
+        or (os.path.isdir(chk)):
+            return chk
+        return False
 
     def txt2filetxt(self, txt='', ):
         ftxt = txt.replace(' ','_')
