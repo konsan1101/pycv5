@@ -438,7 +438,7 @@ class qFunc_class:
                         w = None
                         return False
 
-    def txtsRead(self, filename, encoding='utf-8', exclusive=False, ):
+    def txtsRead(self, filename, encoding='utf-8-sig', exclusive=False, ):
         if (not os.path.exists(filename)):
             return False, ''
 
