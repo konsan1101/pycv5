@@ -123,6 +123,7 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
 
     #ffplay -i test_input.flv -volume 100 -window_title "test_input.flv" -noborder -autoexit -x 320 -y 240
     #ffplay -i test_input.flv -volume 100 -window_title "test_input.flv" -noborder -autoexit -fs
+    #ffplay -f lavfi "amovie=test_sample.mp3,asplit=3[out1][a][b]; [a]showwaves=s=320x100[waves]; [b]showspectrum=s=320x100[spectrum]; [waves][spectrum] vstack[out0]"
 
     vf = 'fps=' + str(fps)
     if (overText != ''):
