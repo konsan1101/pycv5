@@ -419,9 +419,7 @@ if __name__ == '__main__':
     cv2.namedWindow('Display', 1)
     cv2.moveWindow( 'Display', 0, 0)
 
-
-
-    cvdetect_thread = proc_cvdetect('detect', '0', )
+    cvdetect_thread = proc_cvdetect('detect', '0', procMode='full',)
     cvdetect_thread.begin()
 
     inp = cv2.imread('_photos/_photo_face.jpg')
@@ -434,21 +432,29 @@ if __name__ == '__main__':
         res_value = res_data[1]
         if (res_name != ''):
             if (res_name == '[img]'):
-                cv2.imshow('Display', res_value.copy() )
+                print('img')
+                img = cv2.resize(res_value, (320, 240), )
+                cv2.imshow('Display', img )
                 cv2.waitKey(1)
-                time.sleep(2.00)
+                time.sleep(1.00)
             if (res_name == '[array]'):
-                cv2.imshow('Display', res_value.copy() )
+                print('array')
+                img = cv2.resize(res_value, (320, 240), )
+                cv2.imshow('Display', img )
                 cv2.waitKey(1)
-                time.sleep(2.00)
+                time.sleep(1.00)
             if (res_name == '[photo]'):
-                cv2.imshow('Display', res_value.copy() )
+                print('photo')
+                img = cv2.resize(res_value, (320, 240), )
+                cv2.imshow('Display', img )
                 cv2.waitKey(1)
-                time.sleep(2.00)
+                time.sleep(1.00)
             if (res_name == '[detect]'):
-                cv2.imshow('Display', res_value.copy() )
+                print('detect')
+                img = cv2.resize(res_value, (320, 240), )
+                cv2.imshow('Display', img )
                 cv2.waitKey(1)
-                time.sleep(2.00)
+                time.sleep(1.00)
             #else:
             #    print(res_name, res_value, )
 

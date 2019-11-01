@@ -462,7 +462,8 @@ if __name__ == '__main__':
     qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
     qFunc.logOutput(qLogFile, )
 
-
+    cv2.namedWindow('Display', 1)
+    cv2.moveWindow( 'Display', 0, 0)
 
     cv2dnn_ssd_thread = proc_cv2dnn_ssd('dnn_ssd', '0', )
     cv2dnn_ssd_thread.begin()
@@ -470,7 +471,7 @@ if __name__ == '__main__':
     inp = cv2.imread('cv2dnn/dog.jpg')
 
     chktime = time.time()
-    while ((time.time() - chktime) < 120):
+    while ((time.time() - chktime) < 15):
 
         if (cv2dnn_ssd_thread.proc_s.qsize() == 0):
             cv2dnn_ssd_thread.put(['[img]', inp.copy()])

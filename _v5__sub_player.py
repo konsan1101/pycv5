@@ -131,7 +131,9 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
     if (overText != ''):
         vf += ',drawtext=fontfile=' + qFONT_default['file'] + ':fontsize=256:fontcolor=white:text=' + overText
 
-    if (file[-4:].lower() == '.mp3') or (file[-4:].lower() == '.wav'):
+    if (file[-4:].lower() == '.wav') \
+    or (file[-4:].lower() == '.mp3') \
+    or (file[-4:].lower() == '.m4a'):
             ffplay = subprocess.Popen(['ffplay', '-i', file, \
                                         '-volume', str(vol), \
                                         '-window_title', str(id), \
@@ -209,9 +211,11 @@ def panelPlay(panel, path, vol, order, loop, overtext):
                 else:
                     fps = 2
 
-            if (fn[-4:].lower() == '.mp3') or (fn[-4:].lower() == '.wav'):
+            if (fn[-4:].lower() == '.wav') \
+            or (fn[-4:].lower() == '.mp3') \
+            or (fn[-4:].lower() == '.m4a'):
                 if (p=='0') or (p=='0-'):
-                    p = '5'
+                    p = '5+'
 
             left, top, width, height = getPanelPos(p,)
             res = qFFplay(p, fn, vol, order, left, top, width, height, fps, overtext)
@@ -245,7 +249,9 @@ def panelPlay(panel, path, vol, order, loop, overtext):
                     else:
                         fps = 2
 
-                if (fn[-4:].lower() == '.mp3') or (fn[-4:].lower() == '.wav'):
+                if (fn[-4:].lower() == '.wav') \
+                or (fn[-4:].lower() == '.mp3') \
+                or (fn[-4:].lower() == '.m4a'):
                     if (p=='0') or (p=='0-'):
                         p = '5+'
 
@@ -556,7 +562,7 @@ class main_class:
             path['04'] = u'C:/Users/Public/_m4v__Clip/きゃりーぱみゅぱみゅ'
             path['05'] = u'C:/Users/Public/_m4v__Clip/etc'
             path['06'] = u'C:/Users/Public/_m4v__Clip/SekaiNoOwari'
-            path['07'] = path['03']
+            path['07'] = u'C:/Users/Public/_m4v__Clip/GB'
             path['08'] = path['02']
             path['09'] = path['01']
         elif (qPLATFORM == 'darwin'):
@@ -565,9 +571,9 @@ class main_class:
             path['02'] = u'/Users/kondou/Documents/_m4v__Clip/BABYMETAL'
             path['03'] = u'/Users/kondou/Documents/_m4v__Clip/OneOkRock'
             path['04'] = u'/Users/kondou/Documents/_m4v__Clip/きゃりーぱみゅぱみゅ'
-            path['05'] = u'/Users/kondou/Documents/_m4v__Clip/etc'
+            path['05'] = u'/Users/kondou/Documents/_m4v__Clip/GB'
             path['06'] = u'/Users/kondou/Documents/_m4v__Clip/SekaiNoOwari'
-            path['07'] = path['03']
+            path['07'] = u'/Users/kondou/Documents/_m4v__Clip/etc'
             path['08'] = path['02']
             path['09'] = path['01']
 
@@ -704,7 +710,7 @@ class main_class:
             #self.play_proc[i].setDaemon(True)
             self.play_proc[i].start()
 
-            time.sleep(1.00)
+            time.sleep(2.00)
 
     # 停止
     def sub_stop(self, proc_text, ):

@@ -105,7 +105,7 @@ qRdy__d_sendkey = qFunc.getValue('qRdy__d_sendkey')
 
 
 
-qApiCV     = 'azure'
+qApiCV     = 'google'
 qApiOCR    = qApiCV
 qApiTrn    = qApiCV
 qLangCV    = 'ja'

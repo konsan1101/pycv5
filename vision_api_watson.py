@@ -59,7 +59,7 @@ class VisionAPI:
             self.ocr_url  = url
             self.ocr_key  = key
             try:
-               self.ocr_auth = IAMAuthenticator(key)
+                self.ocr_auth = IAMAuthenticator(key)
                 if (not self.ocr_auth is None):
                     return True
             except:

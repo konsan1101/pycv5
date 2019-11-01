@@ -556,8 +556,6 @@ if __name__ == '__main__':
     cv2.namedWindow('Display', 1)
     cv2.moveWindow( 'Display', 0, 0)
 
-
-
     #camDev='http://192.168.200.250/nphMotionJpeg?Resolution=640x480'
     camDev='0'
     camera_thread = proc_camera(name='camera', id='0', runMode='debug', 
@@ -565,7 +563,7 @@ if __name__ == '__main__':
     camera_thread.begin()
 
     chktime = time.time()
-    while ((time.time() - chktime) < 60):
+    while ((time.time() - chktime) < 15):
 
         res_data  = camera_thread.get()
         res_name  = res_data[0]
