@@ -167,6 +167,8 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
                         ], )
                         #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
+    time.sleep(1.00)
+
     z_order = 0
     if (order == 'top'):
         z_order = -1
@@ -702,8 +704,7 @@ class main_class:
             #self.play_proc[i].setDaemon(True)
             self.play_proc[i].start()
 
-            if (os.name == 'nt'):
-                time.sleep(1.00)
+            time.sleep(1.00)
 
     # 停止
     def sub_stop(self, proc_text, ):
