@@ -546,16 +546,28 @@ class main_class:
     # 処理
     def sub_proc(self, proc_text, ):
         path = {}
-        path['00'] = u'C:/Users/Public/_動画_AppleTV'
-        path['01'] = u'C:/Users/Public/_m4v__Clip/Perfume'
-        path['02'] = u'C:/Users/Public/_m4v__Clip/BABYMETAL'
-        path['03'] = u'C:/Users/Public/_m4v__Clip/OneOkRock'
-        path['04'] = u'C:/Users/Public/_m4v__Clip/きゃりーぱみゅぱみゅ'
-        path['05'] = u'C:/Users/Public/_m4v__Clip/etc'
-        path['06'] = u'C:/Users/Public/_m4v__Clip/SekaiNoOwari'
-        path['07'] = path['03']
-        path['08'] = path['02']
-        path['09'] = path['01']
+        if (qPLATFORM == 'windows'):
+            path['00'] = u'C:/Users/Public/_動画_AppleTV'
+            path['01'] = u'C:/Users/Public/_m4v__Clip/Perfume'
+            path['02'] = u'C:/Users/Public/_m4v__Clip/BABYMETAL'
+            path['03'] = u'C:/Users/Public/_m4v__Clip/OneOkRock'
+            path['04'] = u'C:/Users/Public/_m4v__Clip/きゃりーぱみゅぱみゅ'
+            path['05'] = u'C:/Users/Public/_m4v__Clip/etc'
+            path['06'] = u'C:/Users/Public/_m4v__Clip/SekaiNoOwari'
+            path['07'] = path['03']
+            path['08'] = path['02']
+            path['09'] = path['01']
+        elif (qPLATFORM == 'darwin'):
+            path['00'] = u'/Users/kondou/Documents/_動画_AppleTV'
+            path['01'] = u'/Users/kondou/Documents/_m4v__Clip/Perfume'
+            path['02'] = u'/Users/kondou/Documents/_m4v__Clip/BABYMETAL'
+            path['03'] = u'/Users/kondou/Documents/_m4v__Clip/OneOkRock'
+            path['04'] = u'/Users/kondou/Documents/_m4v__Clip/きゃりーぱみゅぱみゅ'
+            path['05'] = u'/Users/kondou/Documents/_m4v__Clip/etc'
+            path['06'] = u'/Users/kondou/Documents/_m4v__Clip/SekaiNoOwari'
+            path['07'] = path['03']
+            path['08'] = path['02']
+            path['09'] = path['01']
 
         if (proc_text.find(u'リセット') >=0):
             #self.sub_stop(proc_text, )
