@@ -124,7 +124,8 @@ import _v5_proc_controld
 import _v5_proc_capture
 import _v5_proc_cvreader
 import _v5_proc_recorder
-import _v5_proc_uploader
+if (qPLATFORM == 'windows'):
+    import _v5_proc_uploader
 
 
 
@@ -276,6 +277,9 @@ class main_desktop:
             cvreader_switch  = 'off'
             recorder_switch  = 'on'
             uploader_switch  = 'on'
+
+        if (qPLATFORM != 'windows'):
+            uploader_switch  = 'off'
 
         # 待機ループ
         self.proc_step = '5'
