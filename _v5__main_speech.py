@@ -664,9 +664,6 @@ class main_speech:
                                 if (qFunc.statusCheck(qRdy__s_sendkey) == True):
                                     qFunc.sendKey(proc_text)
 
-            # ビジー解除
-            qFunc.statusSet(self.fileBsy, False)
-
             # アイドリング
             slow = False
             if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
@@ -689,6 +686,9 @@ class main_speech:
 
             # レディー解除
             qFunc.statusSet(self.fileRdy, False)
+
+            # ビジー解除
+            qFunc.statusSet(self.fileBsy, False)
 
             # スレッド停止
             if (not controls_thread is None):

@@ -1161,6 +1161,9 @@ class main_vision:
             # レディ解除
             qFunc.statusSet(self.fileRdy, False)
 
+            # ビジー解除
+            qFunc.statusSet(self.fileBsy, False)
+
             # スレッド停止
             if (not controlv_thread is None):
                 controlv_thread.abort()

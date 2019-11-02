@@ -130,7 +130,7 @@ if (qPLATFORM == 'windows'):
 
 
 # debug
-runMode     = 'recorder'
+runMode     = 'assistant'
 
 
 
@@ -486,30 +486,36 @@ class main_desktop:
 
                         break
 
-                # 画像合成（ＱＲ　識別結果）
-                if (not cvreader_thread is None):
-                    while (cvreader_thread.proc_r.qsize() != 0):
-                        res_data  = cvreader_thread.get()
-                        res_name  = res_data[0]
-                        res_value = res_data[1]
-                        if (res_name == '[img]'):
-                            pass
-                        if (res_name == '[txts]'):
+            # 画像合成（ＱＲ　識別結果）
+            if (not cvreader_thread is None):
+                while (cvreader_thread.proc_r.qsize() != 0):
+                    res_data  = cvreader_thread.get()
+                    res_name  = res_data[0]
+                    res_value = res_data[1]
+                    if (res_name == '[img]'):
+                        pass
+                    if (res_name == '[txts]'):
 
-                            # コントロール出力
-                            if (res_value[0][:1] == '_'):
-                                nowTime = datetime.datetime.now()
-                                stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
-                                controld_file = qPath_d_ctrl + stamp + '.txt'
-                                qFunc.txtsWrite(controld_file, txts=res_value, encoding='utf-8', exclusive=True, mode='w', )
+                        # コントロール出力
+                        if (res_value[0][:1] == '_'):
+                            nowTime = datetime.datetime.now()
+                            stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
+                            controld_file = qPath_d_ctrl + stamp + '.txt'
+                            qFunc.txtsWrite(controld_file, txts=res_value, encoding='utf-8', exclusive=True, mode='w', )
 
-                            # 画面表示
-                            #qFunc.txtsWrite(qCtrl_control_browser, txts=res_value, encoding='utf-8', exclusive=True, mode='w', )
-                            #qFunc.txtsWrite(qCtrl_control_player, txts=res_value, encoding='utf-8', exclusive=True, mode='w', )
+                        # 画面表示
+                        #qFunc.txtsWrite(qCtrl_control_browser, txts=res_value, encoding='utf-8', exclusive=True, mode='w', )
+                        #qFunc.txtsWrite(qCtrl_control_player, txts=res_value, encoding='utf-8', exclusive=True, mode='w', )
 
-                # 記録機能
-                if (not recorder_thread is None):
+            # 記録機能
+            if (not recorder_thread is None):
+                while (recorder_thread.proc_r.qsize() != 0):
                     res_data  = recorder_thread.get()
+
+            # アップロード機能
+            if (not uploader_thread is None):
+                while (uploader_thread.proc_r.qsize() != 0):
+                    res_data  = uploader_thread.get()
 
             # キャプチャ
             if (control == '_capture_'):
@@ -522,9 +528,6 @@ class main_desktop:
                     nowTime = datetime.datetime.now()
                     stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
                     self.save_capture(stamp, main_img)
-
-            # ビジー解除
-            qFunc.statusSet(self.fileBsy, False)
 
             # アイドリング
             slow = False
@@ -548,6 +551,9 @@ class main_desktop:
 
             # レディー解除
             qFunc.statusSet(self.fileRdy, False)
+
+            # ビジー解除
+            qFunc.statusSet(self.fileBsy, False)
 
             # スレッド停止
             if (not controld_thread is None):
