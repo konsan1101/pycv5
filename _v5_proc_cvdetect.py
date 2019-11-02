@@ -423,6 +423,10 @@ if __name__ == '__main__':
     cvdetect_thread.begin()
 
     inp = cv2.imread('_photos/_photo_face.jpg')
+    cv2.imshow('Display', inp )
+    cv2.waitKey(1)
+    time.sleep(3.00)
+
     cvdetect_thread.put(['[img]', inp.copy()])
 
     chktime = time.time()

@@ -479,6 +479,9 @@ if __name__ == '__main__':
     cv2dnn_yolo_thread.begin()
 
     inp = cv2.imread('cv2dnn/dog.jpg')
+    cv2.imshow('Display', inp )
+    cv2.waitKey(1)
+    time.sleep(3.00)
 
     chktime = time.time()
     while ((time.time() - chktime) < 15):

@@ -318,24 +318,24 @@ class proc_cvreader:
                         code_img = cv2.warpPerspective(image_img, transform_matrix, (sz,sz))
 
                     # 切り出し -> code_img
-                    if (hit == False):
-                        hit = True
+                    #if (hit == False):
+                    #    hit = True
 
-                        proc_left, proc_top, proc_w, proc_h = code.rect
-                        img_left  = int(proc_left * image_width  / proc_width ) - 20
-                        if (img_left < 0):
-                            img_left = 0
-                        img_top   = int(proc_top  * image_height / proc_height) - 20
-                        if (img_top < 0):
-                            img_top = 0
-                        img_w     = int(proc_w    * image_width  / proc_width ) + 40
-                        if (img_left + img_w > image_width):
-                            img_w = image_width - img_left - 1
-                        img_h     = int(proc_h    * image_height / proc_height) + 40
-                        if (img_top + img_h > image_height):
-                            img_h = image_height - img_top - 1
+                    #    proc_left, proc_top, proc_w, proc_h = code.rect
+                    #    img_left  = int(proc_left * image_width  / proc_width ) - 20
+                    #    if (img_left < 0):
+                    #        img_left = 0
+                    #    img_top   = int(proc_top  * image_height / proc_height) - 20
+                    #    if (img_top < 0):
+                    #        img_top = 0
+                    #    img_w     = int(proc_w    * image_width  / proc_width ) + 40
+                    #    if (img_left + img_w > image_width):
+                    #        img_w = image_width - img_left - 1
+                    #    img_h     = int(proc_h    * image_height / proc_height) + 40
+                    #    if (img_top + img_h > image_height):
+                    #        img_h = image_height - img_top - 1
 
-                        code_img = image_img[img_top:img_top + img_h, img_left:img_left+img_w]
+                    #    code_img = image_img[img_top:img_top + img_h, img_left:img_left+img_w]
 
                     # 経過時間計算
                     try:
@@ -516,12 +516,14 @@ if __name__ == '__main__':
     cv2.namedWindow('Display', 1)
     cv2.moveWindow( 'Display', 0, 0)
 
-
-
     cvreader_thread = proc_cvreader('reader', '0', )
     cvreader_thread.begin()
 
     inp = cv2.imread('_photos/_photo_qrcode.jpg')
+    cv2.imshow('Display', cv2.resize(inp, (640,480)))
+    cv2.waitKey(1)
+    time.sleep(3.00)
+
     cvreader_thread.put(['[img]', inp.copy()])
 
     chktime = time.time()
