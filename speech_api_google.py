@@ -28,7 +28,7 @@ from gtts import gTTS
 #pip install --upgrade google-cloud-speech
 #pip install --upgrade google-cloud-translate
 import google.cloud.speech
-import google.cloud.translate
+import google.cloud.translate_v3beta1
 import speech_api_google_key as google_key
 
 
@@ -231,10 +231,15 @@ class SpeechAPI:
 
                 if (res_text == '') and (api == 'auto' or api == 'google'):
                     #try:
-                        client = google.cloud.translate.Client()
-                        res = client.translate([inpText], 
-                                               source_language=inp,
-                                               target_language=out, )
+                        client = google.cloud.translate_v3beta1.TranslationServiceClient()
+                        project_id = 'speech-20190101'
+                        location = 'global'
+                        parent = client.location_path(project_id, location)
+                        res = client.translate_text(parent=parent,
+                                               contents=[inpText],
+                                               mime_type='text/plain',
+                                               source_language_code=inp,
+                                               target_language_code=out, )
                         #print(res)
                         for t in res:
                              res_text += t['translatedText']
