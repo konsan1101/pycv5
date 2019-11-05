@@ -31,29 +31,27 @@ qFunc = _v5__qFunc.qFunc_class()
 
 
 
-qFunc.txtsWrite(qCtrl_control_kernel , txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
-qFunc.txtsWrite(qCtrl_control_speech , txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+qFunc.txtsWrite(qCtrl_control_kernel    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+qFunc.txtsWrite(qCtrl_control_speech    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+qFunc.txtsWrite(qCtrl_control_vision    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+qFunc.txtsWrite(qCtrl_control_desktop   ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+qFunc.txtsWrite(qCtrl_control_bgm       ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+qFunc.txtsWrite(qCtrl_control_browser   ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+qFunc.txtsWrite(qCtrl_control_player    ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+qFunc.txtsWrite(qCtrl_control_chatting  ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+qFunc.txtsWrite(qCtrl_control_knowledge ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+
+
+
+time.sleep(5.00)
 qFunc.kill('adintool-gui')
 qFunc.kill('adintool')
 qFunc.kill('julius')
 qFunc.kill('sox')
-
-qFunc.txtsWrite(qCtrl_control_vision , txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
-
-qFunc.txtsWrite(qCtrl_control_desktop , txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 qFunc.kill('ffmpeg')
-
-qFunc.txtsWrite(qCtrl_control_bgm     , txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
-qFunc.kill('VLC') # Danger!
-
-qFunc.txtsWrite(qCtrl_control_browser , txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+qFunc.kill('VLC')
 qFunc.kill('firefox')
-
-qFunc.txtsWrite(qCtrl_control_player  , txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 qFunc.kill('ffplay')
-
-qFunc.txtsWrite(qCtrl_control_chatting  , txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
-qFunc.txtsWrite(qCtrl_control_knowledge  , txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
 
 
