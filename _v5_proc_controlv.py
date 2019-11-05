@@ -473,9 +473,11 @@ class proc_controlv:
             or   (proc_text.find(u'伝票')   >= 0) \
             or   (proc_text.find(u'計測')   >= 0) \
             or   (proc_text.find(u'測定')   >= 0):
-                if (self.runMode == 'live') \
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live') \
                 or (self.runMode == 'hud') \
-                or (self.runMode == 'camera'):
+                or (self.runMode == 'camera') \
+                or (self.runMode == 'assistant'):
                     out_name  = '[message_txts]'
                     out_value = [proc_text]
                     cn_s.put([out_name, out_value])
