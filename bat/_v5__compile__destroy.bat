@@ -8,7 +8,7 @@ pause
 set pyname=_v5__destroy
     echo;
     echo %pyname%.py
-    pyinstaller %pyname%.py  --onefile --icon="_icon/RiKi_stop.ico"
+    pyinstaller %pyname%.py  --onefile --icon="_icons/RiKi_stop.ico"
     copy "dist\%pyname%.exe"   "%pyname%.exe"
     del  "%pyname%.spec"
 

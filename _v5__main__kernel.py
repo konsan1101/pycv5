@@ -66,6 +66,7 @@ qPath_pictures  = qFunc.getValue('qPath_pictures' )
 qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_icons     = qFunc.getValue('qPath_icons'    )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
@@ -458,8 +459,12 @@ if __name__ == '__main__':
         # プロセス設定
 
         speechs = []
+        guideDisp = False
 
         if (main_speech_run is None) and (main_speech_switch == 'on'):
+            guideDisp = True
+            qFunc.guideDisplay(id='1', filename='_kernel_start', display=2, txt='main_speech start!')
+
             if (qRUNATTR == 'python'):
                 main_speech_run = subprocess.Popen(['python', qPython_main_speech, 
                                 runMode, micDev, micType, micGuide, micLevel,
@@ -489,6 +494,9 @@ if __name__ == '__main__':
             main_speech_run = None
 
         if (main_vision_run is None) and (main_vision_switch == 'on'):
+            guideDisp = True
+            qFunc.guideDisplay(id='1', filename='_kernel_start', display=2, txt='main_vision start!')
+
             if (qRUNATTR == 'python'):
                 main_vision_run = subprocess.Popen(['python', qPython_main_vision, 
                                 runMode, ], )
@@ -509,6 +517,9 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'カメラ機能を、終了しました。', 'wait':0, })
 
         if (main_desktop_run is None) and (main_desktop_switch == 'on'):
+            guideDisp = True
+            qFunc.guideDisplay(id='1', filename='_kernel_start', display=2, txt='main_desktop start!')
+
             if (qRUNATTR == 'python'):
                 main_desktop_run = subprocess.Popen(['python', qPython_main_desktop, 
                                 #'debug', ], )
@@ -531,6 +542,9 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'デスクトップ制御機能を、終了しました。', 'wait':0, })
 
         if (bgm_run is None) and (bgm_switch == 'on'):
+            guideDisp = True
+            qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='bgm control start!')
+
             if (qRUNATTR == 'python'):
                 bgm_run = subprocess.Popen(['python', qPython_bgm, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -550,6 +564,9 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ＢＧＭ再生機能を、終了しました。', 'wait':0, })
 
         if (browser_run is None) and (browser_switch == 'on'):
+            guideDisp = True
+            qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='browser control start!')
+
             if (qRUNATTR == 'python'):
                 browser_run = subprocess.Popen(['python', qPython_browser, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -569,6 +586,9 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ブラウザー連携機能を、終了しました。', 'wait':0, })
 
         if (player_run is None) and (player_switch == 'on'):
+            guideDisp = True
+            qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='player control start!')
+
             if (qRUNATTR == 'python'):
                 player_run = subprocess.Popen(['python', qPython_player, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -588,6 +608,9 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'動画連携機能を、終了しました。', 'wait':0, })
 
         if (chatting_run is None) and (chatting_switch == 'on'):
+            guideDisp = True
+            qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='chatting control start!')
+
             if (qRUNATTR == 'python'):
                 chatting_run = subprocess.Popen(['python', qPython_chatting, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -607,6 +630,9 @@ if __name__ == '__main__':
             speechs.append({ 'text':u'ドコモ雑談連携機能を、終了しました。', 'wait':0, })
 
         if (knowledge_run is None) and (knowledge_switch == 'on'):
+            guideDisp = True
+            qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='knowledge control start!')
+
             if (qRUNATTR == 'python'):
                 knowledge_run = subprocess.Popen(['python', qPython_knowledge, runMode, ], )
                             #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -627,6 +653,9 @@ if __name__ == '__main__':
 
         if (len(speechs) != 0):
             qFunc.speech(id=main_id, speechs=speechs, lang='', )
+
+        if (guideDisp == True):
+            qFunc.guideDisplay(id='1', display=0, )
 
         if (onece == True):
             onece = False
@@ -652,6 +681,7 @@ if __name__ == '__main__':
 
     if (True):
 
+        qFunc.guideDisplay(id='1', filename='_kernel_stop', display=1, txt='')
         qFunc.logOutput(main_id + ':terminate')
 
         # プロセス終了
@@ -715,6 +745,8 @@ if __name__ == '__main__':
             #knowledge_run.wait()
             knowledge_run.terminate()
             knowledge_run = None
+
+        qFunc.guideDisplay(id='1', display=0, )
 
         qFunc.logOutput(main_id + ':bye!')
 

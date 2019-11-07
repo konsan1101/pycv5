@@ -37,6 +37,7 @@ qPath_pictures  = qFunc.getValue('qPath_pictures' )
 qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_icons     = qFunc.getValue('qPath_icons'    )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
@@ -206,7 +207,7 @@ class proc_adintool:
 
         # ガイド音
         if (self.micGuide != 'off'):
-            qFunc.guide('_up')
+            qFunc.guideSound('_up')
 
         # 待機ループ
         self.proc_step = '5'
@@ -289,7 +290,7 @@ class proc_adintool:
                     # ガイド音
                     if (self.micGuide == 'on' or self.micGuide == 'sound') \
                     or (qFunc.statusCheck(qRdy__s_force) == True):
-                        qFunc.guide('_ready')
+                        qFunc.guideSound('_ready')
 
                     if (True):
                         nowTime = datetime.datetime.now()
@@ -357,7 +358,7 @@ class proc_adintool:
                 if (sw == 'accept'):
                     if (self.micGuide == 'on') or (self.micGuide == 'sound') \
                     or (qFunc.statusCheck(qRdy__s_force) == True):
-                        qFunc.guide('_accept')
+                        qFunc.guideSound('_accept')
 
                 # フォース 終了
                 if (qFunc.statusCheck(qRdy__s_force) == True):
@@ -406,7 +407,7 @@ class proc_adintool:
 
             # ガイド音
             if (self.micGuide != 'off'):
-                qFunc.guide('_down')
+                qFunc.guideSound('_down')
 
             # キュー削除
             while (cn_r.qsize() > 0):

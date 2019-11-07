@@ -53,6 +53,7 @@ qPath_pictures  = qFunc.getValue('qPath_pictures' )
 qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_icons     = qFunc.getValue('qPath_icons'    )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
@@ -2324,7 +2325,7 @@ if (__name__ == '__main__'):
                     shutter_last = time.time()
 
                     # シャッター音
-                    qFunc.guide('_shutter', sync=False)
+                    qFunc.guideSound('_shutter', sync=False)
 
                     ## 白表示
                     white_img = np.zeros((dspHeight,dspWidth,3), np.uint8)

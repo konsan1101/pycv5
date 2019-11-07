@@ -58,6 +58,7 @@ if (os.name == 'nt'):
 
 qPath_cache     = '_cache/'
 qPath_sounds    = '_sounds/'
+qPath_icons     = '_icons/'
 qPath_fonts     = '_fonts/'
 
 qPath_log       = 'temp/_log/'
@@ -179,6 +180,7 @@ class qFunc_class:
         if (field == 'qPath_videos'    ): return qPath_videos
         if (field == 'qPath_cache'     ): return qPath_cache
         if (field == 'qPath_sounds'    ): return qPath_sounds
+        if (field == 'qPath_icons'     ): return qPath_icons
         if (field == 'qPath_fonts'     ): return qPath_fonts
 
         if (field == 'qPath_log'       ): return qPath_log
@@ -655,7 +657,7 @@ class qFunc_class:
         list.append(handle)
         return 1
 
-    def guide(self, filename=None, sync=True):
+    def guideSound(self, filename=None, sync=True):
         if (self.statusCheck(qBusy_dev_spk) == True):
             #self.logOutput('spk_busy!_:' + filename, )
             return False
@@ -687,6 +689,103 @@ class qFunc_class:
 
             return True
 
+        return False
+
+    def getPanelPos(self, id='0-', ):
+        #left, top, width, height = getPanelPos(panel,)
+
+        w, h = pyautogui.size()
+        wa = int(w/100) 
+        ha = int(h/100) 
+        wb = int(w/20) 
+        hb = int(h/20) 
+        if   (id == '0'):
+            return 0, 0, w, h
+        elif (id == '0-'):
+            return wb, hb, int(w-wb*2), int(h-hb*2)
+        elif (id == '1'):
+            return 0, 0, int(w/3), int(h/3)
+        elif (id == '1-'):
+            return 0+wa, 0+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+        elif (id == '2'):
+            return int(w/3), 0, int(w/3), int(h/3)
+        elif (id == '2-'):
+            return int(w/3)+wa, 0+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+        elif (id == '3'):
+            return w-int(w/3), 0, int(w/3), int(h/3)
+        elif (id == '3-'):
+            return w-int(w/3)+wa, 0+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+        elif (id == '4'):
+            return 0, int(h/3), int(w/3), int(h/3)
+        elif (id == '4-'):
+            return 0+wa, int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+        elif (id == '5'):
+            return int(w/3), int(h/3), int(w/3), int(h/3)
+        elif (id == '5-'):
+            return int(w/3)+wa, int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+        elif (id == '5+'):
+            return int(w/4), int(h/4), int(w/2), int(h/2)
+        elif (id == '6'):
+            return w-int(w/3), int(h/3), int(w/3), int(h/3)
+        elif (id == '6-'):
+            return w-int(w/3)+wa, int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+        elif (id == '7'):
+            return 0, h-int(h/3), int(w/3), int(h/3)
+        elif (id == '7-'):
+            return 0+wa, h-int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+        elif (id == '8'):
+            return int(w/3), h-int(h/3), int(w/3), int(h/3)
+        elif (id == '8-'):
+            return int(w/3)+wa, h-int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+        elif (id == '9'):
+            return w-int(w/3), h-int(h/3), int(w/3), int(h/3)
+        elif (id == '9-'):
+            return w-int(w/3)+wa, h-int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
+        else:
+            return int(w/4), int(h/4), int(w/2), int(h/2)
+
+    def guideDisplay(self, id='0-', filename=None, display=1, txt='', ):
+        playfile = filename
+        if (filename == '_kernel_start'):
+            playfile = qPath_icons + 'riki_start.png'
+        if (filename == '_kernel_stop'):
+            playfile = qPath_icons + 'riki_stop.png'
+        if (filename == '_speech_start'):
+            playfile = qPath_icons + 'speech_start.png'
+        if (filename == '_speech_stop'):
+            playfile = qPath_icons + 'speech_stop.png'
+        if (filename == '_vision_start'):
+            playfile = qPath_icons + 'cam_start.png'
+        if (filename == '_vision_stop'):
+            playfile = qPath_icons + 'cam_stop.png'
+        if (filename == '_desktop_start'):
+            playfile = qPath_icons + 'rec_start.png'
+        if (filename == '_desktop_stop'):
+            playfile = qPath_icons + 'rec_stop.png'
+
+        try:
+            if (os.path.exists(playfile)):
+                if (display != 0):
+                    left, top, width, height = self.getPanelPos(id,)
+                    img = cv2.imread(playfile)
+                    dsp = cv2.resize(img, (width,height))
+                    if (txt != ''):
+                        cv2.putText(dsp, txt, (5,height-5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
+                    cv2.namedWindow('Guide' + id, 1)
+                    cv2.moveWindow( 'Guide' + id, left, top-30)
+                    cv2.imshow('Guide'+ id, dsp )
+                    cv2.waitKey(1)
+                    time.sleep(display)
+                    return True
+        except:
+            pass
+        try:
+            if (display == 0):
+                cv2.destroyWindow('Guide' + id)
+                cv2.waitKey(1)
+                return True
+        except:
+            pass
         return False
 
     def getResolution(self, reso='full', ):
@@ -1277,6 +1376,9 @@ if (__name__ == '__main__'):
     qFunc.logOutput(logfile, )
 
     qFunc.kill('sox')
+
+    qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='waiting...')
+    qFunc.guideDisplay(id='1', display=0, )
 
     qFunc.notePad(txt=u'開始')
     #qFunc.sendKey(txt=u'日本語')

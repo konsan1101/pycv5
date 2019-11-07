@@ -53,6 +53,7 @@ qPath_pictures  = qFunc.getValue('qPath_pictures' )
 qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_icons     = qFunc.getValue('qPath_icons'    )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
@@ -328,6 +329,7 @@ class main_speech:
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
+                qFunc.logOutput(self.proc_id + ':' + str(txt))
                 if (txt == '_end_'):
                     break
 
@@ -358,8 +360,12 @@ class main_speech:
             # スレッド設定
 
             speechs = []
+            guideDisp = False
 
             if (controls_thread is None) and (controls_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='controls loading...')
+
                 controls_thread = _v5_proc_controls.proc_controls(
                                     name='controls', id='0',
                                     runMode=self.runMode,
@@ -377,6 +383,9 @@ class main_speech:
                 controls_thread = None
 
             if (adintool_thread is None) and (adintool_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='adintool loading...')
+
                 adintool_thread  = _v5_proc_adintool.proc_adintool(
                                     name='adintool', id='0', 
                                     runMode=self.runMode,
@@ -394,6 +403,9 @@ class main_speech:
                 adintool_thread = None
 
             if (voice2wav_thread is None) and (voice2wav_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='voice2wave loading...')
+
                 voice2wav_thread = _v5_proc_voice2wav.proc_voice2wav(
                                     name='voice2wave', id='0',
                                     runMode=self.runMode,
@@ -411,6 +423,9 @@ class main_speech:
                 voice2wav_thread = None
 
             if (coreSTT_thread is None) and (coreSTT_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='coreSTT loading...')
+
                 coreSTT_thread   = _v5_proc_coreSTT.proc_coreSTT(
                                     name='coreSTT', id='0', 
                                     runMode=self.runMode,
@@ -432,6 +447,9 @@ class main_speech:
                 coreSTT_thread = None
 
             if (coreTTS_thread is None) and (coreTTS_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='coreTTS loading...')
+
                 coreTTS_thread   = _v5_proc_coreTTS.proc_coreTTS(
                                     name='coreTTS', id='0',
                                     runMode=self.runMode,
@@ -451,6 +469,9 @@ class main_speech:
                 coreTTS_thread = None
 
             if (playvoice_thread is None) and (playvoice_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='playvoice loading...')
+
                 playvoice_thread = _v5_proc_playvoice.proc_playvoice(
                                     name='playvoice', id='0',
                                     runMode=self.runMode,
@@ -468,6 +489,9 @@ class main_speech:
                 playvoice_thread = None
 
             if (julius_thread is None) and (julius_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='julius loading...')
+
                 julius_thread    = speech_api_julius.proc_julius(
                                     name='julius', id='0', 
                                     runMode=self.runMode,
@@ -484,6 +508,9 @@ class main_speech:
                 julius_thread = None
 
             if (sttreader_thread is None) and (sttreader_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='sttreader loading...')
+
                 sttreader_thread = _v5_proc_txtreader.proc_txtreader(
                                     name='sttreader', id='0', 
                                     runMode=self.runMode,
@@ -501,6 +528,9 @@ class main_speech:
                 sttreader_thread = None
 
             if (trareader_thread is None) and (trareader_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='trareader loading...')
+
                 trareader_thread = _v5_proc_txtreader.proc_txtreader(
                                     name='trareader', id='0', 
                                     runMode=runMode,
@@ -519,6 +549,9 @@ class main_speech:
 
             if (len(speechs) != 0):
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
+            if (guideDisp == True):
+                qFunc.guideDisplay(id='3', display=0, )
 
             if (onece == True):
                 onece = False
@@ -684,6 +717,8 @@ class main_speech:
         # 終了処理
         if (True):
 
+            qFunc.guideDisplay(id='3', filename='_speech_stop', display=1, txt='')
+
             # レディー解除
             qFunc.statusSet(self.fileRdy, False)
 
@@ -751,6 +786,8 @@ class main_speech:
             while (cn_s.qsize() > 0):
                 cn_s_get = cn_s.get()
                 cn_s.task_done()
+
+            qFunc.guideDisplay(id='3', display=0, )
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )

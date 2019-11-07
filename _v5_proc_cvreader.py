@@ -36,6 +36,7 @@ qPath_pictures  = qFunc.getValue('qPath_pictures' )
 qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_icons     = qFunc.getValue('qPath_icons'    )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
@@ -407,7 +408,7 @@ class proc_cvreader:
 
                     # ガイド音
                     if (str(self.id) == '0') or (str(self.id) == 'v'):
-                        qFunc.guide('_ok')
+                        qFunc.guideSound('_ok')
 
                 # on 指令の自動解除
                 for key in list(read_time):

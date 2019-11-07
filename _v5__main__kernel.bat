@@ -88,28 +88,18 @@ ECHO %dev%
 ECHO guide %guide%
 
 ECHO;
-ECHO python _v5__destroy.py
-     python _v5__destroy.py
+ECHO python _v5__destroy.py faster
+     python _v5__destroy.py faster
 
 ECHO;
-ECHO Waiting...5s
-ping localhost -w 1000 -n 5 >nul
+rem ---------------------------------------------------------------------------InpTrn
+ECHO python _v5__main__kernel.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio% ja en
+     python _v5__main__kernel.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio%
+rem ---------------------------------------------------------------------------InpTrn
 
 ECHO;
-rem ---------------------------------------------------------------------------------------InpTrn
-rem  start "" /b python _v5__main__kernel.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio% ja en
-rem  start "" /b python _v5__main__kernel.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio%
-ECHO             python _v5__main__kernel.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio% ja en
-                 python _v5__main__kernel.py %mode% 0 %dev% %guide% 0 %apii% %apit% %apio%
-rem ---------------------------------------------------------------------------------------InpTrn
-
-ECHO;
-ECHO Waiting...5s
-ping localhost -w 1000 -n 5 >nul
-
-ECHO;
-ECHO python _v5__destroy.py
-     python _v5__destroy.py
+ECHO python _v5__destroy.py faster
+     python _v5__destroy.py faster
 
 ECHO;
 ECHO bye!

@@ -48,6 +48,7 @@ qPath_pictures  = qFunc.getValue('qPath_pictures' )
 qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_icons     = qFunc.getValue('qPath_icons'    )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
@@ -195,7 +196,6 @@ def qFFplay(id='qFFplay', file='', vol=100, order='normal', left=100, top=100, w
 
 
 def panelPlay(panel, path, vol, order, loop, overtext):
-    #left, top, width, height = getPanelPos(panel,)
 
     count = 0
     while (loop > 0):
@@ -217,7 +217,7 @@ def panelPlay(panel, path, vol, order, loop, overtext):
                 if (p=='0') or (p=='0-'):
                     p = '5+'
 
-            left, top, width, height = getPanelPos(p,)
+            left, top, width, height = qFunc.getPanelPos(p,)
             res = qFFplay(p, fn, vol, order, left, top, width, height, fps, overtext)
             count += 1
 
@@ -255,7 +255,7 @@ def panelPlay(panel, path, vol, order, loop, overtext):
                     if (p=='0') or (p=='0-'):
                         p = '5+'
 
-                left, top, width, height = getPanelPos(p,)
+                left, top, width, height = qFunc.getPanelPos(p,)
                 res = qFFplay(p, fn, vol, order, left, top, width, height, fps, overtext)
                 count += 1
 
@@ -267,59 +267,6 @@ def panelPlay(panel, path, vol, order, loop, overtext):
 
         if (loop < 9):
             loop -= 1
-
-
-
-def getPanelPos(id='0-', ):
-    w, h = pyautogui.size()
-    wa = int(w/100) 
-    ha = int(h/100) 
-    wb = int(w/20) 
-    hb = int(h/20) 
-    if   (id == '0'):
-        return 0, 0, w, h
-    elif (id == '0-'):
-        return wb, hb, int(w-wb*2), int(h-hb*2)
-    elif (id == '1'):
-        return 0, 0, int(w/3), int(h/3)
-    elif (id == '1-'):
-        return 0+wa, 0+ha, int((w/3)-wa*2), int((h/3)-ha*2)
-    elif (id == '2'):
-        return int(w/3), 0, int(w/3), int(h/3)
-    elif (id == '2-'):
-        return int(w/3)+wa, 0+ha, int((w/3)-wa*2), int((h/3)-ha*2)
-    elif (id == '3'):
-        return w-int(w/3), 0, int(w/3), int(h/3)
-    elif (id == '3-'):
-        return w-int(w/3)+wa, 0+ha, int((w/3)-wa*2), int((h/3)-ha*2)
-    elif (id == '4'):
-        return 0, int(h/3), int(w/3), int(h/3)
-    elif (id == '4-'):
-        return 0+wa, int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
-    elif (id == '5'):
-        return int(w/3), int(h/3), int(w/3), int(h/3)
-    elif (id == '5-'):
-        return int(w/3)+wa, int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
-    elif (id == '5+'):
-        return int(w/4), int(h/4), int(w/2), int(h/2)
-    elif (id == '6'):
-        return w-int(w/3), int(h/3), int(w/3), int(h/3)
-    elif (id == '6-'):
-        return w-int(w/3)+wa, int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
-    elif (id == '7'):
-        return 0, h-int(h/3), int(w/3), int(h/3)
-    elif (id == '7-'):
-        return 0+wa, h-int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
-    elif (id == '8'):
-        return int(w/3), h-int(h/3), int(w/3), int(h/3)
-    elif (id == '8-'):
-        return int(w/3)+wa, h-int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
-    elif (id == '9'):
-        return w-int(w/3), h-int(h/3), int(w/3), int(h/3)
-    elif (id == '9-'):
-        return w-int(w/3)+wa, h-int(h/3)+ha, int((w/3)-wa*2), int((h/3)-ha*2)
-    else:
-        return int(w/4), int(h/4), int(w/2), int(h/2)
 
 
 

@@ -41,6 +41,7 @@ qPath_pictures  = qFunc.getValue('qPath_pictures' )
 qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_icons     = qFunc.getValue('qPath_icons'    )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
@@ -629,7 +630,7 @@ class proc_recorder:
 
             # 記録終了
             self.sub_proc(u'記録終了')
-            time.sleep(15.0)
+            qFunc.statusWait_false(self.fileBsy, 15)
 
             # ビジー解除
             qFunc.statusSet(self.fileBsy, False)
@@ -657,7 +658,7 @@ class proc_recorder:
             # 全記録ストップ
             for i in range(1, self.rec_max+1):
                 if (not self.rec_ffmpeg[i] is None):
-                    self.sub_stop(i, '_rec_stop_', )
+                    self.sub_stop(i, '_stop_', )
 
         elif (proc_text.lower() == '_rec_stop_') \
           or (proc_text.find(u'記録') >=0) and (proc_text.find(u'停止') >=0) \
@@ -668,7 +669,7 @@ class proc_recorder:
             # 全記録ストップ
             for i in range(1, self.rec_max+1):
                 if (not self.rec_ffmpeg[i] is None):
-                    self.sub_stop(i, '_rec_stop_', )
+                    self.sub_stop(i, '_stop_', )
 
         elif (proc_text.lower() == '_rec_start_') \
           or (proc_text.find(u'記録') >=0) \
@@ -952,6 +953,29 @@ class proc_recorder:
                     rec_filea = ''
                     rec_namea = ''
 
+        # 後処理
+        if (rec_filev != ''):
+            #movie_proc(
+            #    self.proc_id, self.batch_index,
+            #    rec_filev, rec_namev, rec_filea, rec_namea,
+            #    )
+
+            if (proc_text != '_stop_'):
+                # threading
+                self.batch_thread[self.batch_index] = threading.Thread(target=movie_proc, args=(
+                    self.proc_id, self.batch_index,
+                    rec_filev, rec_namev, rec_filea, rec_namea,
+                    ))
+                self.batch_thread[self.batch_index].setDaemon(True)
+                self.batch_thread[self.batch_index].start()
+
+                self.batch_index = (self.batch_index + 1) % self.batch_max
+            else:
+                movie_proc(
+                    self.proc_id, self.batch_index,
+                    rec_filev, rec_namev, rec_filea, rec_namea,
+                    )
+
         # いちばん古い録画 -> index
         index = 0
         if (index == 0):
@@ -983,23 +1007,6 @@ class proc_recorder:
             qFunc.statusSet(self.fileBsy, False)
             if (str(self.id) == '0'):
                 qFunc.statusSet(qBusy_d_rec, False)
-
-        # 後処理
-        if (rec_filev != ''):
-            #movie_proc(
-            #    self.proc_id, self.batch_index,
-            #    rec_filev, rec_namev, rec_filea, rec_namea,
-            #    )
-
-            # threading
-            self.batch_thread[self.batch_index] = threading.Thread(target=movie_proc, args=(
-                self.proc_id, self.batch_index,
-                rec_filev, rec_namev, rec_filea, rec_namea,
-                ))
-            self.batch_thread[self.batch_index].setDaemon(True)
-            self.batch_thread[self.batch_index].start()
-
-            self.batch_index = (self.batch_index + 1) % self.batch_max
 
 
 
@@ -1052,7 +1059,7 @@ if __name__ == '__main__':
         time.sleep(45)
 
         recorder_thread.put(['control', u'記録終了'])
-        time.sleep(45)
+        time.sleep(5.00)
 
 
 

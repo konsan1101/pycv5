@@ -57,6 +57,7 @@ qPath_pictures  = qFunc.getValue('qPath_pictures' )
 qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_icons     = qFunc.getValue('qPath_icons'    )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
@@ -298,6 +299,7 @@ class main_desktop:
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
+                qFunc.logOutput(self.proc_id + ':' + str(txt))
                 if (txt == '_end_'):
                     break
 
@@ -328,8 +330,12 @@ class main_desktop:
             # スレッド設定
 
             speechs = []
+            guideDisp = False
 
             if (controld_thread is None) and (controld_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='9', filename='_desktop_start', display=1, txt='controld loading...')
+
                 controld_thread = _v5_proc_controld.proc_controld(
                                     name='controld', id='0',
                                     runMode=self.runMode,
@@ -346,6 +352,9 @@ class main_desktop:
                 controld_thread = None
 
             if (capture_thread is None) and (capture_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='9', filename='_desktop_start', display=1, txt='capture loading...')
+
                 capture_thread = _v5_proc_capture.proc_capture(
                                     name='capture', id='0',
                                     runMode=self.runMode,
@@ -363,6 +372,9 @@ class main_desktop:
                 capture_thread = None
 
             if (cvreader_thread is None) and (cvreader_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='9', filename='_desktop_start', display=1, txt='cvreader loading...')
+
                 cvreader_thread = _v5_proc_cvreader.proc_cvreader(
                                     name='reader', id='d',
                                     runMode=self.runMode, 
@@ -380,6 +392,9 @@ class main_desktop:
                 cvreader_thread = None
 
             if (recorder_thread is None) and (recorder_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='9', filename='_desktop_start', display=1, txt='recorder loading...')
+
                 recorder_thread  = _v5_proc_recorder.proc_recorder(
                                     name='recorder', id='0',
                                     runMode=self.runMode,
@@ -400,6 +415,9 @@ class main_desktop:
                 recorder_thread = None
 
             if (uploader_thread is None) and (uploader_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='9', filename='_desktop_start', display=1, txt='uploader loading...')
+
                 uploader_thread  = _v5_proc_uploader.proc_uploader(
                                     name='uploader', id='0',
                                     runMode=self.runMode,
@@ -417,6 +435,9 @@ class main_desktop:
 
             if (len(speechs) != 0):
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
+            if (guideDisp == True):
+                qFunc.guideDisplay(id='9', display=0, )
 
             if (onece == True):
                 onece = False
@@ -522,7 +543,7 @@ class main_desktop:
                 if (not main_img is None):
 
                     # シャッター音
-                    qFunc.guide('_shutter', sync=False)
+                    qFunc.guideSound('_shutter', sync=False)
 
                     # キャプチャ保存
                     nowTime = datetime.datetime.now()
@@ -548,6 +569,8 @@ class main_desktop:
 
         # 終了処理
         if (True):
+
+            qFunc.guideDisplay(id='9', filename='_desktop_stop', display=1, txt='')
 
             # レディー解除
             qFunc.statusSet(self.fileRdy, False)
@@ -595,6 +618,8 @@ class main_desktop:
             while (cn_s.qsize() > 0):
                 cn_s_get = cn_s.get()
                 cn_s.task_done()
+
+            qFunc.guideDisplay(id='9', display=0, )
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )

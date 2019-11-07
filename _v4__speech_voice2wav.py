@@ -36,6 +36,7 @@ qPath_pictures  = qFunc.getValue('qPath_pictures' )
 qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_icons     = qFunc.getValue('qPath_icons'    )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
@@ -235,7 +236,7 @@ def proc_audio(cn_r, cn_s, ):
                     #              #stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True, )
                     #time.sleep(0.50)
                     if (micGuide != 'off'):
-                        qFunc.guide('_up')
+                        qFunc.guideSound('_up')
 
                 sw = 'off'
                 if (micDev.isdigit()):
@@ -266,7 +267,7 @@ def proc_audio(cn_r, cn_s, ):
                             audio_bakWav  = ''
 
                         if (micGuide == 'on' or micGuide == 'sound'):
-                            qFunc.guide('_ready')
+                            qFunc.guideSound('_ready')
 
                         if (bakSox_run == False):
                             bakSox_run = True
@@ -344,7 +345,7 @@ def proc_audio(cn_r, cn_s, ):
 
                     if (sw == 'accept'):
                         if (micGuide == 'on' or micGuide == 'sound'):
-                            qFunc.guide('_accept')
+                            qFunc.guideSound('_accept')
                             time.sleep(1.00)
 
                 cn_s.put(['OK', ''])
@@ -928,7 +929,7 @@ if (__name__ == '__main__'):
                 qFunc.kill('adintool')
 
                 if (micGuide != 'off'):
-                    qFunc.guide('_down')
+                    qFunc.guideSound('_down')
 
         if (v2w_wave_beat != 0):
           if (micDev.isdigit()):

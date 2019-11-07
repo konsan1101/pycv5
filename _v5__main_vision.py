@@ -61,6 +61,7 @@ qPath_pictures  = qFunc.getValue('qPath_pictures' )
 qPath_videos    = qFunc.getValue('qPath_videos'   )
 qPath_cache     = qFunc.getValue('qPath_cache'    )
 qPath_sounds    = qFunc.getValue('qPath_sounds'   )
+qPath_icons     = qFunc.getValue('qPath_icons'    )
 qPath_fonts     = qFunc.getValue('qPath_fonts'    )
 qPath_log       = qFunc.getValue('qPath_log'      )
 qPath_work      = qFunc.getValue('qPath_work'     )
@@ -433,6 +434,7 @@ class main_vision:
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
+                qFunc.logOutput(self.proc_id + ':' + str(txt))
                 if (txt == '_end_'):
                     break
 
@@ -463,8 +465,12 @@ class main_vision:
             # スレッド設定
 
             speechs = []
+            guideDisp = False
 
             if (controlv_thread is None) and (controlv_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='controlv loading...')
+
                 controlv_thread = _v5_proc_controlv.proc_controlv(
                                     name='controlv', id='0',
                                     runMode=self.runMode,
@@ -482,6 +488,9 @@ class main_vision:
                 controlv_thread = None
 
             if (overlay_thread is None) and (overlay_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='overlay loading...')
+
                 overlay_thread = _v5_proc_overlay.proc_overlay(
                                     name='overlay', id='0',
                                     runMode=self.runMode,
@@ -506,6 +515,9 @@ class main_vision:
                 overlay_thread = None
 
             if (camera_thread1 is None) and (camera_switch1 == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='camera1 loading...')
+
                 camera_thread1 = _v5_proc_camera.proc_camera(
                                     name='camera', id='0',
                                     runMode=self.runMode,
@@ -523,6 +535,9 @@ class main_vision:
                 camera_thread1 = None
 
             if (camera_thread2 is None) and (camera_switch2 == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='camera2 loading...')
+
                 camera_thread2 = _v5_proc_camera.proc_camera(
                                     name='camera', id='1',
                                     runMode=self.runMode,
@@ -540,6 +555,9 @@ class main_vision:
                 camera_thread2 = None
 
             if (txt2img_thread is None) and (txt2img_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='txt2img loading...')
+
                 txt2img_thread = _v5_proc_txt2img.proc_txt2img(
                                     name='txt2img', id='0',
                                     runMode=self.runMode,
@@ -559,6 +577,9 @@ class main_vision:
                 txt2img_thread = None
 
             if (cvreader_thread is None) and (cvreader_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='cvreader loading...')
+
                 cvreader_thread = _v5_proc_cvreader.proc_cvreader(
                                     name='reader', id='v',
                                     runMode=self.runMode, 
@@ -576,6 +597,9 @@ class main_vision:
                 cvreader_thread = None
 
             if (cvdetect_thread1 is None) and (cvdetect_switch1 == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='cvdetect1 loading...')
+
                 cvdetect_thread1 = _v5_proc_cvdetect.proc_cvdetect(
                                     name='detect', id='0',
                                     runMode=self.runMode, 
@@ -593,6 +617,9 @@ class main_vision:
                 cvdetect_thread1 = None
 
             if (cvdetect_thread2 is None) and (cvdetect_switch2 == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='cvdetect2 loading...')
+
                 cvdetect_thread2 = _v5_proc_cvdetect.proc_cvdetect(
                                     name='detect', id='1',
                                     runMode=self.runMode, 
@@ -606,6 +633,9 @@ class main_vision:
                 cvdetect_thread2 = None
 
             if (cv2dnn_yolo_thread is None) and (cv2dnn_yolo_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='cv2dnn_yolo loading...')
+
                 cv2dnn_yolo_thread = _v5_proc_cv2dnn_yolo.proc_cv2dnn_yolo(
                                     name='cv2_yolo', id='0',
                                     runMode=self.runMode, 
@@ -624,6 +654,9 @@ class main_vision:
 
             for i in range(cv2dnn_ssd_max):
                 if (cv2dnn_ssd_thread[i] is None) and (cv2dnn_ssd_switch == 'on'):
+                    guideDisp = True
+                    qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='cv2dnn_ssd'+str(i)+' loading...')
+
                     cv2dnn_ssd_thread[i] = _v5_proc_cv2dnn_ssd.proc_cv2dnn_ssd(
                                         name='cv2_ssd', id=str(i),
                                         runMode=self.runMode, 
@@ -643,6 +676,9 @@ class main_vision:
                     cv2dnn_ssd_thread[i] = None
 
             if (vin2jpg_thread is None) and (vin2jpg_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='vin2jpg loading...')
+
                 vin2jpg_thread = _v5_proc_vin2jpg.proc_vin2jpg(
                                     name='vin2jpg', id='0',
                                     runMode=self.runMode,
@@ -660,6 +696,9 @@ class main_vision:
                 vin2jpg_thread = None
 
             if (coreCV_thread is None) and (coreCV_switch == 'on'):
+                guideDisp = True
+                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='coreCV loading...')
+
                 coreCV_thread = _v5_proc_coreCV.proc_coreCV(
                                     name='coreCV', id='0',
                                     runMode=self.runMode,
@@ -678,6 +717,9 @@ class main_vision:
 
             if (len(speechs) != 0):
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+
+            if (guideDisp == True):
+                qFunc.guideDisplay(id='7', display=0, )
 
             if (onece == True):
                 onece = False
@@ -1158,6 +1200,8 @@ class main_vision:
         # 終了処理
         if (True):
 
+            qFunc.guideDisplay(id='7', filename='_vision_stop', display=1, txt='')
+
             # レディ解除
             qFunc.statusSet(self.fileRdy, False)
 
@@ -1233,6 +1277,8 @@ class main_vision:
             while (cn_s.qsize() > 0):
                 cn_s_get = cn_s.get()
                 cn_s.task_done()
+
+            qFunc.guideDisplay(id='7', display=0, )
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
@@ -1765,7 +1811,7 @@ if __name__ == '__main__':
                     qFunc.logOutput('key accept !', )
 
                 # シャッター音
-                qFunc.guide('_shutter', sync=False)
+                qFunc.guideSound('_shutter', sync=False)
 
 
 
