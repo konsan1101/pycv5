@@ -1050,6 +1050,10 @@ def speech_batch(runMode, micDev,
 
 
 
+        if (inpText != '') and (qLangInp == 'ja'):
+            inpText = inpText.replace(u'　', '')
+            inpText = inpText.replace( ' ', '')
+
         if (inpText == ''):
             inpText = '!'
 
