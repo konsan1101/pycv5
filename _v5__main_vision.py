@@ -465,11 +465,9 @@ class main_vision:
             # スレッド設定
 
             speechs = []
-            guideDisp = False
 
             if (controlv_thread is None) and (controlv_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='controlv loading...')
+                cn_s.put(['guide', 'controlv start!'])
 
                 controlv_thread = _v5_proc_controlv.proc_controlv(
                                     name='controlv', id='0',
@@ -477,6 +475,7 @@ class main_vision:
                                     camDev=self.cam1Dev,
                                     )
                 controlv_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -488,8 +487,7 @@ class main_vision:
                 controlv_thread = None
 
             if (overlay_thread is None) and (overlay_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='overlay loading...')
+                cn_s.put(['guide', 'overlay start!'])
 
                 overlay_thread = _v5_proc_overlay.proc_overlay(
                                     name='overlay', id='0',
@@ -497,6 +495,7 @@ class main_vision:
                                     dspMode=self.dspMode, dspStretch=self.dspStretch, dspRotate=self.dspRotate, dspZoom=self.dspZoom,
                                     )
                 overlay_thread.begin()
+                time.sleep(1.00)
 
                 overlay_thread.put(['_flag_camzoom_'   , flag_camzoom    ])
                 overlay_thread.put(['_flag_dspzoom_'   , flag_dspzoom    ])
@@ -515,8 +514,7 @@ class main_vision:
                 overlay_thread = None
 
             if (camera_thread1 is None) and (camera_switch1 == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='camera1 loading...')
+                cn_s.put(['guide', 'camera1 start!'])
 
                 camera_thread1 = _v5_proc_camera.proc_camera(
                                     name='camera', id='0',
@@ -524,6 +522,7 @@ class main_vision:
                                     camDev=self.cam1Dev, camMode=self.cam1Mode, camStretch=self.cam1Stretch, camRotate=self.cam1Rotate, camZoom=self.cam1Zoom, camFps='5',
                                     )
                 camera_thread1.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -535,8 +534,7 @@ class main_vision:
                 camera_thread1 = None
 
             if (camera_thread2 is None) and (camera_switch2 == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='camera2 loading...')
+                cn_s.put(['guide', 'camera2 start!'])
 
                 camera_thread2 = _v5_proc_camera.proc_camera(
                                     name='camera', id='1',
@@ -544,6 +542,7 @@ class main_vision:
                                     camDev=self.cam2Dev, camMode=self.cam2Mode, camStretch=self.cam2Stretch, camRotate=self.cam2Rotate, camZoom=self.cam2Zoom, camFps='2',
                                     )
                 camera_thread2.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -555,14 +554,14 @@ class main_vision:
                 camera_thread2 = None
 
             if (txt2img_thread is None) and (txt2img_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='txt2img loading...')
+                cn_s.put(['guide', 'txt2img start!'])
 
                 txt2img_thread = _v5_proc_txt2img.proc_txt2img(
                                     name='txt2img', id='0',
                                     runMode=self.runMode,
                                     )
                 txt2img_thread.begin()
+                time.sleep(1.00)
 
                 txt2img_thread.put(['_flag_background_', flag_background ])
                 txt2img_thread.put(['_flag_blackwhite_', flag_blackwhite ])
@@ -577,8 +576,7 @@ class main_vision:
                 txt2img_thread = None
 
             if (cvreader_thread is None) and (cvreader_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='cvreader loading...')
+                cn_s.put(['guide', 'cvreader start!'])
 
                 cvreader_thread = _v5_proc_cvreader.proc_cvreader(
                                     name='reader', id='v',
@@ -586,6 +584,7 @@ class main_vision:
                                     reader=self.codeRead,
                                     )
                 cvreader_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -597,8 +596,7 @@ class main_vision:
                 cvreader_thread = None
 
             if (cvdetect_thread1 is None) and (cvdetect_switch1 == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='cvdetect1 loading...')
+                cn_s.put(['guide', 'cvdetect1 start!'])
 
                 cvdetect_thread1 = _v5_proc_cvdetect.proc_cvdetect(
                                     name='detect', id='0',
@@ -606,6 +604,7 @@ class main_vision:
                                     casName=self.casName1, procMode='640x480',
                                     )
                 cvdetect_thread1.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -617,8 +616,7 @@ class main_vision:
                 cvdetect_thread1 = None
 
             if (cvdetect_thread2 is None) and (cvdetect_switch2 == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='cvdetect2 loading...')
+                cn_s.put(['guide', 'cvdetect2 start!'])
 
                 cvdetect_thread2 = _v5_proc_cvdetect.proc_cvdetect(
                                     name='detect', id='1',
@@ -626,6 +624,7 @@ class main_vision:
                                     casName=self.casName2, procMode='640x480',
                                     )
                 cvdetect_thread2.begin()
+                time.sleep(1.00)
 
             if (not cvdetect_thread2 is None) and (cvdetect_switch2 != 'on'):
                 cvdetect_thread2.abort()
@@ -633,8 +632,7 @@ class main_vision:
                 cvdetect_thread2 = None
 
             if (cv2dnn_yolo_thread is None) and (cv2dnn_yolo_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='cv2dnn_yolo loading...')
+                cn_s.put(['guide', 'cv2dnn_yolo start!'])
 
                 cv2dnn_yolo_thread = _v5_proc_cv2dnn_yolo.proc_cv2dnn_yolo(
                                     name='cv2_yolo', id='0',
@@ -642,6 +640,7 @@ class main_vision:
                                     procMode='320x240',
                                     )
                 cv2dnn_yolo_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -654,8 +653,7 @@ class main_vision:
 
             for i in range(cv2dnn_ssd_max):
                 if (cv2dnn_ssd_thread[i] is None) and (cv2dnn_ssd_switch == 'on'):
-                    guideDisp = True
-                    qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='cv2dnn_ssd'+str(i)+' loading...')
+                    cn_s.put(['guide', 'cv2dnn_ssd'+str(i)+' start!'])
 
                     cv2dnn_ssd_thread[i] = _v5_proc_cv2dnn_ssd.proc_cv2dnn_ssd(
                                         name='cv2_ssd', id=str(i),
@@ -663,6 +661,7 @@ class main_vision:
                                         procMode='320x240',
                                         )
                     cv2dnn_ssd_thread[i].begin()
+                    time.sleep(1.00)
 
                     if (i == 0):
                         if (self.runMode == 'debug') \
@@ -676,8 +675,7 @@ class main_vision:
                     cv2dnn_ssd_thread[i] = None
 
             if (vin2jpg_thread is None) and (vin2jpg_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='vin2jpg loading...')
+                cn_s.put(['guide', 'vin2jpg start!'])
 
                 vin2jpg_thread = _v5_proc_vin2jpg.proc_vin2jpg(
                                     name='vin2jpg', id='0',
@@ -685,6 +683,7 @@ class main_vision:
                                     camDev=self.cam1Dev,
                                     )
                 vin2jpg_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -696,8 +695,7 @@ class main_vision:
                 vin2jpg_thread = None
 
             if (coreCV_thread is None) and (coreCV_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='7', filename='_vision_start', display=1, txt='coreCV loading...')
+                cn_s.put(['guide', 'coreCV start!'])
 
                 coreCV_thread = _v5_proc_coreCV.proc_coreCV(
                                     name='coreCV', id='0',
@@ -705,6 +703,7 @@ class main_vision:
                                     camDev=self.cam1Dev,
                                     )
                 coreCV_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -717,9 +716,6 @@ class main_vision:
 
             if (len(speechs) != 0):
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
-
-            if (guideDisp == True):
-                qFunc.guideDisplay(id='7', display=0, )
 
             if (onece == True):
                 onece = False
@@ -1200,8 +1196,6 @@ class main_vision:
         # 終了処理
         if (True):
 
-            qFunc.guideDisplay(id='7', filename='_vision_stop', display=1, txt='')
-
             # レディ解除
             qFunc.statusSet(self.fileRdy, False)
 
@@ -1277,8 +1271,6 @@ class main_vision:
             while (cn_s.qsize() > 0):
                 cn_s_get = cn_s.get()
                 cn_s.task_done()
-
-            qFunc.guideDisplay(id='7', display=0, )
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
@@ -1663,7 +1655,11 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':start')
 
-        main_vision = main_vision(main_id, '0', 
+        qFunc.guideDisplay(display=True, panel='7', filename='_vision_start_', txt='', )
+        guide_disp = True
+        guide_time = time.time()
+
+        main_core = main_vision(main_id, '0', 
                                 runMode=runMode,
                                 cam1Dev=cam1Dev, cam1Mode=cam1Mode, cam1Stretch=cam1Stretch, cam1Rotate=cam1Rotate, cam1Zoom=cam1Zoom,
                                 cam2Dev=cam2Dev, cam2Mode=cam2Mode, cam2Stretch=cam2Stretch, cam2Rotate=cam2Rotate, cam2Zoom=cam2Zoom,
@@ -1673,7 +1669,7 @@ if __name__ == '__main__':
                                 qLangCV=qLangCV, qLangOCR=qLangOCR, qLangTrn=qLangTrn,
                                 )
 
-        main_vision.begin()
+        main_core.begin()
 
     # 待機ループ
 
@@ -1699,6 +1695,7 @@ if __name__ == '__main__':
              and (qFunc.statusCheck(qBusy_d_play   ) == False) \
              and (qFunc.statusCheck(qBusy_d_browser) == False)):
             cv2.namedWindow('Display', cv2.WINDOW_NORMAL)
+            time.sleep(0.25)
             #cv2.namedWindow('Display', cv2.WINDOW_AUTOSIZE)
             cv2.moveWindow( 'Display', 0, 0)
             if (dspMode == 'full'):
@@ -1715,13 +1712,22 @@ if __name__ == '__main__':
             cv2.waitKey(1)
             display = None
 
-        while (main_vision.proc_r.qsize() != 0) and (control == ''):
-            res_data  = main_vision.get()
+        # スレッド応答
+        while (main_core.proc_r.qsize() != 0) and (control == ''):
+            res_data  = main_core.get()
             res_name  = res_data[0]
             res_value = res_data[1]
             if (res_name == 'control'):
                 control  = res_value
                 break
+
+            # ガイド表示
+            if (res_name == 'guide'):
+                if (guide_disp == True):
+                    qFunc.guideDisplay(txt=res_value, )
+                    guide_time = time.time()
+
+            # 画面表示
             if (res_name == '[display_img]'):
                 display_img = res_value.copy()
 
@@ -1757,7 +1763,7 @@ if __name__ == '__main__':
 
                     else:
                         # CLICK
-                        mouse1, mouse2 = main_vision.check_mouse_click(DisplayEvent, MousePointX, MousePointY, )
+                        mouse1, mouse2 = main_core.check_mouse_click(DisplayEvent, MousePointX, MousePointY, )
                         DisplayEvent = None
                         MousePointX  = None
                         MousePointY  = None
@@ -1782,21 +1788,19 @@ if __name__ == '__main__':
                     # 左クリック　写真撮影と入力画像をＡＩ画像認識処理へ
                     if (mouse1 == 'click_l') and (mouse2 == 'l'):
                         control = '_shutter_'
-                        main_vision.put(['control', control])
+                        main_core.put(['control', control])
 
                     # ズーム操作
                     if (mouse2 == 'camzoom_reset'):
-                        main_vision.put(['control', '_camzoom_reset_'])
+                        main_core.put(['control', '_camzoom_reset_'])
                     if (mouse2 == 'camzoom_zoom'):
-                        main_vision.put(['control', '_camzoom_zoom_'])
+                        main_core.put(['control', '_camzoom_zoom_'])
                     if (mouse2 == 'dspzoom_reset'):
-                        main_vision.put(['control', '_dspzoom_reset_'])
+                        main_core.put(['control', '_dspzoom_reset_'])
                     if (mouse2 == 'dspzoom_zoom'):
-                        main_vision.put(['control', '_dspzoom_zoom_'])
+                        main_core.put(['control', '_dspzoom_zoom_'])
 
                 break
-
-
 
         # シャッター
         if (control == '_shutter_'):
@@ -1835,6 +1839,12 @@ if __name__ == '__main__':
                 qFunc.statusSet(qBusy_dev_cam, True)
                 qFunc.statusSet(qBusy_dev_dsp, True)
 
+        # ガイド表示終了
+        if (guide_disp == True):
+            if ((time.time() - guide_time) > 3):
+                qFunc.guideDisplay(display=False,)
+                guide_disp = False
+
         # アイドリング
         slow = False
         if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
@@ -1856,12 +1866,19 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':terminate')
 
+        qFunc.guideDisplay(display=True, panel='7', filename='_vision_stop_', txt='', )
+        guide_disp = True
+        guide_time = time.time()
+
         if (display == True):
             cv2.destroyWindow('Display')
             cv2.waitKey(1)
 
-        main_vision.abort()
-        del main_vision
+        main_core.abort()
+        del main_core
+
+        qFunc.guideDisplay(display=False,)
+        guide_disp = False
 
         qFunc.logOutput(main_id + ':bye!')
 

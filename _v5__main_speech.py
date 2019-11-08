@@ -360,11 +360,9 @@ class main_speech:
             # スレッド設定
 
             speechs = []
-            guideDisp = False
 
             if (controls_thread is None) and (controls_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='controls loading...')
+                cn_s.put(['guide', 'controls start!'])
 
                 controls_thread = _v5_proc_controls.proc_controls(
                                     name='controls', id='0',
@@ -372,6 +370,7 @@ class main_speech:
                                     micDev=self.micDev, micType=self.micType, micGuide=self.micGuide, micLevel=self.micLevel,
                                     )
                 controls_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -383,8 +382,7 @@ class main_speech:
                 controls_thread = None
 
             if (adintool_thread is None) and (adintool_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='adintool loading...')
+                cn_s.put(['guide', 'adintool start!'])
 
                 adintool_thread  = _v5_proc_adintool.proc_adintool(
                                     name='adintool', id='0', 
@@ -392,6 +390,7 @@ class main_speech:
                                     micDev=self.micDev, micType=self.micType, micGuide=self.micGuide, micLevel=self.micLevel,
                                     )
                 adintool_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -403,8 +402,7 @@ class main_speech:
                 adintool_thread = None
 
             if (voice2wav_thread is None) and (voice2wav_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='voice2wave loading...')
+                cn_s.put(['guide', 'voice2wave start!'])
 
                 voice2wav_thread = _v5_proc_voice2wav.proc_voice2wav(
                                     name='voice2wave', id='0',
@@ -412,6 +410,7 @@ class main_speech:
                                     micDev=self.micDev, micType=self.micType, micGuide=self.micGuide, micLevel=self.micLevel,
                                     )
                 voice2wav_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -423,8 +422,7 @@ class main_speech:
                 voice2wav_thread = None
 
             if (coreSTT_thread is None) and (coreSTT_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='coreSTT loading...')
+                cn_s.put(['guide', 'coreSTT start!'])
 
                 coreSTT_thread   = _v5_proc_coreSTT.proc_coreSTT(
                                     name='coreSTT', id='0', 
@@ -434,6 +432,7 @@ class main_speech:
                                     qLangInp=self.qLangInp, qLangTrn=self.qLangTrn, qLangTxt=self.qLangTxt, qLangOut=self.qLangOut,
                                     )
                 coreSTT_thread.begin()
+                time.sleep(1.00)
 
                 speechs = []
                 if (self.runMode == 'debug') \
@@ -447,8 +446,7 @@ class main_speech:
                 coreSTT_thread = None
 
             if (coreTTS_thread is None) and (coreTTS_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='coreTTS loading...')
+                cn_s.put(['guide', 'coreTTS start!'])
 
                 coreTTS_thread   = _v5_proc_coreTTS.proc_coreTTS(
                                     name='coreTTS', id='0',
@@ -458,6 +456,7 @@ class main_speech:
                                     qLangInp=self.qLangInp, qLangTrn=self.qLangTrn, qLangTxt=self.qLangTxt, qLangOut=self.qLangOut,
                                     )
                 coreTTS_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -469,8 +468,7 @@ class main_speech:
                 coreTTS_thread = None
 
             if (playvoice_thread is None) and (playvoice_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='playvoice loading...')
+                cn_s.put(['guide', 'playvoice start!'])
 
                 playvoice_thread = _v5_proc_playvoice.proc_playvoice(
                                     name='playvoice', id='0',
@@ -478,6 +476,7 @@ class main_speech:
                                     micDev=self.micDev, micType=self.micType, micGuide=self.micGuide, micLevel=self.micLevel,
                                     )
                 playvoice_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -489,14 +488,14 @@ class main_speech:
                 playvoice_thread = None
 
             if (julius_thread is None) and (julius_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='julius loading...')
+                cn_s.put(['guide', 'julius start!'])
 
                 julius_thread    = speech_api_julius.proc_julius(
                                     name='julius', id='0', 
                                     runMode=self.runMode,
                                     )
                 julius_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -508,8 +507,7 @@ class main_speech:
                 julius_thread = None
 
             if (sttreader_thread is None) and (sttreader_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='sttreader loading...')
+                cn_s.put(['guide', 'sttreader start!'])
 
                 sttreader_thread = _v5_proc_txtreader.proc_txtreader(
                                     name='sttreader', id='0', 
@@ -517,6 +515,7 @@ class main_speech:
                                     micDev=self.micDev, path='qPath_s_STT',
                                     )
                 sttreader_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -528,8 +527,7 @@ class main_speech:
                 sttreader_thread = None
 
             if (trareader_thread is None) and (trareader_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='3', filename='_speech_start', display=1, txt='trareader loading...')
+                cn_s.put(['guide', 'trareader start!'])
 
                 trareader_thread = _v5_proc_txtreader.proc_txtreader(
                                     name='trareader', id='0', 
@@ -537,6 +535,7 @@ class main_speech:
                                     micDev=self.micDev, path='qPath_s_TRA',
                                     )
                 trareader_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -549,9 +548,6 @@ class main_speech:
 
             if (len(speechs) != 0):
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
-
-            if (guideDisp == True):
-                qFunc.guideDisplay(id='3', display=0, )
 
             if (onece == True):
                 onece = False
@@ -717,8 +713,6 @@ class main_speech:
         # 終了処理
         if (True):
 
-            qFunc.guideDisplay(id='3', filename='_speech_stop', display=1, txt='')
-
             # レディー解除
             qFunc.statusSet(self.fileRdy, False)
 
@@ -783,8 +777,6 @@ class main_speech:
             while (cn_s.qsize() > 0):
                 cn_s_get = cn_s.get()
                 cn_s.task_done()
-
-            qFunc.guideDisplay(id='3', display=0, )
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
@@ -962,13 +954,17 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':start')
 
-        main_speech = main_speech(main_id, '0', 
+        qFunc.guideDisplay(display=True, panel='3', filename='_speech_start_', txt='', )
+        guide_disp = True
+        guide_time = time.time()
+
+        main_core = main_speech(main_id, '0', 
                                 runMode=runMode,
                                 micDev=micDev, micType=micType, micGuide=micGuide, micLevel=micLevel,
                                 qApiInp=qApiInp, qApiTrn=qApiTrn, qApiOut=qApiOut,
                                 qLangInp=qLangInp, qLangTrn=qLangTrn, qLangTxt=qLangTxt, qLangOut=qLangOut, )
 
-        main_speech.begin()
+        main_core.begin()
 
     # 待機ループ
 
@@ -986,15 +982,30 @@ if __name__ == '__main__':
                 qFunc.remove(qCtrl_control_self)
                 control = txt
 
-        while (main_speech.proc_r.qsize() != 0) and (control == ''):
-            res_data  = main_speech.get()
+        # スレッド応答
+
+        while (main_core.proc_r.qsize() != 0) and (control == ''):
+            res_data  = main_core.get()
             res_name  = res_data[0]
             res_value = res_data[1]
             if (res_name == 'control'):
                 control  = res_value
                 break
+            # ガイド表示
+            if (res_name == 'guide'):
+                if (guide_disp == True):
+                    qFunc.guideDisplay(txt=res_value, )
+                    guide_time = time.time()
+
+        # ガイド表示終了
+
+        if (guide_disp == True):
+            if ((time.time() - guide_time) > 3):
+                qFunc.guideDisplay(display=False,)
+                guide_disp = False
 
         # アイドリング
+
         slow = False
         if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
             slow = True
@@ -1014,13 +1025,20 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':terminate')
 
+        qFunc.guideDisplay(display=True, panel='3', filename='_speech_stop_', txt='', )
+        guide_disp = True
+        guide_time = time.time()
+
         # 外部ＰＧリセット
         qFunc.kill('adintool-gui')
         qFunc.kill('adintool')
         qFunc.kill('julius')
 
-        main_speech.abort()
-        del main_speech
+        main_core.abort()
+        del main_core
+
+        qFunc.guideDisplay(display=False,)
+        guide_disp = False
 
         qFunc.logOutput(main_id + ':bye!')
 

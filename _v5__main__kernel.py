@@ -332,6 +332,7 @@ class main_kernel:
             self.proc_beat = time.time()
 
             # 終了確認
+            control = ''
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
                 qFunc.logOutput(self.proc_id + ':' + str(txt))
@@ -365,11 +366,9 @@ class main_kernel:
             # スレッド設定
 
             speechs = []
-            guideDisp = False
 
             if (main_speech_run is None) and (main_speech_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='1', filename='_kernel_start', display=2, txt='main_speech start!')
+                cn_s.put(['guide', 'main_speech start!'])
 
                 if (qRUNATTR == 'python'):
                     main_speech_run = subprocess.Popen(['python', qPython_main_speech, 
@@ -385,6 +384,7 @@ class main_kernel:
                                     self.qApiInp, self.qApiTrn, self.qApiOut,
                                     self.qLangInp, self.qLangTrn, self.qLangTxt, self.qLangOut, ], )
                                     #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                time.sleep(2.00)
 
                 if   (self.runMode == 'debug'):
                     speechs.append({ 'text':u'ハンズフリーコントロールシステムをデバッグモードで、起動しました。', 'wait':0, })
@@ -394,6 +394,8 @@ class main_kernel:
                     speechs.append({ 'text':u'ヘッドアップディスプレイ機能を、起動しました。', 'wait':0, })
                 elif (self.runMode == 'camera'):
                     speechs.append({ 'text':u'ハンズフリーカメラ機能を、起動しました。', 'wait':0, })
+                elif (self.runMode == 'assistant'):
+                    speechs.append({ 'text':u'ＡＩアシスタント機能を、起動しました。', 'wait':0, })
 
             if (not main_speech_run is None) and (main_speech_switch != 'on'):
                 time.sleep(10.00)
@@ -402,8 +404,7 @@ class main_kernel:
                 main_speech_run = None
 
             if (main_vision_run is None) and (main_vision_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='1', filename='_kernel_start', display=2, txt='main_vision start!')
+                cn_s.put(['guide', 'main_vision start!'])
 
                 if (qRUNATTR == 'python'):
                     main_vision_run = subprocess.Popen(['python', qPython_main_vision, 
@@ -413,8 +414,11 @@ class main_kernel:
                     main_vision_run = subprocess.Popen([qPython_main_vision[:-3],
                                     self.runMode, ], )
                                     #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                time.sleep(2.00)
 
-                speechs.append({ 'text':u'カメラ機能を、起動しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'カメラ機能を、起動しました。', 'wait':0, })
 
             if (not main_vision_run is None) and (main_vision_switch != 'on'):
                 time.sleep(10.00)
@@ -422,11 +426,12 @@ class main_kernel:
                 main_vision_run.terminate()
                 main_vision_run = None
 
-                speechs.append({ 'text':u'カメラ機能を、終了しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'カメラ機能を、終了しました。', 'wait':0, })
 
             if (main_desktop_run is None) and (main_desktop_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='1', filename='_kernel_start', display=2, txt='main_desktop start!')
+                cn_s.put(['guide', 'main_desktop start!'])
 
                 if (qRUNATTR == 'python'):
                     main_desktop_run = subprocess.Popen(['python', qPython_main_desktop, 
@@ -436,8 +441,11 @@ class main_kernel:
                     main_desktop_run = subprocess.Popen([qPython_main_desktop[:-3], 
                                     self.runMode, ], )
                                     #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                time.sleep(2.00)
 
-                speechs.append({ 'text':u'デスクトップ制御機能を、起動しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'デスクトップ制御機能を、起動しました。', 'wait':0, })
 
             if (not main_desktop_run is None) and (main_desktop_switch != 'on'):
                 time.sleep(10.00)
@@ -445,11 +453,12 @@ class main_kernel:
                 main_desktop_run.terminate()
                 main_desktop_run = None
 
-                speechs.append({ 'text':u'デスクトップ制御機能を、終了しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'デスクトップ制御機能を、終了しました。', 'wait':0, })
 
             if (bgm_run is None) and (bgm_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='bgm control start!')
+                cn_s.put(['guide', 'bgm control start!'])
 
                 if (qRUNATTR == 'python'):
                     bgm_run = subprocess.Popen(['python', qPython_bgm, self.runMode, ], )
@@ -457,8 +466,11 @@ class main_kernel:
                 else:
                     bgm_run = subprocess.Popen([qPython_bgm[:-3], self.runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                time.sleep(2.00)
 
-                speechs.append({ 'text':u'ＢＧＭ再生機能を、起動しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'ＢＧＭ再生機能を、起動しました。', 'wait':0, })
 
             if (not bgm_run is None) and (bgm_switch != 'on'):
                 qFunc.txtsWrite(qCtrl_control_bgm, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
@@ -467,11 +479,12 @@ class main_kernel:
                 bgm_run.terminate()
                 bgm_run = None
 
-                speechs.append({ 'text':u'ＢＧＭ再生機能を、終了しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'ＢＧＭ再生機能を、終了しました。', 'wait':0, })
 
             if (browser_run is None) and (browser_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='browser control start!')
+                cn_s.put(['guide', 'browser control start!'])
 
                 if (qRUNATTR == 'python'):
                     browser_run = subprocess.Popen(['python', qPython_browser, self.runMode, ], )
@@ -479,8 +492,11 @@ class main_kernel:
                 else:
                     browser_run = subprocess.Popen([qPython_browser[:-3], self.runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                time.sleep(2.00)
 
-                speechs.append({ 'text':u'ブラウザー連携機能を、起動しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'ブラウザー連携機能を、起動しました。', 'wait':0, })
 
             if (not browser_run is None) and (browser_switch != 'on'):
                 qFunc.txtsWrite(qCtrl_control_browser, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
@@ -489,11 +505,12 @@ class main_kernel:
                 browser_run.terminate()
                 browser_run = None
 
-                speechs.append({ 'text':u'ブラウザー連携機能を、終了しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'ブラウザー連携機能を、終了しました。', 'wait':0, })
 
             if (player_run is None) and (player_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='player control start!')
+                cn_s.put(['guide', 'player control start!'])
 
                 if (qRUNATTR == 'python'):
                     player_run = subprocess.Popen(['python', qPython_player, self.runMode, ], )
@@ -501,8 +518,11 @@ class main_kernel:
                 else:
                     player_run = subprocess.Popen([qPython_player[:-3], self.runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                time.sleep(2.00)
 
-                speechs.append({ 'text':u'動画連携機能を、起動しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'動画連携機能を、起動しました。', 'wait':0, })
 
             if (not player_run is None) and (player_switch != 'on'):
                 qFunc.txtsWrite(qCtrl_control_player, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
@@ -511,11 +531,12 @@ class main_kernel:
                 player_run.terminate()
                 player_run = None
 
-                speechs.append({ 'text':u'動画連携機能を、終了しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'動画連携機能を、終了しました。', 'wait':0, })
 
             if (chatting_run is None) and (chatting_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='chatting control start!')
+                cn_s.put(['guide', 'chatting control start!'])
 
                 if (qRUNATTR == 'python'):
                     chatting_run = subprocess.Popen(['python', qPython_chatting, self.runMode, ], )
@@ -523,8 +544,11 @@ class main_kernel:
                 else:
                     chatting_run = subprocess.Popen([qPython_chatting[:-3], self.runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                time.sleep(2.00)
 
-                speechs.append({ 'text':u'ドコモ雑談連携機能を、起動しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'ドコモ雑談連携機能を、起動しました。', 'wait':0, })
 
             if (not chatting_run is None) and (chatting_switch != 'on'):
                 qFunc.txtsWrite(qCtrl_control_chatting, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
@@ -533,11 +557,12 @@ class main_kernel:
                 chatting_run.terminate()
                 chatting_run = None
 
-                speechs.append({ 'text':u'ドコモ雑談連携機能を、終了しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'ドコモ雑談連携機能を、終了しました。', 'wait':0, })
 
             if (knowledge_run is None) and (knowledge_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='knowledge control start!')
+                cn_s.put(['guide', 'knowledge control start!'])
 
                 if (qRUNATTR == 'python'):
                     knowledge_run = subprocess.Popen(['python', qPython_knowledge, self.runMode, ], )
@@ -545,8 +570,11 @@ class main_kernel:
                 else:
                     knowledge_run = subprocess.Popen([qPython_knowledge[:-3], self.runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                time.sleep(2.00)
 
-                speechs.append({ 'text':u'ドコモ知識データベースを、起動しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'ドコモ知識データベースを、起動しました。', 'wait':0, })
 
             if (not knowledge_run is None) and (knowledge_switch != 'on'):
                 qFunc.txtsWrite(qCtrl_control_knowledge, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
@@ -555,19 +583,18 @@ class main_kernel:
                 knowledge_run.terminate()
                 knowledge_run = None
 
-                speechs.append({ 'text':u'ドコモ知識データベースを、終了しました。', 'wait':0, })
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
+                    speechs.append({ 'text':u'ドコモ知識データベースを、終了しました。', 'wait':0, })
 
             if (len(speechs) != 0):
                 qFunc.speech(id=main_id, speechs=speechs, lang='', )
 
-            if (guideDisp == True):
-                qFunc.guideDisplay(id='1', display=0, )
-
             if (onece == True):
                 onece = False
 
-                if   (self.runMode == 'debug') \
-                or   (self.runMode == 'live'):
+                if (self.runMode == 'debug') \
+                or (self.runMode == 'live'):
                     time.sleep(40)
                     speechs = []
                     speechs.append({ 'text':u'全ての準備が整いました。スタンバイしています。', 'wait':0, })
@@ -583,22 +610,11 @@ class main_kernel:
                 out_value = '_ready_'
                 cn_s.put([out_name, out_value])
 
-            # 制御処理
-            control = ''
-
-            if (not controld_thread is None):
-                while (controld_thread.proc_r.qsize() != 0):
-                    res_data  = controld_thread.get()
-                    res_name  = res_data[0]
-                    res_value = res_data[1]
-
-                    # 制御
-                    if (res_name.lower() == 'control'):
-                        control = res_value
-                        # 結果出力
-                        if (cn_s.qsize() < 99):
-                            cn_s.put([res_name, res_value])
-                        break
+            # リブート
+            if (control == '_reboot_'):
+                out_name  = 'control'
+                out_value = control
+                cn_s.put([out_name, out_value])
 
             # コントロール
             if (control == '_speech_begin_'):
@@ -649,8 +665,6 @@ class main_kernel:
 
         # 終了処理
         if (True):
-
-            qFunc.guideDisplay(id='1', filename='_kernel_stop', display=1, txt='')
 
             # レディー解除
             qFunc.statusSet(self.fileRdy, False)
@@ -717,8 +731,6 @@ class main_kernel:
             while (cn_s.qsize() > 0):
                 cn_s_get = cn_s.get()
                 cn_s.task_done()
-
-            qFunc.guideDisplay(id='1', display=0, )
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
@@ -875,13 +887,17 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':start')
 
-        main_kernel = main_kernel(main_id, '0', 
+        qFunc.guideDisplay(display=True, panel='1', filename='_kernel_start_', txt='', )
+        guide_disp = True
+        guide_time = time.time()
+
+        main_core = main_kernel(main_id, '0', 
                                 runMode=runMode,
                                 micDev=micDev, micType=micType, micGuide=micGuide, micLevel=micLevel,
                                 qApiInp=qApiInp, qApiTrn=qApiTrn, qApiOut=qApiOut,
                                 qLangInp=qLangInp, qLangTrn=qLangTrn, qLangTxt=qLangTxt, qLangOut=qLangOut, )
 
-        main_kernel.begin()
+        main_core.begin()
 
     # 待機ループ
 
@@ -899,15 +915,44 @@ if __name__ == '__main__':
                 qFunc.remove(qCtrl_control_self)
                 control = txt
 
-        while (main_desktop.proc_r.qsize() != 0) and (control == ''):
-            res_data  = main_desktop.get()
+        # リブート
+
+        if (control == '_reboot_'):
+            main_core.abort()
+            del main_core
+            qFunc.remove(qCtrl_control_kernel)
+            main_core = None
+            main_core = main_kernel(main_id, '0', 
+                                    runMode=runMode,
+                                    micDev=micDev, micType=micType, micGuide=micGuide, micLevel=micLevel,
+                                    qApiInp=qApiInp, qApiTrn=qApiTrn, qApiOut=qApiOut,
+                                    qLangInp=qLangInp, qLangTrn=qLangTrn, qLangTxt=qLangTxt, qLangOut=qLangOut, )
+            main_core.begin()
+
+        # スレッド応答
+
+        while (main_core.proc_r.qsize() != 0) and (control == ''):
+            res_data  = main_core.get()
             res_name  = res_data[0]
             res_value = res_data[1]
             if (res_name == 'control'):
                 control  = res_value
                 break
+            # ガイド表示
+            if (res_name == 'guide'):
+                if (guide_disp == True):
+                    qFunc.guideDisplay(txt=res_value, )
+                    guide_time = time.time()
+
+        # ガイド表示終了
+
+        if (guide_disp == True):
+            if ((time.time() - guide_time) > 3):
+                qFunc.guideDisplay(display=False,)
+                guide_disp = False
 
         # アイドリング
+
         slow = False
         if   (qFunc.statusCheck(qBusy_dev_cpu) == True):
             slow = True
@@ -923,8 +968,15 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':terminate')
 
-        main_kernel.abort()
-        del main_kernel
+        qFunc.guideDisplay(display=True, panel='1', filename='_kernel_stop_', txt='', )
+        guide_disp = True
+        guide_time = time.time()
+
+        main_core.abort()
+        del main_core
+
+        qFunc.guideDisplay(display=False,)
+        guide_disp = False
 
         qFunc.logOutput(main_id + ':bye!')
 

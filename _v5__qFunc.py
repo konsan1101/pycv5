@@ -131,7 +131,10 @@ class qFunc_class:
         self.qLogOutf = True
         self.qScreenWidth  = 0
         self.qScreenHeight = 0
-        
+
+        self.qGuidePanel = '5'
+        self.qGuideImg   = None
+
     def __del__(self, ):
         pass
                 
@@ -744,49 +747,58 @@ class qFunc_class:
         else:
             return int(w/4), int(h/4), int(w/2), int(h/2)
 
-    def guideDisplay(self, id='0-', filename=None, display=1, txt='', ):
-        playfile = filename
-        if (filename == '_kernel_start'):
-            playfile = qPath_icons + 'riki_start.png'
-        if (filename == '_kernel_stop'):
-            playfile = qPath_icons + 'riki_stop.png'
-        if (filename == '_speech_start'):
-            playfile = qPath_icons + 'speech_start.png'
-        if (filename == '_speech_stop'):
-            playfile = qPath_icons + 'speech_stop.png'
-        if (filename == '_vision_start'):
-            playfile = qPath_icons + 'cam_start.png'
-        if (filename == '_vision_stop'):
-            playfile = qPath_icons + 'cam_stop.png'
-        if (filename == '_desktop_start'):
-            playfile = qPath_icons + 'rec_start.png'
-        if (filename == '_desktop_stop'):
-            playfile = qPath_icons + 'rec_stop.png'
+    def guideDisplay(self, display=True, panel='', filename='', txt='', ):
+        if (panel != ''):
+            self.qGuidePanel = panel
+        win = 'Guide (' + self.qGuidePanel + ')'
+        if (filename != ''):
+            imgfile = filename
+            if (filename == '_kernel_start_'):
+                imgfile = qPath_icons + 'riki_start.png'
+            if (filename == '_kernel_stop_'):
+                imgfile = qPath_icons + 'riki_stop.png'
+            if (filename == '_speech_start_'):
+                imgfile = qPath_icons + 'speech_start.png'
+            if (filename == '_speech_stop_'):
+                imgfile = qPath_icons + 'speech_stop.png'
+            if (filename == '_vision_start_'):
+                imgfile = qPath_icons + 'cam_start.png'
+            if (filename == '_vision_stop_'):
+                imgfile = qPath_icons + 'cam_stop.png'
+            if (filename == '_desktop_start_'):
+                imgfile = qPath_icons + 'rec_start.png'
+            if (filename == '_desktop_stop_'):
+                imgfile = qPath_icons + 'rec_stop.png'
+            self.qGuideImg = None
+            try:
+                self.qGuideImg = cv2.imread(imgfile)
+            except:
+                pass
 
-        try:
-            if (os.path.exists(playfile)):
-                if (display != 0):
-                    left, top, width, height = self.getPanelPos(id,)
-                    img = cv2.imread(playfile)
-                    dsp = cv2.resize(img, (width,height))
-                    if (txt != ''):
-                        cv2.putText(dsp, txt, (5,height-5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
-                    #cv2.namedWindow('Guide' + id, 1)
-                    #cv2.moveWindow( 'Guide' + id, left, top-30)
-                    #cv2.imshow('Guide'+ id, dsp )
-                    #cv2.waitKey(1)
-                    time.sleep(display)
-                    return True
-        except:
-            pass
-        try:
-            if (display == 0):
-                #cv2.destroyWindow('Guide' + id)
-                #cv2.waitKey(1)
+        if (display == True) and (not self.qGuideImg is None):
+            try:
+                left, top, width, height = self.getPanelPos(self.qGuidePanel,)
+                dsp = cv2.resize(self.qGuideImg, (width,height))
+                if (txt != ''):
+                    cv2.putText(dsp, txt, (5,height-5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
+                cv2.namedWindow(win, 1)
+                time.sleep(0.50)
+                cv2.moveWindow( win, left, top-30)
+                time.sleep(0.10)
+                cv2.imshow(     win, dsp )
+                time.sleep(0.10)
+                cv2.waitKey(1)
                 return True
-        except:
-            pass
-        return False
+            except:
+                return False
+
+        if (display == False):
+            try:
+                cv2.destroyWindow(win)
+                cv2.waitKey(1)
+                return True
+            except:
+                return False
 
     def getResolution(self, reso='full', ):
         if (reso == 'full')  \

@@ -330,17 +330,16 @@ class main_desktop:
             # スレッド設定
 
             speechs = []
-            guideDisp = False
 
             if (controld_thread is None) and (controld_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='9', filename='_desktop_start', display=1, txt='controld loading...')
+                cn_s.put(['guide', 'controld start!'])
 
                 controld_thread = _v5_proc_controld.proc_controld(
                                     name='controld', id='0',
                                     runMode=self.runMode,
                                     )
                 controld_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -352,8 +351,7 @@ class main_desktop:
                 controld_thread = None
 
             if (capture_thread is None) and (capture_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='9', filename='_desktop_start', display=1, txt='capture loading...')
+                cn_s.put(['guide', 'capture start!'])
 
                 capture_thread = _v5_proc_capture.proc_capture(
                                     name='capture', id='0',
@@ -361,6 +359,7 @@ class main_desktop:
                                     capStretch=self.capStretch, capRotate=self.capRotate, capZoom=self.capZoom, capFps='5',
                                     )
                 capture_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -372,8 +371,7 @@ class main_desktop:
                 capture_thread = None
 
             if (cvreader_thread is None) and (cvreader_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='9', filename='_desktop_start', display=1, txt='cvreader loading...')
+                cn_s.put(['guide', 'cvreader start!'])
 
                 cvreader_thread = _v5_proc_cvreader.proc_cvreader(
                                     name='reader', id='d',
@@ -381,6 +379,7 @@ class main_desktop:
                                     reader=self.codeRead,
                                     )
                 cvreader_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -392,14 +391,14 @@ class main_desktop:
                 cvreader_thread = None
 
             if (recorder_thread is None) and (recorder_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='9', filename='_desktop_start', display=1, txt='recorder loading...')
+                cn_s.put(['guide', 'recorder start!'])
 
                 recorder_thread  = _v5_proc_recorder.proc_recorder(
                                     name='recorder', id='0',
                                     runMode=self.runMode,
                                     )
                 recorder_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -415,14 +414,14 @@ class main_desktop:
                 recorder_thread = None
 
             if (uploader_thread is None) and (uploader_switch == 'on'):
-                guideDisp = True
-                qFunc.guideDisplay(id='9', filename='_desktop_start', display=1, txt='uploader loading...')
+                cn_s.put(['guide', 'uploader start!'])
 
                 uploader_thread  = _v5_proc_uploader.proc_uploader(
                                     name='uploader', id='0',
                                     runMode=self.runMode,
                                     )
                 uploader_thread.begin()
+                time.sleep(1.00)
 
                 if (self.runMode == 'debug') \
                 or (self.runMode == 'live'):
@@ -435,9 +434,6 @@ class main_desktop:
 
             if (len(speechs) != 0):
                 qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
-
-            if (guideDisp == True):
-                qFunc.guideDisplay(id='9', display=0, )
 
             if (onece == True):
                 onece = False
@@ -570,8 +566,6 @@ class main_desktop:
         # 終了処理
         if (True):
 
-            qFunc.guideDisplay(id='9', filename='_desktop_stop', display=1, txt='')
-
             # レディー解除
             qFunc.statusSet(self.fileRdy, False)
 
@@ -615,8 +609,6 @@ class main_desktop:
             while (cn_s.qsize() > 0):
                 cn_s_get = cn_s.get()
                 cn_s.task_done()
-
-            qFunc.guideDisplay(id='9', display=0, )
 
             # ログ
             qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
@@ -733,9 +725,13 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':start')
 
-        main_desktop = main_desktop(main_id, '0', runMode=runMode, )
+        qFunc.guideDisplay(display=True, panel='9', filename='_desktop_start_', txt='', )
+        guide_disp = True
+        guide_time = time.time()
 
-        main_desktop.begin()
+        main_core = main_desktop(main_id, '0', runMode=runMode, )
+
+        main_core.begin()
 
     # 待機ループ
 
@@ -754,23 +750,39 @@ if __name__ == '__main__':
                 control = txt
 
         # レコーダー制御
+
         if (control.lower() == '_rec_start_') \
         or (control.lower() == '_rec_stop_') \
         or (control.lower() == '_rec_restart_') \
         or (control.find(u'記録') >= 0) \
         or (control.find(u'録画') >= 0):
-            main_desktop.put(['recorder', control])
+            main_core.put(['recorder', control])
             control = ''
 
-        while (main_desktop.proc_r.qsize() != 0) and (control == ''):
-            res_data  = main_desktop.get()
+        # スレッド応答
+
+        while (main_core.proc_r.qsize() != 0) and (control == ''):
+            res_data  = main_core.get()
             res_name  = res_data[0]
             res_value = res_data[1]
             if (res_name == 'control'):
                 control  = res_value
                 break
+            # ガイド表示
+            if (res_name == 'guide'):
+                if (guide_disp == True):
+                    qFunc.guideDisplay(txt=res_value, )
+                    guide_time = time.time()
+
+        # ガイド表示終了
+
+        if (guide_disp == True):
+            if ((time.time() - guide_time) > 3):
+                qFunc.guideDisplay(display=False,)
+                guide_disp = False
 
         # アイドリング
+
         slow = False
         if (qFunc.statusCheck(qBusy_dev_cpu) == True):
             slow = True
@@ -790,12 +802,19 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':terminate')
 
+        qFunc.guideDisplay(display=True, panel='9', filename='_desktop_stop_', txt='', )
+        guide_disp = True
+        guide_time = time.time()
+
         # 外部ＰＧリセット
         qFunc.kill('ffmpeg')
         qFunc.kill('ffplay')
 
-        main_desktop.abort()
-        del main_desktop
+        main_core.abort()
+        del main_core
+
+        qFunc.guideDisplay(display=False,)
+        guide_disp = False
 
         qFunc.logOutput(main_id + ':bye!')
 

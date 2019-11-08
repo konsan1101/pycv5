@@ -115,7 +115,7 @@ runMode = 'debug'
 
 
 
-class main_class:
+class main_browser:
 
     def __init__(self, name='thread', id='0', runMode='debug', ):
         self.runMode   = runMode
@@ -475,8 +475,8 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':start')
 
-        main_class = main_class(main_name, '0', runMode=runMode, )
-        main_class.begin()
+        main_core = main_browser(main_name, '0', runMode=runMode, )
+        main_core.begin()
 
         main_start = time.time()
         onece      = True
@@ -528,8 +528,8 @@ if __name__ == '__main__':
 
         qFunc.logOutput(main_id + ':terminate')
 
-        main_class.abort()
-        del main_class
+        main_core.abort()
+        del main_core
 
         qFunc.logOutput(main_id + ':bye!')
 
