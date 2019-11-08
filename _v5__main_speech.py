@@ -776,9 +776,6 @@ class main_speech:
             qFunc.kill('adintool')
             qFunc.kill('julius')
 
-            # ビジー解除
-            qFunc.statusSet(self.fileBsy, False)
-
             # キュー削除
             while (cn_r.qsize() > 0):
                 cn_r_get = cn_r.get()
@@ -927,35 +924,37 @@ if __name__ == '__main__':
 
     # 初期設定
 
-    qFunc.remove(qCtrl_control_speech     )
+    if (True):
 
-    qFunc.remove(qCtrl_result_audio       )
-    qFunc.remove(qCtrl_result_speech      )
-    qFunc.remove(qCtrl_recognize          )
-    qFunc.remove(qCtrl_recognize_sjis     )
-    qFunc.remove(qCtrl_translate          )
-    qFunc.remove(qCtrl_translate_sjis     )
+        qFunc.remove(qCtrl_control_speech     )
 
-    qFunc.makeDirs(qPath_log,      15 )
-    qFunc.makeDirs(qPath_work,     15 )
-    qFunc.makeDirs(qPath_rec,      15 )
+        qFunc.remove(qCtrl_result_audio       )
+        qFunc.remove(qCtrl_result_speech      )
+        qFunc.remove(qCtrl_recognize          )
+        qFunc.remove(qCtrl_recognize_sjis     )
+        qFunc.remove(qCtrl_translate          )
+        qFunc.remove(qCtrl_translate_sjis     )
 
-    qFunc.makeDirs(qPath_s_ctrl, True )
-    if (micDev.isdigit()):
-        qFunc.makeDirs(qPath_s_inp,  True )
-    qFunc.makeDirs(qPath_s_wav,  True )
-    qFunc.makeDirs(qPath_s_jul,  True )
-    qFunc.makeDirs(qPath_s_STT,  True )
-    qFunc.makeDirs(qPath_s_TRA,  True )
-    if (micDev.isdigit()):
-        qFunc.makeDirs(qPath_s_TTS,  True )
-        qFunc.makeDirs(qPath_s_play, True )
+        qFunc.makeDirs(qPath_log,      15 )
+        qFunc.makeDirs(qPath_work,     15 )
+        qFunc.makeDirs(qPath_rec,      15 )
 
-    qFunc.statusReset_speech(False)
+        qFunc.makeDirs(qPath_s_ctrl, True )
+        if (micDev.isdigit()):
+            qFunc.makeDirs(qPath_s_inp,  True )
+        qFunc.makeDirs(qPath_s_wav,  True )
+        qFunc.makeDirs(qPath_s_jul,  True )
+        qFunc.makeDirs(qPath_s_STT,  True )
+        qFunc.makeDirs(qPath_s_TRA,  True )
+        if (micDev.isdigit()):
+            qFunc.makeDirs(qPath_s_TTS,  True )
+            qFunc.makeDirs(qPath_s_play, True )
 
-    #if (runMode == 'assistant'):
-    #    qFunc.statusSet(qBusy_dev_mic, True)
-    #    qFunc.statusSet(qBusy_dev_spk, True)
+        qFunc.statusReset_speech(False)
+
+        #if (runMode == 'assistant'):
+        #    qFunc.statusSet(qBusy_dev_mic, True)
+        #    qFunc.statusSet(qBusy_dev_spk, True)
 
     # 起動
 

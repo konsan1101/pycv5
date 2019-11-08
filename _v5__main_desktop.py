@@ -608,9 +608,6 @@ class main_desktop:
             qFunc.kill('ffmpeg')
             qFunc.kill('ffplay')
 
-            # ビジー解除
-            qFunc.statusSet(self.fileBsy, False)
-
             # キュー削除
             while (cn_r.qsize() > 0):
                 cn_r_get = cn_r.get()
@@ -705,28 +702,30 @@ if __name__ == '__main__':
 
     # 初期設定
 
-    qFunc.remove(qCtrl_control_desktop  )
+    if (True):
 
-    qFunc.remove(qCtrl_result_desktop   )
-    qFunc.remove(qCtrl_result_prtscn    )
-    qFunc.remove(qCtrl_result_capture   )
-    qFunc.remove(qCtrl_result_movie     )
-    qFunc.remove(qCtrl_result_recorder  )
+        qFunc.remove(qCtrl_control_desktop  )
 
-    qFunc.makeDirs(qPath_log,        15 )
-    qFunc.makeDirs(qPath_work,       15 )
-    qFunc.makeDirs(qPath_rec,        15 )
+        qFunc.remove(qCtrl_result_desktop   )
+        qFunc.remove(qCtrl_result_prtscn    )
+        qFunc.remove(qCtrl_result_capture   )
+        qFunc.remove(qCtrl_result_movie     )
+        qFunc.remove(qCtrl_result_recorder  )
 
-    qFunc.makeDirs(qPath_d_ctrl,   True )
-    qFunc.makeDirs(qPath_d_play,   True )
-    qFunc.makeDirs(qPath_d_prtscn, True )
-    qFunc.makeDirs(qPath_d_movie,  True )
-    qFunc.makeDirs(qPath_d_upload, True )
+        qFunc.makeDirs(qPath_log,        15 )
+        qFunc.makeDirs(qPath_work,       15 )
+        qFunc.makeDirs(qPath_rec,        15 )
 
-    if (qPath_videos != ''):
-        qFunc.makeDirs(qPath_videos, 15 )
+        qFunc.makeDirs(qPath_d_ctrl,   True )
+        qFunc.makeDirs(qPath_d_play,   True )
+        qFunc.makeDirs(qPath_d_prtscn, True )
+        qFunc.makeDirs(qPath_d_movie,  True )
+        qFunc.makeDirs(qPath_d_upload, True )
 
-    qFunc.statusReset_desktop(False)
+        if (qPath_videos != ''):
+            qFunc.makeDirs(qPath_videos, 15 )
+
+        qFunc.statusReset_desktop(False)
 
     # 起動
 
@@ -801,6 +800,5 @@ if __name__ == '__main__':
         qFunc.logOutput(main_id + ':bye!')
 
         sys.exit(0)
-
 
 

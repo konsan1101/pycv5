@@ -373,10 +373,12 @@ if __name__ == '__main__':
 
     # 初期設定
 
-    txts, txt = qFunc.txtsRead(qCtrl_control_self)
-    if (txts != False):
-        if (txt == '_end_'):
-            qFunc.remove(qCtrl_control_self)
+    if (True):
+
+        txts, txt = qFunc.txtsRead(qCtrl_control_self)
+        if (txts != False):
+            if (txt == '_end_'):
+                qFunc.remove(qCtrl_control_self)
 
     # 起動
 

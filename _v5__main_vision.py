@@ -1618,42 +1618,44 @@ if __name__ == '__main__':
 
     # 初期設定
 
-    qFunc.remove(qCtrl_control_vision     )
+    if (True):
 
-    qFunc.remove(qCtrl_result_vision      )
-    qFunc.remove(qCtrl_result_photo       )
-    qFunc.remove(qCtrl_result_screen      )
-    qFunc.remove(qCtrl_result_cv          )
-    qFunc.remove(qCtrl_result_cv_sjis     )
-    qFunc.remove(qCtrl_result_ocr         )
-    qFunc.remove(qCtrl_result_ocr_sjis    )
-    qFunc.remove(qCtrl_result_ocrTrn      )
-    qFunc.remove(qCtrl_result_ocrTrn_sjis )
+        qFunc.remove(qCtrl_control_vision     )
 
-    qFunc.makeDirs(qPath_log,          15 )
-    qFunc.makeDirs(qPath_work,         15 )
-    qFunc.makeDirs(qPath_rec,          15 )
+        qFunc.remove(qCtrl_result_vision      )
+        qFunc.remove(qCtrl_result_photo       )
+        qFunc.remove(qCtrl_result_screen      )
+        qFunc.remove(qCtrl_result_cv          )
+        qFunc.remove(qCtrl_result_cv_sjis     )
+        qFunc.remove(qCtrl_result_ocr         )
+        qFunc.remove(qCtrl_result_ocr_sjis    )
+        qFunc.remove(qCtrl_result_ocrTrn      )
+        qFunc.remove(qCtrl_result_ocrTrn_sjis )
 
-    qFunc.makeDirs(qPath_v_ctrl,   True   )
-    qFunc.makeDirs(qPath_v_inp,    True   )
-    qFunc.makeDirs(qPath_v_jpg,    True   )
-    qFunc.makeDirs(qPath_v_detect, True   )
-    qFunc.makeDirs(qPath_v_cv,     True   )
-    qFunc.makeDirs(qPath_v_photo,  True   )
-    qFunc.makeDirs(qPath_v_msg,    True   )
-    qFunc.makeDirs(qPath_d_prtscn, True   )
+        qFunc.makeDirs(qPath_log,          15 )
+        qFunc.makeDirs(qPath_work,         15 )
+        qFunc.makeDirs(qPath_rec,          15 )
 
-    if (qPath_pictures != ''):
-        qFunc.makeDirs(qPath_pictures, 15 )
+        qFunc.makeDirs(qPath_v_ctrl,   True   )
+        qFunc.makeDirs(qPath_v_inp,    True   )
+        qFunc.makeDirs(qPath_v_jpg,    True   )
+        qFunc.makeDirs(qPath_v_detect, True   )
+        qFunc.makeDirs(qPath_v_cv,     True   )
+        qFunc.makeDirs(qPath_v_photo,  True   )
+        qFunc.makeDirs(qPath_v_msg,    True   )
+        qFunc.makeDirs(qPath_d_prtscn, True   )
 
-    qFunc.statusReset_vision(False)
+        if (qPath_pictures != ''):
+            qFunc.makeDirs(qPath_pictures, 15 )
 
-    if (runMode == 'assistant'):
-        qFunc.statusSet(qBusy_dev_cam, True)
-        qFunc.statusSet(qBusy_dev_dsp, True)
+        qFunc.statusReset_vision(False)
 
-    display_img = None
-    display = None
+        if (runMode == 'assistant'):
+            qFunc.statusSet(qBusy_dev_cam, True)
+            qFunc.statusSet(qBusy_dev_dsp, True)
+
+        display_img = None
+        display = None
 
     # 起動
 
