@@ -771,18 +771,18 @@ class qFunc_class:
                     dsp = cv2.resize(img, (width,height))
                     if (txt != ''):
                         cv2.putText(dsp, txt, (5,height-5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
-                    cv2.namedWindow('Guide' + id, 1)
-                    cv2.moveWindow( 'Guide' + id, left, top-30)
-                    cv2.imshow('Guide'+ id, dsp )
-                    cv2.waitKey(1)
+                    #cv2.namedWindow('Guide' + id, 1)
+                    #cv2.moveWindow( 'Guide' + id, left, top-30)
+                    #cv2.imshow('Guide'+ id, dsp )
+                    #cv2.waitKey(1)
                     time.sleep(display)
                     return True
         except:
             pass
         try:
             if (display == 0):
-                cv2.destroyWindow('Guide' + id)
-                cv2.waitKey(1)
+                #cv2.destroyWindow('Guide' + id)
+                #cv2.waitKey(1)
                 return True
         except:
             pass

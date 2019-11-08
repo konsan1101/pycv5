@@ -130,7 +130,7 @@ qRdy__d_sendkey = qFunc.getValue('qRdy__d_sendkey')
 
 
 # debug
-runMode     = 'assistant'
+runMode     = 'hud'
 
 qApiInp     = 'free'
 qApiTrn     = 'free'

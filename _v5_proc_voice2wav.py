@@ -262,7 +262,7 @@ class proc_voice2wav:
 
                         # 書込み途中チェック
                         if (os.name != 'nt'):
-                            if (len(path_files) == file_count):
+                            #if (len(path_files) == file_count):
 
                                 # ファイルサイズ
                                 proc_size = 0
@@ -283,7 +283,7 @@ class proc_voice2wav:
                                     break
                                 else:
                                     # 変化なしでn秒経過？
-                                    if ((time.time() - check_time)<0.50):
+                                    if ((time.time() - check_time)<0.75):
                                         break
 
                         if (proc_file[-4:].lower() == '.wav' and proc_file[-8:].lower() != '.wrk.wav'):
