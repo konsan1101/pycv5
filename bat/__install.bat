@@ -110,7 +110,7 @@ ECHO ---------------
 rem python -m pip  install --upgrade mstranslator
     python -m pip  install --upgrade cognitive_face
     python -m pip  install --upgrade pywin32
-    python -m pip  install --upgrade azure-storage-blob
+    python -m pip  install --upgrade azure-storage
 
 ECHO;
 ECHO ------
