@@ -782,11 +782,10 @@ class qFunc_class:
                 if (txt != ''):
                     cv2.putText(dsp, txt, (5,height-5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
                 cv2.namedWindow(win, 1)
-                time.sleep(0.50)
                 cv2.moveWindow( win, left, top-30)
-                time.sleep(0.10)
                 cv2.imshow(     win, dsp )
                 time.sleep(0.10)
+                cv2.moveWindow( win, left, top-30)
                 cv2.waitKey(1)
                 return True
             except:
@@ -1389,8 +1388,8 @@ if (__name__ == '__main__'):
 
     qFunc.kill('sox')
 
-    qFunc.guideDisplay(id='1', filename='_kernel_start', display=1, txt='waiting...')
-    qFunc.guideDisplay(id='1', display=0, )
+    qFunc.guideDisplay(display=True, panel='1', filename='_kernel_start', txt='waiting...')
+    qFunc.guideDisplay(display=False, )
 
     qFunc.notePad(txt=u'開始')
     #qFunc.sendKey(txt=u'日本語')
