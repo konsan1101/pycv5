@@ -750,7 +750,7 @@ class qFunc_class:
     def guideDisplay(self, display=True, panel='', filename='', txt='', ):
         if (panel != ''):
             self.qGuidePanel = panel
-        win = 'Guide (' + self.qGuidePanel + ')'
+        win = 'Guide_' + self.qGuidePanel
         if (filename != ''):
             imgfile = filename
             if (filename == '_kernel_start_'):
@@ -784,9 +784,8 @@ class qFunc_class:
                 cv2.namedWindow(win, 1)
                 cv2.moveWindow( win, left, top-30)
                 cv2.imshow(     win, dsp )
-                time.sleep(0.10)
                 cv2.moveWindow( win, left, top-30)
-                cv2.waitKey(1)
+                cv2.waitKey(20)
                 return True
             except:
                 return False
