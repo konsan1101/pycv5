@@ -865,6 +865,13 @@ if __name__ == '__main__':
 
     # 初期設定
 
+    if (qPLATFORM == 'darwin'):
+        try:
+            subprocess.call(['/usr/bin/osascript', '-e',
+            'tell app "Finder" to set frontmost of process "python" to true'])
+        except:
+            pass
+
     if (True):
 
         qFunc.remove(qCtrl_control_kernel    )

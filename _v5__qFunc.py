@@ -799,7 +799,11 @@ class qFunc_class:
 
         if (display == False):
             try:
+                left, top, width, height = self.getPanelPos(self.qGuidePanel,)
+                dsp = cv2.resize(self.qGuideImg, (width,height))
                 if (os.name == 'nt'):
+                    cv2.imshow(     win, dsp )
+                    cv2.waitKey(1)
                     cv2.destroyWindow(win)
                     #cv2.destroyAllWindow()
                     cv2.waitKey(1)
