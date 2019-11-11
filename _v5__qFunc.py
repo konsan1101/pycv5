@@ -785,7 +785,7 @@ class qFunc_class:
                 cv2.moveWindow( win, left, top-30)
                 cv2.imshow(     win, dsp )
                 cv2.moveWindow( win, left, top-30)
-                cv2.waitKey(20)
+                cv2.waitKey(1)
                 return True
             except:
                 return False

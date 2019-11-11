@@ -18,6 +18,8 @@ import time
 import codecs
 import glob
 
+import cv2
+
 print(os.path.dirname(__file__))
 print(os.path.basename(__file__))
 print(sys.version_info)
@@ -950,6 +952,7 @@ if __name__ == '__main__':
             if ((time.time() - guide_time) > 3):
                 qFunc.guideDisplay(display=False,)
                 guide_disp = False
+        cv2.waitKey(1)
 
         # アイドリング
 
