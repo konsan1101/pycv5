@@ -43,6 +43,8 @@ import pyautogui
 import pyperclip
 import cv2
 
+#from matplotlib import pyplot as plt
+
 import PIL
 import io
 if (os.name == 'nt'):
@@ -776,24 +778,33 @@ class qFunc_class:
                 pass
 
         if (display == True) and (not self.qGuideImg is None):
-            try:
+            #try:
                 left, top, width, height = self.getPanelPos(self.qGuidePanel,)
                 dsp = cv2.resize(self.qGuideImg, (width,height))
                 if (txt != ''):
                     cv2.putText(dsp, txt, (5,height-5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
-                cv2.namedWindow(win, 1)
-                cv2.moveWindow( win, left, top-30)
-                cv2.imshow(     win, dsp )
-                cv2.moveWindow( win, left, top-30)
-                cv2.waitKey(1)
+                if (os.name == 'nt'):
+                    cv2.namedWindow(win, 1)
+                    cv2.moveWindow( win, left, top-30)
+                    cv2.imshow(     win, dsp )
+                    cv2.moveWindow( win, left, top-30)
+                    cv2.waitKey(1)
+                #else:
+                #    rgb = cv2.cvtColor(dsp,cv2.COLOR_BGR2RGB)
+                #    plt.imshow(rgb)
+                #    plt.show()
                 return True
-            except:
-                return False
+            #except:
+            #    return False
 
         if (display == False):
             try:
-                cv2.destroyWindow(win)
-                cv2.waitKey(1)
+                if (os.name == 'nt'):
+                    cv2.destroyWindow(win)
+                    #cv2.destroyAllWindow()
+                    cv2.waitKey(1)
+                #else:
+                #    plt.close('all')
                 return True
             except:
                 return False
@@ -1387,7 +1398,8 @@ if (__name__ == '__main__'):
 
     qFunc.kill('sox')
 
-    qFunc.guideDisplay(display=True, panel='1', filename='_kernel_start', txt='waiting...')
+    qFunc.guideDisplay(display=True, panel='1', filename='_kernel_start_', txt='waiting...')
+    time.sleep(3.00)
     qFunc.guideDisplay(display=False, )
 
     qFunc.notePad(txt=u'開始')
