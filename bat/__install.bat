@@ -113,6 +113,13 @@ rem python -m pip  install --upgrade mstranslator
     python -m pip  install --upgrade azure-storage
 
 ECHO;
+ECHO ---------------
+ECHO azureml
+ECHO ---------------
+    python -m pip  install --upgrade azureml-sdk
+    python -m pip  install --upgrade azureml-dataprep
+
+ECHO;
 ECHO ------
 ECHO google
 ECHO ------
