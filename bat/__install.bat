@@ -118,6 +118,7 @@ ECHO azureml
 ECHO ---------------
     python -m pip  install --upgrade azureml-sdk
     python -m pip  install --upgrade azureml-dataprep
+    python -m pip  install --upgrade azureml-train-automl
 
 ECHO;
 ECHO ------
