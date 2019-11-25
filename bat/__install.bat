@@ -56,15 +56,14 @@ ECHO ------
 ECHO vision
 ECHO ------
 rem python -m pip  install --upgrade pygame
-rem python -m pip  install --upgrade pyqtgraph
-rem python -m pip  install --upgrade pyqt5
     python -m pip  install --upgrade pillow
     python -m pip  install --upgrade numpy
     python -m pip  install --upgrade opencv-python
 rem python -m pip  install --upgrade pyflakes
-rem python -m pip  install --upgrade pylint
+    python -m pip  install --upgrade pylint
 rem python -m pip  install --upgrade pep8
     python -m pip  install --upgrade matplotlib
+    python -m pip  install --upgrade pyqt5
     python -m pip  install --upgrade pyautogui
     python -m pip  install --upgrade pyzbar
 
@@ -122,9 +121,9 @@ ECHO ---------------
     python -m pip  install --upgrade azureml-train-automl
 
 ECHO;
-ECHO ------
+ECHO --------
 ECHO google
-ECHO ------
+ECHO --------
     python -m pip  install --upgrade google-cloud-core
     python -m pip  install --upgrade google-cloud-speech
     python -m pip  install --upgrade google-cloud-translate
@@ -134,12 +133,25 @@ ECHO ------
     python -m pip  install --upgrade googletrans
     python -m pip  install --upgrade goslate
     python -m pip  install --upgrade ggtrans
-    python -m pip  uninstall gtts-token
+    python -m pip  uninstall -y gtts-token
     python -m pip  install --upgrade gtts-token
 
 
 
-PAUSE
+rem  --------
+     PAUSE
+rem  --------
 
 
 
+ECHO;
+ECHO --------
+ECHO pip list
+ECHO --------
+    python -m pip  list
+
+
+
+rem  --------
+     PAUSE
+rem  --------
