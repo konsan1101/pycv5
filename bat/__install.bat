@@ -62,7 +62,8 @@ rem python -m pip  install --upgrade pygame
 rem python -m pip  install --upgrade pyflakes
     python -m pip  install --upgrade pylint
 rem python -m pip  install --upgrade pep8
-    python -m pip  install --upgrade matplotlib
+rem python -m pip  install --upgrade matplotlib
+    python -m pip  install --upgrade matplotlib==3.0.3
     python -m pip  install --upgrade pyqt5
     python -m pip  install --upgrade pyautogui
     python -m pip  install --upgrade pyzbar
