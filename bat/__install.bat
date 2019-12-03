@@ -65,6 +65,7 @@ rem python -m pip  install --upgrade pep8
 rem python -m pip  install --upgrade matplotlib
     python -m pip  install --upgrade matplotlib==3.0.3
     python -m pip  install --upgrade seaborn
+    python -m pip  install --upgrade scipy
     python -m pip  install --upgrade pyqt5
     python -m pip  install --upgrade pyautogui
     python -m pip  install --upgrade pyzbar
