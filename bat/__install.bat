@@ -13,6 +13,14 @@ rem brew install python-opencv
 rem brew cask install chromedriver
 rem brew install geckodriver
 
+ECHO;
+ECHO ----------------
+ECHO anaconda check !
+ECHO ----------------
+start conda info -e
+rem source activate base
+call       activate base
+
 PAUSE
 
 ECHO;
@@ -123,6 +131,7 @@ ECHO ---------------
     python -m pip  install --upgrade azureml-dataprep
     python -m pip  install --upgrade azureml-train-automl
     python -m pip  install --ignore-installed azureml-train-automl-client
+    python -m pip  install --upgrade scipy
 
 ECHO;
 ECHO --------
@@ -154,6 +163,18 @@ ECHO pip list
 ECHO --------
     python -m pip  list
 
+
+
+rem ECHO;
+rem ECHO -------
+rem ECHO jupyter
+rem ECHO -------
+rem python -m pip  install --upgrade jupyter
+rem python -m jupyter notebook --generate-config
+rem c.NotebookApp.notebook_dir = 'C:/Users/kondou/notebook'
+rem c.NotebookApp.open_browser = True
+
+rem python -m jupyter notebook
 
 
 rem  --------
