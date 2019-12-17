@@ -51,6 +51,13 @@ ECHO -------------
     python -m pip  install --upgrade selenium
 
 ECHO;
+ECHO -------------
+ECHO DB
+ECHO -------------
+    python -m pip  install --upgrade pyodbc
+    python -m pip  install --upgrade jaconv
+
+ECHO;
 ECHO -----
 ECHO audio
 ECHO -----
