@@ -51,6 +51,12 @@ ECHO -------------
     python -m pip  install --upgrade selenium
 
 ECHO;
+ECHO ---------
+ECHO bluetooth
+ECHO ---------
+    python -m pip  install --upgrade pybluez
+
+ECHO;
 ECHO -------------
 ECHO DB
 ECHO -------------
