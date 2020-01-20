@@ -39,10 +39,11 @@ ECHO -------------
     python -m pip  install --upgrade jaconv
 
 ECHO;
-ECHO ---------
-ECHO bluetooth
-ECHO ---------
+ECHO ----------------------
+ECHO bluetooth, nfc(felica)
+ECHO ----------------------
     python -m pip  install --upgrade pybluez
+    python -m pip  install --upgrade nfcpy
 
 
 
