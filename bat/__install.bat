@@ -141,6 +141,12 @@ ECHO ---------------
     python -m pip  install --upgrade scipy
 
 ECHO;
+ECHO ---------------
+ECHO jupyter
+ECHO ---------------
+    python -m pip  install --upgrade jupyter
+
+ECHO;
 ECHO --------
 ECHO google
 ECHO --------
