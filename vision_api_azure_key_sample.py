@@ -16,7 +16,7 @@ def getkey(api, key, ):
         print('set your key!')
         if (key == 'url'):
             #return 'your url'
-            return 'https://japaneast.api.cognitive.microsoft.com/vision/v1.0/analyze'
+            return 'https://japaneast.api.cognitive.microsoft.com/vision/v2.1/analyze'
         if (key == 'key'):
             #return 'your key'
             return 'your key'
@@ -27,7 +27,7 @@ def getkey(api, key, ):
         print('set your key!')
         if (key == 'url'):
             #return 'your url'
-            return 'https://japaneast.api.cognitive.microsoft.com/vision/v1.0/ocr'
+            return 'https://japaneast.api.cognitive.microsoft.com/vision/v2.1/ocr'
         if (key == 'key'):
             #return 'your key'
             return 'your key'

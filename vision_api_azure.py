@@ -133,9 +133,10 @@ class VisionAPI:
                         'Ocp-Apim-Subscription-Key': self.cv_key
                         }
                     params = {
-                        'visualFeatures': 'Categories,Description',
+                        #'visualFeatures': 'Categories,Description',
                         'language': lang,
                         }
+                    #print(url)
                     res = requests.post(url, headers=headers, params=params, data=photo, timeout=self.timeOut, )
                     #print(res)
                     if (res.status_code == 200):
@@ -201,6 +202,7 @@ class VisionAPI:
                         'language': lang,
                         'detectOrientation': 'true',
                         }
+                    #print(url)
                     res = requests.post(url, headers=headers, params=params, data=photo, timeout=self.timeOut, )
                     #print(res)
                     if (res.status_code == 200):
