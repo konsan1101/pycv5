@@ -818,7 +818,7 @@ if __name__ == '__main__':
     #micDev   num or file
     #micType  usb or bluetooth
     #micGuide off, on, display, sound
-    #api      free, google, watson, azure, nict, winos, macos, docomo,
+    #api      free, google, watson, azure, aws, nict, winos, macos, docomo,
     #lang     ja, en, fr, kr...
 
     # パラメータ
@@ -875,7 +875,8 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 7):
             qApiInp  = str(sys.argv[6]).lower()
             if (qApiInp == 'google') or (qApiInp == 'watson') \
-            or (qApiInp == 'azure')  or (qApiInp == 'nict'):
+            or (qApiInp == 'azure')  or (qApiInp == 'aws') \
+            or (qApiInp == 'nict'):
                 qApiTrn  = qApiInp
                 qApiOut  = qApiInp
             else:

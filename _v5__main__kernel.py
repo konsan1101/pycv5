@@ -824,7 +824,8 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 7):
             qApiInp  = str(sys.argv[6]).lower()
             if (qApiInp == 'google') or (qApiInp == 'watson') \
-            or (qApiInp == 'azure')  or (qApiInp == 'nict'):
+            or (qApiInp == 'azure')  or (qApiInp == 'aws') \
+            or (qApiInp == 'nict'):
                 qApiTrn  = qApiInp
                 qApiOut  = qApiInp
             else:

@@ -503,7 +503,7 @@ if (__name__ == '__main__'):
     qFunc.logOutput('___main___:init')
     qFunc.logOutput('___main___:exsample.py runMode, api..., lang..., etc..., ')
     #runMode  debug, ...
-    #api      google, azure,
+    #api      google, azure, watson,
     #lang     ja, en, fr, kr...
 
     runMode  = 'debug'

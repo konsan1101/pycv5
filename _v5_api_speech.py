@@ -129,6 +129,10 @@ import speech_api_watson_key as watson_key
 import speech_api_azure     as azure_api
 import speech_api_azure_key as azure_key
 
+# aws 音声認識、翻訳機能、音声合成
+import speech_api_aws     as aws_api
+import speech_api_aws_key as aws_key
+
 # nict 音声認識,翻訳機能,音声合成
 import speech_api_nict     as nict_api
 import speech_api_nict_key as nict_key
@@ -160,9 +164,9 @@ def qVoiceInput(useApi='free', inpLang='auto', inpFile='_sounds/_sound_hallo.wav
     resApi  = ''
 
     api   = useApi
-    if  (api != 'free') and (api != 'google') and (api != 'google8k') \
-    and (api != 'watson') and (api != 'azure') \
-    and (api != 'docomo') and (api != 'nict'):
+    if  (api != 'free')   and (api != 'google') and (api != 'google8k') \
+    and (api != 'watson') and (api != 'azure')  and (api != 'aws') \
+    and (api != 'nict')   and (api != 'docomo'):
         api = 'free'
 
     if (resText == '') and (api == 'watson'):
@@ -183,6 +187,16 @@ def qVoiceInput(useApi='free', inpLang='auto', inpFile='_sounds/_sound_hallo.wav
         res = azureAPI.authenticate('stt', key, authurl, procurl, )
         if (res == True):
             resText, resApi = azureAPI.recognize(inpWave=inpFile, inpLang=inpLang)
+        if (resText == '') and (apiRecovery == True):
+            api   = 'free'
+
+    if (resText == '') and (api == 'aws'):
+        awsAPI = aws_api.SpeechAPI()
+        key_id     = aws_key.getkey('stt', 'key_id',     )
+        secret_key = aws_key.getkey('stt', 'secret_key', )
+        res   = awsAPI.authenticate('stt', key_id, secret_key, )
+        if (res == True):
+            resText, resApi = awsAPI.recognize(inpWave=inpFile, inpLang=inpLang)
         if (resText == '') and (apiRecovery == True):
             api   = 'free'
 
@@ -273,9 +287,8 @@ def qTranslator(useApi='free', inpLang='ja', outLang='en', inpText=u'こんに�
     resApi  = ''
 
     api = useApi
-    if  (api != 'free') and (api != 'google') \
-    and (api != 'watson') and (api != 'azure') \
-    and (api != 'nict'):
+    if  (api != 'free')  and (api != 'google') and (api != 'watson') \
+    and (api != 'azure') and (api != 'aws')    and (api != 'nict'):
         api = 'free'
     if (inpText == '' or inpLang == outLang):
         api = 'none'
@@ -330,6 +343,16 @@ def qTranslator(useApi='free', inpLang='ja', outLang='en', inpText=u'こんに�
             res = azureAPI.authenticate('tra', key, authurl, procurl, )
             if (res == True):
                 resText, resApi = azureAPI.translate(inpText=inpText, inpLang=inpLang, outLang=outLang, )
+            if (resText == '') and (apiRecovery == True):
+                api = 'free'
+
+        if (resText == '') and (api == 'aws'):
+            awsAPI = aws_api.SpeechAPI()
+            key_id     = aws_key.getkey('tra', 'key_id',     )
+            secret_key = aws_key.getkey('tra', 'secret_key', )
+            res   = awsAPI.authenticate('tra', key_id, secret_key, )
+            if (res == True):
+                resText, resApi = awsAPI.translate(inpText=inpText, inpLang=inpLang, outLang=outLang, )
             if (resText == '') and (apiRecovery == True):
                 api = 'free'
 
@@ -463,10 +486,9 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
             pass
 
     api   = useApi
-    if  (api != 'free')   and (api != 'google') \
-    and (api != 'watson') and (api != 'azure') \
-    and (api != 'winos')  and (api != 'macos') \
-    and (api != 'hoya')  and (api != 'nict'):
+    if  (api != 'free')  and (api != 'google') and (api != 'watson') \
+    and (api != 'azure') and (api != 'aws')    and (api != 'nict') \
+    and (api != 'winos') and (api != 'macos')  and (api != 'hoya'):
         api = 'free'
         if (qPLATFORM == 'windows'):
             api = 'winos'
@@ -535,6 +557,44 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
             if (resText == '') and (apiRecovery == True):
                 api  = 'free'
 
+        if (resText == '') and (api == 'aws'):
+            awsAPI = aws_api.SpeechAPI()
+            key_id     = aws_key.getkey('tts', 'key_id',     )
+            secret_key = aws_key.getkey('tts', 'secret_key', )
+            res   = awsAPI.authenticate('tts', key_id, secret_key, )
+            if (res == True):
+                resText, resApi = awsAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileMp3, )
+                if (resText != ''):
+                    if (tempFileMp3[-4:].lower() == outFile[-4:].lower()):
+                        qFunc.copy(tempFileMp3, outFile)
+                    else:
+                        sox = subprocess.Popen(['sox', '-q', tempFileMp3, outFile, ], \
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        sox.wait()
+                        sox.terminate()
+                        sox = None
+            if (resText == '') and (apiRecovery == True):
+                api  = 'free'
+
+        if (resText == '') and (api == 'nict'):
+            nictAPI = nict_api.SpeechAPI()
+            res = nictAPI.authenticate('tts',
+                       nict_key.getkey('tts', 'id' ),
+                       nict_key.getkey('tts', 'key'), )
+            if (res == True):
+                resText, resApi = nictAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileWav, )
+                if (resText != ''):
+                    if (tempFileWav[-4:].lower() == outFile[-4:].lower()):
+                        qFunc.copy(tempFileWav, outFile)
+                    else:
+                        sox = subprocess.Popen(['sox', '-q', tempFileWav, outFile, ], \
+                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                        sox.wait()
+                        sox.terminate()
+                        sox = None
+            if (resText == '') and (apiRecovery == True):
+                api  = 'free'
+
         if (resText == '') and (api == 'winos'):
             winosAPI = winos_api.SpeechAPI()
             res = winosAPI.authenticate()
@@ -557,25 +617,6 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
             res = macosAPI.authenticate()
             if (res == True):
                 resText, resApi = macosAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileWav, )
-                if (resText != ''):
-                    if (tempFileWav[-4:].lower() == outFile[-4:].lower()):
-                        qFunc.copy(tempFileWav, outFile)
-                    else:
-                        sox = subprocess.Popen(['sox', '-q', tempFileWav, outFile, ], \
-                              stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-                        sox.wait()
-                        sox.terminate()
-                        sox = None
-            if (resText == '') and (apiRecovery == True):
-                api  = 'free'
-
-        if (resText == '') and (api == 'nict'):
-            nictAPI = nict_api.SpeechAPI()
-            res = nictAPI.authenticate('tts',
-                       nict_key.getkey('tts', 'id' ),
-                       nict_key.getkey('tts', 'key'), )
-            if (res == True):
-                resText, resApi = nictAPI.vocalize(outText=outText, outLang=outLang, outFile=tempFileWav, )
                 if (resText != ''):
                     if (tempFileWav[-4:].lower() == outFile[-4:].lower()):
                         qFunc.copy(tempFileWav, outFile)
@@ -726,21 +767,24 @@ def speech_batch(runMode, micDev,
             if (qApiInp == 'google'):
                 wrkApi = 'google8k'
 
+            fseq = '00' + str(procId)
+
+            wrkfile    = qPath_work + fseq[-2:]
+            wrkfile_0  = wrkfile + '_input_0.wav'
+            wrkfile_0s = wrkfile + '_input_0s.wav'
+            wrkfile_1  = wrkfile + '_input_1.wav'
+            wrkfile_1s = wrkfile + '_input_1s.wav'
+            wrkfile_2  = wrkfile + '_input_2.wav'
+            wrkfile_2s = wrkfile + '_input_2s.wav'
+            wrkfile_x1 = wrkfile + '_input_x1.wav'
+            wrkfile_x2 = wrkfile + '_input_x2.wav'
+            wrkfile_y1 = wrkfile + '_input_y1.wav'
+            wrkfile_y2 = wrkfile + '_input_y2.wav'
+            wrkfile_y3 = wrkfile + '_input_y3.wav'
+            wrkfile_y4 = wrkfile + '_input_y4.wav'
+            wrkfile_y5 = wrkfile + '_input_y5.wav'
+            wrkfile_y6 = wrkfile + '_input_y6.wav'
             wrkfile    = ''
-            wrkfile_0  = qPath_work + fileId + '_input_0.wav'
-            wrkfile_0s = qPath_work + fileId + '_input_0s.wav'
-            wrkfile_1  = qPath_work + fileId + '_input_1.wav'
-            wrkfile_1s = qPath_work + fileId + '_input_1s.wav'
-            wrkfile_2  = qPath_work + fileId + '_input_2.wav'
-            wrkfile_2s = qPath_work + fileId + '_input_2s.wav'
-            wrkfile_x1 = qPath_work + fileId + '_input_x1.wav'
-            wrkfile_x2 = qPath_work + fileId + '_input_x2.wav'
-            wrkfile_y1 = qPath_work + fileId + '_input_y1.wav'
-            wrkfile_y2 = qPath_work + fileId + '_input_y2.wav'
-            wrkfile_y3 = qPath_work + fileId + '_input_y3.wav'
-            wrkfile_y4 = qPath_work + fileId + '_input_y4.wav'
-            wrkfile_y5 = qPath_work + fileId + '_input_y5.wav'
-            wrkfile_y6 = qPath_work + fileId + '_input_y6.wav'
 
             sox_0  = subprocess.Popen(['sox', '-q', inpInput, wrkfile_0, ], \
                     stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -1289,28 +1333,31 @@ def speech_batch(runMode, micDev,
             txtOutLang = txtText[:2]
             txtText = txtText[3:]
 
+        if (txtText[:7] == 'google,'):
+            txtOutApi = txtText[:6]
+            txtText = txtText[7:]
+        if (txtText[:5] == 'free,'):
+            txtOutApi = txtText[:4]
+            txtText = txtText[5:]
         if (txtText[:7] == 'watson,'):
             txtOutApi = txtText[:6]
             txtText = txtText[7:]
         if (txtText[:6] == 'azure,'):
             txtOutApi = txtText[:5]
             txtText = txtText[6:]
+        if (txtText[:4] == 'aws,'):
+            txtOutApi = txtText[:3]
+            txtText = txtText[4:]
+        if (txtText[:5] == 'nict,'):
+            txtOutApi = txtText[:4]
+            txtText = txtText[5:]
         if (txtText[:6] == 'winos,'):
             txtOutApi = txtText[:5]
             txtText = txtText[6:]
         if (txtText[:6] == 'macos,'):
             txtOutApi = txtText[:5]
             txtText = txtText[6:]
-        if (txtText[:5] == 'nict,'):
-            txtOutApi = txtText[:4]
-            txtText = txtText[5:]
         if (txtText[:5] == 'hoya,'):
-            txtOutApi = txtText[:4]
-            txtText = txtText[5:]
-        if (txtText[:7] == 'google,'):
-            txtOutApi = txtText[:6]
-            txtText = txtText[7:]
-        if (txtText[:5] == 'free,'):
             txtOutApi = txtText[:4]
             txtText = txtText[5:]
 
@@ -1599,7 +1646,7 @@ if (__name__ == '__main__'):
     qFunc.logOutput('___main___:init')
     qFunc.logOutput('___main___:exsample.py runMode, api..., lang..., ')
     #runMode  live, translator, speech, ...,
-    #api      free, google, watson, azure, nict, winos, macos, docomo,
+    #api      free, google, watson, azure, aws, nict, winos, macos, docomo,
     #lang     ja, en, fr, kr...
 
     runMode  = 'debug'
@@ -1627,8 +1674,8 @@ if (__name__ == '__main__'):
         micDev   = str(sys.argv[2]).lower()
     if (len(sys.argv) >= 4):
         qApiInp  = str(sys.argv[3]).lower()
-        if (qApiInp == 'google') or (qApiInp == 'watson') \
-        or (qApiInp == 'azure')  or (qApiInp == 'nict'):
+        if (qApiInp == 'free')  or (qApiInp == 'google') or (qApiInp == 'watson') \
+        or (qApiInp == 'azure') or (qApiInp == 'aws')    or (qApiInp == 'nict'):
             qApiTrn  = qApiInp
             qApiOut  = qApiInp
         else:

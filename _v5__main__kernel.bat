@@ -4,12 +4,13 @@
 ECHO;
 ECHO API選択（入力無しはfree）
 SET api=
-SET /P api="f=free,g=google,w=watson,a=azure,n=nict,d=docomo,s=special："
+SET /P api="f=free,g=google,w=watson,m=azure,a=aws,n=nict,d=docomo,s=special："
 IF %api%@==@        SET api=free
 IF %api%@==f@       SET api=free
 IF %api%@==g@       SET api=google
 IF %api%@==w@       SET api=watson
-IF %api%@==a@       SET api=azure
+IF %api%@==m@       SET api=azure
+IF %api%@==a@       SET api=aws
 IF %api%@==n@       SET api=nict
 IF %api%@==d@       SET api=docomo
 IF %api%@==s@       SET api=special
@@ -17,6 +18,7 @@ IF %api%@==free@    GOTO APIGO
 IF %api%@==google@  GOTO APIGO
 IF %api%@==watson@  GOTO APIGO
 IF %api%@==azure@   GOTO APIGO
+IF %api%@==aws@     GOTO APIGO
 IF %api%@==nict@    GOTO APIGO
 IF %api%@==docomo@  GOTO APIGO
 IF %api%@==special@ GOTO APIGO
@@ -38,6 +40,9 @@ IF %api%@==watson@  SET apio=watson
 IF %api%@==azure@   SET apii=azure
 IF %api%@==azure@   SET apit=azure
 IF %api%@==azure@   SET apio=azure
+IF %api%@==aws@     SET apii=aws
+IF %api%@==aws@     SET apit=aws
+IF %api%@==aws@     SET apio=aws
 IF %api%@==nict@    SET apii=nict
 IF %api%@==nict@    SET apit=nict
 IF %api%@==nict@    SET apio=nict
