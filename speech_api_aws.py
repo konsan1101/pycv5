@@ -37,10 +37,13 @@ class SpeechAPI:
         self.timeOut        = 120
         self.stt_key_id     = None
         self.stt_secret_key = None
+        self.stt_client     = None
         self.tra_key_id     = None
         self.tra_secret_key = None
+        self.tra_client     = None
         self.tts_key_id     = None
         self.tts_secret_key = None
+        self.tts_client     = None
         self.region_name    = 'ap-northeast-1'
         self.bucketid       = 'kondou-pycv-'
 
@@ -50,54 +53,48 @@ class SpeechAPI:
     def authenticate(self, api, key_id, secret_key, ):
         # aws 音声認識
         if (api == 'stt'):
-            if (self.stt_key_id is None):
-                try:
-                    # Service connect
-                    stt = boto3.client('transcribe',
+            try:
+                # Service connect
+                self.stt_client = boto3.client('transcribe',
                         aws_access_key_id     = key_id, 
                         aws_secret_access_key = secret_key,
                         region_name           = self.region_name,
                         )
-                    self.stt_key_id     = key_id
-                    self.stt_secret_key = secret_key
-                    stt = None
-                    return True
-                except:
-                    return False
+                self.stt_key_id     = key_id
+                self.stt_secret_key = secret_key
+                return True
+            except:
+                return False
 
         # aws 翻訳機能
         if (api == 'tra'):
-            if (self.tra_key_id is None):
-                try:
-                    # Service connect
-                    tra = boto3.client('translate',
+            try:
+                # Service connect
+                self.tra_client = boto3.client('translate',
                         aws_access_key_id     = key_id, 
                         aws_secret_access_key = secret_key,
                         region_name           = self.region_name,
                         )
-                    self.tra_key_id     = key_id
-                    self.tra_secret_key = secret_key
-                    tra = None
-                    return True
-                except:
-                    return False
+                self.tra_key_id     = key_id
+                self.tra_secret_key = secret_key
+                return True
+            except:
+                return False
 
         # aws 音声合成
         if (api == 'tts'):
-            if (self.tts_key_id is None):
-                try:
-                    # Service connect
-                    tts = boto3.client('polly',
+            try:
+                # Service connect
+                self.tts_client = boto3.client('polly',
                         aws_access_key_id     = key_id, 
                         aws_secret_access_key = secret_key,
                         region_name           = self.region_name,
                         )
-                    self.tts_key_id     = key_id
-                    self.tts_secret_key = secret_key
-                    tts = None
-                    return True
-                except:
-                    return False
+                self.tts_key_id     = key_id
+                self.tts_secret_key = secret_key
+                return True
+            except:
+                return False
 
         return False
 
@@ -108,7 +105,7 @@ class SpeechAPI:
         res_api  = ''
         s3bucket = self.bucketid + bucket
 
-        if (self.stt_key_id is None):
+        if (self.stt_client is None):
             print('aws: Not Authenticate Error !')
 
         else:
@@ -136,14 +133,7 @@ class SpeechAPI:
                 lang  = 'zh-CN'
 
             if (lang != ''):
-                try:
-
-                    # Service connect
-                    transcribe = boto3.client('transcribe',
-                        aws_access_key_id     = self.stt_key_id, 
-                        aws_secret_access_key = self.stt_secret_key,
-                        region_name           = self.region_name,
-                        )
+                #try:
 
                     # mp3 変換
                     inpFile = inpWave
@@ -174,88 +164,71 @@ class SpeechAPI:
                             job_name = inpFname[:-4]
                             resFname = job_name + '.json'
 
+                            # 音声認識ＪＯＢ削除
                             try:
+                                self.stt_client.delete_transcription_job(TranscriptionJobName=job_name,)
+                            except:
+                                pass
 
-                                # 音声認識ＪＯＢ削除
-                                try:
-                                    transcribe.delete_transcription_job(TranscriptionJobName=job_name,)
-                                except:
-                                    pass
+                            # ファイル削除
+                            res = s3_api.s3_remove(bucket=bucket, s3File=inpFname, )
+                            res = s3_api.s3_remove(bucket=bucket, s3File=resFname, )
 
-                                # ファイル削除
-                                res = s3_api.s3_remove(bucket=bucket, s3File=inpFname, )
-                                #if (res == True):
-                                #    print('s3 delete', inpFname)
-                                res = s3_api.s3_remove(bucket=bucket, s3File=resFname, )
-                                #if (res == True):
-                                #    print('s3 delete', resFname)
+                            # mp3 送信
+                            res = s3_api.s3_put(bucket=bucket, inpPath=inpPath, inpFile=inpFname, s3File='', )
+                            if (res == True):
 
-                                # mp3 送信
-                                res = s3_api.s3_put(bucket=bucket, inpPath=inpPath, inpFile=inpFname, s3File='', )
+                                file_uri = 's3://' + s3bucket + '/' + inpFname
+
+                                # 音声認識ＪＯＢ開始
+                                self.stt_client.start_transcription_job(TranscriptionJobName=job_name,
+                                                                Media={'MediaFileUri': file_uri},
+                                                                MediaFormat=inpFname[-3:],
+                                                                MediaSampleRateHertz=16000,
+                                                                LanguageCode=lang,
+                                                                Settings={'ShowSpeakerLabels' : True,
+                                                                            'MaxSpeakerLabels' : 5, },
+                                                                OutputBucketName=s3bucket,
+                                                                )
+
+                                # ファイル待機
+                                res = s3_api.s3_wait_get(bucket=bucket, s3File=resFname, 
+                                                        outPath=inpPath, outFile='', maxWait=self.timeOut, )
                                 if (res == True):
 
-                                    file_uri = 's3://' + s3bucket + '/' + inpFname
-    
-                                    # 音声認識ＪＯＢ開始
-                                    transcribe.start_transcription_job(TranscriptionJobName=job_name,
-                                                                    Media={'MediaFileUri': file_uri},
-                                                                    MediaFormat=inpFname[-3:],
-                                                                    MediaSampleRateHertz=16000,
-                                                                    LanguageCode=lang,
-                                                                    Settings={'ShowSpeakerLabels' : True,
-                                                                                'MaxSpeakerLabels' : 5, },
-                                                                    OutputBucketName=s3bucket,
-                                                                    )
-
-                                    # ファイル待機
-                                    res = s3_api.s3_wait_get(bucket=bucket, s3File=resFname, 
-                                                            outPath=inpPath, outFile='', maxWait=self.timeOut, )
-                                    if (res == True):
-
-                                        # 戻り値取得
+                                    # 戻り値取得
+                                    res_dic = {}
+                                    try:
+                                        res_file = inpPath + resFname
+                                        with codecs.open(res_file, 'r', 'utf-8') as r:
+                                            res_dic = json.load(r)
+                                    except Exception as e:
+                                        #print(e.args)
                                         res_dic = {}
-                                        try:
-                                            res_file = inpPath + resFname
-                                            with codecs.open(res_file, 'r', 'utf-8') as r:
-                                                res_dic = json.load(r)
-                                        except Exception as e:
-                                            #print(e.args)
-                                            res_dic = {}
 
-                                        #print(json.dumps(res_dic, indent=4))
+                                    #print(json.dumps(res_dic, indent=4))
 
-                                        res_text = ''
-                                        for transcript in res_dic['results']['transcripts']:
-                                            t = str(transcript['transcript'])
-                                            res_text = (res_text + ' ' + str(t)).strip()
-                                        res_api = 'aws'
+                                    res_text = ''
+                                    for transcript in res_dic['results']['transcripts']:
+                                        t = str(transcript['transcript'])
+                                        res_text = (res_text + ' ' + str(t)).strip()
+                                    res_api = 'aws'
 
-                            except:
-                                pass
+                            # 処理後の整理
+                            time.sleep(7.00)
 
+                            # 音声認識ＪＯＢ削除
                             try:
-
-                                time.sleep(7.00)
-
-                                # 音声認識ＪＯＢ削除
-                                try:
-                                    transcribe.delete_transcription_job(TranscriptionJobName=job_name,)
-                                except:
-                                    pass
-
-                                # ファイル削除
-                                res = s3_api.s3_remove(bucket=bucket, s3File=inpFname, )
-                                #if (res == True):
-                                #    print('s3 delete', inpFname)
-                                res = s3_api.s3_remove(bucket=bucket, s3File=resFname, )
-                                #if (res == True):
-                                #    print('s3 delete', resFname)
-
+                                self.stt_client.delete_transcription_job(TranscriptionJobName=job_name,)
                             except:
                                 pass
 
-                except:
-                    pass
+                            # ファイル削除
+                            res = s3_api.s3_remove(bucket=bucket, s3File=inpFname, )
+                            res = s3_api.s3_remove(bucket=bucket, s3File=resFname, )
+
+                #except:
+                #    pass
 
             if (res_text != ''):
                 res_text = str(res_text).strip()
@@ -284,7 +257,7 @@ class SpeechAPI:
     def translate(self, inpText=u'こんにちは', inpLang='ja-JP', outLang='en-US', ):
         res_text = ''
         res_api  = ''
-        if (self.tra_key_id is None):
+        if (self.tra_client is None):
             print('aws: Not Authenticate Error !')
 
         else:
@@ -334,15 +307,8 @@ class SpeechAPI:
             if (inp != '') and (out != '') and (inpText != '') and (inpText != '!'):
                 try:
 
-                    # Service connect
-                    translate = boto3.client('translate',
-                        aws_access_key_id     = self.tra_key_id, 
-                        aws_secret_access_key = self.tra_secret_key,
-                        region_name           = self.region_name,
-                        )
-
                     # 機械翻訳
-                    response = translate.translate_text(
+                    response = self.tra_client.translate_text(
                         Text=inpText,
                         SourceLanguageCode=inpLang, #inp,
                         TargetLanguageCode=outLang, #out,
@@ -379,7 +345,7 @@ class SpeechAPI:
 
 
     def vocalize(self, outText='hallo', outLang='en-US', outGender='Female', outFile='temp_voice.mp3', ):
-        if (self.tts_key_id is None):
+        if (self.tts_client is None):
             print('aws: Not Authenticate Error !')
 
         else:
@@ -433,15 +399,8 @@ class SpeechAPI:
             if (voice != '') and (outText != '') and (outText != '!'):
                 try:
 
-                    # Service connect
-                    polly = boto3.client('polly',
-                        aws_access_key_id     = self.tts_key_id, 
-                        aws_secret_access_key = self.tts_secret_key,
-                        region_name           = self.region_name,
-                        )
-
                     # 音声合成
-                    response = polly.synthesize_speech(
+                    response = self.tts_client.synthesize_speech(
                             Text = outText,
                             OutputFormat = outFile[-3:],
                             VoiceId = voice, )
@@ -496,7 +455,7 @@ if __name__ == '__main__':
             res, api = awsAPI.recognize(inpWave=file2, inpLang='ja', )
             print('recognize:', res, '(' + api + ')' )
 
-            res, api = awsAPI.translate(inpText=res, inpLang='ja', outLang='en', )
+            res, api = awsAPI.translate(inpText=text, inpLang='ja', outLang='en', )
             print('translate:', res, '(' + api + ')' )
 
 

@@ -28,10 +28,11 @@ class StorageAPI:
 
     def __init__(self, ):
         self.timeOut     = 10
-        self.key_id      = None
-        self.secret_key  = None
-        self.region_name = 'ap-northeast-1'
-        self.bucketid    = 'kondou-pycv-'
+        self.s3_key_id      = None
+        self.s3_secret_key  = None
+        self.s3_client      = None
+        self.region_name    = 'ap-northeast-1'
+        self.bucketid       = 'kondou-pycv-'
 
     def setTimeOut(self, timeOut=10, ):
         self.timeOut = timeOut
@@ -41,19 +42,19 @@ class StorageAPI:
         if (api == 's3'):
             try:
                 # Service connect
-                s3 = boto3.client('s3',
-                    aws_access_key_id     = key_id, 
-                    aws_secret_access_key = secret_key,
-                    region_name           = self.region_name,
-                    )
+                self.s3_client = boto3.client('s3',
+                        aws_access_key_id     = key_id, 
+                        aws_secret_access_key = secret_key,
+                        region_name           = self.region_name,
+                        )
 
-                self.key_id     = key_id
-                self.secret_key = secret_key
+                self.s3_key_id     = key_id
+                self.s3_secret_key = secret_key
 
-                s3 = None
                 return True
 
             except:
+                self.s3_client = None
                 return False
 
         return False
@@ -65,23 +66,16 @@ class StorageAPI:
             s3File = inpFile
         s3bucket = self.bucketid + bucket
 
-        if (self.key_id is None):
+        if (self.s3_client is None):
             print('aws: Not Authenticate Error !')
 
         else:
 
             try:
 
-                # Service connect
-                s3 = boto3.client('s3',
-                    aws_access_key_id     = self.key_id, 
-                    aws_secret_access_key = self.secret_key,
-                    region_name           = self.region_name,
-                    )
-
                 # Create a bucket
                 try:
-                    s3.create_bucket(Bucket=s3bucket, 
+                    self.s3_client.create_bucket(Bucket=s3bucket, 
                                      ACL='private', 
                                      CreateBucketConfiguration={'LocationConstraint': self.region_name}, )
                 except:
@@ -89,9 +83,8 @@ class StorageAPI:
 
                 # Upload file
                 full_path_file = inpPath + inpFile
-                s3.upload_file(full_path_file, s3bucket, s3File, )
+                self.s3_client.upload_file(full_path_file, s3bucket, s3File, )
 
-                s3 = None
                 return True
 
             except:
@@ -102,28 +95,20 @@ class StorageAPI:
     def s3_dir(self, bucket='default', ):
         s3bucket = self.bucketid + bucket
 
-        if (self.key_id is None):
+        if (self.s3_client is None):
             print('aws: Not Authenticate Error !')
 
         else:
 
             try:
 
-                # Service connect
-                s3 = boto3.client('s3',
-                    aws_access_key_id     = self.key_id, 
-                    aws_secret_access_key = self.secret_key,
-                    region_name           = self.region_name,
-                    )
-
                 # List s3s
                 s3Files = []
-                list_bucket = s3.list_objects(Bucket=s3bucket, )
+                list_bucket = self.s3_client.list_objects(Bucket=s3bucket, )
                 for content in list_bucket['Contents']:
                     #s3Files.append(content['Key'])
                     print(content['Key'])
 
-                s3 = None
                 return s3Files
 
             except:
@@ -136,25 +121,17 @@ class StorageAPI:
             outFile = s3File
         s3bucket = self.bucketid + bucket
 
-        if (self.key_id is None):
+        if (self.s3_client is None):
             print('aws: Not Authenticate Error !')
 
         else:
 
             try:
 
-                # Service connect
-                s3 = boto3.client('s3',
-                    aws_access_key_id     = self.key_id, 
-                    aws_secret_access_key = self.secret_key,
-                    region_name           = self.region_name,
-                    )
-
                 # Download file
                 full_path_file = outPath + outFile
-                s3.download_file(s3bucket, s3File, full_path_file, )
+                self.s3_client.download_file(s3bucket, s3File, full_path_file, )
 
-                s3 = None
                 return True
 
             except:
@@ -165,24 +142,16 @@ class StorageAPI:
     def s3_remove(self, bucket='default', s3File='', ):
         s3bucket = self.bucketid + bucket
 
-        if (self.key_id is None):
+        if (self.s3_client is None):
             print('aws: Not Authenticate Error !')
 
         else:
 
             try:
 
-                # Service connect
-                s3 = boto3.client('s3',
-                    aws_access_key_id     = self.key_id, 
-                    aws_secret_access_key = self.secret_key,
-                    region_name           = self.region_name,
-                    )
-
                 # Delete file
-                s3.delete_object(Bucket=s3bucket, Key=s3File, )
+                self.s3_client.delete_object(Bucket=s3bucket, Key=s3File, )
 
-                s3 = None
                 return True
 
             except:
@@ -195,19 +164,16 @@ class StorageAPI:
             outFile = s3File
         s3bucket = self.bucketid + bucket
 
-        if (self.key_id is None):
+        if (self.s3_client is None):
             print('aws: Not Authenticate Error !')
 
         else:
 
             try:
 
-                # Service connect
-                s3 = boto3.client('s3',
-                    aws_access_key_id     = self.key_id, 
-                    aws_secret_access_key = self.secret_key,
-                    region_name           = self.region_name,
-                    )
+                # Check
+                if (os.path.exists(outPath + outFile)):
+                    os.remove(outPath + outFile)
 
                 # Wait & Download file
                 chktime = time.time()
