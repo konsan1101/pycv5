@@ -26,19 +26,25 @@ ECHO;
 ECHO Waiting...5s
 ping localhost -w 1000 -n 5 >nul
 
-
-
-ECHO;
-ECHO ----------------
-ECHO anaconda check !
-ECHO ----------------
+rem ECHO;
+rem ECHO ----------------
+rem ECHO anaconda check !
+rem ECHO ----------------
 rem start conda info -e
 rem source activate base
 rem call   activate base
 
-PAUSE
+rem  --------
+     PAUSE
+rem  --------
 
 
+
+ECHO;
+ECHO -------
+ECHO etc
+ECHO -------
+    python -m pip  install --upgrade pywin32
 
 ECHO;
 ECHO -------------
@@ -49,8 +55,6 @@ ECHO -------------
     python -m pip  install --upgrade uuid
     python -m pip  install --upgrade bs4
     python -m pip  install --upgrade pyopenssl
-    python -m pip  install --upgrade grpcio
-    python -m pip  install --upgrade grpcio-tools
     python -m pip  install --upgrade feedparser
     python -m pip  install --upgrade selenium
 
@@ -58,7 +62,6 @@ ECHO;
 ECHO -----
 ECHO audio
 ECHO -----
-rem python -m pip  install --upgrade pyaudio
     python -m pip  install --upgrade wave
     python -m pip  install --upgrade sounddevice
     python -m pip  install --upgrade speechrecognition
@@ -67,17 +70,9 @@ ECHO;
 ECHO ------
 ECHO vision
 ECHO ------
-rem python -m pip  install --upgrade pygame
     python -m pip  install --upgrade pillow
     python -m pip  install --upgrade numpy
     python -m pip  install --upgrade opencv-python
-rem python -m pip  install --upgrade pyflakes
-    python -m pip  install --upgrade pylint
-rem python -m pip  install --upgrade pep8
-rem python -m pip  install --upgrade matplotlib
-    python -m pip  install --upgrade matplotlib==3.0.3
-    python -m pip  install --upgrade seaborn
-    python -m pip  install --upgrade scipy
     python -m pip  install --upgrade pyqt5
     python -m pip  install --upgrade pyautogui
     python -m pip  install --upgrade pyzbar
@@ -99,8 +94,13 @@ ECHO microsoft,azure
 ECHO ---------------
 rem python -m pip  install --upgrade mstranslator
     python -m pip  install --upgrade cognitive_face
-    python -m pip  install --upgrade pywin32
     python -m pip  install --upgrade azure-storage
+
+ECHO;
+ECHO ---------------
+ECHO amazon,AWS
+ECHO ---------------
+    python -m pip  install --upgrade boto3
 
 ECHO;
 ECHO --------

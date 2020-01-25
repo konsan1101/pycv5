@@ -49,6 +49,9 @@ IF %api%@==nict@    SET apio=nict
 IF %api%@==docomo@  SET apii=docomo
 IF %api%@==docomo@  SET apit=free
 IF %api%@==docomo@  SET apio=winos
+IF %api%@==special@ SET apii=google
+IF %api%@==special@ SET apit=azure
+IF %api%@==special@ SET apio=watson
 
 :MODE
 ECHO;

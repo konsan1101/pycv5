@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# COPYRIGHT (C) 2014-2019 Mitsuo KONDOU.
+# COPYRIGHT (C) 2014-2020 Mitsuo KONDOU.
 # This software is released under the MIT License.
 # https://github.com/konsan1101
 # Thank you for keeping the rules.
@@ -42,8 +42,6 @@ import unicodedata
 import pyautogui
 import pyperclip
 import cv2
-
-#from matplotlib import pyplot as plt
 
 import PIL
 import io

@@ -5,6 +5,10 @@ rd build /s /q
 rd dist /s /q
 pause
 
+echo >pip install --upgrade setuptools==44
+echo check setuptool version!
+pause
+
 set pyname=_v5__destroy
     echo;
     echo %pyname%.py
