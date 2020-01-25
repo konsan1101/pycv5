@@ -1,92 +1,171 @@
 STAT: ###### initialize input device
 Stat: adin_file: input speechfile: gijiroku/temp/temp__gijiroku16_0n.wav
-Warning: strip: sample 0-1093 has zero value, stripped
-gijiroku/temp/wav_0n/julius.0001.wav: 55328 samples (3.46 sec.) [201766 (12.61s) - 257094 (16.07s)]
-gijiroku/temp/wav_0n/julius.0002.wav: 178328 samples (11.15 sec.) [295766 (18.49s) - 474094 (29.63s)]
-gijiroku/temp/wav_0n/julius.0003.wav: 115328 samples (7.21 sec.) [481766 (30.11s) - 597094 (37.32s)]
-gijiroku/temp/wav_0n/julius.0004.wav: 41328 samples (2.58 sec.) [611766 (38.24s) - 653094 (40.82s)]
-gijiroku/temp/wav_0n/julius.0005.wav: 57328 samples (3.58 sec.) [668766 (41.80s) - 726094 (45.38s)]
-gijiroku/temp/wav_0n/julius.0006.wav: 34328 samples (2.15 sec.) [749766 (46.86s) - 784094 (49.01s)]
-gijiroku/temp/wav_0n/julius.0007.wav: 13328 samples (0.83 sec.) [792766 (49.55s) - 806094 (50.38s)]
-gijiroku/temp/wav_0n/julius.0008.wav: 27328 samples (1.71 sec.) [1020766 (63.80s) - 1048094 (65.51s)]
-gijiroku/temp/wav_0n/julius.0009.wav: 102328 samples (6.40 sec.) [1048766 (65.55s) - 1151094 (71.94s)]
-gijiroku/temp/wav_0n/julius.0010.wav: 185328 samples (11.58 sec.) [1166766 (72.92s) - 1352094 (84.51s)]
-gijiroku/temp/wav_0n/julius.0011.wav: 45328 samples (2.83 sec.) [1357766 (84.86s) - 1403094 (87.69s)]
-gijiroku/temp/wav_0n/julius.0012.wav: 130328 samples (8.15 sec.) [1424766 (89.05s) - 1555094 (97.19s)]
-gijiroku/temp/wav_0n/julius.0013.wav: 14328 samples (0.90 sec.) [1556766 (97.30s) - 1571094 (98.19s)]
-gijiroku/temp/wav_0n/julius.0014.wav: 16328 samples (1.02 sec.) [1575766 (98.49s) - 1592094 (99.51s)]
-gijiroku/temp/wav_0n/julius.0015.wav: 14328 samples (0.90 sec.) [1594766 (99.67s) - 1609094 (100.57s)]
-gijiroku/temp/wav_0n/julius.0016.wav: 92328 samples (5.77 sec.) [1610766 (100.67s) - 1703094 (106.44s)]
-gijiroku/temp/wav_0n/julius.0017.wav: 142328 samples (8.90 sec.) [1726766 (107.92s) - 1869094 (116.82s)]
-gijiroku/temp/wav_0n/julius.0018.wav: 52328 samples (3.27 sec.) [1870766 (116.92s) - 1923094 (120.19s)]
-gijiroku/temp/wav_0n/julius.0019.wav: 109328 samples (6.83 sec.) [2059766 (128.74s) - 2169094 (135.57s)]
-gijiroku/temp/wav_0n/julius.0020.wav: 27328 samples (1.71 sec.) [2172766 (135.80s) - 2200094 (137.51s)]
-gijiroku/temp/wav_0n/julius.0021.wav: 171328 samples (10.71 sec.) [2231766 (139.49s) - 2403094 (150.19s)]
-gijiroku/temp/wav_0n/julius.0022.wav: 50328 samples (3.15 sec.) [2408766 (150.55s) - 2459094 (153.69s)]
-gijiroku/temp/wav_0n/julius.0023.wav: 80328 samples (5.02 sec.) [2575766 (160.99s) - 2656094 (166.01s)]
-gijiroku/temp/wav_0n/julius.0024.wav: 135328 samples (8.46 sec.) [2657766 (166.11s) - 2793094 (174.57s)]
-gijiroku/temp/wav_0n/julius.0025.wav: 18328 samples (1.15 sec.) [2796766 (174.80s) - 2815094 (175.94s)]
-gijiroku/temp/wav_0n/julius.0026.wav: 168328 samples (10.52 sec.) [2948766 (184.30s) - 3117094 (194.82s)]
-gijiroku/temp/wav_0n/julius.0027.wav: 33328 samples (2.08 sec.) [3118766 (194.92s) - 3152094 (197.01s)]
-gijiroku/temp/wav_0n/julius.0028.wav: 16328 samples (1.02 sec.) [3198766 (199.92s) - 3215094 (200.94s)]
-gijiroku/temp/wav_0n/julius.0029.wav: 51328 samples (3.21 sec.) [3222766 (201.42s) - 3274094 (204.63s)]
-gijiroku/temp/wav_0n/julius.0030.wav: 46328 samples (2.90 sec.) [3277766 (204.86s) - 3324094 (207.76s)]
-gijiroku/temp/wav_0n/julius.0031.wav: 55328 samples (3.46 sec.) [3349766 (209.36s) - 3405094 (212.82s)]
-gijiroku/temp/wav_0n/julius.0032.wav: 20328 samples (1.27 sec.) [3435766 (214.74s) - 3456094 (216.01s)]
-gijiroku/temp/wav_0n/julius.0033.wav: 35328 samples (2.21 sec.) [3462766 (216.42s) - 3498094 (218.63s)]
-gijiroku/temp/wav_0n/julius.0034.wav: 97328 samples (6.08 sec.) [3505766 (219.11s) - 3603094 (225.19s)]
-gijiroku/temp/wav_0n/julius.0035.wav: 90328 samples (5.65 sec.) [3628766 (226.80s) - 3719094 (232.44s)]
-gijiroku/temp/wav_0n/julius.0036.wav: 71328 samples (4.46 sec.) [3740766 (233.80s) - 3812094 (238.26s)]
-gijiroku/temp/wav_0n/julius.0037.wav: 147328 samples (9.21 sec.) [3812766 (238.30s) - 3960094 (247.51s)]
-gijiroku/temp/wav_0n/julius.0038.wav: 43328 samples (2.71 sec.) [4054766 (253.42s) - 4098094 (256.13s)]
-gijiroku/temp/wav_0n/julius.0039.wav: 36328 samples (2.27 sec.) [4130766 (258.17s) - 4167094 (260.44s)]
-gijiroku/temp/wav_0n/julius.0040.wav: 107328 samples (6.71 sec.) [4212766 (263.30s) - 4320094 (270.01s)]
-gijiroku/temp/wav_0n/julius.0041.wav: 17328 samples (1.08 sec.) [4321766 (270.11s) - 4339094 (271.19s)]
-gijiroku/temp/wav_0n/julius.0042.wav: 14328 samples (0.90 sec.) [4421766 (276.36s) - 4436094 (277.26s)]
-gijiroku/temp/wav_0n/julius.0043.wav: 19328 samples (1.21 sec.) [4641766 (290.11s) - 4661094 (291.32s)]
-gijiroku/temp/wav_0n/julius.0044.wav: 176328 samples (11.02 sec.) [4721766 (295.11s) - 4898094 (306.13s)]
-gijiroku/temp/wav_0n/julius.0045.wav: 47328 samples (2.96 sec.) [4923766 (307.74s) - 4971094 (310.69s)]
-gijiroku/temp/wav_0n/julius.0046.wav: 30328 samples (1.90 sec.) [4973766 (310.86s) - 5004094 (312.76s)]
-gijiroku/temp/wav_0n/julius.0047.wav: 56328 samples (3.52 sec.) [5007766 (312.99s) - 5064094 (316.51s)]
-gijiroku/temp/wav_0n/julius.0048.wav: 35328 samples (2.21 sec.) [5095766 (318.49s) - 5131094 (320.69s)]
-gijiroku/temp/wav_0n/julius.0049.wav: 163328 samples (10.21 sec.) [5133766 (320.86s) - 5297094 (331.07s)]
-gijiroku/temp/wav_0n/julius.0050.wav: 13328 samples (0.83 sec.) [5297766 (331.11s) - 5311094 (331.94s)]
-gijiroku/temp/wav_0n/julius.0051.wav: 13328 samples (0.83 sec.) [5313766 (332.11s) - 5327094 (332.94s)]
-gijiroku/temp/wav_0n/julius.0052.wav: 157328 samples (9.83 sec.) [5339766 (333.74s) - 5497094 (343.57s)]
-gijiroku/temp/wav_0n/julius.0053.wav: 30328 samples (1.90 sec.) [5518766 (344.92s) - 5549094 (346.82s)]
-gijiroku/temp/wav_0n/julius.0054.wav: 159328 samples (9.96 sec.) [5551766 (346.99s) - 5711094 (356.94s)]
-gijiroku/temp/wav_0n/julius.0055.wav: 14328 samples (0.90 sec.) [5715766 (357.24s) - 5730094 (358.13s)]
-gijiroku/temp/wav_0n/julius.0056.wav: 27328 samples (1.71 sec.) [5815766 (363.49s) - 5843094 (365.19s)]
-gijiroku/temp/wav_0n/julius.0057.wav: 13328 samples (0.83 sec.) [5853766 (365.86s) - 5867094 (366.69s)]
-gijiroku/temp/wav_0n/julius.0058.wav: 56328 samples (3.52 sec.) [5870766 (366.92s) - 5927094 (370.44s)]
-gijiroku/temp/wav_0n/julius.0059.wav: 82328 samples (5.15 sec.) [5930766 (370.67s) - 6013094 (375.82s)]
-gijiroku/temp/wav_0n/julius.0060.wav: 78328 samples (4.90 sec.) [6018766 (376.17s) - 6097094 (381.07s)]
-gijiroku/temp/wav_0n/julius.0061.wav: 18328 samples (1.15 sec.) [6121766 (382.61s) - 6140094 (383.76s)]
-gijiroku/temp/wav_0n/julius.0062.wav: 40328 samples (2.52 sec.) [6144766 (384.05s) - 6185094 (386.57s)]
-gijiroku/temp/wav_0n/julius.0063.wav: 81328 samples (5.08 sec.) [6200766 (387.55s) - 6282094 (392.63s)]
-gijiroku/temp/wav_0n/julius.0064.wav: 23328 samples (1.46 sec.) [6290766 (393.17s) - 6314094 (394.63s)]
-gijiroku/temp/wav_0n/julius.0065.wav: 58328 samples (3.65 sec.) [6318766 (394.92s) - 6377094 (398.57s)]
-gijiroku/temp/wav_0n/julius.0066.wav: 116328 samples (7.27 sec.) [6387766 (399.24s) - 6504094 (406.51s)]
-gijiroku/temp/wav_0n/julius.0067.wav: 95328 samples (5.96 sec.) [6532766 (408.30s) - 6628094 (414.26s)]
-gijiroku/temp/wav_0n/julius.0068.wav: 92328 samples (5.77 sec.) [6629766 (414.36s) - 6722094 (420.13s)]
-gijiroku/temp/wav_0n/julius.0069.wav: 13328 samples (0.83 sec.) [6729766 (420.61s) - 6743094 (421.44s)]
-gijiroku/temp/wav_0n/julius.0070.wav: 12328 samples (0.77 sec.) [6744766 (421.55s) - 6757094 (422.32s)]
-gijiroku/temp/wav_0n/julius.0071.wav: 102328 samples (6.40 sec.) [6766766 (422.92s) - 6869094 (429.32s)]
-gijiroku/temp/wav_0n/julius.0072.wav: 48328 samples (3.02 sec.) [6874766 (429.67s) - 6923094 (432.69s)]
-gijiroku/temp/wav_0n/julius.0073.wav: 56328 samples (3.52 sec.) [6927766 (432.99s) - 6984094 (436.51s)]
-gijiroku/temp/wav_0n/julius.0074.wav: 32328 samples (2.02 sec.) [6995766 (437.24s) - 7028094 (439.26s)]
-gijiroku/temp/wav_0n/julius.0075.wav: 184328 samples (11.52 sec.) [7222766 (451.42s) - 7407094 (462.94s)]
-gijiroku/temp/wav_0n/julius.0076.wav: 25328 samples (1.58 sec.) [7419766 (463.74s) - 7445094 (465.32s)]
-gijiroku/temp/wav_0n/julius.0077.wav: 145328 samples (9.08 sec.) [7446766 (465.42s) - 7592094 (474.51s)]
-gijiroku/temp/wav_0n/julius.0078.wav: 64328 samples (4.02 sec.) [7633766 (477.11s) - 7698094 (481.13s)]
-gijiroku/temp/wav_0n/julius.0079.wav: 16328 samples (1.02 sec.) [7701766 (481.36s) - 7718094 (482.38s)]
-gijiroku/temp/wav_0n/julius.0080.wav: 62328 samples (3.90 sec.) [7731766 (483.24s) - 7794094 (487.13s)]
-gijiroku/temp/wav_0n/julius.0081.wav: 232328 samples (14.52 sec.) [7810766 (488.17s) - 8043094 (502.69s)]
-gijiroku/temp/wav_0n/julius.0082.wav: 125328 samples (7.83 sec.) [8046766 (502.92s) - 8172094 (510.76s)]
-gijiroku/temp/wav_0n/julius.0083.wav: 66328 samples (4.15 sec.) [8182766 (511.42s) - 8249094 (515.57s)]
-gijiroku/temp/wav_0n/julius.0084.wav: 66328 samples (4.15 sec.) [8264766 (516.55s) - 8331094 (520.69s)]
-gijiroku/temp/wav_0n/julius.0085.wav: 54328 samples (3.40 sec.) [8333766 (520.86s) - 8388094 (524.26s)]
-gijiroku/temp/wav_0n/julius.0086.wav: 78328 samples (4.90 sec.) [8452766 (528.30s) - 8531094 (533.19s)]
-gijiroku/temp/wav_0n/julius.0087.wav: 39328 samples (2.46 sec.) [8532766 (533.30s) - 8572094 (535.76s)]
-gijiroku/temp/wav_0n/julius.0088.wav: 43328 samples (2.71 sec.) [8575766 (535.99s) - 8619094 (538.69s)]
-recorded total 6129864 samples (383.12 sec.) segmented to gijiroku/temp/wav_0n/julius.0000 - gijiroku/temp/wav_0n/julius.0088 files
+Warning: strip: sample 68-87 has zero value, stripped
+Warning: strip: sample 597-614 has zero value, stripped
+Warning: strip: sample 628-643 has zero value, stripped
+Warning: strip: sample 15612-15633 has zero value, stripped
+Warning: strip: sample 16038-16056 has zero value, stripped
+Warning: strip: sample 16770-16786 has zero value, stripped
+Warning: strip: sample 17959-17979 has zero value, stripped
+Warning: strip: sample 18659-18675 has zero value, stripped
+Warning: strip: sample 18855-18870 has zero value, stripped
+Warning: strip: sample 18924-18940 has zero value, stripped
+Warning: strip: sample 18953-18969 has zero value, stripped
+Warning: strip: sample 19049-19064 has zero value, stripped
+Warning: strip: sample 19091-19112 has zero value, stripped
+Warning: strip: sample 19269-19288 has zero value, stripped
+Warning: strip: sample 19573-19588 has zero value, stripped
+Warning: strip: sample 20000-20015 has zero value, stripped
+Warning: strip: sample 20233-20248 has zero value, stripped
+Warning: strip: sample 20868-20885 has zero value, stripped
+Warning: strip: sample 21408-21424 has zero value, stripped
+Warning: strip: sample 22088-22115 has zero value, stripped
+Warning: strip: sample 23646-23665 has zero value, stripped
+Warning: strip: sample 23957-23977 has zero value, stripped
+Warning: strip: sample 24133-24153 has zero value, stripped
+Warning: strip: sample 24468-24483 has zero value, stripped
+Warning: strip: sample 25438-25468 has zero value, stripped
+Warning: strip: sample 25541-25563 has zero value, stripped
+Warning: strip: sample 79200-79215 has zero value, stripped
+Warning: strip: sample 80170-80185 has zero value, stripped
+Warning: strip: sample 80242-80264 has zero value, stripped
+Warning: strip: sample 80674-80693 has zero value, stripped
+Warning: strip: sample 81494-81510 has zero value, stripped
+Warning: strip: sample 81573-81589 has zero value, stripped
+Warning: strip: sample 81654-81672 has zero value, stripped
+Warning: strip: sample 82419-82438 has zero value, stripped
+Warning: strip: sample 82891-82906 has zero value, stripped
+Warning: strip: sample 83005-83022 has zero value, stripped
+Warning: strip: sample 83287-83304 has zero value, stripped
+Warning: strip: sample 83669-83686 has zero value, stripped
+Warning: strip: sample 83809-83824 has zero value, stripped
+Warning: strip: sample 83949-83965 has zero value, stripped
+Warning: strip: sample 84440-84457 has zero value, stripped
+Warning: strip: sample 84507-84538 has zero value, stripped
+Warning: strip: sample 86744-86759 has zero value, stripped
+Warning: strip: sample 86793-86808 has zero value, stripped
+Warning: strip: sample 86813-86829 has zero value, stripped
+Warning: strip: sample 87065-87081 has zero value, stripped
+Warning: strip: sample 87563-87578 has zero value, stripped
+Warning: strip: sample 88002-88021 has zero value, stripped
+Warning: strip: sample 88029-88045 has zero value, stripped
+Warning: strip: sample 89015-89038 has zero value, stripped
+Warning: strip: sample 89291-89308 has zero value, stripped
+Warning: strip: sample 90019-90034 has zero value, stripped
+Warning: strip: sample 102069-102084 has zero value, stripped
+Warning: strip: sample 102583-102598 has zero value, stripped
+Warning: strip: sample 103094-103116 has zero value, stripped
+Warning: strip: sample 103118-103137 has zero value, stripped
+Warning: strip: sample 103217-103237 has zero value, stripped
+Warning: strip: sample 103295-103310 has zero value, stripped
+Warning: strip: sample 103329-103349 has zero value, stripped
+Warning: strip: sample 103654-103673 has zero value, stripped
+Warning: strip: sample 103690-103711 has zero value, stripped
+Warning: strip: sample 103743-103761 has zero value, stripped
+Warning: strip: sample 104197-104215 has zero value, stripped
+Warning: strip: sample 104871-104888 has zero value, stripped
+Warning: strip: sample 105447-105475 has zero value, stripped
+Warning: strip: sample 175899-175914 has zero value, stripped
+Warning: strip: sample 175936-175960 has zero value, stripped
+Warning: strip: sample 176663-176679 has zero value, stripped
+Warning: strip: sample 176725-176745 has zero value, stripped
+Warning: strip: sample 176753-176772 has zero value, stripped
+Warning: strip: sample 177032-177047 has zero value, stripped
+Warning: strip: sample 177706-177728 has zero value, stripped
+Warning: strip: sample 178597-178612 has zero value, stripped
+Warning: strip: sample 178772-178794 has zero value, stripped
+Warning: strip: sample 179098-179121 has zero value, stripped
+Warning: strip: sample 179966-179985 has zero value, stripped
+Warning: strip: sample 180422-180443 has zero value, stripped
+Warning: strip: sample 180616-180636 has zero value, stripped
+Warning: strip: sample 180769-180785 has zero value, stripped
+Warning: strip: sample 180861-180895 has zero value, stripped
+Warning: strip: sample 181023-181038 has zero value, stripped
+Warning: strip: sample 181152-181169 has zero value, stripped
+Warning: strip: sample 181733-181751 has zero value, stripped
+Warning: strip: sample 182248-182272 has zero value, stripped
+Warning: strip: sample 182586-182604 has zero value, stripped
+Warning: strip: sample 182628-182646 has zero value, stripped
+Warning: strip: sample 182884-182900 has zero value, stripped
+Warning: strip: sample 183180-183196 has zero value, stripped
+Warning: strip: sample 183705-183722 has zero value, stripped
+Warning: strip: sample 183858-183876 has zero value, stripped
+Warning: strip: sample 184041-184056 has zero value, stripped
+Warning: strip: sample 184226-184241 has zero value, stripped
+Warning: strip: sample 185085-185109 has zero value, stripped
+Warning: strip: sample 186207-186223 has zero value, stripped
+Warning: strip: sample 186378-186393 has zero value, stripped
+Warning: strip: sample 219345-219360 has zero value, stripped
+Warning: strip: sample 220375-220390 has zero value, stripped
+Warning: strip: sample 220790-220814 has zero value, stripped
+Warning: strip: sample 221118-221134 has zero value, stripped
+Warning: strip: sample 265984-265999 has zero value, stripped
+Warning: strip: sample 266228-266244 has zero value, stripped
+Warning: strip: sample 267107-267124 has zero value, stripped
+Warning: strip: sample 267481-267497 has zero value, stripped
+Warning: strip: sample 268230-268249 has zero value, stripped
+Warning: strip: sample 268287-268304 has zero value, stripped
+Warning: strip: sample 268350-268369 has zero value, stripped
+Warning: strip: sample 268587-268607 has zero value, stripped
+Warning: strip: sample 268692-268719 has zero value, stripped
+Warning: strip: sample 268722-268737 has zero value, stripped
+Warning: strip: sample 268993-269009 has zero value, stripped
+Warning: strip: sample 269275-269297 has zero value, stripped
+Warning: strip: sample 269365-269393 has zero value, stripped
+Warning: strip: sample 270196-270211 has zero value, stripped
+Warning: strip: sample 270453-270468 has zero value, stripped
+Warning: strip: sample 271309-271329 has zero value, stripped
+Warning: strip: sample 271524-271542 has zero value, stripped
+Warning: strip: sample 272661-272677 has zero value, stripped
+Warning: strip: sample 272710-272727 has zero value, stripped
+Warning: strip: sample 273280-273297 has zero value, stripped
+Warning: strip: sample 273879-273906 has zero value, stripped
+Warning: strip: sample 273964-273981 has zero value, stripped
+Warning: strip: sample 274072-274087 has zero value, stripped
+Warning: strip: sample 274221-274238 has zero value, stripped
+Warning: strip: sample 274386-274406 has zero value, stripped
+Warning: strip: sample 274602-274618 has zero value, stripped
+Warning: strip: sample 274727-274758 has zero value, stripped
+Warning: strip: sample 274762-274787 has zero value, stripped
+Warning: strip: sample 275356-275372 has zero value, stripped
+Warning: strip: sample 275639-275655 has zero value, stripped
+Warning: strip: sample 276202-276225 has zero value, stripped
+Warning: strip: sample 276478-276494 has zero value, stripped
+Warning: strip: sample 276803-276829 has zero value, stripped
+Warning: strip: sample 276853-276873 has zero value, stripped
+Warning: strip: sample 277130-277155 has zero value, stripped
+Warning: strip: sample 303779-303794 has zero value, stripped
+Warning: strip: sample 304552-304567 has zero value, stripped
+Warning: strip: sample 304569-304584 has zero value, stripped
+Warning: strip: sample 304797-304817 has zero value, stripped
+Warning: strip: sample 305529-305544 has zero value, stripped
+Warning: strip: sample 305742-305763 has zero value, stripped
+Warning: strip: sample 305922-305937 has zero value, stripped
+Warning: strip: sample 305989-306005 has zero value, stripped
+Warning: strip: sample 307389-307406 has zero value, stripped
+Warning: strip: sample 307657-307672 has zero value, stripped
+Warning: strip: sample 308469-308487 has zero value, stripped
+Warning: strip: sample 308732-308750 has zero value, stripped
+Warning: strip: sample 308860-308876 has zero value, stripped
+Warning: strip: sample 308890-308913 has zero value, stripped
+Warning: strip: sample 309066-309082 has zero value, stripped
+Warning: strip: sample 309443-309460 has zero value, stripped
+Warning: strip: sample 309552-309567 has zero value, stripped
+Warning: strip: sample 310109-310128 has zero value, stripped
+Warning: strip: sample 310399-310421 has zero value, stripped
+Warning: strip: sample 310588-310609 has zero value, stripped
+Warning: strip: sample 310858-310874 has zero value, stripped
+Warning: strip: sample 311117-311132 has zero value, stripped
+Warning: strip: sample 311382-311397 has zero value, stripped
+Warning: strip: sample 312013-312031 has zero value, stripped
+Warning: strip: sample 312323-312343 has zero value, stripped
+Warning: strip: sample 312517-312532 has zero value, stripped
+Warning: strip: sample 312848-312867 has zero value, stripped
+Warning: strip: sample 313198-313225 has zero value, stripped
+Warning: strip: sample 313982-314004 has zero value, stripped
+gijiroku/temp/wav_0n/julius.0001.wav: 22000 samples (1.38 sec.) [  3161 ( 0.20s) -  25161 ( 1.57s)]
+gijiroku/temp/wav_0n/julius.0002.wav: 59328 samples (3.71 sec.) [ 25833 ( 1.61s) -  85161 ( 5.32s)]
+gijiroku/temp/wav_0n/julius.0003.wav: 94328 samples (5.90 sec.) [ 89833 ( 5.61s) - 184161 (11.51s)]
+gijiroku/temp/wav_0n/julius.0004.wav: 84328 samples (5.27 sec.) [185833 (11.61s) - 270161 (16.89s)]
+gijiroku/temp/wav_0n/julius.0005.wav: 31328 samples (1.96 sec.) [274833 (17.18s) - 306161 (19.14s)]
+recorded total 291312 samples (18.21 sec.) segmented to gijiroku/temp/wav_0n/julius.0000 - gijiroku/temp/wav_0n/julius.0005 files
