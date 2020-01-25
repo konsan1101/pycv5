@@ -575,10 +575,16 @@ class main_speech:
 
                 # 音声ファイル処理（バッチ）時の自動終了
                 if (not self.micDev.isdigit()):
-                    if  ((time.time() - coreSTT_thread.proc_last) > 120) \
-                    and ((time.time() - coreTTS_thread.proc_last) > 120):
-                        qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
-                        break
+                    if (self.qApiInp != 'aws'):
+                        if  ((time.time() - coreSTT_thread.proc_last) > 120) \
+                        and ((time.time() - coreTTS_thread.proc_last) > 120):
+                            qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                            break
+                    else:
+                        if  ((time.time() - coreSTT_thread.proc_last) > 300) \
+                        and ((time.time() - coreTTS_thread.proc_last) > 300):
+                            qFunc.txtsWrite(qCtrl_control_self, txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                            break
 
                 # 制御処理
                 control = ''

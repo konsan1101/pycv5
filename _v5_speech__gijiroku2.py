@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
             try:
                 a = codecs.open(outFile, 'a', 'shift_jis')
-                a.write(fileId + ', [' + txt + ']\r\n')
+                a.write(fileId[:-4].replace('julius.','') + ', [' + txt + ']\r\n')
                 a.close()
                 a = None
             except:
@@ -80,8 +80,8 @@ if __name__ == '__main__':
                 if (len(f)>100):
                     f = f[:100] + u'…'
 
-                f1 = 'gijiroku/mp3/' + fileId[:-4] + '.mp3'
-                f2 = 'gijiroku/mp3/' + fileId[:-4] + '.[' + f + '].mp3'
+                f1 = 'gijiroku/mp3/' + fileId[:-4]                                   + '.mp3'
+                f2 = 'gijiroku/mp3/' + fileId[:-4].replace('julius.','') + '.[' + f + '].mp3'
                 try:
                     os.rename(f1, f2)
                 except:

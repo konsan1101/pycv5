@@ -34,7 +34,7 @@ import storage_api_aws_key as s3_key
 class SpeechAPI:
 
     def __init__(self, ):
-        self.timeOut        = 90
+        self.timeOut        = 120
         self.stt_key_id     = None
         self.stt_secret_key = None
         self.tra_key_id     = None
@@ -44,7 +44,7 @@ class SpeechAPI:
         self.region_name    = 'ap-northeast-1'
         self.bucketid       = 'kondou-pycv-'
 
-    def setTimeOut(self, timeOut=90, ):
+    def setTimeOut(self, timeOut=120, ):
         self.timeOut = timeOut
 
     def authenticate(self, api, key_id, secret_key, ):
@@ -138,8 +138,6 @@ class SpeechAPI:
             if (lang != ''):
                 try:
 
-                    print('inpWave =', inpWave)
-
                     # Service connect
                     transcribe = boto3.client('transcribe',
                         aws_access_key_id     = self.stt_key_id, 
@@ -168,6 +166,7 @@ class SpeechAPI:
                                     )
                         if (res == True):
 
+                            # ファイル名決定
                             inpPath  = os.path.dirname(inpFile)
                             if (inpPath != ''):
                                 inpPath += '/'
@@ -175,59 +174,85 @@ class SpeechAPI:
                             job_name = inpFname[:-4]
                             resFname = job_name + '.json'
 
-                            # 音声認識ＪＯＢ削除
                             try:
-                                transcribe.delete_transcription_job(TranscriptionJobName=job_name,)
+
+                                # 音声認識ＪＯＢ削除
+                                try:
+                                    transcribe.delete_transcription_job(TranscriptionJobName=job_name,)
+                                except:
+                                    pass
+
+                                # ファイル削除
+                                res = s3_api.s3_remove(bucket=bucket, s3File=inpFname, )
+                                #if (res == True):
+                                #    print('s3 delete', inpFname)
+                                res = s3_api.s3_remove(bucket=bucket, s3File=resFname, )
+                                #if (res == True):
+                                #    print('s3 delete', resFname)
+
+                                # mp3 送信
+                                res = s3_api.s3_put(bucket=bucket, inpPath=inpPath, inpFile=inpFname, s3File='', )
+                                if (res == True):
+
+                                    file_uri = 's3://' + s3bucket + '/' + inpFname
+    
+                                    # 音声認識ＪＯＢ開始
+                                    transcribe.start_transcription_job(TranscriptionJobName=job_name,
+                                                                    Media={'MediaFileUri': file_uri},
+                                                                    MediaFormat=inpFname[-3:],
+                                                                    MediaSampleRateHertz=16000,
+                                                                    LanguageCode=lang,
+                                                                    Settings={'ShowSpeakerLabels' : True,
+                                                                                'MaxSpeakerLabels' : 5, },
+                                                                    OutputBucketName=s3bucket,
+                                                                    )
+
+                                    # ファイル待機
+                                    res = s3_api.s3_wait_get(bucket=bucket, s3File=resFname, 
+                                                            outPath=inpPath, outFile='', maxWait=self.timeOut, )
+                                    if (res == True):
+
+                                        # 戻り値取得
+                                        res_dic = {}
+                                        try:
+                                            res_file = inpPath + resFname
+                                            with codecs.open(res_file, 'r', 'utf-8') as r:
+                                                res_dic = json.load(r)
+                                        except Exception as e:
+                                            #print(e.args)
+                                            res_dic = {}
+
+                                        #print(json.dumps(res_dic, indent=4))
+
+                                        res_text = ''
+                                        for transcript in res_dic['results']['transcripts']:
+                                            t = str(transcript['transcript'])
+                                            res_text = (res_text + ' ' + str(t)).strip()
+                                        res_api = 'aws'
+
                             except:
                                 pass
 
-                            # ファイル削除
-                            res = s3_api.s3_remove(bucket=bucket, s3File=inpFname, )
-                            #if (res == True):
-                            #    print('s3 delete', inpFname)
-                            res = s3_api.s3_remove(bucket=bucket, s3File=resFname, )
-                            #if (res == True):
-                            #    print('s3 delete', resFname)
+                            try:
 
-                            # mp3 送信
-                            res = s3_api.s3_put(bucket=bucket, inpPath=inpPath, inpFile=inpFname, s3File='', )
-                            if (res == True):
+                                time.sleep(7.00)
 
-                                file_uri = 's3://' + s3bucket + '/' + inpFname
-   
-                                # 音声認識ＪＯＢ開始
-                                transcribe.start_transcription_job(TranscriptionJobName=job_name,
-                                                                   Media={'MediaFileUri': file_uri},
-                                                                   MediaFormat=inpFname[-3:],
-                                                                   MediaSampleRateHertz=16000,
-                                                                   LanguageCode=lang,
-                                                                   Settings={'ShowSpeakerLabels' : True,
-                                                                             'MaxSpeakerLabels' : 5, },
-                                                                   OutputBucketName=s3bucket,
-                                                                   )
+                                # 音声認識ＪＯＢ削除
+                                try:
+                                    transcribe.delete_transcription_job(TranscriptionJobName=job_name,)
+                                except:
+                                    pass
 
-                                # ファイル待機
-                                res = s3_api.s3_wait_get(bucket=bucket, s3File=resFname, 
-                                                         outPath=inpPath, outFile='', maxWait=self.timeOut, )
-                                if (res == True):
+                                # ファイル削除
+                                res = s3_api.s3_remove(bucket=bucket, s3File=inpFname, )
+                                #if (res == True):
+                                #    print('s3 delete', inpFname)
+                                res = s3_api.s3_remove(bucket=bucket, s3File=resFname, )
+                                #if (res == True):
+                                #    print('s3 delete', resFname)
 
-                                    # 戻り値取得
-                                    res_dic = {}
-                                    try:
-                                        res_file = inpPath + resFname
-                                        with codecs.open(res_file, 'r', 'utf-8') as r:
-                                            res_dic = json.load(r)
-                                    except Exception as e:
-                                        #print(e.args)
-                                        res_dic = {}
-
-                                    #print(json.dumps(res_dic, indent=4))
-
-                                    res_text = ''
-                                    for transcript in res_dic['results']['transcripts']:
-                                        t = str(transcript['transcript'])
-                                        res_text = (res_text + ' ' + str(t)).strip()
-                                    res_api = 'aws'
+                            except:
+                                pass
 
                 except:
                     pass
@@ -451,10 +476,10 @@ if __name__ == '__main__':
 
         if (res1 == True) and (res2 == True) and (res3 == True):
 
-            text = 'hallo'
+            text = u'今日は久しぶりにゆっくり休めます。'
             file = 'temp_voice.mp3'
 
-            res, api = awsAPI.vocalize(outText=text, outLang='en', outFile=file)
+            res, api = awsAPI.vocalize(outText=text, outLang='ja', outFile=file)
             print('vocalize:', res, '(' + api + ')' )
 
             sox = subprocess.Popen(['sox', file, '-d', '-q'])
@@ -468,10 +493,11 @@ if __name__ == '__main__':
             sox.terminate()
             sox = None
 
-            res, api = awsAPI.translate(inpText=res, inpLang='en', outLang='ja', )
+            res, api = awsAPI.recognize(inpWave=file2, inpLang='ja', )
+            print('recognize:', res, '(' + api + ')' )
+
+            res, api = awsAPI.translate(inpText=res, inpLang='ja', outLang='en', )
             print('translate:', res, '(' + api + ')' )
 
-            res, api = awsAPI.recognize(inpWave=file2, inpLang='en', )
-            print('recognize:', res, '(' + api + ')' )
 
 
