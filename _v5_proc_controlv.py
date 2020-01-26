@@ -360,6 +360,7 @@ class proc_controlv:
 
         if (cn_s.qsize() < 99):
 
+            # システム制御
             if (proc_text.find(u'リセット') >= 0):
                 out_name  = 'control'
                 out_value = '_reset_'
@@ -371,6 +372,7 @@ class proc_controlv:
                 out_value = '_end_'
                 cn_s.put([out_name, out_value])
 
+            # カメラ制御
             elif (self.runMode == 'assistant') and (proc_text == u'カメラ'):
                 qFunc.statusSet(qBusy_dev_cam, False)
                 qFunc.statusSet(qBusy_dev_dsp, False)
@@ -380,10 +382,12 @@ class proc_controlv:
                 qFunc.statusSet(qBusy_dev_cam, False)
                 qFunc.statusSet(qBusy_dev_dsp, False)
             elif (self.runMode == 'assistant') \
-            and  ((proc_text.find(u'カメラ') >= 0) and (proc_text.find(u'終了') >= 0)):
+            and  ((proc_text.find(u'カメラ') >= 0) \
+            and  (proc_text.find(u'終了') >= 0)):
                 qFunc.statusSet(qBusy_dev_cam, True)
                 qFunc.statusSet(qBusy_dev_dsp, True)
 
+            # カメラ操作
             elif ((self.runMode == 'camera') or (self.runMode == 'assistant')) \
             and  (proc_text == u'エンター'):
                 out_name  = 'control'
@@ -400,7 +404,7 @@ class proc_controlv:
                 out_value = '_close_'
                 cn_s.put([out_name, out_value])
 
-            elif (proc_text.find(u'シャッタ') >= 0) or (proc_text.find(u'撮影') >= 0):
+            elif (proc_text.find(u'撮影') >= 0) or (proc_text.find(u'シャッタ') >= 0):
                 out_name  = 'control'
                 out_value = '_shutter_'
                 cn_s.put([out_name, out_value])

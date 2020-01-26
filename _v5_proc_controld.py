@@ -358,6 +358,7 @@ class proc_controld:
 
         if (cn_s.qsize() < 99):
 
+            # システム制御
             if (proc_text.find(u'リセット') >= 0):
                 out_name  = 'control'
                 out_value = '_reset_'
@@ -379,7 +380,8 @@ class proc_controld:
                 cn_s.put(['recorder', proc_text])
 
             # 画面キャプチャ
-            elif (proc_text.find(u'キャプチャ') >= 0) or (proc_text.find(u'ハードコピー') >= 0):
+            elif (proc_text.find(u'キャプチャ') >= 0) \
+              or (proc_text.find(u'ハードコピー') >= 0):
                 out_name  = 'control'
                 out_value = '_capture_'
                 cn_s.put([out_name, out_value])

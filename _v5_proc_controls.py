@@ -461,6 +461,16 @@ class proc_controls:
 
         print('controls:force',force)
 
+        # 外部プログラム '__ext_program.bat'
+        if ((proc_text.find(u'プログラム') >= 0) \
+        and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))):
+        or ((proc_text.find(u'サープ') >= 0) \
+        and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))) \
+            if (os.name == 'nt'):
+                ext_program = subprocess.Popen(['__ext_program.bat' ], )
+                              #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
+        # 画面操作
         if (proc_text.find(u'メイン') >= 0) and (proc_text.find(u'スクリーン') >= 0):
             pyautogui.keyDown('ctrlleft')
             pyautogui.keyDown('winleft')
@@ -486,22 +496,13 @@ class proc_controls:
             pyautogui.keyUp('winleft')
             pyautogui.keyUp('ctrlleft')
 
-        if ((proc_text.find(u'サープ') >= 0) \
-        and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))) \
-        or ((proc_text.find(u'システム') >= 0) \
-        and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))) \
-        or ((proc_text.find(u'プログラム') >= 0) \
-        and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))):
-            if (os.name == 'nt'):
-                ext_program = subprocess.Popen(['__ext_program.bat' ], )
-                              #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-
+        # キーボード操作
         if (proc_text[-3:] == u'を入力'):
             qFunc.sendKey(proc_text[:-3],cr=True, lf=False)
         elif (proc_text[-2:] == u'入力'):
             qFunc.sendKey(proc_text[:-2],cr=True, lf=False)
 
-        if (proc_text == u'エンター') or (proc_text.lower() == 'enter'):
+        if (proc_text == u'改行') or (proc_text.lower() == 'enter'):
             pyautogui.press('enter')
 
         if (proc_text.lower() == 'f1') or (proc_text.lower() == 'f 1'):
@@ -528,15 +529,17 @@ class proc_controls:
             pyautogui.press('f11')
         if (proc_text.lower() == 'f12') or (proc_text.lower() == 'f 12'):
             pyautogui.press('f12')
-        if (proc_text == u'閉じる') or (proc_text == u'ポーズ'):
-            pyautogui.press('pause')
 
+        if (proc_text == u'ポーズ') \
+        or (proc_text == u'閉じる'):
+            pyautogui.press('pause')
         if (proc_text[-3:] == u'を検索'):
             qFunc.sendKey(proc_text[:-3],cr=False, lf=False)
             pyautogui.press('f9')
 
         if (cn_s.qsize() < 99):
 
+            # システム制御
             if (proc_text.find(u'リセット') >= 0):
                 out_name  = 'control'
                 out_value = '_reset_'
@@ -552,7 +555,8 @@ class proc_controls:
                 cn_s.put([out_name, out_value])
                 qFunc.txtsWrite(qCtrl_control_kernel , txts=[out_value], encoding='utf-8', exclusive=True, mode='w', )
 
-            elif (proc_text.find(u'リブート') >= 0) or (proc_text.find(u'再起動') >= 0):
+            elif (proc_text.find(u'リブート') >= 0) \
+              or (proc_text.find(u'再起動') >= 0):
                 out_name  = 'control'
                 out_value = '_reboot_'
                 cn_s.put([out_name, out_value])
@@ -563,6 +567,7 @@ class proc_controls:
                 self.run_chatting = False
                 self.run_knowledge = False
 
+            # 機能制御
             elif (proc_text.find(u'画面') >= 0) \
             and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_desktop_begin_'], encoding='utf-8', exclusive=True, mode='w', )
@@ -602,27 +607,13 @@ class proc_controls:
                 self.run_bgm = True
 
             elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
-            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
-                qFunc.txtsWrite(qCtrl_control_bgm ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
-
-            elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
             and (proc_text.find(u'終了') >= 0):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_bgm_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = False
 
-            elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
-            and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
-                qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_browser_begin_'], encoding='utf-8', exclusive=True, mode='w', )
-                self.run_browser = True
-
-            elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
+            elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
             and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
-                qFunc.txtsWrite(qCtrl_control_browser ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
-
-            elif ((proc_text.find(u'ウェブ') >= 0) or (proc_text.find(u'ブラウザ') >= 0)) \
-            and (proc_text.find(u'終了') >= 0):
-                qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_browser_end_'], encoding='utf-8', exclusive=True, mode='w', )
-                self.run_browser = False
+                qFunc.txtsWrite(qCtrl_control_bgm ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif (proc_text.find(u'動画') >= 0) \
             and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
@@ -635,13 +626,13 @@ class proc_controls:
                 time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=[u'動画メニュー'], encoding='utf-8', exclusive=True, mode='w', )
 
-            elif (proc_text.find(u'動画') >= 0) \
-            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
-                qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
-
             elif (proc_text.find(u'動画') >= 0) and (proc_text.find(u'終了') >= 0):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_player_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_player = False
+
+            elif (proc_text.find(u'動画') >= 0) \
+            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif (self.run_player == True) \
             and  (proc_text.find(u'動画') >=0) and (proc_text.find(u'メニュー') >=0):
@@ -662,23 +653,47 @@ class proc_controls:
                 time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=[proc_text.lower()], encoding='utf-8', exclusive=True, mode='w', )
 
+            elif ((proc_text.find(u'ブラウザ') >= 0) or (proc_text.find(u'ウェブ') >= 0)) \
+            and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_browser_begin_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_browser = True
+
+            elif ((proc_text.find(u'ブラウザ') >= 0) or (proc_text.find(u'ウェブ') >= 0)) \
+            and (proc_text.find(u'終了') >= 0):
+                qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_browser_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_browser = False
+
+            elif ((proc_text.find(u'ブラウザ') >= 0) or (proc_text.find(u'ウェブ') >= 0)) \
+            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_browser ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+
             elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
             and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_chatting_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_chatting = True
 
             elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
-            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'終了') >= 0)):
+            and   (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_chatting_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_chatting = False
 
-            elif (proc_text.find(u'知識') >= 0) \
-            and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
+            elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
+            and  ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_chatting_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_chatting = False
+
+            elif ((proc_text.find(u'知識') >= 0) or (proc_text.find(u'ナレッジ') >= 0)) \
+            and  ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_knowledge_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_knowledge = True
 
-            elif (proc_text.find(u'知識') >= 0) \
-            and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'終了') >= 0)):
+            elif ((proc_text.find(u'知識') >= 0) or (proc_text.find(u'ナレッジ') >= 0)) \
+            and   (proc_text.find(u'終了') >= 0)):
+                qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_knowledge_end_'], encoding='utf-8', exclusive=True, mode='w', )
+                self.run_knowledge = False
+
+            elif ((proc_text.find(u'知識') >= 0) or (proc_text.find(u'ナレッジ') >= 0)) \
+            and  ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'終了') >= 0)):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_knowledge_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_knowledge = False
 
