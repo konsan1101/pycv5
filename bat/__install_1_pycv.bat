@@ -75,7 +75,6 @@ ECHO ------
     python -m pip  install --upgrade numpy
     python -m pip  install --upgrade opencv-python
     python -m pip  install --upgrade pyqt5
-    python -m pip  install --upgrade pyautogui
     python -m pip  install --upgrade pyzbar
 
 
