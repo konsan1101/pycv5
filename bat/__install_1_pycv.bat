@@ -45,6 +45,7 @@ ECHO -------
 ECHO etc
 ECHO -------
     python -m pip  install --upgrade pywin32
+    python -m pip  install --upgrade pyautogui
 
 ECHO;
 ECHO -------------
