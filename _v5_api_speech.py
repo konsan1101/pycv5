@@ -1111,34 +1111,35 @@ def speech_batch(runMode, micDev,
                 qFunc.logOutput(' ' + procId + ' Recognition  [' + inpText + '] ' + qLangInp + ' (!' + qApiInp + ')', True)
 
         if (inpText != '' and inpText != '!'):
-            numtxt = qKanji2num.strkan2num(inpText)
-            if (numtxt != ''):
-                if (numtxt != inpText):
-                    if (runMode != 'number'):
-                        qFunc.logOutput(' ' + procId + ' Recognition  [' + inpText + u'] → [' + numtxt + ']', True)
-                        inpText = str(numtxt)
-                    else:
-                        numtxt = numtxt.replace(u'ゼロ', '0')
-                        numtxt = numtxt.replace(u'０',   '0')
-                        numtxt = numtxt.replace(u'１',   '1')
-                        numtxt = numtxt.replace(u'２',   '2')
-                        numtxt = numtxt.replace(u'３',   '3')
-                        numtxt = numtxt.replace(u'４',   '4')
-                        numtxt = numtxt.replace(u'５',   '5')
-                        numtxt = numtxt.replace(u'６',   '6')
-                        numtxt = numtxt.replace(u'７',   '7')
-                        numtxt = numtxt.replace(u'８',   '8')
-                        numtxt = numtxt.replace(u'９',   '9')
-                        numtxt = numtxt.replace(u'。', '')
-                        numtxt = numtxt.replace(u'．', '.')
-                        numtxt = numtxt.replace(u'　', '')
-                        numtxt = numtxt.replace(' ', '')
-                        numtxt = numtxt.replace(',', '')
-                        if (numtxt[-1:] == '.'):
-                            numtxt=numtxt[:-1]
-                        if (numtxt != inpText and numtxt.isdigit()):
+            if (not inpText.isdigit()):
+                numtxt = qKanji2num.strkan2num(inpText)
+                if (numtxt != ''):
+                    if (numtxt != inpText):
+                        if (runMode != 'number'):
                             qFunc.logOutput(' ' + procId + ' Recognition  [' + inpText + u'] → [' + numtxt + ']', True)
                             inpText = str(numtxt)
+                        else:
+                            numtxt = numtxt.replace(u'ゼロ', '0')
+                            numtxt = numtxt.replace(u'０',   '0')
+                            numtxt = numtxt.replace(u'１',   '1')
+                            numtxt = numtxt.replace(u'２',   '2')
+                            numtxt = numtxt.replace(u'３',   '3')
+                            numtxt = numtxt.replace(u'４',   '4')
+                            numtxt = numtxt.replace(u'５',   '5')
+                            numtxt = numtxt.replace(u'６',   '6')
+                            numtxt = numtxt.replace(u'７',   '7')
+                            numtxt = numtxt.replace(u'８',   '8')
+                            numtxt = numtxt.replace(u'９',   '9')
+                            numtxt = numtxt.replace(u'。', '')
+                            numtxt = numtxt.replace(u'．', '.')
+                            numtxt = numtxt.replace(u'　', '')
+                            numtxt = numtxt.replace(' ', '')
+                            numtxt = numtxt.replace(',', '')
+                            if (numtxt[-1:] == '.'):
+                                numtxt=numtxt[:-1]
+                            if (numtxt != inpText and numtxt.isdigit()):
+                                qFunc.logOutput(' ' + procId + ' Recognition  [' + inpText + u'] → [' + numtxt + ']', True)
+                                inpText = str(numtxt)
 
 
 
