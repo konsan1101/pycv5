@@ -455,7 +455,11 @@ class proc_coreTTS:
                     inpPlay, txtPlay, outPlay, 
                     )
 
-            #api = subprocess.Popen(['python', '_v5_api_speech.py',
+            #python_exe = 'python'
+            #if (qPLATFORM == 'darwin'):
+            #    python_exe = 'python3'
+
+            #api = subprocess.Popen([python_exe, '_v5_api_speech.py',
             #        self.runMode, self.micDev, 
             #        self.qApiInp, self.qApiTrn, self.qApiOut,
             #        self.qLangTxt, self.qLangTrn, self.qLangTxt, self.qLangOut,

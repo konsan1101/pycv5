@@ -398,7 +398,11 @@ class proc_coreCV:
             #        'CV0' + str(seq4), proc_name, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn, 
             #        )
 
-            api = subprocess.Popen(['python', '_v5_api_vision.py',
+            python_exe = 'python'
+            if (qPLATFORM == 'darwin'):
+                python_exe = 'python3'
+
+            api = subprocess.Popen([python_exe, '_v5_api_vision.py',
                     self.runMode, self.camDev, 
                     self.qApiCV, self.qApiOCR, self.qApiTrn, 
                     self.qLangCV, self.qLangOCR, self.qLangTrn,

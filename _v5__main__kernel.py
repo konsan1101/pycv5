@@ -322,6 +322,10 @@ class main_kernel:
             browser_switch       = 'on'
             player_switch        = 'on'
 
+        python_exe = 'python'
+        if (qPLATFORM == 'darwin'):
+            python_exe = 'python3'
+
         # 待機ループ
         self.proc_step = '5'
 
@@ -371,7 +375,7 @@ class main_kernel:
                 cn_s.put(['guide', 'main_speech start!'])
 
                 if (qRUNATTR == 'python'):
-                    main_speech_run = subprocess.Popen(['python', qPython_main_speech, 
+                    main_speech_run = subprocess.Popen([python_exe, qPython_main_speech, 
                                     self.runMode, 
                                     self.micDev, self.micType, self.micGuide, self.micLevel,
                                     self.qApiInp, self.qApiTrn, self.qApiOut,
@@ -407,7 +411,7 @@ class main_kernel:
                 cn_s.put(['guide', 'main_vision start!'])
 
                 if (qRUNATTR == 'python'):
-                    main_vision_run = subprocess.Popen(['python', qPython_main_vision, 
+                    main_vision_run = subprocess.Popen([python_exe, qPython_main_vision, 
                                     self.runMode, ], )
                                     #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 else:
@@ -434,7 +438,7 @@ class main_kernel:
                 cn_s.put(['guide', 'main_desktop start!'])
 
                 if (qRUNATTR == 'python'):
-                    main_desktop_run = subprocess.Popen(['python', qPython_main_desktop, 
+                    main_desktop_run = subprocess.Popen([python_exe, qPython_main_desktop, 
                                     self.runMode, ], )
                                     #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 else:
@@ -461,7 +465,7 @@ class main_kernel:
                 cn_s.put(['guide', 'bgm control start!'])
 
                 if (qRUNATTR == 'python'):
-                    bgm_run = subprocess.Popen(['python', qPython_bgm, self.runMode, ], )
+                    bgm_run = subprocess.Popen([python_exe, qPython_bgm, self.runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 else:
                     bgm_run = subprocess.Popen([qPython_bgm[:-3], self.runMode, ], )
@@ -487,7 +491,7 @@ class main_kernel:
                 cn_s.put(['guide', 'browser control start!'])
 
                 if (qRUNATTR == 'python'):
-                    browser_run = subprocess.Popen(['python', qPython_browser, self.runMode, ], )
+                    browser_run = subprocess.Popen([python_exe, qPython_browser, self.runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 else:
                     browser_run = subprocess.Popen([qPython_browser[:-3], self.runMode, ], )
@@ -513,7 +517,7 @@ class main_kernel:
                 cn_s.put(['guide', 'player control start!'])
 
                 if (qRUNATTR == 'python'):
-                    player_run = subprocess.Popen(['python', qPython_player, self.runMode, ], )
+                    player_run = subprocess.Popen([python_exe, qPython_player, self.runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 else:
                     player_run = subprocess.Popen([qPython_player[:-3], self.runMode, ], )
@@ -539,7 +543,7 @@ class main_kernel:
                 cn_s.put(['guide', 'chatting control start!'])
 
                 if (qRUNATTR == 'python'):
-                    chatting_run = subprocess.Popen(['python', qPython_chatting, self.runMode, ], )
+                    chatting_run = subprocess.Popen([python_exe, qPython_chatting, self.runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 else:
                     chatting_run = subprocess.Popen([qPython_chatting[:-3], self.runMode, ], )
@@ -565,7 +569,7 @@ class main_kernel:
                 cn_s.put(['guide', 'knowledge control start!'])
 
                 if (qRUNATTR == 'python'):
-                    knowledge_run = subprocess.Popen(['python', qPython_knowledge, self.runMode, ], )
+                    knowledge_run = subprocess.Popen([python_exe, qPython_knowledge, self.runMode, ], )
                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                 else:
                     knowledge_run = subprocess.Popen([qPython_knowledge[:-3], self.runMode, ], )
