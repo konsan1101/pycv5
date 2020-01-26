@@ -463,9 +463,9 @@ class proc_controls:
 
         # 外部プログラム '__ext_program.bat'
         if ((proc_text.find(u'プログラム') >= 0) \
-        and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))):
-        or ((proc_text.find(u'サープ') >= 0) \
         and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))) \
+        or ((proc_text.find(u'サープ') >= 0) \
+        and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))):
             if (os.name == 'nt'):
                 ext_program = subprocess.Popen(['__ext_program.bat' ], )
                               #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -673,7 +673,7 @@ class proc_controls:
                 self.run_chatting = True
 
             elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
-            and   (proc_text.find(u'終了') >= 0)):
+            and   (proc_text.find(u'終了') >= 0):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_chatting_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_chatting = False
 
@@ -688,7 +688,7 @@ class proc_controls:
                 self.run_knowledge = True
 
             elif ((proc_text.find(u'知識') >= 0) or (proc_text.find(u'ナレッジ') >= 0)) \
-            and   (proc_text.find(u'終了') >= 0)):
+            and   (proc_text.find(u'終了') >= 0):
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_knowledge_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_knowledge = False
 
