@@ -329,43 +329,56 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
 
     result = False
 
-    #try:
-    if (True):
+    try:
 
         # 動画処理
-        if (inpFilea == ''):
-            ffmpeg = subprocess.Popen(['ffmpeg', \
-                '-i', inpFilev, \
-                '-vcodec', 'libx264', '-r', '2', \
-                outFilev, \
-                '-loglevel', 'warning', \
-                ], )
-                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-            #logb, errb = ffmpeg.communicate()
-            ffmpeg.wait()
-            ffmpeg.terminate()
-            ffmpeg = None
-        else:
-            ffmpeg = subprocess.Popen(['ffmpeg', \
-                '-i', inpFilev, '-i', inpFilea, \
-                '-vcodec', 'libx264', '-r', '2', \
-                '-acodec', 'aac', '-ab', '96k', '-ac', '1', '-ar', '44100', \
-                outFilev, \
-                '-loglevel', 'warning', \
-                ], )
-                #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-            #logb, errb = ffmpeg.communicate()
-            ffmpeg.wait()
-            ffmpeg.terminate()
-            ffmpeg = None
+        mp4ok = False
+        if (inpFilea != ''):
+            try:
+                ffmpeg = subprocess.Popen(['ffmpeg', \
+                    '-i', inpFilev, '-i', inpFilea, \
+                    '-vcodec', 'libx264', '-r', '2', \
+                    '-acodec', 'aac', '-ab', '96k', '-ac', '1', '-ar', '44100', \
+                    outFilev, \
+                    '-loglevel', 'warning', \
+                    ], )
+                    #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                #logb, errb = ffmpeg.communicate()
+                ffmpeg.wait()
+                ffmpeg.terminate()
+                ffmpeg = None
+                mp4ok = True
+            except:
+                pass
+        if (mp4ok == False):
+            try:
+                ffmpeg = subprocess.Popen(['ffmpeg', \
+                    '-i', inpFilev, \
+                    '-vcodec', 'libx264', '-r', '2', \
+                    outFilev, \
+                    '-loglevel', 'warning', \
+                    ], )
+                    #], stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                #logb, errb = ffmpeg.communicate()
+                ffmpeg.wait()
+                ffmpeg.terminate()
+                ffmpeg = None
+                mp4ok = True
+            except:
+                pass
 
         # 音声処理
+        mp3ok = False
         if (inpFilea != ''):
-            sox = subprocess.Popen(['sox', '-q', inpFilea, outFilea, ], \
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
-            sox.wait()
-            sox.terminate()
-            sox = None
+            try:
+                sox = subprocess.Popen(['sox', '-q', inpFilea, outFilea, ], \
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                sox.wait()
+                sox.terminate()
+                sox = None
+                mp3ok = True
+            except:
+                pass
 
         # 戻り値
         if (outFilea == ''):
@@ -373,8 +386,8 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
         else:
             return [outFilev, outFilea]
 
-    #except:
-    #    pass
+    except:
+        pass
 
     return result
 
