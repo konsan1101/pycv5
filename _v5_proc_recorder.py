@@ -183,8 +183,7 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath='', sfps=1, scene=0.1,
 
     result = False
 
-    #try:
-    if (True):
+    try:
 
         # 作業ディレクトリ
         qFunc.makeDirs(wrkPath, remove=True, )
@@ -223,11 +222,10 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath='', sfps=1, scene=0.1,
                 result = []
             result.append(f2)
 
-    #except:
-    #    pass
+    except:
+        pass
 
-    #try:
-    if (True):
+    try:
 
         # 作業ディレクトリ
         qFunc.makeDirs(wrkPath, remove=True, )
@@ -302,8 +300,8 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath='', sfps=1, scene=0.1,
                             result = []
                         result.append(f2)
 
-    #except:
-    #    pass
+    except:
+        pass
 
     return result
 
