@@ -357,9 +357,17 @@ class proc_cv2dnn_yolo:
                     score   = pass_scores[i]
                     box     = pass_boxes[i]
                     left    = box[0]
+                    if (left < 0):
+                        left = 0
                     top     = box[1]
+                    if (top < 0):
+                        top = 0
                     width   = box[2]
+                    if ((left + width) > image_size):
+                        width = image_width - left
                     height  = box[3]
+                    if ((top + height) > image_size):
+                        height = image_size - top
 
                     # クラス名を取り出す。
                     class_name  = classNames[classid]
@@ -498,10 +506,12 @@ if __name__ == '__main__':
                 cv2.namedWindow('Display', 1)
                 #cv2.moveWindow( 'Display', 0, 0)
                 if (res_name == '[img]'):
+                    print(1)
                     cv2.imshow('Display', res_value.copy() )
                     cv2.waitKey(1)
                     #time.sleep(0.25)
                 if (res_name == '[array]'):
+                    print(2)
                     cv2.imshow('Display', res_value.copy() )
                     cv2.waitKey(1)
                     #time.sleep(0.25)
