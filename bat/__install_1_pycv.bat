@@ -46,6 +46,8 @@ ECHO etc
 ECHO -------
     python -m pip  install --upgrade pywin32
     python -m pip  install --upgrade pyautogui
+rem ↓ use vs code
+    python -m pip  install --upgrade pylint
 
 ECHO;
 ECHO -------------

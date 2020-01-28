@@ -62,9 +62,9 @@ ECHO ----------------------
     python -m pip  install --upgrade nfcpy
 
 ECHO;
-ECHO ------------
-ECHO deep larning
-ECHO ------------
+ECHO -------------
+ECHO deep learning
+ECHO -------------
     python -m pip  install --upgrade gym
     python -m pip  install --upgrade atari-py
     python -m pip  install --upgrade scikit-image
@@ -93,6 +93,7 @@ ECHO ---------------
     python -m pip  install --upgrade azureml-sdk
     python -m pip  install --upgrade azureml-dataprep
     python -m pip  install --upgrade azureml-train-automl
+    python -m pip  install --upgrade azureml.widgets
     python -m pip  install --ignore-installed azureml-train-automl-client
     python -m pip  install --upgrade scipy
 
