@@ -28,7 +28,8 @@ if __name__ == '__main__':
 
 
 
-    inpFile = u'narration/1.入力テキスト_sjis.txt'
+    # 入力ファイル
+    inpFile = u'narration/1.入力ファイル_sjis.txt'
     if (os.path.exists(inpFile)):
 
         nowTime=datetime.datetime.now()
@@ -67,6 +68,5 @@ if __name__ == '__main__':
     print('')
     print('narration1:terminate')
     print('narration1:bye!')
-
 
 

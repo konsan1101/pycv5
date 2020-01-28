@@ -1112,8 +1112,15 @@ def speech_batch(runMode, micDev,
 
         if (inpText != '' and inpText != '!'):
             if (not inpText.isdigit()):
-                numtxt = qKanji2num.strkan2num(inpText)
+                try:
+                    numtxt = inpText
+                    if (len(inpText) <= 10):
+                        numtxt = qKanji2num.strkan2num(inpText)
+                except:
+                    pass
                 if (numtxt != ''):
+                    numtxt.replace(u'1般', u'一般')
+                    numtxt.replace(u'3菱', u'三菱')
                     if (numtxt != inpText):
                         if (runMode != 'number'):
                             qFunc.logOutput(' ' + procId + ' Recognition  [' + inpText + u'] → [' + numtxt + ']', True)

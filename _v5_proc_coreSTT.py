@@ -436,8 +436,9 @@ class proc_coreSTT:
             trnInput = ''
             trnOutput= ''
             if (not self.micDev.isdigit()):
-                trnInput = inpOutput
-                trnOutput= qPath_s_TRA  + proc_name + '.' + inpLang + '.' + trnLang[:2] + '.stt.translate.txt'
+                if (inpLang != trnLang):
+                    trnInput = inpOutput
+                    trnOutput= qPath_s_TRA  + proc_name + '.' + inpLang + '.' + trnLang[:2] + '.stt.translate.txt'
             txtInput = ''
             txtOutput= ''
             outInput = ''

@@ -12,12 +12,12 @@ set pyname=_v5__main__kernel
     copy "dist\%pyname%.exe"   "%pyname%.exe"
     del  "%pyname%.spec"
 
-set pyname=_v5__main_speech
-    echo;
-    echo %pyname%.py
-    pyinstaller %pyname%.py  --onefile  --icon="_icons/speech_start.ico"
-    copy "dist\%pyname%.exe"   "%pyname%.exe"
-    del  "%pyname%.spec"
+rem set pyname=_v5__main_speech
+rem     echo;
+rem     echo %pyname%.py
+rem     pyinstaller %pyname%.py  --onefile  --icon="_icons/speech_start.ico"
+rem     copy "dist\%pyname%.exe"   "%pyname%.exe"
+rem     del  "%pyname%.spec"
 
 set pyname=_v5__main_vision
     echo;
