@@ -33,13 +33,13 @@ if __name__ == '__main__':
     for file in files:
         file = file.replace('\\', '/')
         fileId = file.replace('narration/mp3/', '')
-        fileId = fileId.replace('.text2vocal', '')
+        fileId = fileId.replace('.tts', '')
 
         if (True):
             print(fileId)
 
             f1 = file
-            f2 = 'narration/wav/' + fileId[:-4] + '.text2vocal.wav'
+            f2 = 'narration/wav/' + fileId[:-4] + '.wav'
             try:
                 sox = subprocess.Popen(['sox', '-q', f1, '-r', '16000', '-b', '16', '-c', '1', f2, ], \
                       stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
@@ -89,14 +89,15 @@ if __name__ == '__main__':
                 except:
                     pass
 
-                f1 = 'narration/mp3/' + fileId[:-4] + '.text2vocal.mp3'
+                #f1 = 'narration/mp3/' + fileId[:-4] + '.tts.mp3'
+                f1 = file
                 f2 = 'narration/mp3/' + fileId[:-4] + '.[' + f + '].mp3'
                 try:
                     os.rename(f1, f2)
                 except:
                     pass
 
-                f1 = 'narration/wav/' + fileId[:-4] + '.text2vocal.wav'
+                f1 = 'narration/wav/' + fileId[:-4] + '.wav'
                 f2 = 'narration/wav/' + fileId[:-4] + '.[' + f + '].wav'
                 try:
                     os.rename(f1, f2)
