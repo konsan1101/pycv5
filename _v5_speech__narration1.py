@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 
 
@@ -55,7 +56,7 @@ if __name__ == '__main__':
                     w.write(txt + '\r')
                     w.close
                     w = None
-                except:
+                except Exception as e:
                     w = None
 
 

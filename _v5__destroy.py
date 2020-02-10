@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 
 
@@ -33,7 +34,9 @@ qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -118,18 +121,15 @@ if __name__ == '__main__':
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
-
     qFunc.init()
 
-    # ログ設定
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
-
-    qFunc.logOutput(main_id + ':init')
-    qFunc.logOutput(main_id + ':exsample.py runMode, ')
+    qLog.log('info', main_id, 'init')
+    qLog.log('info', main_id, 'exsample.py runMode, ')
 
     # パラメータ
 

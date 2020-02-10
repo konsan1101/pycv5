@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 import pyautogui
 if (os.name == 'nt'):
@@ -36,7 +37,9 @@ qCtrl_control_self       = qCtrl_control_player
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -285,7 +288,7 @@ class main_player:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -305,10 +308,10 @@ class main_player:
             self.play_path[i] = None
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -329,7 +332,7 @@ class main_player:
         self.proc_main.start()
 
     def abort(self, waitMax=5, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -359,7 +362,7 @@ class main_player:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -386,7 +389,7 @@ class main_player:
             control = ''
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
-                qFunc.logOutput(self.proc_id + ':' + str(txt))
+                qLog.log('info', self.proc_id, '' + str(txt))
                 if (txt == '_end_'):
                     break
 
@@ -405,7 +408,7 @@ class main_player:
 
             # 活動メッセージ
             if  ((time.time() - last_alive) > 30):
-                qFunc.logOutput(self.proc_id + ':alive', display=True, )
+                qLog.log('debug', self.proc_id, 'alive', display=True, )
                 last_alive = time.time()
 
             # キュー取得
@@ -419,7 +422,7 @@ class main_player:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディー設定
             if (qFunc.statusCheck(self.fileRdy) == False):
@@ -492,7 +495,7 @@ class main_player:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
@@ -593,7 +596,7 @@ class main_player:
                         self.play_proc[i] = None
                         self.play_id[i]   = ''
                         self.play_path[i] = ''
-                #except:
+                #except Exception as e:
                 #        self.play_proc[i] = None
                 #        self.play_id[i]   = ''
                 #        self.play_path[i] = ''
@@ -618,7 +621,7 @@ class main_player:
     def sub_start(self, proc_text, panel='0-', vol=100, order='normal', loop=1, overtext='', ):
 
         # ログ
-        qFunc.logOutput(self.proc_id + ':open ' + proc_text, display=True,)
+        qLog.log('info', self.proc_id, 'open ' + proc_text, display=True,)
 
         # 空きＱ検索
         hit = -1
@@ -631,7 +634,7 @@ class main_player:
                         self.play_proc[i] = None
                         self.play_id[i]   = ''
                         self.play_path[i] = ''
-                #except:
+                #except Exception as e:
                 #        self.play_proc[i] = None
                 #        self.play_id[i]   = ''
                 #        self.play_path[i] = ''
@@ -674,7 +677,7 @@ class main_player:
                     self.play_proc[i] = None
                     self.play_id[i]   = ''
                     self.play_path[i] = ''
-                #except:
+                #except Exception as e:
                 #    self.play_proc[i] = None
                 #    self.play_id[i]   = ''
                 #    self.play_path[i] = ''
@@ -703,18 +706,15 @@ if __name__ == '__main__':
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
-
     qFunc.init()
 
-    # ログ設定
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
-
-    qFunc.logOutput(main_id + ':init')
-    qFunc.logOutput(main_id + ':exsample.py runMode, ')
+    qLog.log('info', main_id, 'init')
+    qLog.log('info', main_id, 'exsample.py runMode, ')
 
     # 初期設定
 
@@ -734,13 +734,13 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 2):
             runMode  = str(sys.argv[1]).lower()
 
-        qFunc.logOutput(main_id + ':runMode  =' + str(runMode  ))
+        qLog.log('info', main_id, 'runMode  =' + str(runMode  ))
 
     # 起動
 
     if (True):
 
-        qFunc.logOutput(main_id + ':start')
+        qLog.log('info', main_id, 'start')
 
         main_core = main_player(main_name, '0', runMode=runMode, )
         main_core.begin()
@@ -768,7 +768,7 @@ if __name__ == '__main__':
                 #t = u'_demo1397' # base + 1,3,9,7
                 #t = u'_demo1234' # base + 1234,6789
                 t = u'_test_'      # base + 1-9
-                print(t)
+                qLog.log('debug', main_id, t, )
                 qFunc.txtsWrite(qCtrl_control_self ,txts=[t], encoding='utf-8', exclusive=True, mode='w', )
 
         # デバッグ
@@ -776,10 +776,10 @@ if __name__ == '__main__':
 
             # テスト終了
             if  ((time.time() - main_start) > 30):
-                    print('_stop_')
+                    qLog.log('debug', main_id, '_stop_', )
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
                     time.sleep(5.00)
-                    print('_end_')
+                    qLog.log('debug', main_id, '_end_', )
                     qFunc.txtsWrite(qCtrl_control_self ,txts=['_end_'], encoding='utf-8', exclusive=True, mode='w', )
 
         # アイドリング
@@ -798,14 +798,14 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':terminate')
+        qLog.log('info', main_id, 'terminate')
 
         main_core.abort()
         del main_core
 
         qFunc.kill('ffplay', )
 
-        qFunc.logOutput(main_id + ':bye!')
+        qLog.log('info', main_id, 'bye!')
 
         sys.exit(0)
 

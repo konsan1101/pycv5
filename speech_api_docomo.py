@@ -11,12 +11,13 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import requests
 import json
-import datetime
 
 
 
@@ -68,7 +69,7 @@ class SpeechAPI:
                         at = res.json()['appId']
                         self.chatting_token = at
                         #print(str(self.chatting_token))
-                except:
+                except Exception as e:
                     self.chatting_token = None
             if (not self.chatting_token is None):
                 return True
@@ -93,7 +94,7 @@ class SpeechAPI:
                         at = res.json()['appId']
                         self.knowledge_token = at
                         #print(str(self.knowledge_token))
-                except:
+                except Exception as e:
                     self.knowledge_token = None
             if (not self.knowledge_token is None):
                 return True
@@ -129,7 +130,7 @@ class SpeechAPI:
                         res_text = res.json()['text']
                         if (res_text != ''):
                             res_api = 'docomo'
-                except:
+                except Exception as e:
                     pass
 
             if (res_text != ''):
@@ -198,7 +199,7 @@ class SpeechAPI:
                         self.chatting_recv = res_recv
                         res_text = res_json['systemText']['expression']
                         res_api = 'docomo'
-                except:
+                except Exception as e:
                      pass
 
             if (res_text != ''):
@@ -251,7 +252,7 @@ class SpeechAPI:
                         self.knowledge_recv = res_recv
                         res_text = res_json['systemText']['expression']
                         res_api = 'docomo'
-                except:
+                except Exception as e:
                      pass
 
             if (res_text != ''):

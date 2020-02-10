@@ -11,7 +11,10 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+import glob
+
 import subprocess
 
 import cv2
@@ -51,7 +54,7 @@ class VisionAPI:
                 self.cv_auth = IAMAuthenticator(key)
                 if (not self.cv_auth is None):
                     return True
-            except:
+            except Exception as e:
                 pass
 
         # watson OCR認識
@@ -62,7 +65,7 @@ class VisionAPI:
                 self.ocr_auth = IAMAuthenticator(key)
                 if (not self.ocr_auth is None):
                     return True
-            except:
+            except Exception as e:
                 pass
 
         return False
@@ -116,7 +119,7 @@ class VisionAPI:
             cv2.imwrite(outImage, proc_img)
             return True
 
-        except:
+        except Exception as e:
             pass
 
         return False
@@ -158,12 +161,12 @@ class VisionAPI:
                             nm = str(class_nm.get('class'))
                             #print(nm)
                             classes += nm.strip() + ','
-                    except:
+                    except Exception as e:
                         pass
 
                     res_text = {}
                     res_text['classes'] = classes
-                #except:
+                #except Exception as e:
                 #    pass
 
             return res_text, 'watson'
@@ -202,10 +205,10 @@ class VisionAPI:
                     #        nm = str(class_nm.get('class'))
                     #        #print(nm)
                     #        res_text.append( nm.strip() )
-                    #except:
+                    #except Exception as e:
                     #    pass
 
-                #except:
+                #except Exception as e:
                 #    pass
 
             return res_text, 'watson'

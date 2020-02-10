@@ -11,6 +11,7 @@
 import sys
 import os
 import time
+import datetime
 import codecs
 
 
@@ -74,7 +75,7 @@ if __name__ == '__main__':
 
             outText, api = azureAPI.translate(inpText=inpText, inpLang=inpLang, outLang=outLang, )
 
-        #except:
+        #except Exception as e:
         #print(' Error!', sys.exc_info()[0])
         #sys.exit()
 

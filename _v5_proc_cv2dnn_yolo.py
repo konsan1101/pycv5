@@ -10,20 +10,23 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 import numpy as np
 import cv2
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -118,7 +121,7 @@ class proc_cv2dnn_yolo:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -129,10 +132,10 @@ class proc_cv2dnn_yolo:
         self.proc_seq  = 0
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -153,7 +156,7 @@ class proc_cv2dnn_yolo:
         self.proc_main.start()
 
     def abort(self, waitMax=5, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -183,7 +186,7 @@ class proc_cv2dnn_yolo:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -199,13 +202,13 @@ class proc_cv2dnn_yolo:
         threshold_score = 0.25
         threshold_nms   = 0.4
 
-        print("Loading Network.....")
+        qLog.log('debug', self.proc_id, 'Loading Network.....', )
         model = cv2.dnn.readNetFromDarknet(file_config, file_weights)
         model.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         model.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
         layer_names = model.getLayerNames()
         layer_names = [layer_names[i[0] - 1] for i in model.getUnconnectedOutLayers()]
-        print("Network successfully loaded")
+        qLog.log('debug', self.proc_id, 'Network successfully loaded', )
 
         # モデルの中の訓練されたクラス名
         classNames  = {}
@@ -246,7 +249,7 @@ class proc_cv2dnn_yolo:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
             if (qFunc.statusCheck(self.fileRdy) == False):
@@ -465,22 +468,23 @@ class proc_cv2dnn_yolo:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
 
 if __name__ == '__main__':
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
+    # 設定
     cv2.namedWindow('Display', 1)
     cv2.moveWindow( 'Display', 0, 0)
 
@@ -492,6 +496,9 @@ if __name__ == '__main__':
     cv2.waitKey(1)
     time.sleep(3.00)
 
+
+
+    # ループ
     chktime = time.time()
     while ((time.time() - chktime) < 15):
 
@@ -522,13 +529,14 @@ if __name__ == '__main__':
 
         time.sleep(0.05)
 
+
+
     #cv2.waitKey(0)
     time.sleep(1.00)
     cv2dnn_yolo_thread.abort()
     del cv2dnn_yolo_thread
 
-
-
     cv2.destroyAllWindows()
+
 
 

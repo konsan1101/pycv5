@@ -11,6 +11,7 @@
 import sys
 import os
 import time
+import datetime
 import codecs
 
 
@@ -60,7 +61,7 @@ if __name__ == '__main__':
 
             resText, api = googleAPI.recognize(inpWave=inpWave, inpLang=inpLang)
 
-        #except:
+        #except Exception as e:
         #    pass
 
 

@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import cv2
@@ -103,7 +105,7 @@ class VisionAPI:
             cv2.imwrite(outImage, proc_img)
             return True
 
-        except:
+        except Exception as e:
             pass
 
         return False
@@ -149,27 +151,27 @@ class VisionAPI:
                             for names in res_json.get('categories'):
                                 nm = str(names.get('name')).replace('_',' ')
                                 categories += nm.strip() + ','
-                        except:
+                        except Exception as e:
                             pass
 
                         try:
                             for texts in res_json.get('description').get('captions'):
                                 cp = str(texts.get('text'))
                                 captions = cp.strip() + ','
-                        except:
+                        except Exception as e:
                             pass
 
                         try:
                             for tag in res_json.get('description').get('tags'):
                                 description += str(tag).strip() + ','
-                        except:
+                        except Exception as e:
                             pass
 
                         res_text = {}
                         res_text['categories']  = categories
                         res_text['captions']    = captions
                         res_text['description'] = description
-                except:
+                except Exception as e:
                     pass
 
             return res_text, 'azure'
@@ -218,9 +220,9 @@ class VisionAPI:
                                         s += word.get('text')
                                     #print( s )
                                     res_text.append(s)
-                        except:
+                        except Exception as e:
                             res_text = None
-                except:
+                except Exception as e:
                     pass
 
             return res_text, 'azure'

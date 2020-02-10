@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 
 
@@ -31,7 +32,9 @@ qCtrl_result_ocrTrn_sjis = 'temp/result_ocr_translate_sjis.txt'
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -358,14 +361,16 @@ def vision_batch(runMode, camDev,
                 procId, fileId, inpCV, tmpCV, outCV, inpOCR, tmpOCR, outOCR, outTrn, ):
 
     # 共通クラス
+    qFunc = _v5__qFunc.qFunc_class()
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=False, outfile=True, )
-    #qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog2  = _v5__qLog.qLog_class()
+    qLog2.init(mode='logger', filename=filename, display=False, outfile=True, )
 
+    # 設定
     qFunc.remove(qCtrl_result_vision      )
     qFunc.remove(qCtrl_result_cv          )
     qFunc.remove(qCtrl_result_cv_sjis     )
@@ -377,12 +382,12 @@ def vision_batch(runMode, camDev,
     if (inpCV != ''):
         res,api,ary,landmark = qVisionCV(qApiCV, qLangCV, inpCV, tmpCV)
         if (api == qApiCV) or (api == 'free' and qApiCV == 'google'):
-                qFunc.logOutput(' ' + procId + ' Vision CV    [' + res + '] ' + qLangCV + ' (' + api + ')', True)
+                qLog2.log('info', '   ' + procId, ' Vision CV    [' + res + '] ' + qLangCV + ' (' + api + ')', display=True)
         else:
             if (api != ''):
-                qFunc.logOutput(' ' + procId + ' Vision CV    [' + res + '] ' + qLangCV + ' (!' + api + ')', True)
+                qLog2.log('info', '   ' + procId, ' Vision CV    [' + res + '] ' + qLangCV + ' (!' + api + ')', display=True)
             else:
-                qFunc.logOutput(' ' + procId + ' Vision CV    [' + res + '] ' + qLangCV + ' (!' + qApiCV + ')', True)
+                qLog2.log('info', '   ' + procId, ' Vision CV    [' + res + '] ' + qLangCV + ' (!' + qApiCV + ')', display=True)
 
         if (res != ''):
             if (outCV != ''):
@@ -395,7 +400,7 @@ def vision_batch(runMode, camDev,
                 qFunc.txtsWrite(qCtrl_result_cv_sjis, txts=ary, encoding='shift_jis', exclusive=True, mode='w', )
 
             if (landmark != ''):
-                qFunc.logOutput(' ' + procId + ' Landmark     [' + landmark + '] ' + qLangCV + ' (!' + qApiCV + ')', True)
+                qLog2.log('info', '   ' + procId, ' Landmark     [' + landmark + '] ' + qLangCV + ' (!' + qApiCV + ')', display=True)
 
                 recfile = outCV.replace(qPath_v_cv, '')
                 recfile = recfile.replace(qPath_rec, '')
@@ -408,12 +413,12 @@ def vision_batch(runMode, camDev,
     if (inpOCR != ''):
         res,api,ary = qVisionOCR(qApiOCR, qLangOCR, inpOCR, tmpOCR)
         if (api == qApiOCR) or (api == 'free' and qApiOCR == 'google'):
-                qFunc.logOutput(' ' + procId + ' Vision OCR   [' + res + '] ' + qLangOCR + ' (' + api + ')', True)
+                qLog2.log('info', '   ' + procId, ' Vision OCR   [' + res + '] ' + qLangOCR + ' (' + api + ')', display=True)
         else:
             if (api != ''):
-                qFunc.logOutput(' ' + procId + ' Vision OCR   [' + res + '] ' + qLangOCR + ' (!' + api + ')', True)
+                qLog2.log('info', '   ' + procId, ' Vision OCR   [' + res + '] ' + qLangOCR + ' (!' + api + ')', display=True)
             else:
-                qFunc.logOutput(' ' + procId + ' Vision OCR   [' + res + '] ' + qLangOCR + ' (!' + qApiOCR + ')', True)
+                qLog2.log('info', '   ' + procId, ' Vision OCR   [' + res + '] ' + qLangOCR + ' (!' + qApiOCR + ')', display=True)
 
         if (res != ''):
             if (outOCR != ''):
@@ -427,12 +432,12 @@ def vision_batch(runMode, camDev,
 
             trnRes,trnApi,trnAry = qOCR2Trn(qApiTrn, qLangOCR, ary, qLangTrn)
             if (api == qApiOCR) or (api == 'free' and qApiOCR == 'google'):
-                    qFunc.logOutput(' ' + procId + ' Vision Trns  [' + trnRes + '] ' + qLangTrn + ' (' + api + ')', True)
+                    qLog2.log('info', '   ' + procId, ' Vision Trns  [' + trnRes + '] ' + qLangTrn + ' (' + api + ')', display=True)
             else:
                 if (api != ''):
-                    qFunc.logOutput(' ' + procId + ' Vision Trans [' + trnRes + '] ' + qLangTrn + ' (!' + api + ')', True)
+                    qLog2.log('info', '   ' + procId, ' Vision Trans [' + trnRes + '] ' + qLangTrn + ' (!' + api + ')', display=True)
                 else:
-                    qFunc.logOutput(' ' + procId + ' Vision Trans [' + trnRes + '] ' + qLangTrn + ' (!' + qApiTrn + ')', True)
+                    qLog2.log('info', '   ' + procId, ' Vision Trans [' + trnRes + '] ' + qLangTrn + ' (!' + qApiTrn + ')', display=True)
 
             if (trnRes != ''):
                 if (outTrn != ''):
@@ -491,21 +496,22 @@ class api_vision_class:
 
 
 if (__name__ == '__main__'):
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=False, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, display=False, outfile=True, )
 
-    qFunc.logOutput('___main___:init')
-    qFunc.logOutput('___main___:exsample.py runMode, api..., lang..., etc..., ')
+    qLog.log('info', '___main___:init')
+    qLog.log('info', '___main___:exsample.py runMode, api..., lang..., etc..., ')
     #runMode  debug, ...
     #api      google, azure, watson,
     #lang     ja, en, fr, kr...
 
+    # 設定
     runMode  = 'debug'
     camDev   = '0'
 
@@ -560,31 +566,31 @@ if (__name__ == '__main__'):
     if (len(sys.argv) >= 18):
         outTrn = sys.argv[17]
 
-    qFunc.logOutput('')
-    qFunc.logOutput('___main___:runMode  =' + str(runMode  ))
-    qFunc.logOutput('___main___:camDev   =' + str(camDev   ))
-    qFunc.logOutput('___main___:qApiCV   =' + str(qApiCV   ))
-    qFunc.logOutput('___main___:qApiOCR  =' + str(qApiOCR  ))
-    qFunc.logOutput('___main___:qApiTrn  =' + str(qApiTrn  ))
-    qFunc.logOutput('___main___:qLangCV  =' + str(qLangCV  ))
-    qFunc.logOutput('___main___:qLangOCR =' + str(qLangOCR ))
-    qFunc.logOutput('___main___:qLangTrn =' + str(qLangTrn ))
+    qLog.log('info', '')
+    qLog.log('info', '___main___:runMode  =' + str(runMode  ))
+    qLog.log('info', '___main___:camDev   =' + str(camDev   ))
+    qLog.log('info', '___main___:qApiCV   =' + str(qApiCV   ))
+    qLog.log('info', '___main___:qApiOCR  =' + str(qApiOCR  ))
+    qLog.log('info', '___main___:qApiTrn  =' + str(qApiTrn  ))
+    qLog.log('info', '___main___:qLangCV  =' + str(qLangCV  ))
+    qLog.log('info', '___main___:qLangOCR =' + str(qLangOCR ))
+    qLog.log('info', '___main___:qLangTrn =' + str(qLangTrn ))
 
-    qFunc.logOutput('___main___:procId   =' + str(procId   ))
-    qFunc.logOutput('___main___:fileId   =' + str(fileId   ))
+    qLog.log('info', '___main___:procId   =' + str(procId   ))
+    qLog.log('info', '___main___:fileId   =' + str(fileId   ))
 
-    qFunc.logOutput('___main___:inpCV    =' + str(inpCV    ))
-    qFunc.logOutput('___main___:tmpCV    =' + str(tmpCV    ))
-    qFunc.logOutput('___main___:outCV    =' + str(outCV    ))
-    qFunc.logOutput('___main___:inpOCR   =' + str(inpOCR   ))
-    qFunc.logOutput('___main___:tmpOCR   =' + str(tmpOCR   ))
-    qFunc.logOutput('___main___:outOCR   =' + str(outOCR   ))
-    qFunc.logOutput('___main___:outTrn   =' + str(outTrn   ))
+    qLog.log('info', '___main___:inpCV    =' + str(inpCV    ))
+    qLog.log('info', '___main___:tmpCV    =' + str(tmpCV    ))
+    qLog.log('info', '___main___:outCV    =' + str(outCV    ))
+    qLog.log('info', '___main___:inpOCR   =' + str(inpOCR   ))
+    qLog.log('info', '___main___:tmpOCR   =' + str(tmpOCR   ))
+    qLog.log('info', '___main___:outOCR   =' + str(outOCR   ))
+    qLog.log('info', '___main___:outTrn   =' + str(outTrn   ))
 
 
 
-    qFunc.logOutput('')
-    qFunc.logOutput('___main___:start')
+    qLog.log('info', '')
+    qLog.log('info', '___main___:start')
 
 
 
@@ -601,8 +607,8 @@ if (__name__ == '__main__'):
 
 
 
-    qFunc.logOutput('___main___:terminate')
+    qLog.log('info', '___main___:terminate')
 
-    qFunc.logOutput('___main___:bye!')
+    qLog.log('info', '___main___:bye!')
 
 

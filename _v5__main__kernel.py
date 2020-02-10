@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 print(os.path.dirname(__file__))
 print(os.path.basename(__file__))
@@ -54,7 +55,9 @@ qPython_weather          = '_v5_sub_weather_search.py'
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -178,7 +181,7 @@ class main_kernel:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -189,10 +192,10 @@ class main_kernel:
         self.proc_seq  = 0
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -213,7 +216,7 @@ class main_kernel:
         self.proc_main.start()
 
     def abort(self, waitMax=20, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -243,7 +246,7 @@ class main_kernel:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -255,7 +258,7 @@ class main_kernel:
             if (txt == '_end_'):
                 qFunc.remove(qCtrl_control_self)
 
-        # 起動条件
+        # 起動条件（controls.pyと合わせる）
         main_speech_run      = None
         main_speech_switch   = 'on'
         main_vision_run      = None
@@ -292,35 +295,19 @@ class main_kernel:
             browser_switch       = 'on'
             player_switch        = 'on'
         elif (self.runMode == 'translator'):
-            main_vision_switch   = 'off'
-            main_desktop_switch  = 'off'
-            bgm_switch           = 'off'
-            browser_switch       = 'off'
-            player_switch        = 'off'
+            pass
         elif (self.runMode == 'speech'):
-            main_vision_switch   = 'off'
-            main_desktop_switch  = 'off'
-            bgm_switch           = 'off'
-            browser_switch       = 'off'
-            player_switch        = 'off'
+            pass
         elif (self.runMode == 'number'):
-            main_vision_switch   = 'off'
-            main_desktop_switch  = 'off'
-            bgm_switch           = 'off'
-            browser_switch       = 'off'
-            player_switch        = 'off'
+            pass
         elif (self.runMode == 'camera'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
-            bgm_switch           = 'off'
-            browser_switch       = 'off'
-            player_switch        = 'off'
         elif (self.runMode == 'assistant'):
             main_vision_switch   = 'on'
             main_desktop_switch  = 'on'
-            bgm_switch           = 'off'
-            browser_switch       = 'on'
-            player_switch        = 'on'
+        elif (self.runMode == 'reception'):
+            main_vision_switch   = 'on'
 
         python_exe = 'python'
         if (qPLATFORM == 'darwin'):
@@ -339,7 +326,7 @@ class main_kernel:
             control = ''
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
-                qFunc.logOutput(self.proc_id + ':' + str(txt))
+                qLog.log('info', self.proc_id, '' + str(txt))
                 if (txt == '_end_'):
                     break
 
@@ -351,7 +338,7 @@ class main_kernel:
 
             # 活動メッセージ
             if  ((time.time() - last_alive) > 30):
-                qFunc.logOutput(self.proc_id + ':alive', display=True, )
+                qLog.log('debug', self.proc_id, 'alive', display=True, )
                 last_alive = time.time()
 
             # キュー取得
@@ -365,7 +352,7 @@ class main_kernel:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # スレッド設定
 
@@ -400,6 +387,8 @@ class main_kernel:
                     speechs.append({ 'text':u'ハンズフリーカメラ機能を、起動しました。', 'wait':0, })
                 elif (self.runMode == 'assistant'):
                     speechs.append({ 'text':u'ＡＩアシスタント機能を、起動しました。', 'wait':0, })
+                elif (self.runMode == 'reception'):
+                    speechs.append({ 'text':u'ＡＩ受付機能を、起動しました。', 'wait':0, })
 
             if (not main_speech_run is None) and (main_speech_switch != 'on'):
                 time.sleep(10.00)
@@ -737,7 +726,7 @@ class main_kernel:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
@@ -759,20 +748,17 @@ if __name__ == '__main__':
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
-
     qFunc.init()
 
-    # ログ設定
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    qLog.log('info', main_id, 'init')
+    qLog.log('info', main_id, 'exsample.py runMode, ..., ')
 
-    qFunc.logOutput(main_id + ':init')
-    qFunc.logOutput(main_id + ':exsample.py runMode, ..., ')
-
-    #runMode  debug, hud, live, translator, speech, number, camera, assistant,
+    #runMode  debug, hud, live, translator, speech, number, camera, assistant, reception,
 
     # パラメータ
 
@@ -809,7 +795,10 @@ if __name__ == '__main__':
             micType   = 'usb'
             micGuide  = 'off'
         elif (runMode == 'assistant'):
-            micType   = 'bluetooth'
+            micType   = 'usb'
+            micGuide  = 'off'
+        elif (runMode == 'reception'):
+            micType   = 'usb'
             micGuide  = 'off'
 
         if (len(sys.argv) >= 3):
@@ -854,19 +843,19 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 13):
             qLangOut = str(sys.argv[12]).lower()
 
-        qFunc.logOutput(main_id + ':runMode  =' + str(runMode  ))
-        qFunc.logOutput(main_id + ':micDev   =' + str(micDev   ))
-        qFunc.logOutput(main_id + ':micType  =' + str(micType  ))
-        qFunc.logOutput(main_id + ':micGuide =' + str(micGuide ))
-        qFunc.logOutput(main_id + ':micLevel =' + str(micLevel ))
+        qLog.log('info', main_id, 'runMode  =' + str(runMode  ))
+        qLog.log('info', main_id, 'micDev   =' + str(micDev   ))
+        qLog.log('info', main_id, 'micType  =' + str(micType  ))
+        qLog.log('info', main_id, 'micGuide =' + str(micGuide ))
+        qLog.log('info', main_id, 'micLevel =' + str(micLevel ))
 
-        qFunc.logOutput(main_id + ':qApiInp  =' + str(qApiInp  ))
-        qFunc.logOutput(main_id + ':qApiTrn  =' + str(qApiTrn  ))
-        qFunc.logOutput(main_id + ':qApiOut  =' + str(qApiOut  ))
-        qFunc.logOutput(main_id + ':qLangInp =' + str(qLangInp ))
-        qFunc.logOutput(main_id + ':qLangTrn =' + str(qLangTrn ))
-        qFunc.logOutput(main_id + ':qLangTxt =' + str(qLangTxt ))
-        qFunc.logOutput(main_id + ':qLangOut =' + str(qLangOut ))
+        qLog.log('info', main_id, 'qApiInp  =' + str(qApiInp  ))
+        qLog.log('info', main_id, 'qApiTrn  =' + str(qApiTrn  ))
+        qLog.log('info', main_id, 'qApiOut  =' + str(qApiOut  ))
+        qLog.log('info', main_id, 'qLangInp =' + str(qLangInp ))
+        qLog.log('info', main_id, 'qLangTrn =' + str(qLangTrn ))
+        qLog.log('info', main_id, 'qLangTxt =' + str(qLangTxt ))
+        qLog.log('info', main_id, 'qLangOut =' + str(qLangOut ))
 
     # 初期設定
 
@@ -874,7 +863,7 @@ if __name__ == '__main__':
         try:
             subprocess.call(['/usr/bin/osascript', '-e',
             'tell app "Finder" to set frontmost of process "python" to true'])
-        except:
+        except Exception as e:
             pass
 
     if (True):
@@ -897,7 +886,7 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':start')
+        qLog.log('info', main_id, 'start')
 
         qFunc.guideDisplay(display=True, panel='1', filename='_kernel_start_', txt='', )
         guide_disp = True
@@ -920,7 +909,7 @@ if __name__ == '__main__':
         control = ''
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            qFunc.logOutput(main_id + ':' + str(txt))
+            qLog.log('info', main_id, '' + str(txt))
             if (txt == '_end_'):
                 break
             else:
@@ -950,10 +939,15 @@ if __name__ == '__main__':
             if (res_name == 'control'):
                 control  = res_value
                 break
+
             # ガイド表示
             if (res_name == 'guide'):
                 if (guide_disp == True):
                     qFunc.guideDisplay(txt=res_value, )
+                    guide_time = time.time()
+                else:
+                    qFunc.guideDisplay(display=True, panel='1', filename='_kernel_guide_', txt=res_value, )
+                    guide_disp = True
                     guide_time = time.time()
 
         # ガイド表示終了
@@ -978,7 +972,7 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':terminate')
+        qLog.log('info', main_id, 'terminate')
 
         qFunc.guideDisplay(display=True, panel='1', filename='_kernel_stop_', txt='', )
         guide_disp = True
@@ -990,7 +984,8 @@ if __name__ == '__main__':
         qFunc.guideDisplay(display=False,)
         guide_disp = False
 
-        qFunc.logOutput(main_id + ':bye!')
+        qLog.log('info', main_id, 'bye!')
+        time.sleep(5.00)
 
         sys.exit(0)
 

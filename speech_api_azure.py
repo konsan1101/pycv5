@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import requests
@@ -57,7 +59,7 @@ class SpeechAPI:
                     if (res.status_code == 200):
                         #print(res.text)
                         self.stt_token = res.text
-                except:
+                except Exception as e:
                     self.stt_token = None
             if (not self.stt_token is None):
                 return True
@@ -74,7 +76,7 @@ class SpeechAPI:
                     if (res.status_code == 200):
                         #print(res.text)
                         self.tra_token = res.text
-                except:
+                except Exception as e:
                     self.tra_token = None
             if (not self.tra_token is None):
                 return True
@@ -95,7 +97,7 @@ class SpeechAPI:
                     if (res.status_code == 200):
                         #print(res.text)
                         self.tts_token = res.text
-                except:
+                except Exception as e:
                     self.tts_token = None
             if (not self.tts_token is None):
                 return True
@@ -160,7 +162,7 @@ class SpeechAPI:
                         if (res_text != ''):
                             res_api = 'azure'
 
-                except:
+                except Exception as e:
                     pass
 
             if (res_text != ''):
@@ -258,7 +260,7 @@ class SpeechAPI:
                         if (res_text != ''):
                             res_api = 'azure'
 
-                except:
+                except Exception as e:
                     pass
 
             if (res_text != ''):
@@ -293,7 +295,7 @@ class SpeechAPI:
             if (os.path.exists(outFile)):
                 try:
                     os.remove(outFile)
-                except:
+                except Exception as e:
                     pass
 
             lang  = ''
@@ -375,7 +377,7 @@ class SpeechAPI:
                         wb = None
                         return outText, 'azure'
 
-                except:
+                except Exception as e:
                     pass
         return '', ''
 

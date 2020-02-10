@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 import pyautogui
 
@@ -25,7 +26,9 @@ import cv2
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -123,7 +126,7 @@ class proc_capture:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -139,10 +142,10 @@ class proc_capture:
         cv2.putText(self.blue_img, 'No Image !', (40,80), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0,0,255))
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -163,7 +166,7 @@ class proc_capture:
         self.proc_main.start()
 
     def abort(self, waitMax=5, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -193,7 +196,7 @@ class proc_capture:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -227,7 +230,7 @@ class proc_capture:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
             if (qFunc.statusCheck(self.fileRdy) == False):
@@ -265,7 +268,7 @@ class proc_capture:
                     frm = pyautogui.screenshot()
                     frame = np.asarray(frm)
                     frame = cv2.cvtColor(frame,cv2.COLOR_RGB2BGR)
-                except:
+                except Exception as e:
                     pass
 
                 if (not frame is None):
@@ -382,30 +385,32 @@ class proc_capture:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
 
 if __name__ == '__main__':
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
+    # 設定
     cv2.namedWindow('Display', 1)
     cv2.moveWindow( 'Display', 0, 0)
-
-
 
     capture_thread = proc_capture('capture', '0', )
     capture_thread.begin()
 
+
+
+    # ループ
     chktime = time.time()
     while ((time.time() - chktime) < 15):
 
@@ -431,5 +436,6 @@ if __name__ == '__main__':
 
 
     cv2.destroyAllWindows()
+
 
 

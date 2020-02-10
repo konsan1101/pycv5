@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 #print(os.path.dirname(__file__))
 #print(os.path.basename(__file__))
@@ -30,7 +31,9 @@ qCtrl_control_self       = qCtrl_control_bgm
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -124,7 +127,7 @@ class main_bgm:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -141,10 +144,10 @@ class main_bgm:
         self.bgm_name  = ''
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -165,7 +168,7 @@ class main_bgm:
         self.proc_main.start()
 
     def abort(self, waitMax=5, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -195,7 +198,7 @@ class main_bgm:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -220,7 +223,7 @@ class main_bgm:
             control = ''
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
-                qFunc.logOutput(self.proc_id + ':' + str(txt))
+                qLog.log('info', self.proc_id, '' + str(txt))
                 if (txt == '_end_'):
                     break
                 else:
@@ -235,7 +238,7 @@ class main_bgm:
 
             # 活動メッセージ
             if  ((time.time() - last_alive) > 30):
-                qFunc.logOutput(self.proc_id + ':alive', display=True, )
+                qLog.log('debug', self.proc_id, 'alive', display=True, )
                 last_alive = time.time()
 
             # キュー取得
@@ -249,7 +252,7 @@ class main_bgm:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディー設定
             if (qFunc.statusCheck(self.fileRdy) == False):
@@ -314,7 +317,7 @@ class main_bgm:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
@@ -480,11 +483,11 @@ class main_bgm:
                         self.bgm_id = subprocess.Popen(['open', '-a', 'VLC', self.bgm_name, ], \
                                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
                         self.bgm_start = time.time()
-            except:
+            except Exception as e:
                 pass
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'play ' + self.bgm_file + ' start', display=True,)
+            qLog.log('info', self.proc_id, '' + u'play ' + self.bgm_file + ' start', display=True,)
 
     # 停止
     def sub_stop(self, proc_text, ):
@@ -496,7 +499,7 @@ class main_bgm:
             self.bgm_id = None
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':' + u'play ' + self.bgm_file + ' stop', display=True,)
+            qLog.log('info', self.proc_id, '' + u'play ' + self.bgm_file + ' stop', display=True,)
 
         # リセット
         qFunc.kill('VLC', )
@@ -522,18 +525,15 @@ if __name__ == '__main__':
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
-
     qFunc.init()
 
-    # ログ設定
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
-
-    qFunc.logOutput(main_id + ':init')
-    qFunc.logOutput(main_id + ':exsample.py runMode, ')
+    qLog.log('info', main_id, 'init')
+    qLog.log('info', main_id, 'exsample.py runMode, ')
 
     # パラメータ
 
@@ -542,7 +542,7 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 2):
             runMode  = str(sys.argv[1]).lower()
 
-        qFunc.logOutput(main_id + ':runMode  =' + str(runMode  ))
+        qLog.log('info', main_id, 'runMode  =' + str(runMode  ))
 
     # 初期設定
 
@@ -557,7 +557,7 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':start')
+        qLog.log('info', main_id, 'start')
 
         main_core = main_bgm(main_name, '0', runMode=runMode, )
         main_core.begin()
@@ -606,12 +606,12 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':terminate')
+        qLog.log('info', main_id, 'terminate')
 
         main_core.abort()
         del main_core
 
-        qFunc.logOutput(main_id + ':bye!')
+        qLog.log('info', main_id, 'bye!')
 
         sys.exit(0)
 

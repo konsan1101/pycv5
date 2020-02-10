@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 
 
@@ -25,7 +26,9 @@ qCtrl_control_speech     = 'temp/control_speech.txt'
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -137,7 +140,7 @@ class proc_coreSTT:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -148,10 +151,10 @@ class proc_coreSTT:
         self.proc_seq  = 0
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -172,7 +175,7 @@ class proc_coreSTT:
         self.proc_main.start()
 
     def abort(self, waitMax=5, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -202,7 +205,7 @@ class proc_coreSTT:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -232,7 +235,7 @@ class proc_coreSTT:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
             if (qFunc.statusCheck(self.fileRdy) == False):
@@ -270,7 +273,7 @@ class proc_coreSTT:
                             try:
                                 os.rename(f1, f2)
                                 proc_file = f2
-                            except:
+                            except Exception as e:
                                 pass
                         if (proc_file[-4:].lower() == '.mp3' and proc_file[-8:].lower() != '.wrk.mp3'):
                             f1 = proc_file
@@ -278,7 +281,7 @@ class proc_coreSTT:
                             try:
                                 os.rename(f1, f2)
                                 proc_file = f2
-                            except:
+                            except Exception as e:
                                 pass
 
                         if (proc_file[-8:].lower() == '.wrk.wav' or proc_file[-8:].lower() == '.wrk.mp3'):
@@ -287,7 +290,7 @@ class proc_coreSTT:
                             try:
                                 os.rename(f1, f2)
                                 proc_file = f2
-                            except:
+                            except Exception as e:
                                 pass
 
                             # 実行カウンタ
@@ -319,7 +322,7 @@ class proc_coreSTT:
 
                                 # ログ
                                 if (self.runMode == 'debug') or (not self.micDev.isdigit()):
-                                    qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
+                                    qLog.log('info', self.proc_id, '' + proc_name + u' → ' + work_name, display=self.logDisp,)
 
                                 # 結果出力
                                 if (cn_s.qsize() < 99):
@@ -344,7 +347,7 @@ class proc_coreSTT:
 
                                 time.sleep(1.00)
 
-                #except:
+                #except Exception as e:
                 #    pass
 
 
@@ -391,7 +394,7 @@ class proc_coreSTT:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
@@ -499,14 +502,14 @@ class proc_coreSTT:
 
 
 if __name__ == '__main__':
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
     # 初期設定
     qFunc.remove(qCtrl_control_speech)
@@ -557,7 +560,7 @@ if __name__ == '__main__':
             control = ''
             txts, txt = qFunc.txtsRead(qCtrl_control_speech)
             if (txts != False):
-                qFunc.logOutput(str(txt))
+                qLog.log('info', str(txt))
                 if (txt == '_end_'):
                     break
                 else:
@@ -578,5 +581,6 @@ if __name__ == '__main__':
     # 終了
     coreSTT_thread.abort()
     del coreSTT_thread
+
 
 

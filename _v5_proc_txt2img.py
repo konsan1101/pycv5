@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 import numpy as np
 import cv2
@@ -24,7 +25,9 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -100,10 +103,10 @@ qRdy__d_sendkey = qFunc.getValue('qRdy__d_sendkey')
 
 
 # フォント
-qFONT_default = {'file':qPath_fonts + '_vision_font_ipaexg.ttf','offset':8}
-qFONT_status  = {'file':qPath_fonts + '_vision_font_ipag.ttf','offset':8}
-qFONT_zh = {'file':'C:/Windows/Fonts/msyh.ttc', 'offset':5}
-qFONT_ko = {'file':'C:/Windows/Fonts/batang.ttc', 'offset':10}
+qFont_default = {'file':qPath_fonts + '_vision_font_ipaexg.ttf','offset':8}
+qFont_status  = {'file':qPath_fonts + '_vision_font_ipag.ttf','offset':8}
+qFont_zh = {'file':'C:/Windows/Fonts/msyh.ttc', 'offset':5}
+qFont_ko = {'file':'C:/Windows/Fonts/batang.ttc', 'offset':10}
 
 
 
@@ -123,7 +126,7 @@ class proc_txt2img:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -138,10 +141,10 @@ class proc_txt2img:
         self.flag_blackwhite = 'black'
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -162,7 +165,7 @@ class proc_txt2img:
         self.proc_main.start()
 
     def abort(self, waitMax=5, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -192,7 +195,7 @@ class proc_txt2img:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -200,26 +203,26 @@ class proc_txt2img:
         self.proc_step = '1'
 
         # フォント
-        font16_default  = ImageFont.truetype(qFONT_default['file'], 16, encoding='unic')
-        font16_defaulty =                    qFONT_default['offset']
-        font16_status   = ImageFont.truetype(qFONT_status[ 'file'], 16, encoding='unic')
-        font16_statusy  =                    qFONT_status[ 'offset']
-        font32_default  = ImageFont.truetype(qFONT_default['file'], 32, encoding='unic')
-        font32_defaulty =                    qFONT_default['offset']
-        font48_default  = ImageFont.truetype(qFONT_default['file'], 48, encoding='unic')
-        font48_defaulty =                    qFONT_default['offset']
-        if (os.path.exists(qFONT_zh['file'])):
-            font32_zh  = ImageFont.truetype(qFONT_zh['file']     , 32, encoding='unic')
-            font32_zhy =                    qFONT_zh['offset']
+        font16_default  = ImageFont.truetype(qFont_default['file'], 16, encoding='unic')
+        font16_defaulty =                    qFont_default['offset']
+        font16_status   = ImageFont.truetype(qFont_status[ 'file'], 16, encoding='unic')
+        font16_statusy  =                    qFont_status[ 'offset']
+        font32_default  = ImageFont.truetype(qFont_default['file'], 32, encoding='unic')
+        font32_defaulty =                    qFont_default['offset']
+        font48_default  = ImageFont.truetype(qFont_default['file'], 48, encoding='unic')
+        font48_defaulty =                    qFont_default['offset']
+        if (os.path.exists(qFont_zh['file'])):
+            font32_zh  = ImageFont.truetype(qFont_zh['file']     , 32, encoding='unic')
+            font32_zhy =                    qFont_zh['offset']
         else:
-            font32_zh  = ImageFont.truetype(qFONT_default['file'], 32, encoding='unic')
-            font32_zhy =                    qFONT_default['offset']
-        if (os.path.exists(qFONT_ko['file'])):
-            font32_ko  = ImageFont.truetype(qFONT_ko['file']     , 32, encoding='unic')
-            font32_koy =                    qFONT_ko['offset']
+            font32_zh  = ImageFont.truetype(qFont_default['file'], 32, encoding='unic')
+            font32_zhy =                    qFont_default['offset']
+        if (os.path.exists(qFont_ko['file'])):
+            font32_ko  = ImageFont.truetype(qFont_ko['file']     , 32, encoding='unic')
+            font32_koy =                    qFont_ko['offset']
         else:
-            font32_ko  = ImageFont.truetype(qFONT_default['file'], 32, encoding='unic')
-            font32_koy =                    qFONT_default['offset']
+            font32_ko  = ImageFont.truetype(qFont_default['file'], 32, encoding='unic')
+            font32_koy =                    qFont_default['offset']
 
         # 待機ループ
         self.proc_step = '5'
@@ -244,7 +247,7 @@ class proc_txt2img:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
             if (qFunc.statusCheck(self.fileRdy) == False):
@@ -411,27 +414,29 @@ class proc_txt2img:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
 
 if __name__ == '__main__':
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
+    # 設定
     cv2.namedWindow('Display', 1)
     cv2.moveWindow( 'Display', 0, 0)
 
 
 
+    # テスト
     txt2img_thread = proc_txt2img('txt2img', '0', )
     txt2img_thread.begin()
 
@@ -459,8 +464,7 @@ if __name__ == '__main__':
     txt2img_thread.abort()
     del txt2img_thread
 
-
-
     cv2.destroyAllWindows()
+
 
 

@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 import numpy as np
 import cv2
@@ -24,7 +25,9 @@ from pyzbar.pyzbar import decode
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -116,7 +119,7 @@ class proc_cvreader:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -127,10 +130,10 @@ class proc_cvreader:
         self.proc_seq  = 0
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -151,7 +154,7 @@ class proc_cvreader:
         self.proc_main.start()
 
     def abort(self, waitMax=5, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -181,7 +184,7 @@ class proc_cvreader:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -217,7 +220,7 @@ class proc_cvreader:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
             if (qFunc.statusCheck(self.fileRdy) == False):
@@ -341,7 +344,7 @@ class proc_cvreader:
                     # 経過時間計算
                     try:
                         sec = time.time() - read_time[read_text]
-                    except:
+                    except Exception as e:
                         sec = 999
 
                     # 新規
@@ -363,11 +366,11 @@ class proc_cvreader:
                     # 読取ＯＫ
                     if (code_text != '') and (read_text != ''):
                         hit_count += 1
-                        qFunc.logOutput(self.proc_id + ':' + code_type + ' [' + code_text + ']')
+                        qLog.log('info', self.proc_id, '' + code_type + ' [' + code_text + ']')
 
                         # 読取文字
                         if (read_text != ''):
-                            qFunc.logOutput(self.proc_id + ':reader [' + read_text + ']')
+                            qLog.log('info', self.proc_id, 'reader [' + read_text + ']')
 
                             # 結果出力
                             out_name  = '[txts]'
@@ -391,7 +394,7 @@ class proc_cvreader:
                                 try:
                                     cv2.imwrite(fn1, code_img)
                                     cv2.imwrite(fn2, code_img)
-                                except:
+                                except Exception as e:
                                     pass
 
                 # 読取記録
@@ -403,7 +406,7 @@ class proc_cvreader:
                         try:
                             cv2.imwrite(fn3, image_img)
                             cv2.imwrite(fn4, image_img)
-                        except:
+                        except Exception as e:
                             pass
 
                     # ガイド音
@@ -419,12 +422,12 @@ class proc_cvreader:
                         # 自動解除 on -> off
                         if (key[-4:] == '_on_'):
                             read_text2 = key[:-4] + '_off_'
-                            qFunc.logOutput(self.proc_id + ':reader [' + read_text2 + ']')
+                            qLog.log('info', self.proc_id, 'reader [' + read_text2 + ']')
 
                         # 自動解除 off -> on
                         if (key[-5:] == '_off_'):
                             read_text2 = key[:-5] + '_on_'
-                            qFunc.logOutput(self.proc_id + ':reader [' + read_text2 + ']')
+                            qLog.log('info', self.proc_id, 'reader [' + read_text2 + ']')
 
                         # 結果出力
                         if (read_text2 != ''):
@@ -498,22 +501,23 @@ class proc_cvreader:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
 
 if __name__ == '__main__':
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
+    # 設定
     cv2.namedWindow('Display', 1)
     cv2.moveWindow( 'Display', 0, 0)
 
@@ -527,6 +531,9 @@ if __name__ == '__main__':
 
     cvreader_thread.put(['[img]', inp.copy()])
 
+
+
+    # ループ
     chktime = time.time()
     while ((time.time() - chktime) < 15):
         res_data  = cvreader_thread.get()
@@ -542,12 +549,13 @@ if __name__ == '__main__':
 
         time.sleep(0.05)
 
+
+
     time.sleep(1.00)
     cvreader_thread.abort()
     del cvreader_thread
 
-
-
     cv2.destroyAllWindows()
+
 
 

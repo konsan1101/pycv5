@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 import pyautogui
 
@@ -33,9 +34,14 @@ qCtrl_control_player     = 'temp/control_player.txt'
 qCtrl_control_chatting   = 'temp/control_chatting.txt'
 qCtrl_control_knowledge  = 'temp/control_knowledge.txt'
 
+# 外部プログラム
+qExt_program             = '__ext_program.bat'
 
 
-# qFunc 共通ルーチン
+
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -133,7 +139,7 @@ class proc_controls:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -147,22 +153,56 @@ class proc_controls:
         self.last_text     = ''
         self.last_time     = time.time()
 
-        self.run_vision    = True
-        self.run_desktop   = True
-        self.run_bgm       = True
-        self.run_browser   = True
-        self.run_player    = True
-        self.run_chatting  = True
-        self.run_knowledge = True
+        # 起動条件（kernel.pyと合わせる）
+        self.run_vision    = False
+        self.run_desktop   = False
+        self.run_bgm       = False
+        self.run_browser   = False
+        self.run_player    = False
+        self.run_chatting  = False
+        self.run_knowledge = False
+
+        if   (self.runMode == 'debug'):
+            self.run_vision    = True
+            self.run_desktop   = True
+            self.run_bgm       = True
+            self.run_browser   = True
+            self.run_player    = True
+        elif (self.runMode == 'hud'):
+            self.run_vision    = True
+            self.run_desktop   = True
+            self.run_bgm       = True
+            self.run_browser   = True
+            self.run_player    = True
+        elif (self.runMode == 'live'):
+            self.run_vision    = True
+            self.run_desktop   = True
+            self.run_bgm       = True
+            self.run_browser   = True
+            self.run_player    = True
+        elif (self.runMode == 'translator'):
+            pass
+        elif (self.runMode == 'speech'):
+            pass
+        elif (self.runMode == 'number'):
+            pass
+        elif (self.runMode == 'camera'):
+            self.run_vision    = True
+            self.run_desktop   = True
+        elif (self.runMode == 'assistant'):
+            self.run_vision    = True
+            self.run_desktop   = True
+        elif (self.runMode == 'reception'):
+            self.run_vision    = True
 
         # フォース
         self.force_last    = 0
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -183,7 +223,7 @@ class proc_controls:
         self.proc_main.start()
 
     def abort(self, waitMax=5, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -213,7 +253,7 @@ class proc_controls:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -243,7 +283,7 @@ class proc_controls:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
             if (qFunc.statusCheck(self.fileRdy) == False):
@@ -294,7 +334,7 @@ class proc_controls:
                             try:
                                 os.rename(f1, f2)
                                 proc_file = f2
-                            except:
+                            except Exception as e:
                                 pass
 
                         if (proc_file[-8:].lower() == '.wrk.txt'):
@@ -303,7 +343,7 @@ class proc_controls:
                             try:
                                 os.rename(f1, f2)
                                 proc_file = f2
-                            except:
+                            except Exception as e:
                                 pass
 
                             # 実行カウンタ
@@ -335,7 +375,7 @@ class proc_controls:
 
                                 # ログ
                                 #if (self.runMode == 'debug') or (not self.micDev.isdigit()):
-                                #    qFunc.logOutput(self.proc_id + ':' + proc_name + u' → ' + work_name, display=self.logDisp,)
+                                #    qLog.log('info', self.proc_id, '' + proc_name + u' → ' + work_name, display=self.logDisp,)
 
                                 # 結果出力
                                 if (cn_s.qsize() < 99):
@@ -381,7 +421,7 @@ class proc_controls:
                                 if  (qFunc.statusCheck(qRdy__s_force) == False):
                                     qFunc.statusSet(qRdy__s_fproc, False)
 
-                #except:
+                #except Exception as e:
                 #    pass
 
 
@@ -424,7 +464,7 @@ class proc_controls:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
@@ -440,35 +480,17 @@ class proc_controls:
             self.last_text = proc_text
             self.last_time = time.time()
 
-        # インターフェース
-        #if (self.run_vision    == True):
-        #    qFunc.txtsWrite(qCtrl_control_vision   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
-        #if (self.run_desktop   == True):
-        #    qFunc.txtsWrite(qCtrl_control_desktop  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
-        if (self.run_bgm       == True):
-                qFunc.txtsWrite(qCtrl_control_bgm       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
-        if (self.run_browser   == True):
-            if (jp_true == True):
-                qFunc.txtsWrite(qCtrl_control_browser   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
-        #if (self.run_player    == True):
-        #        qFunc.txtsWrite(qCtrl_control_player    ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
-        if (self.run_chatting  == True):
-            if (jp_true == True):
-                qFunc.txtsWrite(qCtrl_control_chatting  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
-        if (self.run_knowledge == True):
-            if (jp_true == True):
-                qFunc.txtsWrite(qCtrl_control_knowledge ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+        qLog.log('debug', self.proc_id, 'fource = ' + str(force), )
 
-        print('controls:force',force)
-
-        # 外部プログラム '__ext_program.bat'
-        if ((proc_text.find(u'プログラム') >= 0) \
+        # 外部プログラム qExt_program
+        if  ((proc_text.find(u'プログラム') >= 0) \
         and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))) \
-        or ((proc_text.find(u'サープ') >= 0) \
+        or  ((proc_text.find(u'サープ') >= 0) \
         and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0))):
             if (os.name == 'nt'):
-                ext_program = subprocess.Popen(['__ext_program.bat' ], )
-                              #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+                if (os.path.exists(qExt_program)):
+                    ext_program = subprocess.Popen([qExt_program, proc_text, ], )
+                                  #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
 
         # 画面操作
         if (proc_text.find(u'メイン') >= 0) and (proc_text.find(u'スクリーン') >= 0):
@@ -601,101 +623,173 @@ class proc_controls:
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_desktop_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_desktop = False
 
+
+
             elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
             and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
+                # BGM 起動
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_bgm_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = True
+                # BGM 開始
+                qFunc.statusWait_false(qCtrl_control_bgm, 5)
+                qFunc.txtsWrite(qCtrl_control_bgm ,txts=['_start_'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
             and (proc_text.find(u'終了') >= 0):
+                # BGM 停止
+                qFunc.statusWait_false(qCtrl_control_bgm, 5)
+                qFunc.txtsWrite(qCtrl_control_bgm ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+                # BGM 終了
+                qFunc.statusWait_false(qCtrl_control_bgm, 5)
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_bgm_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_bgm = False
 
             elif ((proc_text.find(u'ＢＧＭ') >= 0) or (proc_text.find('BGM') >= 0)) \
             and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                # BGM 停止
+                qFunc.statusWait_false(qCtrl_control_bgm, 5)
                 qFunc.txtsWrite(qCtrl_control_bgm ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+
+
 
             elif (proc_text.find(u'動画') >= 0) \
             and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
+                # 動画 起動
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_player_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_player = True
+                # 動画 メニュー
                 qFunc.statusWait_false(qCtrl_control_player, 5)
-                time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.statusWait_false(qCtrl_control_player, 5)
-                time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=[u'動画メニュー'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif (proc_text.find(u'動画') >= 0) and (proc_text.find(u'終了') >= 0):
+                # 動画 停止
+                qFunc.statusWait_false(qCtrl_control_player, 5)
+                qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+                # 動画 終了
+                qFunc.statusWait_false(qCtrl_control_player, 5)
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_player_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_player = False
 
             elif (proc_text.find(u'動画') >= 0) \
             and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                # 動画 停止
+                qFunc.statusWait_false(qCtrl_control_player, 5)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+
+
 
             elif (self.run_player == True) \
             and  (proc_text.find(u'動画') >=0) and (proc_text.find(u'メニュー') >=0):
+                # 動画 メニュー
                 qFunc.statusWait_false(qCtrl_control_player, 5)
-                time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.statusWait_false(qCtrl_control_player, 5)
-                time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=[u'動画メニュー'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif (self.run_player == True) \
             and  (word_true == True) \
             and  (proc_text.lower() >= '01') and (proc_text.lower() <= '09'):
+                # 動画 番号で開く
                 qFunc.statusWait_false(qCtrl_control_player, 5)
-                time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
                 qFunc.statusWait_false(qCtrl_control_player, 5)
-                time.sleep(5.00)
                 qFunc.txtsWrite(qCtrl_control_player ,txts=[proc_text.lower()], encoding='utf-8', exclusive=True, mode='w', )
+
+
 
             elif ((proc_text.find(u'ブラウザ') >= 0) or (proc_text.find(u'ウェブ') >= 0)) \
             and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
+                # ブラウザ 起動
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_browser_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_browser = True
+                # ブラウザ 開く
+                qFunc.statusWait_false(qCtrl_control_browser, 5)
+                qFunc.txtsWrite(qCtrl_control_browser ,txts=['_start_'], encoding='utf-8', exclusive=True, mode='w', )
 
             elif ((proc_text.find(u'ブラウザ') >= 0) or (proc_text.find(u'ウェブ') >= 0)) \
             and (proc_text.find(u'終了') >= 0):
+                # ブラウザ 閉じる
+                qFunc.statusWait_false(qCtrl_control_browser, 5)
+                qFunc.txtsWrite(qCtrl_control_browser ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+                # ブラウザ 終了
+                qFunc.statusWait_false(qCtrl_control_browser, 5)
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_browser_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_browser = False
 
             elif ((proc_text.find(u'ブラウザ') >= 0) or (proc_text.find(u'ウェブ') >= 0)) \
             and ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                # ブラウザ 閉じる
+                qFunc.statusWait_false(qCtrl_control_browser, 5)
                 qFunc.txtsWrite(qCtrl_control_browser ,txts=['_stop_'], encoding='utf-8', exclusive=True, mode='w', )
+
+
 
             elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
             and ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
+                # チャット 起動
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_chatting_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_chatting = True
 
             elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
             and   (proc_text.find(u'終了') >= 0):
+                # チャット 終了
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_chatting_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_chatting = False
 
             elif ((proc_text.find(u'チャット') >= 0) or (proc_text.find(u'雑談') >= 0)) \
             and  ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                # チャット 終了
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_chatting_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_chatting = False
 
+
+
             elif ((proc_text.find(u'知識') >= 0) or (proc_text.find(u'ナレッジ') >= 0)) \
             and  ((proc_text.find(u'開始') >= 0) or (proc_text.find(u'起動') >= 0)):
+                # ナレッジ 開始
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_knowledge_begin_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_knowledge = True
 
             elif ((proc_text.find(u'知識') >= 0) or (proc_text.find(u'ナレッジ') >= 0)) \
             and   (proc_text.find(u'終了') >= 0):
+                # ナレッジ 終了
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_knowledge_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_knowledge = False
 
             elif ((proc_text.find(u'知識') >= 0) or (proc_text.find(u'ナレッジ') >= 0)) \
-            and  ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'終了') >= 0)):
+            and  ((proc_text.find(u'停止') >= 0) or (proc_text.find(u'ストップ') >= 0)):
+                # ナレッジ 終了
                 qFunc.txtsWrite(qCtrl_control_kernel ,txts=['_knowledge_end_'], encoding='utf-8', exclusive=True, mode='w', )
                 self.run_knowledge = False
+
+
+
+            else:
+
+
+
+                # インターフェース
+                #if (self.run_vision    == True):
+                #    qFunc.txtsWrite(qCtrl_control_vision   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+                #if (self.run_desktop   == True):
+                #    qFunc.txtsWrite(qCtrl_control_desktop  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+                if (self.run_bgm       == True):
+                        qFunc.txtsWrite(qCtrl_control_bgm       ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+                if (self.run_browser   == True):
+                    if (jp_true == True):
+                        qFunc.txtsWrite(qCtrl_control_browser   ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+                #if (self.run_player    == True):
+                #        qFunc.txtsWrite(qCtrl_control_player    ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+                if (self.run_chatting  == True):
+                    if (jp_true == True):
+                        qFunc.txtsWrite(qCtrl_control_chatting  ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+                if (self.run_knowledge == True):
+                    if (jp_true == True):
+                        qFunc.txtsWrite(qCtrl_control_knowledge ,txts=[proc_text], encoding='utf-8', exclusive=True, mode='w', )
+
+
 
         self.last_text = proc_text
         self.last_time = time.time()
@@ -703,20 +797,22 @@ class proc_controls:
 
 
 if __name__ == '__main__':
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
-
-
+    # 設定
     controls_thread = proc_controls('controls', '0', )
     controls_thread.begin()
 
+
+
+    # ループ
     chktime = time.time()
     while ((time.time() - chktime) < 15):
 
@@ -730,6 +826,8 @@ if __name__ == '__main__':
             controls_thread.put(['_status_', ''])
 
         time.sleep(0.05)
+
+
 
     time.sleep(1.00)
     controls_thread.abort()

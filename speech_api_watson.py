@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import requests
@@ -53,7 +55,7 @@ class SpeechAPI:
                 self.stt_auth = IAMAuthenticator(key)
                 if (not self.stt_auth is None):
                     return True
-            except:
+            except Exception as e:
                 pass
 
         # Watson 翻訳機能
@@ -64,7 +66,7 @@ class SpeechAPI:
                 self.tra_auth = IAMAuthenticator(key)
                 if (not self.tra_auth is None):
                     return True
-            except:
+            except Exception as e:
                 pass
 
         # Watson 音声合成
@@ -75,7 +77,7 @@ class SpeechAPI:
                 self.tts_auth = IAMAuthenticator(key)
                 if (not self.tts_auth is None):
                     return True
-            except:
+            except Exception as e:
                 pass
 
         return False
@@ -148,7 +150,7 @@ class SpeechAPI:
                                 res_text += '(' + sentence[2:] +')'
                     if (res_text != ''):
                         res_api = 'watson'
-                except:
+                except Exception as e:
                     pass
 
             if (res_text != ''):
@@ -232,7 +234,7 @@ class SpeechAPI:
                     if (res_text != ''):
                         res_api = 'watson'
 
-                except:
+                except Exception as e:
                     pass
 
             if (res_text != ''):
@@ -261,7 +263,7 @@ class SpeechAPI:
             if (os.path.exists(outFile)):
                 try:
                     os.remove(outFile)
-                except:
+                except Exception as e:
                     pass
 
             lang  = ''
@@ -305,7 +307,7 @@ class SpeechAPI:
                     wb = None
 
                     return outText, 'watson'
-                except:
+                except Exception as e:
                     pass
 
         return '', ''

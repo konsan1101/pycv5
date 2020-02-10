@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import requests
@@ -109,7 +111,7 @@ class SpeechAPI:
                         if (res_text != ''):
                             res_api = 'free'
                             #print(res_text + '(' + res_api + ')')
-                    except:
+                    except Exception as e:
                         pass
 
                 if (res_text == '') and (api == 'auto' or api == 'google' or api == 'google8k'):
@@ -140,7 +142,7 @@ class SpeechAPI:
 
                         try:
                             os.remove(inpWave8k)
-                        except:
+                        except Exception as e:
                             pass
 
                 if (res_text == '') and (api == 'auto' or api == 'google'):
@@ -201,7 +203,7 @@ class SpeechAPI:
                         if (res_text != ''):
                             res_api = 'free'
                             #print(res_text + '(' + res_api + ')')
-                    except:
+                    except Exception as e:
                         pass
 
                 if (res_text == '') and (api == 'free' or api == 'free2'):
@@ -226,7 +228,7 @@ class SpeechAPI:
                         if (res_text != ''):
                             res_api = 'free2'
                             #print(res_text + '(' + res_api + ')')
-                    except:
+                    except Exception as e:
                         pass
 
                 if (res_text == '') and (api == 'auto' or api == 'google'):
@@ -246,7 +248,7 @@ class SpeechAPI:
                         if (res_text != ''):
                             res_api = 'google'
                             #print(res_text + '(' + res_api + ')')
-                    #except:
+                    #except Exception as e:
                     #    pass
 
             if (res_text != ''):
@@ -275,7 +277,7 @@ class SpeechAPI:
             if (os.path.exists(outFile)):
                 try:
                     os.remove(outFile)
-                except:
+                except Exception as e:
                     pass
 
             if (outText != '') and (outText != '!'):
@@ -287,7 +289,7 @@ class SpeechAPI:
                     tts.save(outFile)
                     return outText, 'free'
 
-                except:
+                except Exception as e:
                     pass
         return '', ''
 

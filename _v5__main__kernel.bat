@@ -59,7 +59,7 @@ ECHO MODE選択（入力無しはhud）
 SET mode=
 SET dev=bluetooth
 SET guide=on
-SET /P mode="1=hud,2=live,3=translator,4=speech,5=number,6=camera,9=assistant："
+SET /P mode="1=hud,2=live,3=translator,4=speech,5=number,6=camera,8=assistant,9=reception："
 IF %mode%@==@            SET  mode=hud
 IF %mode%@==1@           SET  mode=hud
 IF %mode%@==2@           SET  mode=live
@@ -67,7 +67,8 @@ IF %mode%@==3@           SET  mode=translator
 IF %mode%@==4@           SET  mode=speech
 IF %mode%@==5@           SET  mode=number
 IF %mode%@==6@           SET  mode=camera
-IF %mode%@==9@           SET  mode=assistant
+IF %mode%@==8@           SET  mode=assistant
+IF %mode%@==9@           SET  mode=reception
 IF %mode%@==hud@         SET  dev=bluetooth
 IF %mode%@==hud@         SET  guide=off
 IF %mode%@==hud@         GOTO MODEGO
@@ -89,6 +90,9 @@ IF %mode%@==camera@      GOTO MODEGO
 IF %mode%@==assistant@   SET  dev=usb
 IF %mode%@==assistant@   SET  guide=off
 IF %mode%@==assistant@   GOTO MODEGO
+IF %mode%@==reception@   SET  dev=usb
+IF %mode%@==reception@   SET  guide=off
+IF %mode%@==reception@   GOTO MODEGO
 GOTO MODE
 :MODEGO
 ECHO %mode%

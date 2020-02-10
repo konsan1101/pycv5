@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 
@@ -53,7 +55,7 @@ class StorageAPI:
 
                 return True
 
-            except:
+            except Exception as e:
                 self.s3_client = None
                 return False
 
@@ -78,7 +80,7 @@ class StorageAPI:
                     self.s3_client.create_bucket(Bucket=s3bucket, 
                                      ACL='private', 
                                      CreateBucketConfiguration={'LocationConstraint': self.region_name}, )
-                except:
+                except Exception as e:
                     pass
 
                 # Upload file
@@ -87,7 +89,7 @@ class StorageAPI:
 
                 return True
 
-            except:
+            except Exception as e:
                 return False
 
         return False
@@ -111,7 +113,7 @@ class StorageAPI:
 
                 return s3Files
 
-            except:
+            except Exception as e:
                 return False
 
         return False
@@ -134,7 +136,7 @@ class StorageAPI:
 
                 return True
 
-            except:
+            except Exception as e:
                 return False
 
         return False
@@ -154,7 +156,7 @@ class StorageAPI:
 
                 return True
 
-            except:
+            except Exception as e:
                 return False
 
         return False
@@ -186,7 +188,7 @@ class StorageAPI:
                 if (os.path.exists(outPath + outFile)):
                     return True
 
-            except:
+            except Exception as e:
                 return False
 
         return False

@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import pythoncom
@@ -44,7 +46,7 @@ class SpeechAPI:
             if (os.path.exists(outFile)):
                 try:
                     os.remove(outFile)
-                except:
+                except Exception as e:
                     pass
 
             #ja-JP:日本語〇,    en-US:英語〇,
@@ -98,7 +100,7 @@ class SpeechAPI:
                         try:
                             engine = win32com.client.Dispatch('SAPI.SpVoice')
                             #engine.Speak(stml)
-                        except:
+                        except Exception as e:
                             print('win32com.client.Dispatch(SAPI.SpVoice) is error !', lang, outGender.lower(), )
 
                     stream = None
@@ -113,7 +115,7 @@ class SpeechAPI:
                             engine.Speak(stml)
                             stream.close()
 
-                        except:
+                        except Exception as e:
                             print('win32com.client.Dispatch(SAPI.SpFileStream) is error !')
 
                     pythoncom.CoUninitialize()
@@ -128,7 +130,7 @@ class SpeechAPI:
                             os.remove(outFile)
                         else:
                             return outText, 'winos'
-                except:
+                except Exception as e:
                     pass
 
         return '', ''

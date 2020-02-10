@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 from requests_toolbelt import SSLAdapter
@@ -48,7 +50,7 @@ class SpeechAPI:
             if (os.path.exists(outFile)):
                 try:
                     os.remove(outFile)
-                except:
+                except Exception as e:
                     pass
 
             lang = ''
@@ -82,7 +84,7 @@ class SpeechAPI:
                         wb.close()
                         wb = None
                         return outText, 'hoya'
-                #except:
+                #except Exception as e:
                 #    pass
 
         return '', ''

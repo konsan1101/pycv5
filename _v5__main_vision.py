@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 import numpy as np
 import cv2
@@ -49,7 +50,9 @@ qCtrl_result_ocrTrn_sjis = 'temp/result_ocr_translate_sjis.txt'
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -136,7 +139,8 @@ import _v5_proc_coreCV
 
 
 
-runMode    = 'hud'
+#runMode    = 'hud'
+runMode    = 'reception'
 
 qApiCV     = 'google'
 qApiOCR    = qApiCV
@@ -200,7 +204,7 @@ class main_vision:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -236,12 +240,16 @@ class main_vision:
             self.flag_camzoom    = 'on'
             self.flag_enter      = 'on'
             self.flag_cancel     = 'on'
+        elif (self.runMode == 'reception'):
+            self.flag_camzoom    = 'on'
+            self.flag_enter      = 'off'
+            self.flag_cancel     = 'off'
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -262,7 +270,7 @@ class main_vision:
         self.proc_main.start()
 
     def abort(self, waitMax=20, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -292,7 +300,7 @@ class main_vision:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -387,6 +395,16 @@ class main_vision:
             cv2dnn_ssd_switch  = 'off'
             vin2jpg_switch     = 'off'
             coreCV_switch      = 'off'
+        elif (self.runMode == 'reception'):
+            camera_switch2     = 'off'
+            txt2img_switch     = 'on'
+            cvreader_switch    = 'on'
+            cvdetect_switch1   = 'on'
+            cvdetect_switch2   = 'off'
+            cv2dnn_yolo_switch = 'off'
+            cv2dnn_ssd_switch  = 'off'
+            vin2jpg_switch     = 'off'
+            coreCV_switch      = 'off'
 
         if (self.cam2Dev == 'none'):
             camera_switch2     = 'off'
@@ -434,7 +452,7 @@ class main_vision:
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
-                qFunc.logOutput(self.proc_id + ':' + str(txt))
+                qLog.log('info', self.proc_id, '' + str(txt))
                 if (txt == '_end_'):
                     break
 
@@ -446,7 +464,7 @@ class main_vision:
 
             # 活動メッセージ
             if  ((time.time() - last_alive) > 30):
-                qFunc.logOutput(self.proc_id + ':alive', display=True, )
+                qLog.log('debug', self.proc_id, 'alive', display=True, )
                 last_alive = time.time()
 
             # キュー取得
@@ -460,7 +478,7 @@ class main_vision:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # スレッド設定
 
@@ -932,6 +950,9 @@ class main_vision:
                         # 写真保存
                         self.save_photo(stamp, main_img, display_img, message_txts, message_time, photo_img, photo_time, )
 
+                        # ガイド表示
+                        cn_s.put(['guide', 'shutter !'])
+
             if  (cn_s.qsize() == 0) \
             and (overlay_thread.proc_s.qsize() == 0):
 
@@ -1273,7 +1294,7 @@ class main_vision:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
@@ -1281,13 +1302,15 @@ class main_vision:
 
     def save_photo(self, stamp, main_img, display_img, message_txts, message_time, photo_img, photo_time, ):
 
+        yyyymmdd = stamp[:8]
+
         # 写真保存
         main_file = ''
         try:
             if (not main_img is None):
                 main_file = qPath_rec + stamp + '.photo.jpg'
                 cv2.imwrite(main_file, main_img)
-        except:
+        except Exception as e:
             main_file = ''
 
         screen_file = ''
@@ -1295,7 +1318,7 @@ class main_vision:
             if (not display_img is None):
                 screen_file = qPath_rec + stamp + '.screen.jpg'
                 cv2.imwrite(screen_file, display_img)
-        except:
+        except Exception as e:
             screen_file = ''
 
         photo_file = ''
@@ -1309,7 +1332,7 @@ class main_vision:
                             photo_file = qPath_work + stamp + '.jpg'
                             cv2.imwrite(photo_file, photo_img)
                             photo_img = None
-        except:
+        except Exception as e:
             photo_file = ''
             photo_txt  = ''
         #if (photo_file == ''):
@@ -1323,19 +1346,22 @@ class main_vision:
         filename_p1 = qPath_v_photo  + stamp + '.photo.jpg'
         filename_p2 = qPath_d_upload + stamp + '.photo.jpg'
         filename_p3 = qCtrl_result_photo
-        filename_p4 = qPath_pictures + stamp + '.photo.jpg'
+        #filename_p4 = qPath_pictures + stamp + '.photo.jpg'
         filename_s1 = qPath_d_prtscn + stamp + '.screen.jpg'
         filename_s2 = qCtrl_result_screen
         filename_m1 = qPath_rec      + stamp + photo_txt + '.jpg'
         filename_m2 = qPath_d_upload + stamp + photo_txt + '.jpg'
         filename_m3 = qPath_v_msg    + stamp + photo_txt + '.jpg'
-        filename_m4 = qPath_pictures + stamp + photo_txt + '.jpg'
+        #filename_m4 = qPath_pictures + stamp + photo_txt + '.jpg'
         if (main_file != ''):
             qFunc.copy(main_file,   filename_p1)
             qFunc.copy(main_file,   filename_p2)
             qFunc.copy(main_file,   filename_p3)
             if (qPath_pictures != ''):
-                qFunc.copy(main_file,   filename_p4)
+                #qFunc.copy(main_file, filename_p4)
+                folder = qPath_pictures + yyyymmdd + '/'
+                qFunc.makeDirs(folder)
+                qFunc.copy(main_file, folder + stamp + '.photo.jpg')
         if (screen_file != ''):
             qFunc.copy(screen_file, filename_s1)
             qFunc.copy(screen_file, filename_s2)
@@ -1344,7 +1370,10 @@ class main_vision:
             qFunc.copy(photo_file,  filename_m2)
             qFunc.copy(photo_file,  filename_m3)
             if (qPath_pictures != ''):
-                qFunc.copy(photo_file,  filename_m4)
+                #qFunc.copy(photo_file, filename_m4)
+                folder = qPath_pictures + yyyymmdd + '/'
+                qFunc.makeDirs(folder)
+                qFunc.copy(photo_file, folder + stamp + photo_txt + '.jpg')
 
 
 
@@ -1420,18 +1449,15 @@ if __name__ == '__main__':
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
-
     qFunc.init()
 
-    # ログ設定
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
-
-    qFunc.logOutput(main_id + ':init')
-    qFunc.logOutput(main_id + ':exsample.py runMode, cam... ')
+    qLog.log('info', main_id, 'init')
+    qLog.log('info', main_id, 'exsample.py runMode, cam... ')
 
     #runMode  debug, live, hud, camera,
     #cam1Dev  num or file
@@ -1448,12 +1474,12 @@ if __name__ == '__main__':
                 chk = True
             else:
                 camDev_max = str(int(camDev_max)-1)
-        except:
+        except Exception as e:
             camDev_max = str(int(camDev_max)-1)
     if (chk == False):
         camDev_max = 'none'
 
-    print('camDev_max', camDev_max)
+    qLog.log('debug', main_id, 'camDev_max = ' + str(camDev_max), )
 
     # パラメータ
 
@@ -1504,7 +1530,7 @@ if __name__ == '__main__':
                 cam2Dev  = '1'
 
         if (cam1Dev == cam2Dev):
-            print('cam1Dev == cam2Dev')
+            qLog.log('debug', main_id, 'cam1Dev == cam2Dev', )
             cam2Dev = 'none'
 
         codeRead    = 'qr'
@@ -1580,33 +1606,33 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 23):
             autoShot = str(sys.argv[22]).lower()
 
-        qFunc.logOutput(main_id + ':runMode  =' + str(runMode     ))
-        qFunc.logOutput(main_id + ':cam1Dev  =' + str(cam1Dev     ))
-        qFunc.logOutput(main_id + ':cam1Mode =' + str(cam1Mode    ))
-        qFunc.logOutput(main_id + ':cam1Stre =' + str(cam1Stretch ))
-        qFunc.logOutput(main_id + ':cam1Rote =' + str(cam1Rotate  ))
-        qFunc.logOutput(main_id + ':cam1Zoom =' + str(cam1Zoom    ))
-        qFunc.logOutput(main_id + ':cam2Dev  =' + str(cam2Dev     ))
-        qFunc.logOutput(main_id + ':cam2Mode =' + str(cam2Mode    ))
-        qFunc.logOutput(main_id + ':cam2Stre =' + str(cam2Stretch ))
-        qFunc.logOutput(main_id + ':cam2Rote =' + str(cam2Rotate  ))
-        qFunc.logOutput(main_id + ':cam2Zoom =' + str(cam2Zoom    ))
-        qFunc.logOutput(main_id + ':dspMode  =' + str(dspMode     ))
-        qFunc.logOutput(main_id + ':dspStre  =' + str(dspStretch  ))
-        qFunc.logOutput(main_id + ':dspRote  =' + str(dspRotate   ))
-        qFunc.logOutput(main_id + ':dspZoom  =' + str(dspZoom     ))
+        qLog.log('info', main_id, 'runMode  =' + str(runMode     ))
+        qLog.log('info', main_id, 'cam1Dev  =' + str(cam1Dev     ))
+        qLog.log('info', main_id, 'cam1Mode =' + str(cam1Mode    ))
+        qLog.log('info', main_id, 'cam1Stre =' + str(cam1Stretch ))
+        qLog.log('info', main_id, 'cam1Rote =' + str(cam1Rotate  ))
+        qLog.log('info', main_id, 'cam1Zoom =' + str(cam1Zoom    ))
+        qLog.log('info', main_id, 'cam2Dev  =' + str(cam2Dev     ))
+        qLog.log('info', main_id, 'cam2Mode =' + str(cam2Mode    ))
+        qLog.log('info', main_id, 'cam2Stre =' + str(cam2Stretch ))
+        qLog.log('info', main_id, 'cam2Rote =' + str(cam2Rotate  ))
+        qLog.log('info', main_id, 'cam2Zoom =' + str(cam2Zoom    ))
+        qLog.log('info', main_id, 'dspMode  =' + str(dspMode     ))
+        qLog.log('info', main_id, 'dspStre  =' + str(dspStretch  ))
+        qLog.log('info', main_id, 'dspRote  =' + str(dspRotate   ))
+        qLog.log('info', main_id, 'dspZoom  =' + str(dspZoom     ))
 
-        qFunc.logOutput(main_id + ':codeRead =' + str(codeRead    ))
-        qFunc.logOutput(main_id + ':casName1 =' + str(casName1    ))
-        qFunc.logOutput(main_id + ':casName2 =' + str(casName2    ))
-        qFunc.logOutput(main_id + ':qApiCV   =' + str(qApiCV      ))
-        qFunc.logOutput(main_id + ':qApiOCR  =' + str(qApiOCR     ))
-        qFunc.logOutput(main_id + ':qApiTrn  =' + str(qApiTrn     ))
-        qFunc.logOutput(main_id + ':qLangCV  =' + str(qLangCV     ))
-        qFunc.logOutput(main_id + ':qLangOCR =' + str(qLangOCR    ))
-        qFunc.logOutput(main_id + ':qLangTrn =' + str(qLangTrn    ))
+        qLog.log('info', main_id, 'codeRead =' + str(codeRead    ))
+        qLog.log('info', main_id, 'casName1 =' + str(casName1    ))
+        qLog.log('info', main_id, 'casName2 =' + str(casName2    ))
+        qLog.log('info', main_id, 'qApiCV   =' + str(qApiCV      ))
+        qLog.log('info', main_id, 'qApiOCR  =' + str(qApiOCR     ))
+        qLog.log('info', main_id, 'qApiTrn  =' + str(qApiTrn     ))
+        qLog.log('info', main_id, 'qLangCV  =' + str(qLangCV     ))
+        qLog.log('info', main_id, 'qLangOCR =' + str(qLangOCR    ))
+        qLog.log('info', main_id, 'qLangTrn =' + str(qLangTrn    ))
 
-        qFunc.logOutput(main_id + ':autoShot =' + str(autoShot    ))
+        qLog.log('info', main_id, 'autoShot =' + str(autoShot    ))
 
     # 初期設定
 
@@ -1645,6 +1671,8 @@ if __name__ == '__main__':
         if (runMode == 'assistant'):
             qFunc.statusSet(qBusy_dev_cam, True)
             qFunc.statusSet(qBusy_dev_dsp, True)
+        if (runMode == 'reception'):
+            qFunc.statusSet(qBusy_dev_dsp, True)
 
         display_img = None
         display = None
@@ -1653,9 +1681,9 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':start')
+        qLog.log('info', main_id, 'start')
 
-        qFunc.guideDisplay(display=True, panel='7', filename='_vision_start_', txt='', )
+        qFunc.guideDisplay(display=True, panel='3', filename='_vision_start_', txt='', )
         guide_disp = True
         guide_time = time.time()
 
@@ -1682,7 +1710,7 @@ if __name__ == '__main__':
         control = ''
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            qFunc.logOutput(main_id + ':' + str(txt))
+            qLog.log('info', main_id, '' + str(txt))
             if (txt == '_end_'):
                 break
             else:
@@ -1726,6 +1754,10 @@ if __name__ == '__main__':
                 if (guide_disp == True):
                     qFunc.guideDisplay(txt=res_value, )
                     guide_time = time.time()
+                else:
+                    qFunc.guideDisplay(display=True, panel='3', filename='_vision_guide_', txt=res_value, )
+                    guide_disp = True
+                    guide_time = time.time()
 
             # 画面表示
             if (res_name == '[display_img]'):
@@ -1747,7 +1779,7 @@ if __name__ == '__main__':
 
                     # キーボード操作検査(1)
                     if (cv2.waitKey(1) >= 0):
-                        qFunc.logOutput('key accept !', )
+                        qLog.log('info', 'key accept !', )
                         #break
 
                     # マウス操作検査
@@ -1757,7 +1789,7 @@ if __name__ == '__main__':
                         # CLOSE
                         mouse1 = 'close'
                         mouse2 = 'close'
-                        qFunc.logOutput(mouse1 + ', ' + mouse2 )
+                        qLog.log('info', mouse1 + ', ' + mouse2 )
                         show_onece = True
                         #break
 
@@ -1768,7 +1800,7 @@ if __name__ == '__main__':
                         MousePointX  = None
                         MousePointY  = None
                         if (mouse1 !=''):
-                            qFunc.logOutput(mouse1 + ', ' + mouse2 )
+                            qLog.log('info', mouse1 + ', ' + mouse2 )
                             #break
                     
                     # 画面出力
@@ -1776,7 +1808,7 @@ if __name__ == '__main__':
 
                     # キーボード操作検査(2)
                     if (cv2.waitKey(1) >= 0):
-                        qFunc.logOutput('key accept !', )
+                        qLog.log('info', 'key accept !', )
                         #break
 
                     # ボタン操作
@@ -1814,7 +1846,7 @@ if __name__ == '__main__':
                 alpha_img = cv2.addWeighted(display_img, 0.5, white_img, 0.5, 0.0)
                 cv2.imshow('Display', alpha_img )
                 if (cv2.waitKey(1) >= 0):
-                    qFunc.logOutput('key accept !', )
+                    qLog.log('info', 'key accept !', )
 
                 # シャッター音
                 qFunc.guideSound('_shutter', sync=False)
@@ -1864,9 +1896,9 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':terminate')
+        qLog.log('info', main_id, 'terminate')
 
-        qFunc.guideDisplay(display=True, panel='7', filename='_vision_stop_', txt='', )
+        qFunc.guideDisplay(display=True, panel='3', filename='_vision_stop_', txt='', )
         guide_disp = True
         guide_time = time.time()
 
@@ -1880,7 +1912,7 @@ if __name__ == '__main__':
         qFunc.guideDisplay(display=False,)
         guide_disp = False
 
-        qFunc.logOutput(main_id + ':bye!')
+        qLog.log('info', main_id, 'bye!')
 
         sys.exit(0)
 

@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 #print(os.path.dirname(__file__))
 #print(os.path.basename(__file__))
@@ -41,7 +42,9 @@ qCtrl_translate_sjis     = 'temp/result_translate_sjis.txt'
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -177,7 +180,7 @@ class main_speech:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -188,10 +191,10 @@ class main_speech:
         self.proc_seq  = 0
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -212,7 +215,7 @@ class main_speech:
         self.proc_main.start()
 
     def abort(self, waitMax=20, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -242,7 +245,7 @@ class main_speech:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -273,11 +276,11 @@ class main_speech:
         playvoice_thread = None
         playvoice_switch = 'on'
         julius_thread    = None
-        julius_switch    = 'on'
+        julius_switch    = 'off'
         sttreader_thread = None
-        sttreader_switch = 'on'
+        sttreader_switch = 'off'
         trareader_thread = None
-        trareader_switch = 'on'
+        trareader_switch = 'off'
 
         if   (self.runMode == 'debug'):
             julius_switch    = 'on'
@@ -311,6 +314,10 @@ class main_speech:
             julius_switch    = 'on'
             sttreader_switch = 'on'
             trareader_switch = 'off'
+        elif (self.runMode == 'reception'):
+            julius_switch    = 'off'
+            sttreader_switch = 'off'
+            trareader_switch = 'off'
 
         if (not self.micDev.isdigit()):
             julius_switch    = 'off'
@@ -329,7 +336,7 @@ class main_speech:
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
-                qFunc.logOutput(self.proc_id + ':' + str(txt))
+                qLog.log('info', self.proc_id, '' + str(txt))
                 if (txt == '_end_'):
                     break
 
@@ -341,7 +348,7 @@ class main_speech:
 
             # 活動メッセージ
             if  ((time.time() - last_alive) > 30):
-                qFunc.logOutput(self.proc_id + ':alive', display=True, )
+                qLog.log('debug', self.proc_id, 'alive', display=True, )
                 last_alive = time.time()
 
             # キュー取得
@@ -355,7 +362,7 @@ class main_speech:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # スレッド設定
 
@@ -656,7 +663,7 @@ class main_speech:
                         res_value = res_data[1]
                         if (res_name == '[txts]'):
                             for proc_text in res_value:
-                                print('julius:', proc_text)
+                                qLog.log('debug', '    julius', proc_text, )
 
                                 # フォース 覚醒
                                 if (qFunc.checkWakeUpWord(proc_text) == True):
@@ -785,7 +792,7 @@ class main_speech:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
@@ -807,20 +814,17 @@ if __name__ == '__main__':
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
-
     qFunc.init()
 
-    # ログ設定
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    qLog.log('info', main_id, 'init')
+    qLog.log('info', main_id, 'exsample.py runMode, mic..., ')
 
-    qFunc.logOutput(main_id + ':init')
-    qFunc.logOutput(main_id + ':exsample.py runMode, mic..., ')
-
-    #runMode  debug, hud, live, translator, speech, number, camera, assistant,
+    #runMode  debug, hud, live, translator, speech, number, camera, assistant, reception,
     #micDev   num or file
     #micType  usb or bluetooth
     #micGuide off, on, display, sound
@@ -862,7 +866,10 @@ if __name__ == '__main__':
             micType   = 'bluetooth'
             micGuide  = 'off'
         elif (runMode == 'assistant'):
-            micType   = 'bluetooth'
+            micType   = 'usb'
+            micGuide  = 'off'
+        elif (runMode == 'reception'):
+            micType   = 'usb'
             micGuide  = 'off'
 
         if (len(sys.argv) >= 3):
@@ -907,19 +914,19 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 13):
             qLangOut = str(sys.argv[12]).lower()
 
-        qFunc.logOutput(main_id + ':runMode  =' + str(runMode  ))
-        qFunc.logOutput(main_id + ':micDev   =' + str(micDev   ))
-        qFunc.logOutput(main_id + ':micType  =' + str(micType  ))
-        qFunc.logOutput(main_id + ':micGuide =' + str(micGuide ))
-        qFunc.logOutput(main_id + ':micLevel =' + str(micLevel ))
+        qLog.log('info', main_id, 'runMode  =' + str(runMode  ))
+        qLog.log('info', main_id, 'micDev   =' + str(micDev   ))
+        qLog.log('info', main_id, 'micType  =' + str(micType  ))
+        qLog.log('info', main_id, 'micGuide =' + str(micGuide ))
+        qLog.log('info', main_id, 'micLevel =' + str(micLevel ))
 
-        qFunc.logOutput(main_id + ':qApiInp  =' + str(qApiInp  ))
-        qFunc.logOutput(main_id + ':qApiTrn  =' + str(qApiTrn  ))
-        qFunc.logOutput(main_id + ':qApiOut  =' + str(qApiOut  ))
-        qFunc.logOutput(main_id + ':qLangInp =' + str(qLangInp ))
-        qFunc.logOutput(main_id + ':qLangTrn =' + str(qLangTrn ))
-        qFunc.logOutput(main_id + ':qLangTxt =' + str(qLangTxt ))
-        qFunc.logOutput(main_id + ':qLangOut =' + str(qLangOut ))
+        qLog.log('info', main_id, 'qApiInp  =' + str(qApiInp  ))
+        qLog.log('info', main_id, 'qApiTrn  =' + str(qApiTrn  ))
+        qLog.log('info', main_id, 'qApiOut  =' + str(qApiOut  ))
+        qLog.log('info', main_id, 'qLangInp =' + str(qLangInp ))
+        qLog.log('info', main_id, 'qLangTrn =' + str(qLangTrn ))
+        qLog.log('info', main_id, 'qLangTxt =' + str(qLangTxt ))
+        qLog.log('info', main_id, 'qLangOut =' + str(qLangOut ))
 
     # 初期設定
 
@@ -959,9 +966,9 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':start')
+        qLog.log('info', main_id, 'start')
 
-        qFunc.guideDisplay(display=True, panel='3', filename='_speech_start_', txt='', )
+        qFunc.guideDisplay(display=True, panel='7', filename='_speech_start_', txt='', )
         guide_disp = True
         guide_time = time.time()
 
@@ -982,7 +989,7 @@ if __name__ == '__main__':
         control = ''
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            qFunc.logOutput(main_id + ':' + str(txt))
+            qLog.log('info', main_id, '' + str(txt))
             if (txt == '_end_'):
                 break
             else:
@@ -998,10 +1005,15 @@ if __name__ == '__main__':
             if (res_name == 'control'):
                 control  = res_value
                 break
+
             # ガイド表示
             if (res_name == 'guide'):
                 if (guide_disp == True):
                     qFunc.guideDisplay(txt=res_value, )
+                    guide_time = time.time()
+                else:
+                    qFunc.guideDisplay(display=True, panel='7', filename='_speech_guide_', txt=res_value, )
+                    guide_disp = True
                     guide_time = time.time()
 
         # ガイド表示終了
@@ -1030,9 +1042,9 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':terminate')
+        qLog.log('info', main_id, 'terminate')
 
-        qFunc.guideDisplay(display=True, panel='3', filename='_speech_stop_', txt='', )
+        qFunc.guideDisplay(display=True, panel='7', filename='_speech_stop_', txt='', )
         guide_disp = True
         guide_time = time.time()
 
@@ -1047,7 +1059,7 @@ if __name__ == '__main__':
         qFunc.guideDisplay(display=False,)
         guide_disp = False
 
-        qFunc.logOutput(main_id + ':bye!')
+        qLog.log('info', main_id, 'bye!')
 
         sys.exit(0)
 

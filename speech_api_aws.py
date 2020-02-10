@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import json
@@ -63,7 +65,7 @@ class SpeechAPI:
                 self.stt_key_id     = key_id
                 self.stt_secret_key = secret_key
                 return True
-            except:
+            except Exception as e:
                 return False
 
         # aws 翻訳機能
@@ -78,7 +80,7 @@ class SpeechAPI:
                 self.tra_key_id     = key_id
                 self.tra_secret_key = secret_key
                 return True
-            except:
+            except Exception as e:
                 return False
 
         # aws 音声合成
@@ -93,7 +95,7 @@ class SpeechAPI:
                 self.tts_key_id     = key_id
                 self.tts_secret_key = secret_key
                 return True
-            except:
+            except Exception as e:
                 return False
 
         return False
@@ -167,7 +169,7 @@ class SpeechAPI:
                             # 音声認識ＪＯＢ削除
                             try:
                                 self.stt_client.delete_transcription_job(TranscriptionJobName=job_name,)
-                            except:
+                            except Exception as e:
                                 pass
 
                             # ファイル削除
@@ -220,14 +222,14 @@ class SpeechAPI:
                             # 音声認識ＪＯＢ削除
                             try:
                                 self.stt_client.delete_transcription_job(TranscriptionJobName=job_name,)
-                            except:
+                            except Exception as e:
                                 pass
 
                             # ファイル削除
                             res = s3_api.s3_remove(bucket=bucket, s3File=inpFname, )
                             res = s3_api.s3_remove(bucket=bucket, s3File=resFname, )
 
-                #except:
+                #except Exception as e:
                 #    pass
 
             if (res_text != ''):
@@ -317,7 +319,7 @@ class SpeechAPI:
                     res_text = response['TranslatedText']
                     res_api = 'aws'
 
-                except:
+                except Exception as e:
                     pass
 
             if (res_text != ''):
@@ -352,7 +354,7 @@ class SpeechAPI:
             if (os.path.exists(outFile)):
                 try:
                     os.remove(outFile)
-                except:
+                except Exception as e:
                     pass
 
             lang  = ''
@@ -411,7 +413,7 @@ class SpeechAPI:
 
                     return outText, 'aws'
 
-                except:
+                except Exception as e:
                     pass
         return '', ''
 

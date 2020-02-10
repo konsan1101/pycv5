@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import platform
@@ -41,14 +43,14 @@ class SpeechAPI:
             if (os.path.exists(outFile)):
                 try:
                     os.remove(outFile)
-                except:
+                except Exception as e:
                     pass
 
             file = outFile[:-4] + '.wave'
             if (os.path.exists(file)):
                 try:
                     os.remove(file)
-                except:
+                except Exception as e:
                     pass
 
             #ja-JP:日本語,    en-US:英語,
@@ -103,7 +105,7 @@ class SpeechAPI:
                             os.remove(outFile)
                         else:
                             return outText, 'macos'
-                except:
+                except Exception as e:
                     pass
 
         return '', ''

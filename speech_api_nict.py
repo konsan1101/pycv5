@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import requests
@@ -59,7 +61,7 @@ class SpeechAPI:
                     at = res.json()['accessToken']
                     self.stt_token = at
                     #print('NICT:' + str(self.stt_token))
-                except:
+                except Exception as e:
                     self.stt_token = None
             if (not self.stt_token is None):
                 return True
@@ -80,7 +82,7 @@ class SpeechAPI:
                     at = res.json()['accessToken']
                     self.tra_token = at
                     #print('NICT:' + str(self.tra_token))
-                except:
+                except Exception as e:
                     self.tra_token = None
             if (not self.tra_token is None):
                 return True
@@ -101,7 +103,7 @@ class SpeechAPI:
                     at = res.json()['accessToken']
                     self.tts_token = at
                     #print('NICT:' + str(self.tts_token))
-                except:
+                except Exception as e:
                     self.tts_token = None
             if (not self.tts_token is None):
                 return True
@@ -211,7 +213,7 @@ class SpeechAPI:
                                     res_text += ' ' + res_split[0]
                             if (res_text != ''):
                                 res_api = 'nict(google)'
-                except:
+                except Exception as e:
                     pass
 
             if (res_text != ''):
@@ -266,7 +268,7 @@ class SpeechAPI:
                         res_text = res_json[0]
                         if (res_text != ''):
                             res_api = 'nict'
-                except:
+                except Exception as e:
                     pass
 
             if (res_text != ''):
@@ -302,7 +304,7 @@ class SpeechAPI:
             if (os.path.exists(outFile)):
                 try:
                     os.remove(outFile)
-                except:
+                except Exception as e:
                     pass
 
             if (outText != '') and (outText != '!'):
@@ -328,7 +330,7 @@ class SpeechAPI:
                         wb = None
                         return outText, 'nict'
 
-                except:
+                except Exception as e:
                     pass
         return '', ''
 

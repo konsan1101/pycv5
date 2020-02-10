@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 
@@ -73,7 +75,7 @@ if __name__ == '__main__':
                 sox.terminate()
                 sox = None
 
-        #except:
+        #except Exception as e:
         #print(' Error!', sys.exc_info()[0])
 
 

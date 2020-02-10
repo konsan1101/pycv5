@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 import cv2
 
@@ -45,7 +46,9 @@ qCtrl_result_recorder     = 'temp/result_recorder.txt'
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -155,7 +158,7 @@ class main_desktop:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -166,10 +169,10 @@ class main_desktop:
         self.proc_seq  = 0
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -190,7 +193,7 @@ class main_desktop:
         self.proc_main.start()
 
     def abort(self, waitMax=20, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -220,7 +223,7 @@ class main_desktop:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -273,6 +276,11 @@ class main_desktop:
             cvreader_switch  = 'on'
             recorder_switch  = 'on'
             uploader_switch  = 'on'
+        elif (self.runMode == 'reception'):
+            capture_switch   = 'off'
+            cvreader_switch  = 'off'
+            recorder_switch  = 'off'
+            uploader_switch  = 'off'
         elif (self.runMode == 'recorder'):
             capture_switch   = 'off'
             cvreader_switch  = 'off'
@@ -299,7 +307,7 @@ class main_desktop:
             # 終了確認
             txts, txt = qFunc.txtsRead(qCtrl_control_self)
             if (txts != False):
-                qFunc.logOutput(self.proc_id + ':' + str(txt))
+                qLog.log('info', self.proc_id, '' + str(txt))
                 if (txt == '_end_'):
                     break
 
@@ -311,7 +319,7 @@ class main_desktop:
 
             # 活動メッセージ
             if  ((time.time() - last_alive) > 30):
-                qFunc.logOutput(self.proc_id + ':alive', display=True, )
+                qLog.log('debug', self.proc_id, 'alive', display=True, )
                 last_alive = time.time()
 
             # キュー取得
@@ -325,7 +333,7 @@ class main_desktop:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # スレッド設定
 
@@ -528,6 +536,12 @@ class main_desktop:
             if (not recorder_thread is None):
                 while (recorder_thread.proc_r.qsize() != 0):
                     res_data  = recorder_thread.get()
+                    res_name  = res_data[0]
+                    res_value = res_data[1]
+                    if (res_name == 'guide'):
+
+                        # ガイド表示
+                        cn_s.put(['guide', res_value])
 
             # アップロード機能
             if (not uploader_thread is None):
@@ -545,6 +559,10 @@ class main_desktop:
                     nowTime = datetime.datetime.now()
                     stamp   = nowTime.strftime('%Y%m%d.%H%M%S')
                     self.save_capture(stamp, main_img)
+
+                    # ガイド表示
+                    cn_s.put(['guide', 'capture !'])
+
 
             # アイドリング
             slow = False
@@ -611,13 +629,15 @@ class main_desktop:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
 
     def save_capture(self, stamp, main_img):
+
+        yyyymmdd = stamp[:8]
 
         # キャプチャ保存
         main_file = ''
@@ -627,7 +647,7 @@ class main_desktop:
         #    if (not main_img is None):
         #        main_file = qPath_rec + stamp + '.capture.jpg'
         #        cv2.imwrite(main_file, main_img)
-        #except:
+        #except Exception as e:
         #    main_file = ''
 
         # クリップボードへ
@@ -638,13 +658,16 @@ class main_desktop:
         filename_s1 = qPath_d_prtscn + stamp + '.capture.jpg'
         filename_s2 = qPath_d_upload + stamp + '.capture.jpg'
         filename_s3 = qCtrl_result_prtscn
-        filename_s4 = qPath_pictures + stamp + '.capture.jpg'
+        #filename_s4 = qPath_pictures + stamp + '.capture.jpg'
         if (main_file != ''):
             qFunc.copy(main_file,   filename_s1)
             qFunc.copy(main_file,   filename_s2)
             qFunc.copy(main_file,   filename_s3)
             if (qPath_pictures != ''):
-                qFunc.copy(main_file,   filename_s4)
+                #qFunc.copy(main_file, filename_s4)
+                folder = qPath_pictures + yyyymmdd + '/'
+                qFunc.makeDirs(folder)
+                qFunc.copy(main_file, folder + stamp + '.capture.jpg')
 
             qFunc.txtsWrite(qCtrl_result_capture, txts=[stamp + '.capture.jpg'], encoding='utf-8', exclusive=True, mode='w', )
 
@@ -666,20 +689,17 @@ if __name__ == '__main__':
     main_id   = '{0:10s}'.format(main_name).replace(' ', '_')
 
     # 共通クラス
-
     qFunc.init()
 
-    # ログ設定
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    qLog.log('info', main_id, 'init')
+    qLog.log('info', main_id, 'exsample.py runMode, mic..., ')
 
-    qFunc.logOutput(main_id + ':init')
-    qFunc.logOutput(main_id + ':exsample.py runMode, mic..., ')
-
-    #runMode  debug, hud, live, translator, speech, number, camera, assistant,
+    #runMode  debug, hud, live, translator, speech, number, camera, assistant, reception,
 
     # パラメータ
 
@@ -690,7 +710,7 @@ if __name__ == '__main__':
         if (len(sys.argv) >= 2):
             runMode  = str(sys.argv[1]).lower()
 
-        qFunc.logOutput(main_id + ':runMode  =' + str(runMode  ))
+        qLog.log('info', main_id, 'runMode  =' + str(runMode  ))
 
     # 初期設定
 
@@ -723,7 +743,7 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':start')
+        qLog.log('info', main_id, 'start')
 
         qFunc.guideDisplay(display=True, panel='9', filename='_desktop_start_', txt='', )
         guide_disp = True
@@ -742,7 +762,7 @@ if __name__ == '__main__':
         control = ''
         txts, txt = qFunc.txtsRead(qCtrl_control_self)
         if (txts != False):
-            qFunc.logOutput(main_id + ':' + str(txt))
+            qLog.log('info', main_id, '' + str(txt))
             if (txt == '_end_'):
                 break
             else:
@@ -768,10 +788,15 @@ if __name__ == '__main__':
             if (res_name == 'control'):
                 control  = res_value
                 break
+
             # ガイド表示
             if (res_name == 'guide'):
                 if (guide_disp == True):
                     qFunc.guideDisplay(txt=res_value, )
+                    guide_time = time.time()
+                else:
+                    qFunc.guideDisplay(display=True, panel='9', filename='_desktop_guide_', txt=res_value, )
+                    guide_disp = True
                     guide_time = time.time()
 
         # ガイド表示終了
@@ -800,7 +825,7 @@ if __name__ == '__main__':
 
     if (True):
 
-        qFunc.logOutput(main_id + ':terminate')
+        qLog.log('info', main_id, 'terminate')
 
         qFunc.guideDisplay(display=True, panel='9', filename='_desktop_stop_', txt='', )
         guide_disp = True
@@ -816,7 +841,7 @@ if __name__ == '__main__':
         qFunc.guideDisplay(display=False,)
         guide_disp = False
 
-        qFunc.logOutput(main_id + ':bye!')
+        qLog.log('info', main_id, 'bye!')
 
         sys.exit(0)
 

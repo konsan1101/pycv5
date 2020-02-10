@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 
 
@@ -27,9 +28,14 @@ qCtrl_recognize_sjis     = 'temp/result_recognize_sjis.txt'
 qCtrl_translate          = 'temp/result_translate.txt'
 qCtrl_translate_sjis     = 'temp/result_translate_sjis.txt'
 
+# 外部プログラム
+qExt_speech              = '__ext_speech.bat'
 
 
-# qFunc 共通ルーチン
+
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -423,7 +429,7 @@ def qVoiceOutput_fromCache(useApi='free', outLang='en', outText='Hallo', outFile
                     sox.terminate()
                     sox = None
                     return True
-            except:
+            except Exception as e:
                 pass
     return False
 
@@ -453,7 +459,7 @@ def qVoiceOutput_toCache(useApi='free', outLang='en', outText='Hallo', tempFile=
             sox.terminate()
             sox = None
             return True
-    except:
+    except Exception as e:
         pass
 
     return False
@@ -465,7 +471,7 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
     if (os.path.exists(outFile)):
         try:
             os.remove(outFile)
-        except:
+        except Exception as e:
             pass
 
     if (tempFile == ''):
@@ -477,12 +483,12 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
     if (os.path.exists(tempFileWav)):
         try:
             os.remove(tempFileWav)
-        except:
+        except Exception as e:
             pass
     if (os.path.exists(tempFileMp3)):
         try:
             os.remove(tempFileMp3)
-        except:
+        except Exception as e:
             pass
 
     api   = useApi
@@ -683,7 +689,7 @@ def qVoiceOutput(useApi='free', outLang='en', outText='Hallo', outFile='temp/tem
             os.remove(tempFileWav)
         if (os.path.exists(tempFileMp3)):
             os.remove(tempFileMp3)
-    except:
+    except Exception as e:
         pass
 
     if (resText != ''):
@@ -700,13 +706,16 @@ def speech_batch(runMode, micDev,
                 inpPlay, txtPlay, outPlay,  ):
 
     # 共通クラス
+    qFunc = _v5__qFunc.qFunc_class()
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=False, outfile=True, )
-    #qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog2  = _v5__qLog.qLog_class()
+    qLog2.init(mode='logger', filename=filename, display=False, outfile=True, )
+
+    # 設定
 
     qFunc.remove(qCtrl_result_speech      )
     qFunc.remove(qCtrl_recognize          )
@@ -724,9 +733,8 @@ def speech_batch(runMode, micDev,
     trnText = ''
     outRun  = False
 
- 
- 
     # STT 処理
+
     if (inpInput != '' and os.path.exists(inpInput)):
         nowTime = datetime.datetime.now()
         stamp   = nowTime.strftime('%Y%m%d')
@@ -742,7 +750,7 @@ def speech_batch(runMode, micDev,
 
             api = 'julius'
             waitfile = qPath_s_jul + fileId + '.txt'
-            print(waitfile)
+            #print(waitfile)
 
             chktime = time.time()
             while ((time.time() - chktime) < 5):
@@ -808,7 +816,7 @@ def speech_batch(runMode, micDev,
             if (os.path.exists(wrkfile_0)):
                 inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_0, False, )
                 if (runMode == 'debug'):
-                    qFunc.logOutput('Debug [' + inpText + '](' + wrkApi + ') step1 normal wav ', True)
+                    qLog2.log('debug', '   ' + procId, '[' + inpText + '](' + wrkApi + ') step1 normal wav ', display=True)
 
                 if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                     inpText = inpTextX
@@ -824,7 +832,7 @@ def speech_batch(runMode, micDev,
                 if (not micDev.isdigit()) or (runMode == 'debug'):
                     inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_0s, False, )
                     if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 sox silence 0.5s 0%', True)
+                        qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step1 sox silence 0.5s 0%', display=True)
 
                     if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                         inpText = inpTextX
@@ -840,7 +848,7 @@ def speech_batch(runMode, micDev,
                 if (not micDev.isdigit()) or (runMode == 'debug'):
                     inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_1, False, )
                     if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 --norm', True)
+                        qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step1 --norm', display=True)
 
                     if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                         inpText = inpTextX
@@ -855,7 +863,7 @@ def speech_batch(runMode, micDev,
                 or (inpText == '') or (inpText == '!'):
                     inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_1s, False, )
                     if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 --norm silence 0.5s 0%', True)
+                        qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step1 --norm silence 0.5s 0%', display=True)
 
                     if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                         inpText = inpTextX
@@ -871,7 +879,7 @@ def speech_batch(runMode, micDev,
                 if (not micDev.isdigit()) or (runMode == 'debug'):
                     inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_2, False, )
                     if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 gain +12', True)
+                        qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step1 gain +12', display=True)
 
                     if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                         inpText = inpTextX
@@ -887,7 +895,7 @@ def speech_batch(runMode, micDev,
                 if (not micDev.isdigit()) or (runMode == 'debug'):
                     inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_2s, False, )
                     if (runMode == 'debug'):
-                        qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step1 gain +12 silence 0.5s 0.1%', True)
+                        qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step1 gain +12 silence 0.5s 0.1%', display=True)
 
                     if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                         inpText = inpTextX
@@ -913,7 +921,7 @@ def speech_batch(runMode, micDev,
                     if (os.path.exists(wrkfile_x1)):
                         inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_x1, False, )
                         if (runMode == 'debug'):
-                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step2 silence 0.3s 0.5%', True)
+                            qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step2 silence 0.3s 0.5%', display=True)
 
                         if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                             inpText = inpTextX
@@ -926,7 +934,7 @@ def speech_batch(runMode, micDev,
                     if (os.path.exists(wrkfile_x2)):
                         inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_x2, False, )
                         if (runMode == 'debug'):
-                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step2 silence 0.3s 1.0%', True)
+                            qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step2 silence 0.3s 1.0%', display=True)
 
                         if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                             inpText = inpTextX
@@ -961,7 +969,7 @@ def speech_batch(runMode, micDev,
                     if (os.path.exists(wrkfile_y1)):
                         inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y1, False, )
                         if (runMode == 'debug'):
-                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass 50', True)
+                            qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step3 highpass 50', display=True)
 
                         if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                             inpText = inpTextX
@@ -974,7 +982,7 @@ def speech_batch(runMode, micDev,
                     if (os.path.exists(wrkfile_y2)):
                         inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y2, False, )
                         if (runMode == 'debug'):
-                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 equalizer 500 1.0q 3', True)
+                            qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step3 equalizer 500 1.0q 3', display=True)
 
                         if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                             inpText = inpTextX
@@ -987,7 +995,7 @@ def speech_batch(runMode, micDev,
                     if (os.path.exists(wrkfile_y3)):
                         inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y3, False, )
                         if (runMode == 'debug'):
-                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass + equalizer', True)
+                            qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step3 highpass + equalizer', display=True)
 
                         if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                             inpText = inpTextX
@@ -1000,7 +1008,7 @@ def speech_batch(runMode, micDev,
                     if (os.path.exists(wrkfile_y4)):
                         inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y4, False, )
                         if (runMode == 'debug'):
-                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 treble +2', True)
+                            qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step3 treble +2', display=True)
 
                         if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                             inpText = inpTextX
@@ -1013,7 +1021,7 @@ def speech_batch(runMode, micDev,
                     if (os.path.exists(wrkfile_y5)):
                         inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y5, False, )
                         if (runMode == 'debug'):
-                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass + treble', True)
+                            qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step3 highpass + treble', display=True)
 
                         if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                             inpText = inpTextX
@@ -1026,7 +1034,7 @@ def speech_batch(runMode, micDev,
                     if (os.path.exists(wrkfile_y6)):
                         inpTextX,api = qVoiceInput(wrkApi, qLangInp, wrkfile_y6, False, )
                         if (runMode == 'debug'):
-                            qFunc.logOutput('Debug [' + inpTextX + '](' + wrkApi + ') step3 highpass + equalizer + treble', True)
+                            qLog2.log('debug', '   ' + procId, '[' + inpTextX + '](' + wrkApi + ') step3 highpass + equalizer + treble', display=True)
 
                         if (inpTextX != '' and inpTextX != '!') and (len(inpTextX) > len(inpText)):
                             inpText = inpTextX
@@ -1091,7 +1099,7 @@ def speech_batch(runMode, micDev,
                 os.remove(wrkfile_y6)
 
             if (inpText != '' and inpText != '!') and (soxMsg1 != '' or soxMsg2 != '' or soxMsg3 != ''):
-                qFunc.logOutput(' ' + procId + ' Recognition  <<<<' + soxMsg3 + soxMsg2 + soxMsg1 + '<<<<< wav', True)
+                qLog2.log('debug', '   ' + procId, 'Recognition  <<<<' + soxMsg3 + soxMsg2 + soxMsg1 + '<<<<< wav', display=True)
 
 
 
@@ -1103,12 +1111,12 @@ def speech_batch(runMode, micDev,
             inpText = '!'
 
         if (api == qApiInp) or (api == 'free' and qApiInp == 'google'):
-                qFunc.logOutput(' ' + procId + ' Recognition  [' + inpText + '] ' + qLangInp + ' (' + api + ')', True)
+                qLog2.log('info', '   ' + procId, 'Recognition  [' + inpText + '] ' + qLangInp + ' (' + api + ')', display=True)
         else:
             if (api != ''):
-                qFunc.logOutput(' ' + procId + ' Recognition  [' + inpText + '] ' + qLangInp + ' (!' + api + ')', True)
+                qLog2.log('info', '   ' + procId, 'Recognition  [' + inpText + '] ' + qLangInp + ' (!' + api + ')', display=True)
             else:
-                qFunc.logOutput(' ' + procId + ' Recognition  [' + inpText + '] ' + qLangInp + ' (!' + qApiInp + ')', True)
+                qLog2.log('info', '   ' + procId, 'Recognition  [' + inpText + '] ' + qLangInp + ' (!' + qApiInp + ')', display=True)
 
         if (inpText != '' and inpText != '!'):
             if (not inpText.isdigit()):
@@ -1116,14 +1124,15 @@ def speech_batch(runMode, micDev,
                     numtxt = inpText
                     if (len(inpText) <= 10):
                         numtxt = qKanji2num.strkan2num(inpText)
-                except:
+                        numtxt.replace(u'零', u'0')
+                except Exception as e:
                     pass
                 if (numtxt != ''):
                     numtxt.replace(u'1般', u'一般')
                     numtxt.replace(u'3菱', u'三菱')
                     if (numtxt != inpText):
                         if (runMode != 'number'):
-                            qFunc.logOutput(' ' + procId + ' Recognition  [' + inpText + u'] → [' + numtxt + ']', True)
+                            qLog2.log('info', '   ' + procId, 'Recognition  [' + inpText + u'] → [' + numtxt + ']', display=True)
                             inpText = str(numtxt)
                         else:
                             numtxt = numtxt.replace(u'ゼロ', '0')
@@ -1145,12 +1154,25 @@ def speech_batch(runMode, micDev,
                             if (numtxt[-1:] == '.'):
                                 numtxt=numtxt[:-1]
                             if (numtxt != inpText and numtxt.isdigit()):
-                                qFunc.logOutput(' ' + procId + ' Recognition  [' + inpText + u'] → [' + numtxt + ']', True)
+                                qLog2.log('info', '   ' + procId, 'Recognition  [' + inpText + u'] → [' + numtxt + ']', display=True)
                                 inpText = str(numtxt)
 
 
 
+    # 外部プログラム
+    if (inpText != '' and inpText != '!'):
+
+        if (runMode == 'debug') \
+        or (runMode == 'reception'):
+            if (os.name == 'nt'):
+                if (os.path.exists(qExt_speech)):
+                    filePath = os.path.dirname(inpInput)
+                    fileName = os.path.basename(inpInput)
+                    ext_speech = subprocess.Popen([qExt_speech, filePath, fileName, inpText, ], )
+                                 #stdout=subprocess.PIPE, stderr=subprocess.PIPE, )
+
     # STT 結果出力
+
     if (inpOutput != '' and inpText != ''):
 
         if  (qFunc.statusCheck(qRdy__s_force) != True) \
@@ -1187,6 +1209,7 @@ def speech_batch(runMode, micDev,
 
 
     # TRA 処理
+
     if (trnInput != ''):
         trnRun   = True
         trnIn    = ''
@@ -1206,7 +1229,7 @@ def speech_batch(runMode, micDev,
 
         if (trnIn != '!'):
             if (inpInput == ''):
-                                    qFunc.logOutput(' ' + procId + ' Text Input   [' + trnIn + '] ' + qLangInp, True)
+                                    qLog2.log('info', '   ' + procId, 'Text Input   [' + trnIn + '] ' + qLangInp, display=True)
             langs = qLangTrn.split(',')
             for lang in langs:
                 lang = str(lang).strip()
@@ -1215,20 +1238,20 @@ def speech_batch(runMode, micDev,
                     if (trnRes != '' and trnRes != '!'):
                         if (api == qApiTrn) or (api == 'free' and qApiTrn == 'google'):
                                 if (inpInput != ''):
-                                    qFunc.logOutput(' ' + procId + ' Translation  [' + trnRes + '] ' + lang + ' (' + api + ')', True)
+                                    qLog2.log('info', '   ' + procId, 'Translation  [' + trnRes + '] ' + lang + ' (' + api + ')', display=True)
                                 else:
-                                    qFunc.logOutput(' ' + procId + ' Text Trans   [' + trnRes + '] ' + lang + ' (' + api + ')', True)
+                                    qLog2.log('info', '   ' + procId, 'Text Trans   [' + trnRes + '] ' + lang + ' (' + api + ')', display=True)
                         else:
                             if (api != ''):
                                 if (inpInput != ''):
-                                    qFunc.logOutput(' ' + procId + ' Translation  [' + trnRes + '] ' + lang + ' (!' + api + ')', True)
+                                    qLog2.log('info', '   ' + procId, 'Translation  [' + trnRes + '] ' + lang + ' (!' + api + ')', display=True)
                                 else:
-                                    qFunc.logOutput(' ' + procId + ' Text Trans   [' + trnRes + '] ' + lang + ' (!' + api + ')', True)
+                                    qLog2.log('info', '   ' + procId, 'Text Trans   [' + trnRes + '] ' + lang + ' (!' + api + ')', display=True)
                             else:
                                 if (inpInput != ''):
-                                    qFunc.logOutput(' ' + procId + ' Translation  [' + trnRes + '] ' + lang + ' (!' + qApiTrn + ')', True)
+                                    qLog2.log('info', '   ' + procId, 'Translation  [' + trnRes + '] ' + lang + ' (!' + qApiTrn + ')', display=True)
                                 else:
-                                    qFunc.logOutput(' ' + procId + ' Text Trans   [' + trnRes + '] ' + lang + ' (!' + qApiTrn + ')', True)
+                                    qLog2.log('info', '   ' + procId, 'Text Trans   [' + trnRes + '] ' + lang + ' (!' + qApiTrn + ')', display=True)
 
                     if (trnRes == ''):
                         trnRes = '!'
@@ -1254,7 +1277,7 @@ def speech_batch(runMode, micDev,
                         if (numtxt[-1:] == '.'):
                             numtxt=numtxt[:-1]
                         if (numtxt != trnRes and numtxt.isdigit()):
-                            qFunc.logOutput(' ' + procId + ' Translation  [' + trnRes + u'] → [' + numtxt + ']', True)
+                            qLog2.log('info', '   ' + procId, 'Translation  [' + trnRes + u'] → [' + numtxt + ']', display=True)
                             trnRes = str(numtxt)
 
                     trnMulti.append({'lang':lang, 'text':trnRes, 'api':api,})
@@ -1264,6 +1287,7 @@ def speech_batch(runMode, micDev,
 
 
     # TRA 結果出力
+
     if (trnOutput != '' and trnText != ''):
         qFunc.txtsWrite(trnOutput, txts=[trnText], encoding='utf-8', exclusive=False, mode='w', )
 
@@ -1321,6 +1345,7 @@ def speech_batch(runMode, micDev,
 
 
     # TTS 処理
+
     if (txtInput != ''):
         txtRun  = True
         txtText = ''
@@ -1377,7 +1402,7 @@ def speech_batch(runMode, micDev,
         if (True):
             if (txtText != '' and txtText != '!'):
                 if (txtInpLang != txtOutLang):
-                    qFunc.logOutput(' ' + procId + ' Text Input   [' + txtText + '] ' + txtInpLang, True)
+                    qLog2.log('info', '   ' + procId, 'Text Input   [' + txtText + '] ' + txtInpLang, display=True)
 
                 recfile = txtInput.replace(qPath_s_STT, '')
                 recfile = recfile.replace(qPath_s_TRA, '')
@@ -1406,12 +1431,12 @@ def speech_batch(runMode, micDev,
             txtWork,api = qTranslator(qApiTrn, txtInpLang, txtOutLang, txtText, )
             if (txtWork != '' and txtWork != '!'):
                 if (api == qApiTrn) or (api == 'free' and qApiTrn == 'google'):
-                        qFunc.logOutput(' ' + procId + ' Text Trans   [' + txtWork + '] ' + txtOutLang + ' (' + api + ')', True)
+                        qLog2.log('info', '   ' + procId, 'Text Trans   [' + txtWork + '] ' + txtOutLang + ' (' + api + ')', display=True)
                 else:
                     if (api != ''):
-                        qFunc.logOutput(' ' + procId + ' Text Trans   [' + txtWork + '] ' + txtOutLang + ' (!' + api + ')', True)
+                        qLog2.log('info', '   ' + procId, 'Text Trans   [' + txtWork + '] ' + txtOutLang + ' (!' + api + ')', display=True)
                     else:
-                        qFunc.logOutput(' ' + procId + ' Text Trans   [' + txtWork + '] ' + txtOutLang + ' (!' + qApiTrn + ')', True)
+                        qLog2.log('info', '   ' + procId, 'Text Trans   [' + txtWork + '] ' + txtOutLang + ' (!' + qApiTrn + ')', display=True)
 
                 txt = txtOutLang + ', [' + txtWork + ']'
                 qFunc.txtsWrite(qCtrl_translate, txts=[txt], encoding='utf-8', exclusive=True, mode='w', )
@@ -1422,6 +1447,7 @@ def speech_batch(runMode, micDev,
 
 
     # TTS 結果出力
+
     if (txtOutput != '' and txtWork != '!'):
 
         nowTime = datetime.datetime.now()
@@ -1430,18 +1456,18 @@ def speech_batch(runMode, micDev,
         if (txtInput == inpOutput ):
             recfile = qPath_rec + fileId + '.feedback.mp3'
 
-        #qFunc.logOutput(' ' + procId + ' Text Vocal   [' + txtWork + '] ' + txtOutLang + ' (' + qApiOut + ')', True)
+        #qLog2.log('info', '   ' + procId, 'Text Vocal   [' + txtWork + '] ' + txtOutLang + ' (' + qApiOut + ')', display=True)
         tmpfile = qPath_work + 'temp_qVoiceOutput.' + fileId + '.mp3'
         #res,api = qVoiceOutput(qApiOut, txtOutLang, txtWork, recfile, tmpfile)
         res,api = qVoiceOutput(txtOutApi, txtOutLang, txtWork, recfile, tmpfile)
         #if (api == qApiOut) or (api == 'free' and qApiOut == 'google'):
         if (api == txtOutApi) or (api == 'free' and txtOutApi == 'google'):
-                qFunc.logOutput(' ' + procId + ' Text Vocal   [' + txtWork + '] ' + txtOutLang + ' (' + api + ')', True)
+                qLog2.log('info', '   ' + procId, 'Text Vocal   [' + txtWork + '] ' + txtOutLang + ' (' + api + ')', display=True)
         else:
             if (api != ''):
-                qFunc.logOutput(' ' + procId + ' Text Vocal   [' + txtWork + '] ' + txtOutLang + ' (!' + api + ')', True)
+                qLog2.log('info', '   ' + procId, 'Text Vocal   [' + txtWork + '] ' + txtOutLang + ' (!' + api + ')', display=True)
             else:
-                qFunc.logOutput(' ' + procId + ' Text Vocal   [' + txtWork + '] ' + txtOutLang + ' (!' + txtOutApi + ')', True)
+                qLog2.log('info', '   ' + procId, 'Text Vocal   [' + txtWork + '] ' + txtOutLang + ' (!' + txtOutApi + ')', display=True)
 
         if (os.path.exists(recfile)):
 
@@ -1492,25 +1518,25 @@ def speech_batch(runMode, micDev,
         else:
             recfile = qPath_rec + fileId + '.text2vocal.mp3'
 
-        #qFunc.logOutput(' ' + procId + ' Vocalization [' + outText + '] ' + qLangOut + ' (' + qApiOut + ')', True)
+        #qLog2.log('info', '   ' + procId, 'Vocalization [' + outText + '] ' + qLangOut + ' (' + qApiOut + ')', display=True)
         tmpfile = qPath_work + 'temp_qVoiceOutput.' + fileId + '.mp3'
         res,api = qVoiceOutput(qApiOut, qLangOut, outText, recfile, tmpfile)
         if (api == qApiOut) or (api == 'free' and qApiOut == 'google'):
                 if (inpInput != ''):
-                    qFunc.logOutput(' ' + procId + ' Vocalization [' + outText + '] ' + qLangOut + ' (' + api + ')', True)
+                    qLog2.log('info', '   ' + procId, 'Vocalization [' + outText + '] ' + qLangOut + ' (' + api + ')', display=True)
                 else:
-                    qFunc.logOutput(' ' + procId + ' Text Vocal   [' + outText + '] ' + qLangOut + ' (' + api + ')', True)
+                    qLog2.log('info', '   ' + procId, 'Text Vocal   [' + outText + '] ' + qLangOut + ' (' + api + ')', display=True)
         else:
             if (api != ''):
                 if (inpInput != ''):
-                    qFunc.logOutput(' ' + procId + ' Vocalization [' + outText + '] ' + qLangOut + ' (!' + api + ')', True)
+                    qLog2.log('info', '   ' + procId, 'Vocalization [' + outText + '] ' + qLangOut + ' (!' + api + ')', display=True)
                 else:
-                    qFunc.logOutput(' ' + procId + ' Text Vocal   [' + outText + '] ' + qLangOut + ' (!' + api + ')', True)
+                    qLog2.log('info', '   ' + procId, 'Text Vocal   [' + outText + '] ' + qLangOut + ' (!' + api + ')', display=True)
             else:
                 if (inpInput != ''):
-                    qFunc.logOutput(' ' + procId + ' Vocalization [' + outText + '] ' + qLangOut + ' (!' + qApiOut + ')', True)
+                    qLog2.log('info', '   ' + procId, 'Vocalization [' + outText + '] ' + qLangOut + ' (!' + qApiOut + ')', display=True)
                 else:
-                    qFunc.logOutput(' ' + procId + ' Text Vocal   [' + outText + '] ' + qLangOut + ' (!' + qApiOut + ')', True)
+                    qLog2.log('info', '   ' + procId, 'Text Vocal   [' + outText + '] ' + qLangOut + ' (!' + qApiOut + ')', display=True)
 
         if (os.path.exists(recfile)):
 
@@ -1642,20 +1668,22 @@ class api_speech_class:
 
 
 if (__name__ == '__main__'):
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=False, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, display=False, outfile=True, )
 
-    qFunc.logOutput('___main___:init')
-    qFunc.logOutput('___main___:exsample.py runMode, api..., lang..., ')
+    qLog.log('info', '___main___:init')
+    qLog.log('info', '___main___:exsample.py runMode, api..., lang..., ')
     #runMode  live, translator, speech, ...,
     #api      free, google, watson, azure, aws, nict, winos, macos, docomo,
     #lang     ja, en, fr, kr...
+
+    # 設定
 
     runMode  = 'debug'
     micDev   = '0'
@@ -1733,37 +1761,37 @@ if (__name__ == '__main__'):
     if (len(sys.argv) >= 23):
         outPlay  = str(sys.argv[22]).lower()
 
-    qFunc.logOutput('')
-    qFunc.logOutput('___main___:runMode  =' + str(runMode  ))
-    qFunc.logOutput('___main___:micDev   =' + str(micDev   ))
-    qFunc.logOutput('___main___:qApiInp  =' + str(qApiInp  ))
-    qFunc.logOutput('___main___:qApiTrn  =' + str(qApiTrn  ))
-    qFunc.logOutput('___main___:qApiOut  =' + str(qApiOut  ))
-    qFunc.logOutput('___main___:qLangInp =' + str(qLangInp ))
-    qFunc.logOutput('___main___:qLangTrn =' + str(qLangTrn ))
-    qFunc.logOutput('___main___:qLangTxt =' + str(qLangTxt ))
-    qFunc.logOutput('___main___:qLangOut =' + str(qLangOut ))
+    qLog.log('info', '')
+    qLog.log('info', '___main___:runMode  =' + str(runMode  ))
+    qLog.log('info', '___main___:micDev   =' + str(micDev   ))
+    qLog.log('info', '___main___:qApiInp  =' + str(qApiInp  ))
+    qLog.log('info', '___main___:qApiTrn  =' + str(qApiTrn  ))
+    qLog.log('info', '___main___:qApiOut  =' + str(qApiOut  ))
+    qLog.log('info', '___main___:qLangInp =' + str(qLangInp ))
+    qLog.log('info', '___main___:qLangTrn =' + str(qLangTrn ))
+    qLog.log('info', '___main___:qLangTxt =' + str(qLangTxt ))
+    qLog.log('info', '___main___:qLangOut =' + str(qLangOut ))
 
-    qFunc.logOutput('___main___:procId   =' + str(procId   ))
-    qFunc.logOutput('___main___:fileId   =' + str(fileId   ))
+    qLog.log('info', '___main___:procId   =' + str(procId   ))
+    qLog.log('info', '___main___:fileId   =' + str(fileId   ))
 
-    qFunc.logOutput('___main___:inpInput =' + str(inpInput ))
-    qFunc.logOutput('___main___:inpOutput=' + str(inpOutput))
-    qFunc.logOutput('___main___:trnInput =' + str(trnInput ))
-    qFunc.logOutput('___main___:trnOutput=' + str(trnOutput))
-    qFunc.logOutput('___main___:txtInput =' + str(txtInput ))
-    qFunc.logOutput('___main___:txtOutput=' + str(txtOutput))
-    qFunc.logOutput('___main___:outInput =' + str(outInput ))
-    qFunc.logOutput('___main___:outOutput=' + str(outOutput))
+    qLog.log('info', '___main___:inpInput =' + str(inpInput ))
+    qLog.log('info', '___main___:inpOutput=' + str(inpOutput))
+    qLog.log('info', '___main___:trnInput =' + str(trnInput ))
+    qLog.log('info', '___main___:trnOutput=' + str(trnOutput))
+    qLog.log('info', '___main___:txtInput =' + str(txtInput ))
+    qLog.log('info', '___main___:txtOutput=' + str(txtOutput))
+    qLog.log('info', '___main___:outInput =' + str(outInput ))
+    qLog.log('info', '___main___:outOutput=' + str(outOutput))
 
-    qFunc.logOutput('___main___:inpPlay  =' + str(inpPlay  ))
-    qFunc.logOutput('___main___:txtPlay  =' + str(txtPlay  ))
-    qFunc.logOutput('___main___:outPlay  =' + str(outPlay  ))
+    qLog.log('info', '___main___:inpPlay  =' + str(inpPlay  ))
+    qLog.log('info', '___main___:txtPlay  =' + str(txtPlay  ))
+    qLog.log('info', '___main___:outPlay  =' + str(outPlay  ))
 
 
 
-    qFunc.logOutput('')
-    qFunc.logOutput('___main___:start')
+    qLog.log('info', '')
+    qLog.log('info', '___main___:start')
 
 
 
@@ -1782,8 +1810,8 @@ if (__name__ == '__main__'):
 
 
 
-    qFunc.logOutput('___main___:terminate')
+    qLog.log('info', '___main___:terminate')
 
-    qFunc.logOutput('___main___:bye!')
+    qLog.log('info', '___main___:bye!')
 
 

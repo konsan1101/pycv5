@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import requests
@@ -58,7 +60,7 @@ class WeatherAPI:
                         temp_max = str(res_json['main']['temp_max'])
                         temp_min = str(res_json['main']['temp_min'])
                         humidity = str(res_json['main']['humidity'])
-                except:
+                except Exception as e:
                     pass
 
         return weather, temp_max, temp_min, humidity

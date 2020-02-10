@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import cv2
@@ -108,7 +110,7 @@ class VisionAPI:
             cv2.imwrite(outImage, proc_img)
             return True
 
-        except:
+        except Exception as e:
             pass
 
         return False
@@ -182,7 +184,7 @@ class VisionAPI:
                                     #        text = outText
                                     detect_label += str(text) + ','
                                     detect_label = detect_label.strip()
-                            except:
+                            except Exception as e:
                                 pass
                             try:
                                 for landmark in response['landmarkAnnotations']:
@@ -195,13 +197,13 @@ class VisionAPI:
                                     #        text = outText
                                     detect_landmark += str(text) + ','
                                     detect_landmark = detect_landmark.strip()
-                            except:
+                            except Exception as e:
                                 pass
 
                         res_text = {}
                         res_text['label']    = detect_label
                         res_text['landmark'] = detect_landmark
-                except:
+                except Exception as e:
                     pass
 
             return res_text, 'google'
@@ -262,9 +264,9 @@ class VisionAPI:
                                     text = str(text).strip()
                                     if (text != ''):
                                         res_text.append(text)
-                            except:
+                            except Exception as e:
                                 res_text = None
-                except:
+                except Exception as e:
                     pass
 
             return res_text, 'google'

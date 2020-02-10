@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 from azure.storage.blob import BlockBlobService, PublicAccess
@@ -49,7 +51,7 @@ class StorageAPI:
                 block_blob_service = None
                 return True
 
-            except:
+            except Exception as e:
                 return False
 
         return False
@@ -84,7 +86,7 @@ class StorageAPI:
                 block_blob_service = None
                 return True
 
-            except:
+            except Exception as e:
                 return False
 
         return False
@@ -112,7 +114,7 @@ class StorageAPI:
                 block_blob_service = None
                 return blobFiles
 
-            #except:
+            #except Exception as e:
             #    return False
 
         return False
@@ -139,7 +141,7 @@ class StorageAPI:
                 block_blob_service = None
                 return True
 
-            except:
+            except Exception as e:
                 return False
 
         return False

@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 
 
@@ -46,7 +47,7 @@ if __name__ == '__main__':
                 sox.wait()
                 sox.terminate()
                 sox = None
-            except:
+            except Exception as e:
                 pass
 
             txt = ''
@@ -59,7 +60,7 @@ if __name__ == '__main__':
                         txt = (txt + ' ' + str(t)).strip()
                     rt.close
                     rt = None
-                except:
+                except Exception as e:
                     rt = None
 
             if (txt != ''):
@@ -86,7 +87,7 @@ if __name__ == '__main__':
                 f2 = 'narration/tts/' + fileId[:-4] + '.[' + f + '].txt'
                 try:
                     os.rename(f1, f2)
-                except:
+                except Exception as e:
                     pass
 
                 #f1 = 'narration/mp3/' + fileId[:-4] + '.tts.mp3'
@@ -94,14 +95,14 @@ if __name__ == '__main__':
                 f2 = 'narration/mp3/' + fileId[:-4] + '.[' + f + '].mp3'
                 try:
                     os.rename(f1, f2)
-                except:
+                except Exception as e:
                     pass
 
                 f1 = 'narration/wav/' + fileId[:-4] + '.wav'
                 f2 = 'narration/wav/' + fileId[:-4] + '.[' + f + '].wav'
                 try:
                     os.rename(f1, f2)
-                except:
+                except Exception as e:
                     pass
 
 

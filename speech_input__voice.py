@@ -11,7 +11,9 @@
 import sys
 import os
 import time
+import datetime
 import codecs
+
 import subprocess
 
 import speech_recognition as sr
@@ -54,7 +56,7 @@ if __name__ == '__main__':
                 speech = srr.listen(source, timeout=15, phrase_time_limit=15)
                 data    =speech.get_wav_data(16000,2)
                 datasize=sys.getsizeof(data)
-            except:
+            except Exception as e:
                 srr.dynamic_energy_threshold = True
                 srr.adjust_for_ambient_noise(source, duration=5)
                 datasize=0

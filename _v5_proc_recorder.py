@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 
 
@@ -29,7 +30,9 @@ qCtrl_result_recorder     = 'temp/result_recorder.txt'
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -114,7 +117,7 @@ def check_sox():
         sox.wait()
         sox.terminate()
         sox = None
-    except:
+    except Exception as e:
         return False
     
     return result
@@ -222,7 +225,7 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath='', sfps=1, scene=0.1,
                 result = []
             result.append(f2)
 
-    except:
+    except Exception as e:
         pass
 
     try:
@@ -231,7 +234,7 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath='', sfps=1, scene=0.1,
         qFunc.makeDirs(wrkPath, remove=True, )
 
         # 動画処理
-        if (scene == None):
+        if (scene is None):
             ffmpeg = subprocess.Popen(['ffmpeg', '-i', inpFilev, \
                 '-filter:v', 'fps=fps=' + str(sfps) + ':round=down, showinfo', \
                 wrkPath + '%04d.jpg', \
@@ -300,7 +303,7 @@ def movie2jpg(inpPath='', inpNamev='',outPath='', wrkPath='', sfps=1, scene=0.1,
                             result = []
                         result.append(f2)
 
-    except:
+    except Exception as e:
         pass
 
     return result
@@ -346,7 +349,7 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
                 ffmpeg.terminate()
                 ffmpeg = None
                 mp4ok = True
-            except:
+            except Exception as e:
                 pass
         if (mp4ok == False):
             try:
@@ -362,7 +365,7 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
                 ffmpeg.terminate()
                 ffmpeg = None
                 mp4ok = True
-            except:
+            except Exception as e:
                 pass
 
         # 音声処理
@@ -375,7 +378,7 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
                 sox.terminate()
                 sox = None
                 mp3ok = True
-            except:
+            except Exception as e:
                 pass
 
         # 戻り値
@@ -384,15 +387,18 @@ def movie2mp4(inpPath='', inpNamev='', inpNamea='', outPath='', ):
         else:
             return [outFilev, outFilea]
 
-    except:
+    except Exception as e:
         pass
 
     return result
 
 def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
 
+    nowTime  = datetime.datetime.now()
+    yyyymmdd = nowTime.strftime('%Y%m%d')
+
     # ログ
-    print(proc_id + ':thread ' + str(index) + ':start')
+    qLog.log('debug', proc_id, 'thread ' + str(index) + ' : start', )
 
     # サムネイル抽出
     wrkPath = qPath_work + 'movie2jpg' + str(index) + '/'
@@ -403,10 +409,12 @@ def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
             qFunc.copy(f, qPath_d_movie  + outFile)
             qFunc.copy(f, qPath_d_upload + outFile)
             if (qPath_videos != ''):
-                qFunc.copy(f, qPath_videos + outFile)
+                folder = qPath_videos + yyyymmdd + '/'
+                qFunc.makeDirs(folder)
+                qFunc.copy(f, folder + outFile)
 
             # ログ
-            print(proc_id + ':thread ' + str(index) + ':' + rec_namev + u' → ' + outFile)
+            qLog.log('debug', proc_id, 'thread ' + str(index) + ' : ' + rec_namev + u' → ' + outFile, )
 
     # 動画変換
     res = movie2mp4(inpPath=qPath_work, inpNamev=rec_namev, inpNamea=rec_namea, outPath = qPath_rec, )
@@ -418,15 +426,17 @@ def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
             qFunc.copy(f, qPath_d_upload + outFile)
             qFunc.copy(f, qCtrl_result_movie)
             if (qPath_videos != ''):
-                qFunc.copy(f, qPath_videos + outFile)
+                folder = qPath_videos + yyyymmdd + '/'
+                qFunc.makeDirs(folder)
+                qFunc.copy(f, folder + outFile)
             if (outFile[-4:] == '.mp4'):
                 mp4file = outFile
 
             # ログ
             if (outFile[-4:] == '.mp4'):
-                print(proc_id + ':thread ' + str(index) + ':' + rec_namev + u' → ' + outFile)
+                qLog.log('debug', proc_id, 'thread ' + str(index) + ' : ' + rec_namev + u' → ' + outFile, )
             if (outFile[-4:] == '.mp3'):
-                print(proc_id + ':thread ' + str(index) + ':' + rec_namea + u' → ' + outFile)
+                qLog.log('debug', proc_id, 'thread ' + str(index) + ' : ' + rec_namea + u' → ' + outFile, )
 
         if (mp4file != ''):
             qFunc.txtsWrite(qCtrl_result_recorder, txts=[mp4file], encoding='utf-8', exclusive=True, mode='w', )
@@ -440,7 +450,7 @@ def movie_proc(proc_id, index, rec_filev, rec_namev, rec_filea, rec_namea, ):
         qFunc.remove(rec_filea)
 
     # ログ
-    print(proc_id + ':thread ' + str(index) + ':complete')
+    qLog.log('debug', proc_id, 'thread ' + str(index) + ' : complete', )
 
 
 
@@ -459,7 +469,7 @@ class proc_recorder:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -491,10 +501,10 @@ class proc_recorder:
             self.batch_thread[i] = None
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -515,7 +525,7 @@ class proc_recorder:
         self.proc_main.start()
 
     def abort(self, waitMax=20, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -545,7 +555,7 @@ class proc_recorder:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -575,7 +585,7 @@ class proc_recorder:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
             if (qFunc.statusCheck(self.fileRdy) == False):
@@ -589,7 +599,9 @@ class proc_recorder:
                         
                         # 記録ストップ
                         if (not self.rec_ffmpeg[i] is None):
-                            self.sub_stop(i, '_rec_stop_', )
+
+                            # 停止
+                            self.sub_stop(i, '_rec_stop_', cn_s, )
 
             # 一定時間（5分毎）、自動リスタート
             for i in range(1, self.rec_max+1):
@@ -601,10 +613,10 @@ class proc_recorder:
                     if ((time.time() - self.rec_start[i]) > limit_sec):
 
                         # 記録リスタート
-                        self.sub_start(0, '_rec_restart_', )
+                        self.sub_start(0, '_rec_restart_', cn_s, )
 
                         # 記録ストップ
-                        self.sub_stop(i, '_rec_stop_', )
+                        self.sub_stop(i, '_rec_stop_', cn_s, )
 
             # ステータス応答
             if (inp_name.lower() == '_status_'):
@@ -614,7 +626,7 @@ class proc_recorder:
 
             # 処理
             elif (inp_name.lower() != ''):
-                self.sub_proc(inp_value, )
+                self.sub_proc(inp_value, cn_s, )
 
             # アイドリング
             slow = False
@@ -640,7 +652,7 @@ class proc_recorder:
             qFunc.statusSet(self.fileRdy, False)
 
             # 記録終了
-            self.sub_proc(u'記録終了')
+            self.sub_proc(u'記録終了', cn_s, )
             qFunc.statusWait_false(self.fileBsy, 15)
 
             # ビジー解除
@@ -655,21 +667,24 @@ class proc_recorder:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
 
     # 処理
-    def sub_proc(self, proc_text, ):
+    def sub_proc(self, proc_text, cn_s, ):
 
         if (proc_text.find(u'リセット') >=0):
 
             # 全記録ストップ
             for i in range(1, self.rec_max+1):
                 if (not self.rec_ffmpeg[i] is None):
-                    self.sub_stop(i, '_stop_', )
+
+                    # 停止
+                    self.sub_stop(i, '_stop_', cn_s, )
+
 
         elif (proc_text.lower() == '_rec_stop_') \
           or (proc_text.find(u'記録') >=0) and (proc_text.find(u'停止') >=0) \
@@ -680,19 +695,21 @@ class proc_recorder:
             # 全記録ストップ
             for i in range(1, self.rec_max+1):
                 if (not self.rec_ffmpeg[i] is None):
-                    self.sub_stop(i, '_stop_', )
+
+                    # 停止
+                    self.sub_stop(i, '_stop_', cn_s, )
 
         elif (proc_text.lower() == '_rec_start_') \
           or (proc_text.find(u'記録') >=0) \
           or (proc_text.find(u'録画') >=0):
 
             # 記録スタート
-            self.sub_start(0, proc_text, )
+            self.sub_start(0, proc_text, cn_s, )
 
 
 
     # 記録開始
-    def sub_start(self, index, proc_text, ):
+    def sub_start(self, index, proc_text, cn_s, ):
 
         # インターフェース
         qFunc.remove(qCtrl_result_movie     )
@@ -729,9 +746,10 @@ class proc_recorder:
             if (proc_text.lower() == '_rec_start_') \
             or (proc_text.find(u'記録') >=0) \
             or (proc_text.find(u'録画') >=0):
-                speechs = []
-                speechs.append({ 'text':u'記録を開始します。', 'wait':0, })
-                qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
+                if (proc_text.find(u'開始') >=0):
+                    speechs = []
+                    speechs.append({ 'text':u'記録を開始します。', 'wait':0, })
+                    qFunc.speech(id=self.proc_id, speechs=speechs, lang='', )
 
             elif (proc_text.lower() == '_rec_restart_'):
                 speechs = []
@@ -756,6 +774,8 @@ class proc_recorder:
 
                     nowTime    = datetime.datetime.now()
                     stamp      = nowTime.strftime('%Y%m%d.%H%M%S')
+
+                    # 連続録画
                     if (proc_text.lower() == '_rec_start_') \
                     or (proc_text.lower() == '_rec_restart_') \
                     or (proc_text.find(u'開始') >=0):
@@ -765,6 +785,8 @@ class proc_recorder:
                         self.rec_filea[index] = ''
                         if (len(mic) > 0) and (sox_enable == True):
                             self.rec_filea[index] = qPath_work + stamp + '.wav'
+
+                    # 一時録画
                     else:
                         rec_txt = '.' + qFunc.txt2filetxt(proc_text)
                         self.rec_start[index] = time.time()
@@ -854,7 +876,7 @@ class proc_recorder:
 
                     if (check == False):
                         # ログ
-                        qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec start error!', display=True,)
+                        qLog.log('info', self.proc_id, '' + rec_namev + ' rec start error!', display=True,)
 
                         self.rec_ffmpeg[index].terminate()
                         self.rec_ffmpeg[index] = None
@@ -863,14 +885,17 @@ class proc_recorder:
                             self.rec_sox[index] = None
 
                 # ログ
-                qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec start (ch=' + str(index) + ')', display=True,)
+                qLog.log('info', self.proc_id, '' + rec_namev + ' rec start (ch=' + str(index) + ')', display=True,)
                 if (self.rec_filea[index] != ''):
-                    qFunc.logOutput(self.proc_id + ':' + rec_namea + ' rec start (ch=' + str(index) + ')', display=True,)
+                    qLog.log('info', self.proc_id, '' + rec_namea + ' rec start (ch=' + str(index) + ')', display=True,)
+
+                # ガイド表示
+                cn_s.put(['guide', 'rec start (ch=' + str(index) + ') !'])
 
 
 
     # 記録停止
-    def sub_stop(self, index, proc_text, ):
+    def sub_stop(self, index, proc_text, cn_s, ):
 
         # index
         if (index == 0):
@@ -903,7 +928,7 @@ class proc_recorder:
                     self.rec_ffmpeg[index].stdin.write(b'q\n')
                     try:
                         self.rec_ffmpeg[index].stdin.flush()
-                    except:
+                    except Exception as e:
                         pass
 
                 # 録音停止
@@ -924,7 +949,7 @@ class proc_recorder:
                     self.rec_ffmpeg[index].stdin.write(b'q\n')
                     try:
                         self.rec_ffmpeg[index].stdin.flush()
-                    except:
+                    except Exception as e:
                         pass
 
                 # 録音停止
@@ -950,16 +975,24 @@ class proc_recorder:
             rec_namev = rec_filev.replace(qPath_work, '')
             rec_namea = rec_filea.replace(qPath_work, '')
             if (os.path.exists(rec_filev)):
-                    qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec stop (ch=' + str(index) + ')', display=True,)
+                    qLog.log('info', self.proc_id, '' + rec_namev + ' rec stop (ch=' + str(index) + ')', display=True,)
+
+                    # ガイド表示
+                    cn_s.put(['guide', 'rec ok (ch=' + str(index) + ') !'])
+
             else:
-                    qFunc.logOutput(self.proc_id + ':' + rec_namev + ' rec err  (ch=' + str(index) + ')', display=True,)
+                    qLog.log('info', self.proc_id, '' + rec_namev + ' rec err  (ch=' + str(index) + ')', display=True,)
                     rec_filev = ''
                     rec_namev = ''
                     rec_filea = ''
                     rec_namea = ''
+
+                    # ガイド表示
+                    cn_s.put(['guide', 'rec error (ch=' + str(index) + ') !'])
+
             if (rec_namea != ''):
                 if (os.path.exists(rec_filea)):
-                    qFunc.logOutput(self.proc_id + ':' + rec_namea + ' rec stop (ch=' + str(index) + ')', display=True,)
+                    qLog.log('info', self.proc_id, '' + rec_namea + ' rec stop (ch=' + str(index) + ')', display=True,)
                 else:
                     rec_filea = ''
                     rec_namea = ''
@@ -1033,14 +1066,14 @@ signal.signal(signal.SIGTERM, signal.SIG_IGN)
 
 
 if __name__ == '__main__':
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
     # 初期設定
     qFunc.remove(qCtrl_control_desktop)
@@ -1087,7 +1120,7 @@ if __name__ == '__main__':
             control = ''
             txts, txt = qFunc.txtsRead(qCtrl_control_desktop)
             if (txts != False):
-                qFunc.logOutput(str(txt))
+                qLog.log('info', str(txt))
                 if (txt == '_end_'):
                     break
                 else:

@@ -10,17 +10,20 @@
 
 import sys
 import os
-import queue
-import threading
-import subprocess
-import datetime
 import time
+import datetime
 import codecs
 import glob
 
+import queue
+import threading
+import subprocess
 
 
-# qFunc 共通ルーチン
+
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -110,7 +113,7 @@ class proc_julius:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -121,10 +124,10 @@ class proc_julius:
         self.proc_seq  = 0
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -145,7 +148,7 @@ class proc_julius:
         self.proc_main.start()
 
     def abort(self, waitMax=5, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -175,7 +178,7 @@ class proc_julius:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -251,12 +254,12 @@ class proc_julius:
                 inp_value = ''
 
             if (cn_r.qsize() > 1) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディー設定
             if (qFunc.statusCheck(self.fileRdy) == False):
                 qFunc.statusSet(self.fileRdy, True)
-                qFunc.logOutput(self.proc_id + ':ready', display=self.logDisp,)
+                qLog.log('info', self.proc_id, 'ready', display=self.logDisp,)
 
             # 処理
             if (inp_name.lower() == 'filename'):
@@ -266,7 +269,7 @@ class proc_julius:
                     self.proc_seq = 1
 
                 # ログ
-                # qFunc.logOutput(self.proc_id + ':' + str(inp_name) + ' , ' + str(inp_value), display=self.logDisp, )
+                # qLog.log('info', self.proc_id, '' + str(inp_name) + ' , ' + str(inp_value), display=self.logDisp, )
 
                 # ビジー設定
                 if (qFunc.statusCheck(self.fileBsy) == False):
@@ -319,9 +322,9 @@ class proc_julius:
                 cn_s.put([out_name, out_value])
 
                 if (self.runMode=='debug'):
-                    qFunc.logOutput(self.proc_id + ':' + str(out_name) + ', ' + str(out_value), display=self.logDisp, )
+                    qLog.log('info', self.proc_id, '' + str(out_name) + ', ' + str(out_value), display=self.logDisp, )
                 else:
-                    #qFunc.logOutput(' ' + self.proc_id + ':Recognize /' + str(out_value) + '/ ja (julius) pass!', display=True, )
+                    #qLog.log('info', ' ' + self.proc_id + ':Recognize /' + str(out_value) + '/ ja (julius) pass!', display=True, )
                     pass
 
                 # txt ファイル出力
@@ -374,22 +377,23 @@ class proc_julius:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
 
 
 
 if __name__ == '__main__':
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
+    # テスト
     qFunc.kill('julius')
     qFunc.kill('adintool')
 
@@ -411,5 +415,6 @@ if __name__ == '__main__':
 
     qFunc.kill('julius')
     qFunc.kill('adintool')
+
 
 

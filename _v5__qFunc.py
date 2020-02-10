@@ -10,15 +10,17 @@
 
 import sys
 import os
-import signal
-import shutil
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
+
+import signal
+import shutil
 
 import platform
 qPLATFORM = platform.system().lower() #windows,darwin,linux
@@ -41,9 +43,10 @@ import array
 import unicodedata
 import pyautogui
 import pyperclip
+import numpy as np
 import cv2
 
-import PIL
+from PIL import Image, ImageDraw, ImageFont
 import io
 if (os.name == 'nt'):
     import win32clipboard
@@ -125,15 +128,26 @@ qRdy__d_sendkey = qPath_work + 'ready_d_sendkey.txt'
 class qFunc_class:
 
     def __init__(self, ):
-        nowTime = datetime.datetime.now()
-        self.qLogFlie = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.log'
-        self.qLogDisp = True
-        self.qLogOutf = True
         self.qScreenWidth  = 0
         self.qScreenHeight = 0
 
-        self.qGuidePanel = '5'
-        self.qGuideImg   = None
+        # フォント
+        self.qFont_default = {'file':'_fonts/' + '_vision_font_ipaexg.ttf','offset':8}
+        self.qFont_status  = {'file':'_fonts/' + '_vision_font_ipag.ttf',  'offset':8}
+        self.qFont_zh = {'file':'C:/Windows/Fonts/msyh.ttc',   'offset':5 }
+        self.qFont_ko = {'file':'C:/Windows/Fonts/batang.ttc', 'offset':10}
+        self.qFont16_default  = ImageFont.truetype(self.qFont_default['file'], 16, encoding='unic')
+        self.qFont16_defaulty =                    self.qFont_default['offset']
+
+
+        # ガイド表示
+        self.qGuide_panel  = '5'
+        self.qGuide_left   = 0
+        self.qGuide_top    = 0
+        self.qGuide_width  = 320
+        self.qGuide_height = 240
+        self.qGuide_img    = None
+        self.qGuide_title  = 'qGuide'
 
     def __del__(self, ):
         pass
@@ -248,74 +262,6 @@ class qFunc_class:
         print('check program !' + field)
         return None
 
-    def logFileSet(self, file, display=True, outfile=True, ):
-        self.qLogFlie = file
-        self.qLogDisp = display
-        self.qLogOutf = outfile
-        return True
-
-    def logOutput(self, text='', display='auto', outfile='auto', fgColor='', fgLine='', bgColor='', ):
-        if (display != 'auto'):
-            disp = display
-        else:
-            disp = self.qLogDisp
-        if (outfile != 'auto'):
-            outf = outfile
-        else:
-            outf = self.qLogOutf
-        try:
-            if (disp == True) or (disp == 'yes'):
-                print(self.colorText(text=text, fgColor=fgColor, fgLine=fgLine, bgColor=bgColor, ))
-            if (outf == True) or (outf == 'yes'):
-                w = codecs.open(qLogFlie, 'a', 'utf-8')
-                w.write(str(text) + '\n')
-                w.close()
-                w = None
-        except:
-            pass
-        return True
-
-    def colorText(self, text='', fgColor='', fgLine='', bgColor='', ):
-        txtColor = ''
-        if   (fgLine != ''):
-            txtColor += '\033[4m'
-        if   (fgColor == 'black'):
-            txtColor += '\033[30m'
-        elif (fgColor == 'red'):
-            txtColor += '\033[31m'
-        elif (fgColor == 'green'):
-            txtColor += '\033[32m'
-        elif (fgColor == 'yellow'):
-            txtColor += '\033[33m'
-        elif (fgColor == 'blue'):
-            txtColor += '\033[34m'
-        elif (fgColor == 'magenta'):
-            txtColor += '\033[35m'
-        elif (fgColor == 'cyan'):
-            txtColor += '\033[36m'
-        elif (fgColor == 'white'):
-            txtColor += '\033[37m'
-        if   (bgColor == 'black'):
-            txtColor += '\033[40m'
-        elif (bgColor == 'red'):
-            txtColor += '\033[41m'
-        elif (bgColor == 'green'):
-            txtColor += '\033[42m'
-        elif (bgColor == 'yellow'):
-            txtColor += '\033[43m'
-        elif (bgColor == 'blue'):
-            txtColor += '\033[44m'
-        elif (bgColor == 'magenta'):
-            txtColor += '\033[45m'
-        elif (bgColor == 'cyan'):
-            txtColor += '\033[46m'
-        elif (bgColor == 'white'):
-            txtColor += '\033[47m'
-        resetColor = ''
-        if (txtColor != ''):
-            resetColor = '\033[0m'
-        return txtColor + str(text) + resetColor
-
     def makeDirs(self, ppath, remove=False, ):
         try:
             if (len(ppath) > 0):
@@ -331,7 +277,7 @@ class qFunc_class:
                             if (remove == True):
                                 try:
                                     self.remove(f)
-                                except:
+                                except Exception as e:
                                     pass
                             if (str(remove).isdigit()):
                                 try:
@@ -341,10 +287,10 @@ class qFunc_class:
                                     td = nowTime - fileTime
                                     if (td.days >= int(remove)):
                                         self.remove(f)
-                                except:
+                                except Exception as e:
                                     pass
 
-        except:
+        except Exception as e:
             pass
         return True
 
@@ -357,7 +303,7 @@ class qFunc_class:
                 kill.terminate()
                 kill = None
                 return True
-            except:
+            except Exception as e:
                 pass
         else:
             try:
@@ -367,7 +313,7 @@ class qFunc_class:
                 kill.terminate()
                 kill = None
                 return True
-            except:
+            except Exception as e:
                 pass
         return False
 
@@ -379,7 +325,7 @@ class qFunc_class:
             try:
                 os.remove(filename) 
                 return True
-            except:
+            except Exception as e:
                 return False
         else:
             chktime = time.time()
@@ -387,7 +333,7 @@ class qFunc_class:
                 try:
                     os.remove(filename)
                     return True
-                except:
+                except Exception as e:
                     pass
                 time.sleep(0.10)
 
@@ -400,7 +346,7 @@ class qFunc_class:
         try:
             shutil.copy2(fromFile, toFile)
             return True
-        except:
+        except Exception as e:
             return False
 
     def txtsWrite(self, filename, txts=[''], encoding='utf-8', exclusive=False, mode='w', ):
@@ -415,7 +361,7 @@ class qFunc_class:
                 w.close()
                 w = None
                 return True
-            except:
+            except Exception as e:
                 w = None
                 return False
         else:
@@ -439,7 +385,7 @@ class qFunc_class:
                         w = None
                         os.rename(f2, filename)
                         return True
-                    except:
+                    except Exception as e:
                         w = None
                         return False
 
@@ -464,7 +410,7 @@ class qFunc_class:
                 r.close
                 r = None
                 return txts, txt
-            except:
+            except Exception as e:
                 r = None
                 return False, ''
         else:
@@ -487,7 +433,7 @@ class qFunc_class:
                     r = None
                     self.remove(f2, )
                     return txts, txt
-                except:
+                except Exception as e:
                     r = None
                     return False, ''
 
@@ -559,7 +505,7 @@ class qFunc_class:
     def img2clip(self, file):
         if (os.name == 'nt'):
             #try:
-                img = PIL.Image.open(file)
+                img = Image.open(file)
                 output = io.BytesIO()
                 img.convert('RGB').save(output, 'BMP')
                 data = output.getvalue()[14:]
@@ -570,7 +516,7 @@ class qFunc_class:
                 win32clipboard.SetClipboardData(win32clipboard.CF_DIB, data)
                 win32clipboard.CloseClipboard()
                 return True
-            #except:
+            #except Exception as e:
             #    pass
         return False
 
@@ -586,12 +532,12 @@ class qFunc_class:
                 or ('HIRAGANA' in name) \
                 or ('KATAKANA' in name):
                     return True
-        except:
+        except Exception as e:
             pass
         return False
 
     def checkWakeUpWord(self, txt='', ):
-        if (txt == u'力') or (txt == u'りき') \
+        if (txt == u'力') or (txt == u'りき') or (txt == u'リッキー') \
         or (txt == u'三木') or (txt == u'ミキ') or (txt == u'ミッキー') \
         or (txt == u'ウィキ') \
         or (txt.lower() == 'riki') \
@@ -653,7 +599,7 @@ class qFunc_class:
                 for i in range(len(out_txt)):
                     ctypes.windll.user32.SendMessageW(child_handles[0], WM_CHAR, (ord(out_txt[i])), 0)
                 return True
-            #except:
+            #except Exception as e:
             #    return False
 
     def enum_child_windows_proc(self, handle, list):
@@ -693,6 +639,27 @@ class qFunc_class:
             return True
 
         return False
+
+    def cv2pil(self, cv2_image=None):
+        wrk_image = cv2_image.copy()
+        if (wrk_image.ndim == 2):  # モノクロ
+            pass
+        elif (wrk_image.shape[2] == 3):  # カラー
+            wrk_image = cv2.cvtColor(wrk_image, cv2.COLOR_BGR2RGB)
+        elif (wrk_image.shape[2] == 4):  # 透過
+            wrk_image = cv2.cvtColor(wrk_image, cv2.COLOR_BGRA2RGBA)
+        pil_image = Image.fromarray(wrk_image)
+        return pil_image
+
+    def pil2cv(self, pil_image=None):
+        cv2_image = np.array(pil_image, dtype=np.uint8)
+        if (cv2_image.ndim == 2):  # モノクロ
+            pass
+        elif (cv2_image.shape[2] == 3):  # カラー
+            cv2_image = cv2.cvtColor(cv2_image, cv2.COLOR_RGB2BGR)
+        elif (cv2_image.shape[2] == 4):  # 透過
+            cv2_image = cv2.cvtColor(cv2_image, cv2.COLOR_RGBA2BGRA)
+        return cv2_image
 
     def getPanelPos(self, id='0-', ):
         #left, top, width, height = getPanelPos(panel,)
@@ -749,66 +716,119 @@ class qFunc_class:
 
     def guideDisplay(self, display=True, panel='', filename='', txt='', ):
         if (panel != ''):
-            self.qGuidePanel = panel
-        win = 'Guide_' + self.qGuidePanel
+            self.qGuide_panel = panel
         if (filename != ''):
             imgfile = filename
             if (filename == '_kernel_start_'):
-                imgfile = qPath_icons + 'riki_start.png'
+                imgfile = qPath_icons + 'RiKi_start.png'
             if (filename == '_kernel_stop_'):
-                imgfile = qPath_icons + 'riki_stop.png'
+                imgfile = qPath_icons + 'RiKi_stop.png'
+            if (filename == '_kernel_guide_'):
+                imgfile = qPath_icons + 'RiKi_guide.png'
             if (filename == '_speech_start_'):
                 imgfile = qPath_icons + 'speech_start.png'
             if (filename == '_speech_stop_'):
                 imgfile = qPath_icons + 'speech_stop.png'
+            if (filename == '_speech_guide_'):
+                imgfile = qPath_icons + 'speech_guide.png'
             if (filename == '_vision_start_'):
                 imgfile = qPath_icons + 'cam_start.png'
             if (filename == '_vision_stop_'):
                 imgfile = qPath_icons + 'cam_stop.png'
+            if (filename == '_vision_guide_'):
+                imgfile = qPath_icons + 'cam_guide.png'
             if (filename == '_desktop_start_'):
                 imgfile = qPath_icons + 'rec_start.png'
             if (filename == '_desktop_stop_'):
                 imgfile = qPath_icons + 'rec_stop.png'
-            self.qGuideImg = None
+            if (filename == '_desktop_guide_'):
+                imgfile = qPath_icons + 'rec_guide.png'
+            self.qGuide_img = None
             try:
-                self.qGuideImg = cv2.imread(imgfile)
-            except:
+                self.qGuide_img = cv2.imread(imgfile)
+            except Exception as e:
                 pass
 
-        if (display == True) and (not self.qGuideImg is None):
-            #try:
-                left, top, width, height = self.getPanelPos(self.qGuidePanel,)
-                dsp = cv2.resize(self.qGuideImg, (width,height))
-                if (txt != ''):
-                    cv2.putText(dsp, txt, (5,height-5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
+            # 表示位置
+            if  (self.qGuide_panel != 'detect_face') \
+            and (self.qGuide_panel != 'detect_speech'):
+                self.qGuide_title = 'Guide_' + self.qGuide_panel
+                self.qGuide_left, self.qGuide_top, self.qGuide_width, self.qGuide_height = self.getPanelPos(self.qGuide_panel,)
+                if (filename.find('guide') >= 0):
+                    self.qGuide_height = int(self.qGuide_height/4)
+                    if (self.qGuide_panel == '7') \
+                    or (self.qGuide_panel == '8') \
+                    or (self.qGuide_panel == '9'):
+                        self.qGuide_top += (self.qGuide_height * 3)
                 if (os.name == 'nt'):
-                    cv2.namedWindow(win, 1)
-                    cv2.moveWindow( win, left, top-30)
-                    cv2.imshow(     win, dsp )
-                    cv2.moveWindow( win, left, top-30)
+                    if (self.qGuide_panel == '7') \
+                    or (self.qGuide_panel == '8') \
+                    or (self.qGuide_panel == '9'):
+                        self.qGuide_top -= 50
+            else:
+                w, h = pyautogui.size()
+                chksec9 = int(time.time()) % 10
+                chksec2 = (int(time.time()) % 2)
+                self.qGuide_left = int(w * (chksec9 * 0.1))
+                self.qGuide_top  = int(h * (chksec2 * 0.1))
+
+                # 顔画像リサイズ
+                if (not self.qGuide_img is None):
+                    image_height, image_width = self.qGuide_img.shape[:2]
+                    self.qGuide_width  = int(w / 10)
+                    self.qGuide_height = int(self.qGuide_width * image_height / image_width)
+                    self.qGuide_img = cv2.resize(self.qGuide_img, (self.qGuide_width, self.qGuide_height))
+
+            if  (self.qGuide_panel == 'detect_face'):
+                self.qGuide_title = 'Face_' + str(chksec9)
+                self.qGuide_top  += int(h * 0.1)
+
+            if  (self.qGuide_panel == 'detect_speech'):
+                self.qGuide_title = 'Speech_' + str(chksec9)
+                self.qGuide_top  += int(h * 0.3)
+
+        # ベース画像
+        img = None
+        if (not self.qGuide_img is None):
+            if  (self.qGuide_panel != 'detect_face') \
+            and (self.qGuide_panel != 'detect_speech'):
+                img = cv2.resize(self.qGuide_img, (self.qGuide_width,self.qGuide_height))
+            else:
+                img = self.qGuide_img.copy()
+
+        if (display == True) and (not img is None):
+            #try:
+                if (txt != ''):
+                    #cv2.putText(img, txt, (5,self.qGuide_height-15), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255,0,255))
+                    pil_image = self.cv2pil(img)
+                    text_draw = ImageDraw.Draw(pil_image)
+                    text_draw.text((10, self.qGuide_height-26), txt, font=self.qFont16_default, fill=(255,0,255))
+                    img = self.pil2cv(pil_image)
+
+                if (os.name == 'nt'):
+                    cv2.namedWindow(self.qGuide_title, 1)
+                    cv2.moveWindow( self.qGuide_title, self.qGuide_left, self.qGuide_top-30)
+                    cv2.imshow(     self.qGuide_title, img )
+                    cv2.moveWindow( self.qGuide_title, self.qGuide_left, self.qGuide_top-30)
                     cv2.waitKey(1)
                 #else:
-                #    rgb = cv2.cvtColor(dsp,cv2.COLOR_BGR2RGB)
+                #    rgb = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
                 #    plt.imshow(rgb)
                 #    plt.show()
                 return True
-            #except:
+            #except Exception as e:
             #    return False
 
         if (display == False):
             try:
-                left, top, width, height = self.getPanelPos(self.qGuidePanel,)
-                dsp = cv2.resize(self.qGuideImg, (width,height))
                 if (os.name == 'nt'):
-                    cv2.imshow(     win, dsp )
-                    cv2.waitKey(1)
-                    cv2.destroyWindow(win)
+                    cv2.destroyWindow(self.qGuide_title)
                     #cv2.destroyAllWindow()
                     cv2.waitKey(1)
                 #else:
                 #    plt.close('all')
                 return True
-            except:
+            except Exception as e:
                 return False
 
     def getResolution(self, reso='full', ):
@@ -818,7 +838,7 @@ class qFunc_class:
             if (self.qScreenWidth == 0):
                 try:
                     self.qScreenWidth, self.qScreenHeight = pyautogui.size()
-                except:
+                except Exception as e:
                     self.qScreenHeight =  720
                     self.qScreenWidth  = 1280
 
@@ -866,7 +886,7 @@ class qFunc_class:
                     w.close()
                     w = None
                     return True
-                except:
+                except Exception as e:
                     w = None
                 time.sleep(0.10)
         else:
@@ -875,7 +895,7 @@ class qFunc_class:
                 try:
                     self.remove(file, )
                     return True
-                except:
+                except Exception as e:
                     pass
                 time.sleep(0.10)
         return False
@@ -995,7 +1015,7 @@ class qFunc_class:
             self.tts(id2, text, 0, 0, )
             try:
                 time.sleep(speech['wait'])
-            except:
+            except Exception as e:
                 pass
 
         return True
@@ -1386,17 +1406,11 @@ class qFPS_class(object):
 
 if (__name__ == '__main__'):
 
-    #import  _v5__qFunc
-    #qFunc = _v5__qFunc.qFunc_class()
     qFunc = qFunc_class()
     qFunc.init()
 
+    # テスト
     qBusy_status_txts = qBusy_status_txts_class()
-
-    nowTime = datetime.datetime.now()
-    logfile = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=logfile, display=True, outfile=True, )
-    qFunc.logOutput(logfile, )
 
     qFunc.kill('sox')
 
@@ -1423,12 +1437,13 @@ if (__name__ == '__main__'):
 
     txts = qBusy_status_txts.getAll()
     for txt in txts:
-        qFunc.logOutput( txt, fgColor='blue',)
+        print(txt)
 
     txts = qBusy_status_txts.getRecorder()
     for txt in txts:
-        qFunc.logOutput( txt, fgColor='black', bgColor='white', )
+        print(txt)
 
     qFunc.notePad(txt=u'終了')
+
 
 

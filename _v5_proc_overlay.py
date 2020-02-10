@@ -10,20 +10,23 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 import numpy as np
 import cv2
 
 
 
-# qFunc 共通ルーチン
+# qLog,qFunc 共通ルーチン
+import  _v5__qLog
+qLog  = _v5__qLog.qLog_class()
 import  _v5__qFunc
 qFunc = _v5__qFunc.qFunc_class()
 
@@ -122,7 +125,7 @@ class proc_overlay:
             self.logDisp = True
         else:
             self.logDisp = False
-        qFunc.logOutput(self.proc_id + ':init', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'init', display=self.logDisp, )
 
         self.proc_s    = None
         self.proc_r    = None
@@ -153,10 +156,10 @@ class proc_overlay:
         self.flag_blackwhite = 'black'
 
     def __del__(self, ):
-        qFunc.logOutput(self.proc_id + ':bye!', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'bye!', display=self.logDisp, )
 
     def begin(self, ):
-        #qFunc.logOutput(self.proc_id + ':start')
+        #qLog.log('info', self.proc_id, 'start')
 
         self.fileRun = qPath_work + self.proc_id + '.run'
         self.fileRdy = qPath_work + self.proc_id + '.rdy'
@@ -177,7 +180,7 @@ class proc_overlay:
         self.proc_main.start()
 
     def abort(self, waitMax=5, ):
-        qFunc.logOutput(self.proc_id + ':stop', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'stop', display=self.logDisp, )
 
         self.breakFlag.set()
         chktime = time.time()
@@ -207,7 +210,7 @@ class proc_overlay:
 
     def main_proc(self, cn_r, cn_s, ):
         # ログ
-        qFunc.logOutput(self.proc_id + ':start', display=self.logDisp, )
+        qLog.log('info', self.proc_id, 'start', display=self.logDisp, )
         qFunc.statusSet(self.fileRun, True)
         self.proc_beat = time.time()
 
@@ -283,7 +286,7 @@ class proc_overlay:
                 inp_value = ''
 
             if (cn_r.qsize() > 10) or (cn_s.qsize() > 20):
-                qFunc.logOutput(self.proc_id + ':queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
+                qLog.log('warning', self.proc_id, 'queue overflow warning!, ' + str(cn_r.qsize()) + ', ' + str(cn_s.qsize()))
 
             # レディ設定
             if (qFunc.statusCheck(self.fileRdy) == False):
@@ -332,8 +335,8 @@ class proc_overlay:
                         image_img = inp_value.copy()
                         shutter_time = time.time()
                         shutter_img  = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 # カメラ１（メイン画像）
                 if (inp_name.lower() == '[img]') \
@@ -355,8 +358,8 @@ class proc_overlay:
                         work_height = int(work_width * image_height / image_width)
                         cam1_mini   = cv2.resize(image_img, (work_width, work_height))
 
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 if (inp_name.lower() == '_cam1_fps_'):
                     cam1_fps  = inp_value
@@ -382,8 +385,8 @@ class proc_overlay:
                         work_height = int(work_width * image_height / image_width)
                         cam2_mini   = cv2.resize(image_img, (work_width, work_height))
 
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 if (inp_name.lower() == '_cam2_fps_'):
                     cam2_fps  = inp_value
@@ -411,8 +414,8 @@ class proc_overlay:
                         work_height = int(work_width * image_height / image_width)
                         comp_mini   = cv2.resize(image_img, (work_width, work_height))
 
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 if (inp_name.lower() == '_comp_fps_'):
                     comp_fps  = inp_value
@@ -434,8 +437,8 @@ class proc_overlay:
                         status_time = time.time()
                         status_img  = image_img.copy()
 
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 # リーダー画像
                 if (inp_name.lower() == '[reader]'):
@@ -446,8 +449,8 @@ class proc_overlay:
                         work_height = int(work_width * image_height / image_width)
                         reader_time = time.time()
                         reader_img  = cv2.resize(image_img, (work_width, work_height))
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 # 認識画像
                 if (inp_name.lower() == '[cvdetect]') \
@@ -456,16 +459,16 @@ class proc_overlay:
                         image_img      = inp_value.copy()
                         cvdetect1_time = time.time()
                         cvdetect1_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 if (inp_name.lower() == '[cvdetect2]'):
                     try:
                         image_img      = inp_value.copy()
                         cvdetect2_time = time.time()
                         cvdetect2_base = cv2.resize(image_img, (self.dspWidth, self.dspHeight ))
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 # 認識画像
                 if (inp_name.lower() == '[detect]') \
@@ -477,8 +480,8 @@ class proc_overlay:
                         work_height = int(work_width * image_height / image_width)
                         detect1_time = time.time()
                         detect1_img  = cv2.resize(image_img, (work_width, work_height))
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 if (inp_name.lower() == '[detect2]'):
                     try:
@@ -488,8 +491,8 @@ class proc_overlay:
                         work_height = int(work_width * image_height / image_width)
                         detect2_time = time.time()
                         detect2_img  = cv2.resize(image_img, (work_width, work_height))
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 # 配列画像
                 if (inp_name.lower() == '[array]'):
@@ -508,8 +511,8 @@ class proc_overlay:
                         ary_time[ary_max] = time.time()
                         ary_img[ary_max]  = cv2.resize(image_img, (work_width, work_height))
 
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 # テキスト画像
                 if (inp_name.lower() == '[txts_img]') \
@@ -535,8 +538,8 @@ class proc_overlay:
                         txt_time[txt_max] = time.time()
                         txt_img[txt_max]  = image_img.copy()
 
-                    except:
-                        print(inp_name.lower() + ' error!')
+                    except Exception as e:
+                        qLog.log('error', self.proc_id, inp_name.lower() + ' error!', )
 
                 # メッセージ画像のフィードバック
                 if (inp_name.lower() == '[message_img]'):
@@ -1024,7 +1027,7 @@ class proc_overlay:
                 cn_s.task_done()
 
             # ログ
-            qFunc.logOutput(self.proc_id + ':end', display=self.logDisp, )
+            qLog.log('info', self.proc_id, 'end', display=self.logDisp, )
             qFunc.statusSet(self.fileRun, False)
             self.proc_beat = None
     
@@ -1087,19 +1090,18 @@ def DisplayMouseEvent(event, x, y, flags, param):
 
 
 if __name__ == '__main__':
+
     # 共通クラス
     qFunc.init()
 
-    # ログ設定
-    qNowTime = datetime.datetime.now()
-    qLogFile = qPath_log + qNowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
-    qFunc.logFileSet(file=qLogFile, display=True, outfile=True, )
-    qFunc.logOutput(qLogFile, )
+    # ログ
+    nowTime  = datetime.datetime.now()
+    filename = qPath_log + nowTime.strftime('%Y%m%d.%H%M%S') + '.' + os.path.basename(__file__) + '.log'
+    qLog.init(mode='logger', filename=filename, )
 
+    # 設定
     cv2.namedWindow('Display', 1)
     cv2.moveWindow( 'Display', 0, 0)
-
-
 
     overlay_thread = proc_overlay('overlay', '00', )
     overlay_thread.begin()
@@ -1131,6 +1133,9 @@ if __name__ == '__main__':
     time.sleep(0.5)
     overlay_thread.put(['[array]',  detect.copy() ])
 
+
+
+    # ループ
     show_onece = True
     while (True):
 
@@ -1152,7 +1157,7 @@ if __name__ == '__main__':
 
                 # キーボード操作検査(1)
                 if (cv2.waitKey(1) >= 0):
-                    qFunc.logOutput('key accept !', )
+                    qLog.log('info', 'key accept !', )
                     #break
 
                 # マウス操作検査
@@ -1162,7 +1167,7 @@ if __name__ == '__main__':
                     # CLOSE
                     mouse1 = 'close'
                     mouse2 = 'close'
-                    qFunc.logOutput(mouse1 + ', ' + mouse2 )
+                    qLog.log('info', mouse1 + ', ' + mouse2 )
                     show_onece = True
                     break
 
@@ -1173,7 +1178,7 @@ if __name__ == '__main__':
                     MousePointX  = None
                     MousePointY  = None
                     if (mouse1 !=''):
-                        qFunc.logOutput(mouse1 + ', ' + mouse2 )
+                        qLog.log('info', mouse1 + ', ' + mouse2 )
                         break
 
                 # 画面出力
@@ -1181,7 +1186,7 @@ if __name__ == '__main__':
 
                 # キーボード操作検査(2)
                 if (cv2.waitKey(1) >= 0):
-                    qFunc.logOutput('key accept !', )
+                    qLog.log('info', 'key accept !', )
                     #break
 
         if (mouse2 == 'enter') \
@@ -1194,12 +1199,13 @@ if __name__ == '__main__':
 
         time.sleep(0.01)
 
+
+
     time.sleep(1.00)
     overlay_thread.abort()
     del overlay_thread
 
-
-
     cv2.destroyAllWindows()
+
 
 

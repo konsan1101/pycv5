@@ -10,13 +10,14 @@
 
 import sys
 import os
+import time
+import datetime
+import codecs
+import glob
+
 import queue
 import threading
 import subprocess
-import datetime
-import time
-import codecs
-import glob
 
 
 
@@ -49,7 +50,7 @@ if __name__ == '__main__':
                     txt = (txt + ' ' + str(t)).strip()
                 rt.close
                 rt = None
-            except:
+            except Exception as e:
                 rt = None
 
             try:
@@ -57,7 +58,7 @@ if __name__ == '__main__':
                 a.write(fileId[:-4].replace('julius.','') + ', [' + txt + ']\r\n')
                 a.close()
                 a = None
-            except:
+            except Exception as e:
                 a = None
 
             if (txt != ''):
@@ -84,7 +85,7 @@ if __name__ == '__main__':
                 f2 = 'gijiroku/mp3/' + fileId[:-4].replace('julius.','') + '.[' + f + '].mp3'
                 try:
                     os.rename(f1, f2)
-                except:
+                except Exception as e:
                     pass
 
 
